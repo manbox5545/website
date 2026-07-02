@@ -1,1 +1,500 @@
-<h1> Hi </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mpoxel | Building Digital Experiences</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#090909;
+color:white;
+overflow-x:hidden;
+}
+
+body::before{
+content:"";
+position:fixed;
+width:500px;
+height:500px;
+background:#f8c30022;
+filter:blur(120px);
+top:-150px;
+left:-150px;
+z-index:-1;
+}
+
+body::after{
+content:"";
+position:fixed;
+width:400px;
+height:400px;
+background:#ffd54a22;
+filter:blur(100px);
+bottom:-150px;
+right:-150px;
+z-index:-1;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 10%;
+position:sticky;
+top:0;
+backdrop-filter:blur(15px);
+background:rgba(0,0,0,.35);
+border-bottom:1px solid rgba(255,213,74,.15);
+z-index:999;
+}
+
+.logo{
+font-size:30px;
+font-weight:800;
+color:#FFD54A;
+letter-spacing:2px;
+}
+
+nav a{
+text-decoration:none;
+color:white;
+margin-left:25px;
+transition:.3s;
+}
+
+nav a:hover{
+color:#FFD54A;
+}
+
+.hero{
+
+min-height:90vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:40px;
+}
+
+.hero h1{
+
+font-size:65px;
+font-weight:800;
+margin-bottom:15px;
+
+background:linear-gradient(90deg,#FFD54A,#fff2b0);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+
+max-width:700px;
+margin:auto;
+font-size:20px;
+line-height:1.8;
+opacity:.9;
+
+}
+
+.buttons{
+
+margin-top:40px;
+
+}
+
+.btn{
+
+display:inline-block;
+padding:15px 35px;
+margin:10px;
+border-radius:50px;
+text-decoration:none;
+font-weight:700;
+transition:.35s;
+}
+
+.gold{
+
+background:#FFD54A;
+color:#111;
+
+}
+
+.gold:hover{
+
+transform:translateY(-5px);
+box-shadow:0 10px 35px #ffd54a66;
+
+}
+
+.outline{
+
+border:2px solid #FFD54A;
+color:#FFD54A;
+
+}
+
+.outline:hover{
+
+background:#FFD54A;
+color:#111;
+
+}
+
+section{
+
+padding:90px 10%;
+
+}
+
+.title{
+
+text-align:center;
+font-size:40px;
+margin-bottom:50px;
+color:#FFD54A;
+
+}
+
+.about{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:40px;
+align-items:center;
+
+}
+
+.card{
+
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,213,74,.15);
+backdrop-filter:blur(12px);
+border-radius:25px;
+padding:35px;
+transition:.4s;
+
+}
+
+.card:hover{
+
+transform:translateY(-10px);
+border-color:#FFD54A;
+
+}
+
+.services{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+
+}
+
+.service{
+
+text-align:center;
+
+}
+
+.service h3{
+
+margin:15px 0;
+color:#FFD54A;
+
+}
+
+.portfolio{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:35px;
+
+}
+
+.project{
+
+overflow:hidden;
+
+}
+
+.preview{
+
+height:200px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:60px;
+background:linear-gradient(135deg,#1b1b1b,#2c2c2c);
+
+}
+
+.project h3{
+
+margin:20px 0 10px;
+
+}
+
+.project p{
+
+opacity:.8;
+line-height:1.7;
+
+}
+
+.project a{
+
+display:inline-block;
+margin-top:25px;
+padding:12px 25px;
+border-radius:40px;
+background:#FFD54A;
+text-decoration:none;
+font-weight:bold;
+color:#111;
+
+}
+
+footer{
+
+padding:40px;
+text-align:center;
+border-top:1px solid rgba(255,213,74,.15);
+margin-top:80px;
+opacity:.8;
+
+}
+
+@media(max-width:768px){
+
+.hero h1{
+
+font-size:42px;
+
+}
+
+.hero p{
+
+font-size:18px;
+
+}
+
+nav{
+
+padding:20px;
+
+}
+
+nav div:last-child{
+
+display:none;
+
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<nav>
+
+<div class="logo">MPOXEL</div>
+
+<div>
+
+<a href="#about">About</a>
+<a href="#services">Services</a>
+<a href="#portfolio">Portfolio</a>
+
+</div>
+
+</nav>
+
+<section class="hero">
+
+<div>
+
+<h1>Building Digital Experiences</h1>
+
+<p>
+
+Mpoxel creates modern websites, interactive 3D experiences, and premium digital solutions that combine creativity with performance.
+
+</p>
+
+<div class="buttons">
+
+<a href="#portfolio" class="btn gold">View Portfolio</a>
+
+<a href="mailto:hello@mpoxel.in" class="btn outline">Contact</a>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="about">
+
+<h2 class="title">About Mpoxel</h2>
+
+<div class="about">
+
+<div class="card">
+
+<h3 style="color:#FFD54A;">Who We Are</h3>
+
+<br>
+
+<p>
+
+Mpoxel is a creative web studio focused on building beautiful, responsive, and high-performance websites. Whether it's a clean business website or an immersive 3D experience, our goal is to deliver modern digital products that stand out.
+
+</p>
+
+</div>
+
+<div class="card">
+
+<h3 style="color:#FFD54A;">Our Mission</h3>
+
+<br>
+
+<p>
+
+To help businesses and creators establish a strong online presence through elegant design, smooth user experiences, and reliable web technologies.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="services">
+
+<h2 class="title">Services</h2>
+
+<div class="services">
+
+<div class="card service">
+
+<h3>🌐 2D Websites</h3>
+
+<p>Responsive websites with modern UI and optimized performance.</p>
+
+</div>
+
+<div class="card service">
+
+<h3>🚀 3D Websites</h3>
+
+<p>Interactive Three.js experiences that make your brand unforgettable.</p>
+
+</div>
+
+<div class="card service">
+
+<h3>🎨 Branding</h3>
+
+<p>Professional logos and digital identity for businesses and creators.</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="portfolio">
+
+<h2 class="title">Portfolio</h2>
+
+<div class="portfolio">
+
+<div class="card project">
+
+<div class="preview">🌐</div>
+
+<h3>2D Website</h3>
+
+<p>
+
+A responsive business website featuring clean layouts, modern design, and an intuitive user experience.
+
+</p>
+
+<a href="https://rmm-join.github.io/RMM/" target="_blank">
+
+Visit Project
+
+</a>
+
+</div>
+
+<div class="card project">
+
+<div class="preview">🚀</div>
+
+<h3>3D Website</h3>
+
+<p>
+
+An interactive Three.js experience showcasing immersive graphics and real-time 3D environments.
+
+</p>
+
+<a href="https://rmm-join.github.io/rwf/" target="_blank">
+
+Visit Project
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<h2 style="color:#FFD54A;">MPOXEL</h2>
+
+<br>
+
+<p>
+
+Building Digital Experiences.
+
+</p>
+
+<br>
+
+<p>
+
+© 2026 Mpoxel. All rights reserved.
+
+</p>
+
+</footer>
+
+</body>
+</html>
