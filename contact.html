@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact | Mpoxel</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+
+background:#090909;
+color:white;
+overflow-x:hidden;
+
+}
+
+body::before{
+content:"";
+position:fixed;
+width:450px;
+height:450px;
+background:#FFD54A33;
+filter:blur(120px);
+top:-120px;
+left:-120px;
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+width:350px;
+height:350px;
+background:#ffcc0030;
+filter:blur(120px);
+bottom:-100px;
+right:-100px;
+z-index:-2;
+}
+
+nav{
+
+padding:22px 10%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+backdrop-filter:blur(18px);
+background:rgba(0,0,0,.35);
+border-bottom:1px solid rgba(255,213,74,.15);
+
+}
+
+.logo{
+
+font-size:30px;
+font-weight:800;
+color:#FFD54A;
+letter-spacing:2px;
+
+}
+
+nav a{
+
+color:white;
+text-decoration:none;
+font-weight:600;
+
+}
+
+.container{
+
+width:min(900px,92%);
+margin:60px auto;
+
+}
+
+.title{
+
+font-size:55px;
+text-align:center;
+font-weight:800;
+margin-bottom:40px;
+color:#FFD54A;
+text-shadow:
+0 2px 0 #9d7c00,
+0 4px 0 #7a6200,
+0 0 25px rgba(255,213,74,.4);
+
+}
+
+.card{
+
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,213,74,.15);
+border-radius:30px;
+backdrop-filter:blur(18px);
+padding:35px;
+box-shadow:0 0 40px rgba(0,0,0,.4);
+
+}
+
+.info{
+
+display:grid;
+gap:18px;
+margin-bottom:35px;
+
+}
+
+.info div{
+
+font-size:20px;
+
+}
+
+.info a{
+
+color:#FFD54A;
+text-decoration:none;
+font-weight:bold;
+
+}
+
+.directBtn{
+
+width:100%;
+padding:18px;
+border:none;
+border-radius:50px;
+font-size:20px;
+font-weight:700;
+cursor:pointer;
+background:linear-gradient(45deg,#FFD54A,#ffb800);
+color:#111;
+transition:.35s;
+
+}
+
+.directBtn:hover{
+
+transform:translateY(-4px);
+box-shadow:0 12px 35px rgba(255,213,74,.4);
+
+}
+
+.formBox{
+
+overflow:hidden;
+max-height:0;
+transition:.7s ease;
+
+}
+
+.formBox.open{
+
+max-height:500px;
+margin-top:30px;
+
+}
+
+textarea{
+
+width:100%;
+height:180px;
+margin-top:20px;
+resize:none;
+padding:20px;
+font-size:22px;
+font-weight:700;
+border-radius:20px;
+outline:none;
+border:2px solid #FFD54A;
+background:#111;
+color:#FFD54A;
+box-shadow:
+0 0 20px rgba(255,213,74,.2),
+inset 0 0 10px rgba(255,213,74,.1);
+
+}
+
+textarea::placeholder{
+
+color:#d9b94f;
+
+}
+
+.send{
+
+margin-top:20px;
+width:100%;
+padding:18px;
+border:none;
+cursor:pointer;
+border-radius:50px;
+font-size:20px;
+font-weight:800;
+background:#FFD54A;
+color:#111;
+transition:.3s;
+
+}
+
+.send:hover{
+
+transform:scale(1.02);
+
+}
+
+.popup{
+
+position:fixed;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) scale(.7);
+background:#111;
+border:2px solid #FFD54A;
+border-radius:25px;
+padding:35px;
+width:min(420px,90%);
+text-align:center;
+opacity:0;
+pointer-events:none;
+transition:.4s;
+box-shadow:0 0 60px rgba(255,213,74,.35);
+
+}
+
+.popup.show{
+
+opacity:1;
+pointer-events:auto;
+transform:translate(-50%,-50%) scale(1);
+
+}
+
+.tick{
+
+width:90px;
+height:90px;
+margin:auto;
+border-radius:50%;
+background:#FFD54A;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:45px;
+color:#111;
+font-weight:bold;
+margin-bottom:20px;
+animation:pop .5s;
+
+}
+
+@keyframes pop{
+
+0%{transform:scale(.2) rotate(-180deg);}
+100%{transform:scale(1);}
+
+}
+
+.popup h2{
+
+color:#FFD54A;
+margin-bottom:12px;
+
+}
+
+footer{
+
+margin:70px 0 30px;
+text-align:center;
+opacity:.7;
+
+}
+
+@media(max-width:700px){
+
+.title{
+
+font-size:40px;
+
+}
+
+textarea{
+
+font-size:18px;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">MPOXEL</div>
+
+<a href="index.html">← Back Home</a>
+
+</nav>
+
+<div class="container">
+
+<h1 class="title">Contact Us</h1>
+
+<div class="card">
+
+<div class="info">
+
+<div>
+📞
+<a href="tel:8318604464">
+8318604464
+</a>
+</div>
+
+<div>
+📧
+<a href="mailto:mpoxel@gmail.com">
+mpoxel@gmail.com
+</a>
+</div>
+
+</div>
+
+<button class="directBtn" onclick="toggleBox()">
+Direct Contact
+</button>
+
+<div class="formBox" id="box">
+
+<textarea id="msg" placeholder="Write your message to Mpoxel..."></textarea>
+
+<button class="send" onclick="sendMessage()">
+Send Message
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="popup" id="popup">
+
+<div class="tick">✓</div>
+
+<h2>Message Sent!</h2>
+
+<p>
+Thank you for contacting <b style="color:#FFD54A;">Mpoxel</b>.<br><br>
+Your message has been received successfully.
+</p>
+
+</div>
+
+<footer>
+
+© 2026 Mpoxel. All Rights Reserved.
+
+</footer>
+
+<script>
+
+const box=document.getElementById("box");
+
+function toggleBox(){
+
+box.classList.toggle("open");
+
+}
+
+function sendMessage(){
+
+document.getElementById("msg").value="";
+
+const popup=document.getElementById("popup");
+
+popup.classList.add("show");
+
+setTimeout(()=>{
+
+popup.classList.remove("show");
+
+},3000);
+
+}
+
+</script>
+
+</body>
+</html>
