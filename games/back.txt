@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Parcel Delivery</title>
+
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:#87ceeb;
+font-family:Arial;
+}
+
+#ui{
+position:absolute;
+top:10px;
+left:10px;
+background:rgba(0,0,0,.5);
+padding:10px;
+color:white;
+border-radius:10px;
+font-size:20px;
+}
+</style>
+
+<script type="importmap">
+{
+"imports":{
+"three":"https://cdn.jsdelivr.net/npm/three@0.170/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170/examples/jsm/"
+}
+}
+</script>
+
+</head>
+
+<body>
+
+<div id="ui">
+Money: ₹<span id="money">0</span><br>
+Packages: <span id="packages">0</span>
+</div>
+
+<script type="module" src="game.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games | Mpoxel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Poppins,sans-serif;
+background:#07111f;
+color:white;
+overflow-x:hidden;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%,#00c3ff33,transparent 35%),
+radial-gradient(circle at 80% 70%,#8b5cf633,transparent 35%),
+linear-gradient(180deg,#07111f,#03070d);
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:40px 40px;
+z-index:-1;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 8%;
+background:rgba(0,0,0,.25);
+backdrop-filter:blur(20px);
+border-bottom:1px solid rgba(255,255,255,.08);
+position:sticky;
+top:0;
+}
+
+.logo{
+font-family:Orbitron,sans-serif;
+font-size:30px;
+font-weight:700;
+letter-spacing:3px;
+color:#4fd6ff;
+}
+
+.back{
+text-decoration:none;
+color:white;
+padding:12px 24px;
+border-radius:50px;
+background:#1699ff;
+transition:.3s;
+}
+
+.back:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 30px #1699ff55;
+}
+
+.hero{
+padding:90px 20px;
+text-align:center;
+}
+
+.hero h1{
+font-family:Orbitron,sans-serif;
+font-size:60px;
+color:#4fd6ff;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:20px;
+opacity:.85;
+max-width:700px;
+margin:auto;
+line-height:1.8;
+}
+
+section{
+padding:70px 8%;
+}
+
+.title{
+font-family:Orbitron,sans-serif;
+font-size:38px;
+margin-bottom:35px;
+color:#4fd6ff;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:30px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+border-radius:25px;
+padding:30px;
+backdrop-filter:blur(18px);
+transition:.35s;
+}
+
+.card:hover{
+transform:translateY(-10px) scale(1.02);
+border-color:#4fd6ff;
+box-shadow:0 15px 40px rgba(79,214,255,.25);
+}
+
+.icon{
+font-size:75px;
+margin-bottom:15px;
+}
+
+.card h2{
+color:#4fd6ff;
+margin-bottom:10px;
+}
+
+.card p{
+opacity:.85;
+line-height:1.8;
+}
+
+.play{
+display:inline-block;
+margin-top:25px;
+padding:12px 28px;
+background:#4fd6ff;
+color:#07111f;
+font-weight:bold;
+border-radius:40px;
+text-decoration:none;
+transition:.3s;
+}
+
+.play:hover{
+background:white;
+transform:scale(1.05);
+}
+
+footer{
+margin-top:70px;
+padding:40px;
+text-align:center;
+border-top:1px solid rgba(255,255,255,.08);
+opacity:.7;
+}
+
+@media(max-width:700px){
+
+.hero h1{
+font-size:42px;
+}
+
+.hero p{
+font-size:17px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+
+<div class="logo">MPOXEL</div>
+
+<a class="back" href="/more.html">← Back</a>
+
+</nav>
+
+<div class="hero">
+
+<h1>Games Room</h1>
+
+<p>
+Welcome to the Mpoxel Games Room. Explore games developed by our studio.
+</p>
+
+</div>
+
+<section>
+
+<h2 class="title">Available Games</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<div class="icon">🖱️</div>
+
+<h2>CLICK MASTER GAME</h2>
+
+<p>
+Build your clicking empire by earning coins, unlocking achievements, purchasing auto-clickers, decorating your room, and upgrading your themes.
+</p>
+
+<br>
+
+<p><b>👤 Made by Manvir Sharma</b></p>
+
+<a class="play" href="game.html">
+▶ Play Game
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<h2 style="color:#4fd6ff;">MPOXEL</h2>
+
+<br>
+
+<p>Games developed by Manvir Sharma.</p>
+
+<br>
+
+<p>© 2026 Mpoxel</p>
+
+</footer>
+
+</body>
+</html>

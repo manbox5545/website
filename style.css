@@ -1,0 +1,258 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#020202;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.deadly-btn{
+    position:relative;
+    width:340px;
+    height:110px;
+
+    border:none;
+    outline:none;
+    cursor:pointer;
+
+    font-size:38px;
+    font-weight:900;
+    letter-spacing:6px;
+    color:white;
+    text-transform:uppercase;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(135deg,#ff0044,#ff7700,#ffee00,#00ff88,#00d9ff,#4d00ff,#ff0088);
+
+    background-size:600% 600%;
+
+    animation:
+    rgb 6s linear infinite,
+    float 4s ease-in-out infinite;
+
+    transform-style:preserve-3d;
+    perspective:1200px;
+
+    box-shadow:
+    0 0 15px #ff0055,
+    0 0 30px #ff0055,
+    0 0 60px #ff0055,
+    0 0 120px #ff0055,
+    0 0 240px rgba(255,0,100,.7),
+    inset 0 0 30px rgba(255,255,255,.35),
+    inset 0 -15px 30px rgba(0,0,0,.4);
+
+    overflow:hidden;
+}
+
+.deadly-btn span{
+    position:relative;
+    z-index:20;
+
+    text-shadow:
+    0 0 5px white,
+    0 0 15px cyan,
+    0 0 30px cyan,
+    0 0 60px cyan,
+    0 0 120px cyan;
+}
+
+.deadly-btn::before{
+    content:"";
+    position:absolute;
+    inset:-5px;
+
+    border-radius:inherit;
+
+    background:
+    conic-gradient(
+    red,
+    orange,
+    yellow,
+    lime,
+    cyan,
+    blue,
+    magenta,
+    red);
+
+    filter:blur(20px);
+    animation:spin 3s linear infinite;
+
+    opacity:.9;
+}
+
+.deadly-btn::after{
+    content:"";
+    position:absolute;
+    inset:2px;
+
+    border-radius:27px;
+
+    background:
+    linear-gradient(
+    rgba(255,255,255,.18),
+    rgba(255,255,255,.03));
+
+    backdrop-filter:blur(30px);
+
+    box-shadow:
+    inset 0 1px 8px white,
+    inset 0 -8px 20px rgba(0,0,0,.6);
+
+    z-index:1;
+}
+
+/* Shine */
+
+.deadly-btn::selection{
+    background:none;
+}
+
+.deadly-btn span::before{
+    content:"";
+    position:absolute;
+}
+
+.deadly-btn:hover{
+    transform:
+    rotateX(12deg)
+    rotateY(-12deg)
+    scale(1.08);
+
+    box-shadow:
+    0 0 30px white,
+    0 0 60px cyan,
+    0 0 120px cyan,
+    0 0 240px cyan,
+    0 0 500px #00ffff;
+}
+
+.deadly-btn:hover::before{
+    filter:blur(35px);
+}
+
+.deadly-btn:active{
+    transform:scale(.93);
+}
+
+.deadly-btn::marker{
+    display:none;
+}
+
+/* Liquid Shine */
+
+.deadly-btn .shine{
+    display:none;
+}
+
+.deadly-btn::after{
+    overflow:hidden;
+}
+
+.deadly-btn::before,
+.deadly-btn::after{
+    pointer-events:none;
+}
+
+.deadly-btn::after{
+    background:
+    linear-gradient(
+    120deg,
+    transparent 15%,
+    rgba(255,255,255,.45) 45%,
+    transparent 75%),
+    rgba(10,10,10,.3);
+
+    background-size:250%;
+
+    animation:
+    shine 3s linear infinite;
+}
+
+/* Glow Ring */
+
+.deadly-btn{
+    filter:
+    drop-shadow(0 0 20px cyan)
+    drop-shadow(0 0 60px magenta)
+    drop-shadow(0 0 120px blue);
+}
+
+/* Floating Particles */
+
+body::before,
+body::after{
+    content:"";
+    position:fixed;
+    width:220vmax;
+    height:220vmax;
+
+    background:
+    radial-gradient(circle,#00ffff 1px,transparent 2px);
+
+    background-size:45px 45px;
+
+    opacity:.08;
+
+    animation:
+    stars 60s linear infinite;
+
+    pointer-events:none;
+}
+
+body::after{
+    animation-direction:reverse;
+    opacity:.04;
+}
+
+@keyframes rgb{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+@keyframes spin{
+from{
+transform:rotate(0deg);
+}
+to{
+transform:rotate(360deg);
+}
+}
+
+@keyframes shine{
+0%{
+background-position:-250%;
+}
+100%{
+background-position:250%;
+}
+}
+
+@keyframes float{
+0%,100%{
+transform:translateY(0px);
+}
+50%{
+transform:translateY(-10px);
+}
+}
+
+@keyframes stars{
+from{
+transform:rotate(0deg);
+}
+to{
+transform:rotate(360deg);
+}
+}

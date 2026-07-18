@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="google-site-verification" content="dPTTYWQaXzrELbV7bySa09u456hbkneA8jtPIs8u6Eg" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mpoxel | Building Digital Experiences</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -280,31 +281,137 @@ opacity:.8;
 
 }
 
-@media(max-width:768px){
-
-.hero h1{
-
-font-size:42px;
-
-}
-
-.hero p{
-
-font-size:18px;
-
-}
+@media (max-width: 768px){
 
 nav{
-
-padding:20px;
-
+padding:18px 20px;
+flex-direction:column;
+gap:15px;
 }
 
 nav div:last-child{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+}
 
-display:none;
+nav a{
+margin:0;
+font-size:15px;
+}
+
+.hero{
+min-height:80vh;
+padding:60px 20px;
+}
+
+.hero h1{
+font-size:40px;
+line-height:1.2;
+}
+
+.hero p{
+font-size:17px;
+line-height:1.7;
+}
+
+.buttons{
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.btn{
+width:100%;
+max-width:320px;
+text-align:center;
+margin:8px 0;
+}
+
+.title{
+font-size:32px;
+}
+
+section{
+padding:70px 20px;
+}
+
+.about,
+.services,
+.portfolio{
+grid-template-columns:1fr;
+}
+
+.preview{
+height:170px;
+font-size:50px;
+}
+
+.card{
+padding:25px;
+}
+
+footer{
+padding:30px 20px;
+}
+
+footer h2{
+font-size:22px;
+}
 
 }
+
+/* Website Scrollbar */
+
+::-webkit-scrollbar{
+width:12px;
+}
+
+::-webkit-scrollbar-track{
+
+background:#0b0b0b;
+
+border-left:1px solid rgba(255,213,74,.08);
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:linear-gradient(
+180deg,
+#FFD54A,
+#ffb800,
+#c68a00
+);
+
+border-radius:20px;
+
+border:2px solid #111;
+
+box-shadow:
+0 0 12px rgba(255,213,74,.45);
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+background:linear-gradient(
+180deg,
+#fff0a6,
+#FFD54A,
+#ff9800
+);
+
+box-shadow:
+0 0 20px rgba(255,213,74,.7);
+
+}
+
+html{
+
+scrollbar-color:#FFD54A #0b0b0b;
+scrollbar-width:thin;
 
 }
 
@@ -345,6 +452,8 @@ Mpoxel creates modern websites, interactive 3D experiences, and premium digital 
 
 <a href="contact.html" class="btn outline">Contact</a>
 
+<a href="more.html" class="btn outline">More</a>
+
 </div>
 
 </div>
@@ -380,6 +489,30 @@ Mpoxel is a creative web studio focused on building beautiful, responsive, and h
 <p>
 
 To help businesses and creators establish a strong online presence through elegant design, smooth user experiences, and reliable web technologies.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="founder">
+
+<h2 class="title">Who Is Behind Mpoxel?</h2>
+
+<div class="about">
+
+<div class="card">
+
+<h3 style="color:#FFD54A;">Who Am I?</h3>
+
+<br>
+
+<p>
+
+I am Manvir Sharma, a 14-year-old web developer with a dream of building a successful technology company. Mpoxel is my own company, and I currently own 100% of its shares. Since it is a private company, anyone interested in purchasing shares can contact me directly.
 
 </p>
 
@@ -479,9 +612,12 @@ Visit Project
 
 <br>
 
+<h2 style="color:#FFD54A;">A website by Manvir Sharma</h2>
+
+<br>
 <p>
 
-Building Digital Experiences.
+Making the Impossible Possible.
 
 </p>
 
@@ -490,6 +626,16 @@ Building Digital Experiences.
 <p>
 
 © 2026 Mpoxel. All rights reserved.
+
+</p>
+
+
+<br>
+
+
+<p>
+
+Last Updated: 18 July 2026
 
 </p>
 

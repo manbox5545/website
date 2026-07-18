@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Click Kingdom</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#181818;
+color:white;
+display:flex;
+justify-content:center;
+padding:30px;
+transition:.5s;
+}
+
+#game{
+width:900px;
+display:grid;
+grid-template-columns:1fr 320px;
+gap:20px;
+}
+
+#left,#right{
+background:#252525;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+h1{
+margin-bottom:20px;
+}
+
+.money{
+font-size:35px;
+margin-bottom:20px;
+color:gold;
+}
+
+#clickBtn{
+width:220px;
+height:220px;
+border:none;
+border-radius:50%;
+font-size:30px;
+cursor:pointer;
+background:linear-gradient(#ffd54f,#ff9800);
+transition:.15s;
+}
+
+#clickBtn:active{
+transform:scale(.92);
+}
+
+.shopItem{
+background:#333;
+padding:12px;
+margin:12px 0;
+border-radius:10px;
+cursor:pointer;
+transition:.25s;
+}
+
+.shopItem:hover{
+background:#444;
+}
+
+#room{
+margin-top:30px;
+height:220px;
+background:#555;
+border-radius:15px;
+position:relative;
+overflow:hidden;
+}
+
+#wall{
+position:absolute;
+top:0;
+width:100%;
+height:65%;
+background:#777;
+transition:.5s;
+}
+
+#floor{
+position:absolute;
+bottom:0;
+width:100%;
+height:35%;
+background:#5c4033;
+}
+
+#tv{
+position:absolute;
+width:90px;
+height:60px;
+background:black;
+border:5px solid #333;
+left:40%;
+top:40%;
+display:none;
+}
+
+#achievement{
+position:fixed;
+top:-100px;
+left:50%;
+transform:translateX(-50%);
+background:gold;
+color:black;
+padding:15px 30px;
+font-size:20px;
+border-radius:12px;
+transition:.5s;
+font-weight:bold;
+}
+
+.stat{
+margin-top:20px;
+line-height:35px;
+}
+
+.floatMoney{
+
+position:fixed;
+
+font-size:28px;
+
+font-weight:bold;
+
+color:gold;
+
+pointer-events:none;
+
+animation:floatUp .8s linear forwards;
+
+}
+
+@keyframes floatUp{
+
+0%{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+100%{
+
+opacity:0;
+transform:translateY(-100px);
+
+}
+
+}
+</style>
+</head>
+<body>
+
+<div id="achievement"></div>
+
+<div id="game">
+
+<div id="left">
+
+<h1>🖱 Click Kingdom</h1>
+
+<div class="money">
+💰 <span id="money">0</span>
+</div>
+
+<button id="clickBtn">CLICK</button>
+
+<div class="stat">
+Total Clicks:
+<span id="clicks">0</span>
+</div>
+
+<div id="room">
+<div id="wall"></div>
+<div id="floor"></div>
+<div id="tv"></div>
+</div>
+
+</div>
+
+<div id="right">
+
+<h2>🛒 Shop</h2>
+
+<div class="shopItem" onclick="buyTV()">
+📺 TV
+<br>
+Price:
+<span id="tvPrice">150</span>
+</div>
+
+<div class="shopItem" onclick="paintWall()">
+🎨 Wall Paint
+<br>
+Price:
+<span id="paintPrice">100</span>
+</div>
+
+<div class="shopItem" onclick="buyAuto()">
+🤖 Auto Clicker
+<br>
+Owned:
+<span id="autoOwned">0</span>
+<br>
+Price:
+<span id="autoPrice">50</span>
+</div>
+
+<div class="shopItem" onclick="buySpeed()">
+⚡ Auto Speed
+<br>
+Level:
+<span id="speedLevel">0</span>
+<br>
+Price:
+<span id="speedPrice">200</span>
+</div>
+
+<div class="shopItem" onclick="buyTheme()">
+🌈 Theme Upgrade
+<br>
+Level:
+<span id="themeLevel">0</span>/2
+<br>
+Price:
+<span id="themePrice">500</span>
+</div>
+
+<div class="shopItem">
+💵 Money/sec
+<br>
+<span id="mps">0</span>
+</div>
+
+<div class="shopItem">
+📈 Total Earned
+<br>
+<span id="earned">0</span>
+</div>
+
+<hr style="margin:20px 0;">
+
+<h2>🏆 Achievements</h2>
+
+<div id="achievements">
+None Yet
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let game={
+money:0,
+earned:0,
+clicks:0,
+
+tv:false,
+paint:false,
+
+auto:0,
+autoPrice:50,
+
+speed:0,
+speedPrice:200,
+speedDelay:1000,
+
+theme:0,
+themePrice:500,
+
+achievements:[]
+}
+
+function save(){
+localStorage.setItem("clickGame",JSON.stringify(game))
+}
+
+function load(){
+
+let data=localStorage.getItem("clickGame");
+
+if(data){
+
+game=JSON.parse(data);
+
+update();
+
+if(game.tv)
+document.getElementById("tv").style.display="block";
+
+if(game.paint)
+document.getElementById("wall").style.background="#8bc34a";
+
+}
+
+}
+
+function update(){
+
+money.innerHTML=Math.floor(game.money);
+
+clicks.innerHTML=game.clicks;
+
+autoOwned.innerHTML=game.auto;
+
+autoPrice.innerHTML=Math.floor(game.autoPrice);
+
+speedLevel.innerHTML=game.speed;
+
+speedPrice.innerHTML=Math.floor(game.speedPrice);
+
+themeLevel.innerHTML=game.theme;
+
+themePrice.innerHTML=Math.floor(game.themePrice);
+
+earned.innerHTML=Math.floor(game.earned);
+
+}
+
+clickBtn.onclick=function(e){
+
+game.money++;
+
+game.earned++;
+
+game.clicks++;
+
+floatingMoney(
+e.clientX,
+e.clientY,
+"+1"
+);
+
+checkAchievements();
+
+update();
+
+save();
+
+}
+
+function unlock(name){
+
+if(game.achievements.includes(name))
+return;
+
+game.achievements.push(name);
+
+achievement.innerHTML="🏆 "+name;
+
+achievement.style.top="20px";
+
+setTimeout(()=>{
+achievement.style.top="-100px";
+},2500);
+
+document.getElementById("achievements").innerHTML=
+game.achievements.join("<br>");
+
+}
+
+function checkAchievements(){
+
+if(game.theme>=1)
+unlock("New Look");
+
+if(game.theme>=2)
+unlock("Ultimate Style");
+
+if(game.earned>=1000)
+unlock("Business Started");
+
+if(game.earned>=5000)
+unlock("Money Machine");
+
+if(game.earned>=50000)
+unlock("Millionaire Mindset");
+
+if(game.auto>=25)
+unlock("Factory");
+
+if(game.auto>=100)
+unlock("Automation Empire");
+
+if(game.clicks==1)
+unlock("First Click");
+
+if(game.clicks==10)
+unlock("Click Beginner");
+
+if(game.clicks==100)
+unlock("100 Clicks");
+
+if(game.money>=1000)
+unlock("Rich");
+
+if(game.auto>=1)
+unlock("Automation Begins");
+
+if(game.auto>=10)
+unlock("Robot Army");
+
+if(game.speed>=1)
+unlock("Speed I");
+
+if(game.speed>=5)
+unlock("Speed Master");
+
+if(game.money>=10000)
+unlock("10K Coins");
+
+if(game.money>=100000)
+unlock("100K Coins");
+
+}
+
+function buyTV(){
+
+if(game.tv)return;
+
+if(game.money<150)return alert("Not enough money!");
+
+game.money-=150;
+
+game.tv=true;
+
+tv.style.display="block";
+
+unlock("Bought TV");
+
+update();
+
+save();
+
+}
+
+function paintWall(){
+
+if(game.paint)return;
+
+if(game.money<100)return alert("Not enough money!");
+
+game.money-=100;
+
+game.paint=true;
+
+wall.style.background="#8bc34a";
+
+unlock("Painted Wall");
+
+update();
+
+save();
+
+}
+
+function buyAuto(){
+
+if(game.money<game.autoPrice){
+alert("Not enough money!");
+return;
+}
+
+game.money-=game.autoPrice;
+
+game.auto++;
+
+game.autoPrice=Math.floor(game.autoPrice*1.4);
+
+unlock("Bought Auto Clicker");
+
+update();
+save();
+
+}
+
+function buySpeed(){
+
+if(game.money<game.speedPrice){
+alert("Not enough money!");
+return;
+}
+
+game.money-=game.speedPrice;
+
+game.speed++;
+
+if(game.speedDelay>50){
+game.speedDelay*=0.8;
+}
+
+if(game.speed%2==0){
+game.speedPrice*=2;
+}
+
+unlock("Speed Upgrade");
+
+restartAuto();
+
+update();
+
+save();
+
+}
+
+function buyTheme(){
+
+if(game.theme>=2){
+
+alert("Maximum Theme!");
+
+return;
+
+}
+
+if(game.money<game.themePrice){
+
+alert("Not enough money!");
+
+return;
+
+}
+
+game.money-=game.themePrice;
+
+game.theme++;
+
+themeLevel.innerHTML=game.theme;
+
+if(game.theme==1){
+
+document.body.style.background="#0d1b2a";
+
+document.getElementById("left").style.background="#1b263b";
+
+document.getElementById("right").style.background="#1b263b";
+
+clickBtn.style.background="linear-gradient(#00e5ff,#2979ff)";
+
+themePrice.innerHTML="2500";
+
+game.themePrice=2500;
+
+unlock("Modern Theme");
+
+}
+
+else{
+
+document.body.style.background="linear-gradient(135deg,#2b1055,#7597de)";
+
+left.style.background="rgba(255,255,255,.15)";
+
+right.style.background="rgba(255,255,255,.15)";
+
+document.getElementById("left").style.backdropFilter="blur(15px)";
+
+document.getElementById("right").style.backdropFilter="blur(15px)";
+
+clickBtn.style.background="linear-gradient(#ff00cc,#3333ff)";
+
+unlock("Ultimate Theme");
+
+}
+
+update();
+
+save();
+
+}
+
+function floatingMoney(x,y,text){
+
+let div=document.createElement("div");
+
+div.className="floatMoney";
+
+div.innerHTML=text;
+
+div.style.left=x+"px";
+
+div.style.top=y+"px";
+
+document.body.appendChild(div);
+
+setTimeout(()=>{
+div.remove();
+},800);
+
+}
+
+let autoLoop;
+
+let moneyLoop;
+
+function restartAuto(){
+
+clearInterval(autoLoop);
+
+autoLoop=setInterval(function(){
+
+if(game.auto>0){
+
+game.money+=game.auto;
+
+game.earned+=game.auto;
+
+game.clicks+=game.auto;
+
+checkAchievements();
+
+update();
+
+save();
+
+}
+
+},game.speedDelay);
+
+}
+
+moneyLoop=setInterval(function(){
+
+mps.innerHTML=Math.round(game.auto*(1000/game.speedDelay));
+
+},300);
+
+restartAuto();
+
+update();
+save();
+
+load();
+
+update();
+
+</script>
+
+</body>
+</html>

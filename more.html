@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>More | Mpoxel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Poppins,sans-serif;
+background:#07111f;
+color:white;
+overflow-x:hidden;
+}
+
+/* Background */
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%,#00c3ff33,transparent 35%),
+radial-gradient(circle at 80% 70%,#8b5cf633,transparent 35%),
+linear-gradient(180deg,#07111f,#03070d);
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:40px 40px;
+z-index:-1;
+}
+
+/* Navbar */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 8%;
+backdrop-filter:blur(20px);
+background:rgba(0,0,0,.25);
+border-bottom:1px solid rgba(255,255,255,.08);
+position:sticky;
+top:0;
+}
+
+.logo{
+font-family:Orbitron,sans-serif;
+font-size:30px;
+font-weight:700;
+color:#4fd6ff;
+letter-spacing:3px;
+}
+
+.back{
+text-decoration:none;
+color:white;
+padding:12px 24px;
+border-radius:50px;
+background:#1699ff;
+transition:.3s;
+}
+
+.back:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 30px #1699ff55;
+}
+
+/* Hero */
+
+.hero{
+padding:90px 20px;
+text-align:center;
+}
+
+.hero h1{
+font-family:Orbitron,sans-serif;
+font-size:60px;
+color:#4fd6ff;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:20px;
+opacity:.85;
+max-width:700px;
+margin:auto;
+line-height:1.8;
+}
+
+/* Sections */
+
+section{
+padding:70px 8%;
+}
+
+.title{
+font-size:38px;
+margin-bottom:35px;
+font-family:Orbitron,sans-serif;
+color:#4fd6ff;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+border-radius:25px;
+padding:30px;
+transition:.35s;
+backdrop-filter:blur(18px);
+}
+
+.card:hover{
+transform:translateY(-10px) scale(1.02);
+border-color:#4fd6ff;
+box-shadow:0 15px 40px rgba(79,214,255,.25);
+}
+
+.icon{
+font-size:70px;
+margin-bottom:15px;
+}
+
+.card h2{
+margin-bottom:12px;
+color:#4fd6ff;
+}
+
+.card p{
+opacity:.8;
+line-height:1.7;
+}
+
+.folder{
+margin-top:25px;
+display:inline-block;
+padding:12px 25px;
+border-radius:40px;
+background:#4fd6ff;
+color:#07111f;
+font-weight:bold;
+text-decoration:none;
+}
+
+.folder:hover{
+background:white;
+}
+
+footer{
+text-align:center;
+padding:40px;
+opacity:.7;
+border-top:1px solid rgba(255,255,255,.08);
+margin-top:60px;
+}
+
+@media(max-width:700px){
+
+.hero h1{
+font-size:42px;
+}
+
+.hero p{
+font-size:17px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">MPOXEL</div>
+
+<a class="back" href="index.html">← Home</a>
+
+</nav>
+
+<div class="hero">
+
+<h1>More Creations by US</h1>
+
+<p>
+Explore more projects developed by Mpoxel. From immersive games to useful applications, this is where all our creative work is organized.
+</p>
+
+</div>
+
+<section>
+
+<h2 class="title">Explore</h2>
+
+<div class="grid">
+
+<div class="card">
+
+<div class="icon">🎮</div>
+
+<h2>Games</h2>
+
+<p>
+Browse all games created by Mpoxel, including 2D adventures, experimental projects, and immersive 3D experiences.
+</p>
+
+<a class="folder" href="games/">📁 Open Games Folder</a>
+
+</div>
+
+<div class="card">
+
+<div class="icon">📱</div>
+
+<h2>Apps</h2>
+
+<p>
+Discover web apps, utilities, tools, and creative software built for productivity and entertainment.
+</p>
+
+<a class="folder" href="apps/">📁 Open Apps Folder</a>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<h2 style="color:#4fd6ff;">MPOXEL</h2>
+
+<br>
+
+<p>Creating games, apps, and digital experiences.</p>
+
+<br>
+
+<p>© 2026 Mpoxel</p>
+
+</footer>
+
+</body>
+</html>
