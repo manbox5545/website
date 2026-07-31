@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MgO Experiment</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+
+html,body{
+width:100%;
+height:100%;
+overflow:hidden;
+background:
+radial-gradient(circle at top,#25334d 0%,#161c27 45%,#090b10 100%);
+}
+
+canvas{
+display:block;
+width:100%;
+height:100%;
+}
+
+#title{
+position:absolute;
+top:25px;
+left:25px;
+padding:18px 22px;
+min-width:340px;
+background:rgba(18,24,36,.72);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:18px;
+color:#fff;
+box-shadow:
+0 10px 40px rgba(0,0,0,.45),
+0 0 20px rgba(0,180,255,.08);
+z-index:10;
+animation:slide .8s ease;
+}
+
+#title h2{
+font-size:26px;
+font-weight:700;
+letter-spacing:.5px;
+margin-bottom:8px;
+}
+
+#title p{
+font-size:15px;
+opacity:.75;
+line-height:1.5;
+}
+
+button{
+cursor:pointer;
+border:none;
+outline:none;
+transition:.25s;
+font-size:17px;
+font-weight:600;
+border-radius:14px;
+padding:14px 34px;
+}
+
+button:hover{
+transform:translateY(-3px) scale(1.04);
+}
+
+button:active{
+transform:scale(.96);
+}
+
+#startBtn,
+#resetBtn{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+padding:16px 48px;
+font-size:20px;
+border-radius:18px;
+backdrop-filter:blur(18px);
+z-index:100;
+box-shadow:
+0 15px 35px rgba(0,0,0,.45);
+}
+
+#startBtn{
+top:50%;
+transform:translate(-50%,-50%);
+background:linear-gradient(135deg,#2bd673,#159d55);
+color:white;
+animation:pulse 2s infinite;
+}
+
+#startBtn:hover{
+box-shadow:
+0 0 25px #2bd673,
+0 0 60px rgba(43,214,115,.35);
+}
+
+#resetBtn{
+display:none;
+top:50%;
+transform:translate(-50%,-50%);
+background:linear-gradient(135deg,#2196f3,#0d6efd);
+color:white;
+}
+
+#resetBtn:hover{
+box-shadow:
+0 0 25px #2196f3,
+0 0 60px rgba(33,150,243,.35);
+}
+
+#equation{
+position:absolute;
+left:50%;
+bottom:50px;
+transform:translateX(-50%);
+padding:18px 40px;
+background:rgba(10,14,20,.8);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:18px;
+color:#fff;
+font-size:30px;
+font-weight:700;
+letter-spacing:1px;
+display:none;
+box-shadow:
+0 0 40px rgba(255,255,255,.08);
+animation:pop .5s ease;
+}
+
+#status{
+position:absolute;
+right:25px;
+top:25px;
+padding:15px 22px;
+background:rgba(18,24,36,.72);
+backdrop-filter:blur(16px);
+border-radius:16px;
+color:white;
+font-size:15px;
+border:1px solid rgba(255,255,255,.08);
+}
+
+#credit{
+position:absolute;
+bottom:18px;
+right:22px;
+font-size:13px;
+color:rgba(255,255,255,.45);
+}
+
+@keyframes slide{
+from{
+opacity:0;
+transform:translateY(-25px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes pop{
+0%{
+transform:translateX(-50%) scale(.7);
+opacity:0;
+}
+100%{
+transform:translateX(-50%) scale(1);
+opacity:1;
+}
+}
+
+@keyframes pulse{
+0%{
+box-shadow:0 0 0 rgba(43,214,115,0);
+}
+50%{
+box-shadow:
+0 0 25px rgba(43,214,115,.8),
+0 0 70px rgba(43,214,115,.35);
+}
+100%{
+box-shadow:0 0 0 rgba(43,214,115,0);
+}
+}
+
+.fadeOut{
+animation:fade .4s forwards;
+}
+
+.fadeIn{
+animation:fadeIn .5s forwards;
+}
+
+@keyframes fade{
+to{
+opacity:0;
+visibility:hidden;
+}
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translate(-50%,20px);
+}
+to{
+opacity:1;
+transform:translate(-50%,0);
+}
+}
+</style>
+
+<script type="importmap">
+{
+"imports":{
+"three":"https://unpkg.com/three@0.170.0/build/three.module.js",
+"OrbitControls":"https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js"
+}
+}
+</script>
+</head>
+
+<body>
+
+<div id="title">
+<h2>Magnesium + Oxygen → Magnesium Oxide</h2>
+<p>Drag the magnesium ribbon to flame</p>
+</div>
+
+<script type="module">
+import * as THREE from "three";
+import {OrbitControls} from "OrbitControls";
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0d0f16);
+
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,100);
+camera.position.set(6,5,9);
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+document.body.appendChild(renderer.domElement);
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 1.5));
+
+const sun = new THREE.DirectionalLight(0xffffff, 2.5);
+sun.position.set(5, 10, 5);
+scene.add(sun);
+
+
+const flameLight=new THREE.PointLight(0xffaa33,2,6);
+flameLight.position.set(0,.7,0);
+scene.add(flameLight);
+
+const table=new THREE.Mesh(
+new THREE.BoxGeometry(10,.4,6),
+new THREE.MeshStandardMaterial({color:0x8b5a2b})
+);
+table.position.y=-1;
+scene.add(table);
+
+const stand=new THREE.Mesh(
+new THREE.CylinderGeometry(.12,.12,1.2,32),
+new THREE.MeshStandardMaterial({color:0x444444})
+);
+stand.position.set(0,-.4,0);
+scene.add(stand);
+
+const base=new THREE.Mesh(
+new THREE.CylinderGeometry(.45,.55,.2,32),
+new THREE.MeshStandardMaterial({color:0x1b1b1b,
+metalness:.9,
+roughness:.2})
+);
+base.position.set(0,-.9,0);
+scene.add(base);
+
+const nozzle=new THREE.Mesh(
+new THREE.CylinderGeometry(.05,.05,.25,16),
+new THREE.MeshStandardMaterial({color:0x777777})
+);
+nozzle.position.set(0,.25,0);
+scene.add(nozzle);
+
+const flameGroup=new THREE.Group();
+scene.add(flameGroup);
+
+const flames=[];
+
+const startBtn=document.createElement("button");
+startBtn.id="startBtn";
+startBtn.textContent="▶ Start Experiment";
+document.body.appendChild(startBtn);
+
+const reset=document.createElement("button");
+reset.id="resetBtn";
+reset.textContent="↻ Perform Again";
+document.body.appendChild(reset);
+reset.style.display = "none";
+
+let experimentStarted = false;
+
+startBtn.onclick = () => {
+
+    experimentStarted = true;
+
+    startBtn.classList.add("fadeOut");
+
+    setTimeout(() => {
+        startBtn.style.display = "none";
+    },500);
+
+};
+
+reset.onclick = () => {
+
+    experimentStarted = false;
+    burning = false;
+    reactionDone = false;
+
+    ribbon.scale.set(1,1,1);
+    ribbon.position.set(-2,1.2,0);
+
+    ribbonMat.emissive.set(0x000000);
+
+    flameLight.intensity = 2;
+
+    eq.style.display = "none";
+
+    smokeIndex = 0;
+    powderIndex = 0;
+    sparkIndex = 0;
+
+    smoke.forEach(p=>{
+        p.visible=false;
+        p.material.opacity=1;
+        p.scale.set(1,1,1);
+    });
+
+    powder.forEach(p=>{
+        p.visible=false;
+    });
+
+    sparks.forEach(p=>{
+        p.visible=false;
+        p.material.opacity=1;
+    });
+
+    startBtn.style.display="block";
+    startBtn.classList.remove("fadeOut");
+
+    reset.style.display="none";
+
+};
+
+for(let i=0;i<40;i++){
+
+const f=new THREE.Mesh(
+new THREE.SphereGeometry(.05,8,8),
+new THREE.MeshBasicMaterial({
+color:i%2?0xff6600:0xffff33,
+transparent:true,
+opacity:.8
+})
+);
+
+flameGroup.add(f);
+flames.push(f);
+
+}
+
+const ribbonMat=new THREE.MeshStandardMaterial({
+color:0xcfcfcf,
+metalness:0.6,
+roughness:.03,
+envMapIntensity:2,
+emissive:0x000000
+});
+
+const ribbon=new THREE.Mesh(
+new THREE.BoxGeometry(2,.05,.18),
+ribbonMat
+);
+ribbon.position.set(-2,1.2,0);
+ribbon.rotation.z=.35;
+scene.add(ribbon);
+
+const glass=new THREE.Mesh(
+new THREE.SphereGeometry(
+1,
+64,
+64,
+0,
+Math.PI*2,
+0,
+Math.PI/3
+),
+new THREE.MeshPhysicalMaterial({
+color:0x88ddff,
+transparent:true,
+opacity:.35,
+transmission:1
+})
+);
+glass.position.set(2,-.8,0);
+
+glass.rotation.x=Math.PI;
+glass.position.y=-0.35;
+scene.add(glass);
+
+const smoke=[],powder=[],sparks=[];
+
+function makeParticle(color,size){
+const m=new THREE.Mesh(
+new THREE.SphereGeometry(size,8,8),
+new THREE.MeshBasicMaterial({color,transparent:true,opacity:1})
+);
+m.visible=false;
+scene.add(m);
+return m;
+}
+
+for(let i=0;i<80;i++) smoke.push(makeParticle(0xaaaaaa,.05));
+for(let i=0;i<120;i++) powder.push(makeParticle(0xffffff,.03));
+for(let i=0;i<50;i++) sparks.push(makeParticle(0xffdd55,.025));
+
+let smokeIndex=0,powderIndex=0,sparkIndex=0;
+let reactionDone=false;
+
+const eq=document.createElement("div");
+eq.id="equation";
+eq.style.position="absolute";
+eq.style.left="50%";
+eq.style.bottom="20px";
+eq.style.transform="translateX(-50%)";
+eq.style.color="white";
+eq.style.fontSize="28px";
+eq.style.display="none";
+eq.innerHTML="2Mg + O₂ → 2MgO";
+document.body.appendChild(eq);
+
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+
+let dragging=false;
+let burning=false;
+
+window.addEventListener("pointerdown", e => {
+
+    mouse.x = e.clientX / innerWidth * 2 - 1;
+    mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    if (raycaster.intersectObject(ribbon).length) {
+
+        dragging = true;
+        controls.enabled = false;   // Stop OrbitControls
+
+    }
+
+});
+
+window.addEventListener("pointerup", () => {
+
+    dragging = false;
+    controls.enabled = true;        // Enable OrbitControls again
+
+});
+
+window.addEventListener("pointermove",e=>{
+if(!dragging)return;
+mouse.x=e.clientX/innerWidth*2-1;
+mouse.y=-(e.clientY/innerHeight)*2+1;
+
+const p=new THREE.Vector3(mouse.x,mouse.y,.5);
+p.unproject(camera);
+
+const dir=p.sub(camera.position).normalize();
+const d=(ribbon.position.y-camera.position.y)/dir.y;
+const pos=camera.position.clone().add(dir.multiplyScalar(d));
+
+ribbon.position.x=Math.max(-4,Math.min(4,pos.x));
+ribbon.position.z=Math.max(-2,Math.min(2,pos.z));
+});
+
+window.addEventListener("resize",()=>{
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+});
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+controls.update();
+
+
+
+if(
+experimentStarted &&
+Math.abs(ribbon.position.x)<0.4 &&
+Math.abs(ribbon.position.z)<0.4 &&
+ribbon.position.y>0.6
+){
+    burning=true;
+}
+
+if(burning){
+
+ribbonMat.emissive.set(0xffffff);
+
+
+
+flameLight.intensity=
+5+
+Math.sin(Date.now()*0.02)*1.5+
+Math.random();
+
+if(ribbon.scale.x>.15){
+let burn=.002;
+
+ribbon.scale.x-=burn;
+ribbon.position.x+=burn*.9;
+}
+
+if(smokeIndex<smoke.length){
+
+let p=smoke[smokeIndex++];
+p.visible=true;
+p.position.set(
+ribbon.position.x,
+1,
+(Math.random()-.5)*.1
+);
+p.userData={
+vx:(Math.random()-.5)*.01,
+vy:.02,
+life:1
+};
+
+}
+
+if(powderIndex<powder.length && Math.random()<.4){
+
+let p=powder[powderIndex++];
+p.visible=true;
+p.position.set(
+ribbon.position.x,
+1,
+0
+);
+
+p.userData={
+vy:-.02,
+target:glass.position.y+.12
+};
+
+}
+
+if(sparkIndex<sparks.length && Math.random()<.6){
+
+let s=sparks[sparkIndex++];
+s.visible=true;
+s.position.set(ribbon.position.x,1,0);
+
+s.userData={
+vx:(Math.random()-.5)*.06,
+vy:Math.random()*.05+.02,
+life:1
+};
+
+}
+
+}else{
+
+ribbonMat.emissive.set(0x000000);
+
+
+
+flameLight.intensity=2;
+
+}
+
+smoke.forEach(p=>{
+if(!p.visible)return;
+p.position.x+=p.userData.vx;
+p.position.y+=p.userData.vy;
+p.material.opacity-=.008;
+p.scale.multiplyScalar(1.01);
+if(p.material.opacity<=0){
+p.position.set(0,-100,0);
+p.visible=false;
+p.material.opacity=1;
+p.scale.set(1,1,1);
+}
+});
+
+powder.forEach(p=>{
+if(!p.visible)return;
+p.position.y+=p.userData.vy;
+if(p.position.y<=p.userData.target){
+p.userData.vy=0;
+}
+});
+
+sparks.forEach(s=>{
+if(!s.visible)return;
+s.position.x+=s.userData.vx;
+s.position.y+=s.userData.vy;
+s.material.opacity-=.03;
+if(s.material.opacity<=0){
+s.visible=false;
+s.material.opacity=1;
+}
+});
+
+if(
+burning &&
+ribbon.scale.x<=.15 &&
+!reactionDone
+){
+
+    reactionDone=true;
+
+    eq.style.display="block";
+    eq.classList.add("fadeIn");
+
+    reset.style.display="block";
+    reset.classList.add("fadeIn");
+
+}
+
+flames.forEach((f,i)=>{
+
+let t=Date.now()*0.004+i;
+
+f.position.x=Math.sin(t*3)*0.08;
+f.position.z=Math.cos(t*2)*0.08;
+f.position.y=.45+(i/40)*.45+Math.sin(t)*0.05;
+
+f.scale.setScalar(.5+Math.random()*.6);
+
+});
+
+flameGroup.position.set(0,0,0);
+
+flames.forEach(f=>{
+
+    f.visible = experimentStarted;
+
+    if(burning){
+f.material.color.set(Math.random()>0.5?0xffff55:0xff6600);
+}else{
+f.material.color.set(0xff8800);
+}
+});
+
+renderer.render(scene,camera);
+
+}
+
+animate();
+</script>
+
+</body>
+</html>
