@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>R Billing</title>
+
+<style>
+
+:root{
+
+--glass:rgba(255,255,255,.08);
+--border:rgba(255,255,255,.12);
+
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+
+body{
+
+overflow:hidden;
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:
+radial-gradient(circle at top left,#275cff 0%,transparent 35%),
+radial-gradient(circle at bottom right,#14b87a 0%,transparent 35%),
+linear-gradient(140deg,#09090b,#111217,#17191d);
+
+color:white;
+
+}
+
+/* Floating Background */
+
+body::before,
+body::after{
+
+content:"";
+
+position:absolute;
+
+width:450px;
+height:450px;
+
+border-radius:50%;
+
+filter:blur(90px);
+
+opacity:.25;
+
+animation:float 15s ease-in-out infinite;
+
+}
+
+body::before{
+
+background:#357dff;
+
+left:-150px;
+top:-150px;
+
+}
+
+body::after{
+
+background:#35ffb5;
+
+right:-180px;
+bottom:-150px;
+
+animation-delay:-7s;
+
+}
+
+@keyframes float{
+
+50%{
+
+transform:
+translate(80px,-40px);
+
+}
+
+}
+
+/* Card */
+
+.card{
+
+width:min(520px,90vw);
+
+padding:45px;
+
+border-radius:32px;
+
+background:var(--glass);
+
+backdrop-filter:blur(14px);
+
+border:1px solid var(--border);
+
+text-align:center;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.35);
+
+animation:appear .7s;
+
+}
+
+@keyframes appear{
+
+from{
+
+opacity:0;
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+transform:none;
+
+}
+
+}
+
+/* Logo */
+
+.logo{
+
+width:120px;
+height:120px;
+
+margin:auto;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+font-size:55px;
+
+font-weight:bold;
+
+background:
+linear-gradient(145deg,#3388ff,#42d392);
+
+box-shadow:
+0 0 35px rgba(60,150,255,.4);
+
+animation:spin 8s linear infinite;
+
+}
+
+@keyframes spin{
+
+100%{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+h1{
+
+margin-top:25px;
+
+font-size:42px;
+
+letter-spacing:-1px;
+
+}
+
+p{
+
+margin-top:12px;
+
+color:#c5ccd7;
+
+line-height:1.6;
+
+}
+
+button{
+
+margin-top:35px;
+
+width:100%;
+
+padding:18px;
+
+font-size:17px;
+
+font-weight:600;
+
+border:none;
+
+border-radius:18px;
+
+cursor:pointer;
+
+color:white;
+
+background:
+linear-gradient(145deg,#3388ff,#1665ff);
+
+transition:.25s;
+
+box-shadow:
+0 15px 40px rgba(0,80,255,.35);
+
+}
+
+button:hover{
+
+transform:translateY(-3px);
+
+}
+
+button:active{
+
+transform:scale(.97);
+
+}
+
+/* Loading */
+
+#loading{
+
+display:none;
+
+text-align:left;
+
+margin-top:35px;
+
+animation:fade .4s;
+
+}
+
+.progress{
+
+margin-top:20px;
+
+height:12px;
+
+background:rgba(255,255,255,.08);
+
+border-radius:30px;
+
+overflow:hidden;
+
+}
+
+.bar{
+
+height:100%;
+
+width:0;
+
+border-radius:30px;
+
+background:
+linear-gradient(90deg,#3b82f6,#42d392);
+
+transition:width .25s;
+
+}
+
+.status{
+
+margin-top:20px;
+
+font-size:15px;
+
+color:#cfd6e2;
+
+}
+
+.percent{
+
+margin-top:8px;
+
+font-size:30px;
+
+font-weight:bold;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+}
+
+}
+
+/* Mobile */
+
+@media(max-width:600px){
+
+.card{
+
+padding:28px;
+
+}
+
+.logo{
+
+width:90px;
+height:90px;
+
+font-size:40px;
+
+}
+
+h1{
+
+font-size:32px;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="logo">
+E
+</div>
+
+<h1>E Billing</h1>
+
+<p>
+
+Fast • Offline • Modern Billing System
+
+</p>
+
+<button id="start">
+
+Create New Bill
+
+</button>
+
+<div id="loading">
+
+<div class="status" id="status">
+
+Initializing...
+
+</div>
+
+<div class="percent" id="percent">
+
+0%
+
+</div>
+
+<div class="progress">
+
+<div class="bar" id="bar"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const btn=document.getElementById("start");
+
+const loading=document.getElementById("loading");
+
+const bar=document.getElementById("bar");
+
+const percent=document.getElementById("percent");
+
+const status=document.getElementById("status");
+
+btn.onclick=function(){
+
+btn.style.display="none";
+
+loading.style.display="block";
+
+localStorage.removeItem("currentBill");
+
+const steps=[
+
+["Initializing Billing Engine...",10],
+
+["Loading Components...",25],
+
+["Preparing Workspace...",45],
+
+["Creating Blank Invoice...",70],
+
+["Optimizing Interface...",90],
+
+["Ready...",100]
+
+];
+
+let i=0;
+
+function next(){
+
+if(i>=steps.length){
+
+setTimeout(()=>{
+
+window.location.href="main.html";
+
+},500);
+
+return;
+
+}
+
+status.textContent=steps[i][0];
+
+percent.textContent=steps[i][1]+"%";
+
+bar.style.width=steps[i][1]+"%";
+
+i++;
+
+setTimeout(next,450);
+
+}
+
+next();
+
+}
+
+</script>
+
+</body>
+</html>
