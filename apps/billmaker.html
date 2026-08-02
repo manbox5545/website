@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Billing App</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="home">
+
+    <h1>Billing App</h1>
+
+    <hr><br>
+
+    <h2>Invoice Details</h2>
+
+    Invoice No:
+    <input id="invoiceNo" readonly>
+
+    Date:
+    <input id="invoiceDate" type="date">
+
+    <br><br>
+
+    <h2>Items</h2>
+
+    <table border="1" width="100%">
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Delete</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="itemTable">
+
+        </tbody>
+
+    </table>
+
+    <br>
+
+    <button id="addItem">
+        + Add Item
+    </button>
+
+    <hr><br>
+
+    <h2>Bill Summary</h2>
+
+    <p>
+
+        Subtotal :
+
+        <span id="subtotal">₹0.00</span>
+
+    </p>
+
+    <br>
+
+    <label>
+
+        Discount %
+
+        <input
+        id="discount"
+        type="number"
+        value="0">
+
+    </label>
+
+    <br><br>
+
+    <label>
+
+        GST %
+
+        <input
+        id="gst"
+        type="number"
+        value="0">
+
+    </label>
+
+    <br><br>
+
+    <h2>
+
+        Grand Total :
+
+        <span id="grandTotal">
+
+            ₹0.00
+
+        </span>
+
+    </h2>
+
+    <hr><br>
+
+    <h2>Notes</h2>
+
+    <textarea
+
+        id="notes"
+
+        rows="5"
+
+        cols="60"
+
+        placeholder="Write notes here...">
+
+    </textarea>
+
+    <br><br>
+
+    <button onclick="saveBill()">
+
+        💾 Save Bill
+
+    </button>
+
+    <button onclick="newInvoice()">
+
+        🆕 New Invoice
+
+    </button>
+
+    <button onclick="printBill()">
+
+        🖨 Print / PDF
+
+    </button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+
+DL application number: 2991862726
