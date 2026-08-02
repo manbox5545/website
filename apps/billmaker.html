@@ -694,7 +694,706 @@ transform:none;
 
 </div>
 
-<script src="script.js"></script>
+<script>
+/*=========================================================
+ Billing App - script.js (Part 1A)
+ Features:
+ ✔ Auto Invoice Number
+ ✔ Today's Date
+ ✔ Add Item
+ ✔ Delete Item
+ ✔ Row Number
+ ✔ Basic Event System
+
+ Required HTML IDs
+
+ invoiceNo
+ invoiceDate
+ itemTable
+ addItem
+
+=========================================================*/
+
+let invoiceNumber =
+parseInt(localStorage.getItem("invoiceNumber")) || 1;
+
+const invoiceInput = document.getElementById("invoiceNo");
+const invoiceDate = document.getElementById("invoiceDate");
+const itemTable = document.getElementById("itemTable");
+const addItemBtn = document.getElementById("addItem");
+
+invoiceInput.value =
+"INV-" + String(invoiceNumber).padStart(4, "0");
+
+invoiceDate.value =
+new Date().toISOString().split("T")[0];
+
+let rowID = 0;
+
+/*=====================================
+Create Item Row
+=====================================*/
+
+function createRow() {
+
+    rowID++;
+
+    const row = document.createElement("tr");
+
+    row.className="itemRow";
+
+    row.dataset.id = rowID;
+
+    row.innerHTML = `
+
+<td class="rowNo">${rowID}</td>
+
+<td>
+<input
+type="text"
+class="itemName"
+placeholder="Item Name">
+</td>
+
+<td>
+<input
+type="number"
+class="qty"
+min="1"
+value="1">
+</td>
+
+<td>
+<input
+type="number"
+class="price"
+min="0"
+step="0.01"
+placeholder="₹0.00"
+value="0">
+</td>
+
+<td class="total">
+₹0
+</td>
+
+<td>
+
+<button
+class="deleteBtn">
+
+Delete
+
+</button>
+
+</td>
+
+`;
+
+    itemTable.appendChild(row);
+
+}
+
+/*=====================================
+Delete Row
+=====================================*/
+
+itemTable.addEventListener("click", function(e){
+
+    if(!e.target.classList.contains("deleteBtn"))
+        return;
+
+    e.target.closest("tr").remove();
+
+    refreshRowNumbers();
+
+});
+
+/*=====================================
+Refresh Row Numbers
+=====================================*/
+
+function refreshRowNumbers(){
+
+    const rows =
+    itemTable.querySelectorAll("tr");
+
+    let count=1;
+
+    rows.forEach(row=>{
+
+        row.dataset.id=count;
+
+        row.querySelector(".rowNo").textContent=count;
+
+        count++;
+
+    });
+
+    rowID=rows.length;
+
+}
+
+/*=====================================
+Add Item Button
+=====================================*/
+
+addItemBtn.addEventListener("click",()=>{
+
+    createRow();
+
+});
+
+/*=====================================
+New Invoice
+=====================================*/
+
+function newInvoice(){
+
+    invoiceNumber++;
+
+    localStorage.setItem(
+        "invoiceNumber",
+        invoiceNumber
+    );
+
+    invoiceInput.value=
+    "INV-"+String(invoiceNumber).padStart(4,"0");
+
+    invoiceDate.value=
+    new Date().toISOString().split("T")[0];
+
+    itemTable.innerHTML="";
+
+    rowID=0;
+
+    createRow();
+
+    calculateBill();
+
+}
+
+/*=====================================
+Keyboard Shortcuts
+=====================================*/
+
+document.addEventListener("keydown",function(e){
+
+    if(e.ctrlKey && e.key==="n"){
+
+        e.preventDefault();
+
+        newInvoice();
+
+    }
+
+});
+
+/*=====================================
+Start App
+=====================================*/
+
+
+/*=========================================================
+ Billing App - script.js (Part 1B)
+ Features
+ ✔ Qty × Price
+ ✔ Row Total
+ ✔ Subtotal
+ ✔ Discount
+ ✔ GST
+ ✔ Grand Total
+=========================================================*/
+
+/*
+Required HTML IDs
+
+subtotal
+discount
+gst
+grandTotal
+
+Example:
+
+<span id="subtotal">₹0</span>
+
+<input id="discount" type="number" value="0">
+
+<input id="gst" type="number" value="0">
+
+<span id="grandTotal">₹0</span>
+
+*/
+
+const subtotalElement = document.getElementById("subtotal");
+const discountInput = document.getElementById("discount");
+const gstInput = document.getElementById("gst");
+const grandTotalElement = document.getElementById("grandTotal");
+
+
+/*==========================================
+Format Rupees
+==========================================*/
+
+function rupees(value){
+
+    value = Number(value) || 0;
+
+    return "₹" + value.toFixed(2);
+
+}
+
+
+/*==========================================
+Calculate One Row
+==========================================*/
+
+function calculateRow(row){
+
+    const qty =
+    Number(
+        row.querySelector(".qty").value
+    ) || 0;
+
+    const price =
+    Number(
+        row.querySelector(".price").value
+    ) || 0;
+
+    const total =
+    qty * price;
+
+    row.querySelector(".total").textContent =
+    rupees(total);
+
+    return total;
+
+}
+
+
+/*==========================================
+Calculate Whole Bill
+==========================================*/
+
+function calculateBill(){
+
+    let subtotal = 0;
+
+    const rows =
+    itemTable.querySelectorAll("tr");
+
+    rows.forEach(row=>{
+
+        subtotal += calculateRow(row);
+
+    });
+
+    subtotalElement.textContent =
+    rupees(subtotal);
+
+    let discount =
+    Number(discountInput.value) || 0;
+
+    let gst =
+    Number(gstInput.value) || 0;
+
+    let afterDiscount =
+    subtotal - (subtotal * discount / 100);
+
+    let grandTotal =
+    afterDiscount +
+    (afterDiscount * gst / 100);
+
+    grandTotalElement.textContent =
+    rupees(grandTotal);
+
+}
+
+
+/*==========================================
+Watch Table Changes
+==========================================*/
+
+itemTable.addEventListener("input",function(e){
+
+    if(
+        e.target.classList.contains("qty") ||
+        e.target.classList.contains("price")
+    ){
+
+        calculateBill();
+
+    }
+
+});
+
+
+/*==========================================
+Watch Discount
+==========================================*/
+
+discountInput.addEventListener("input",function(){
+
+    calculateBill();
+
+});
+
+
+/*==========================================
+Watch GST
+==========================================*/
+
+gstInput.addEventListener("input",function(){
+
+    calculateBill();
+
+});
+
+
+/*==========================================
+Update After New Row
+==========================================*/
+
+const oldCreateRow = createRow;
+
+createRow = function(){
+
+    oldCreateRow();
+
+    calculateBill();
+
+};
+
+
+/*==========================================
+Update After Delete
+==========================================*/
+
+itemTable.addEventListener("click",function(e){
+
+    if(
+        e.target.classList.contains("deleteBtn")
+    ){
+
+        setTimeout(calculateBill,20);
+
+    }
+
+});
+
+
+/*==========================================
+First Calculation
+==========================================*/
+
+calculateBill();
+
+/*=========================================================
+ Billing App - script.js (Part 1C)
+ Features
+ ✔ Auto Save
+ ✔ Load Last Bill
+ ✔ Ctrl + S
+ ✔ Ctrl + P
+ ✔ Ctrl + N
+ ✔ Notes
+=========================================================*/
+
+const notes =
+document.getElementById("notes") ||
+{value:""};
+
+/*==========================================
+Save Bill
+==========================================*/
+
+function saveBill(){
+
+    const rows = [];
+
+    itemTable.querySelectorAll("tr").forEach(row=>{
+
+        rows.push({
+
+            item:
+            row.querySelector(".itemName").value,
+
+            qty:
+            row.querySelector(".qty").value,
+
+            price:
+            row.querySelector(".price").value
+
+        });
+
+    });
+
+    const bill={
+
+        invoice:
+        invoiceInput.value,
+
+        date:
+        invoiceDate.value,
+
+        discount:
+        discountInput.value,
+
+        gst:
+        gstInput.value,
+
+        notes:
+        notes ? notes.value : "",
+
+        rows:
+        rows
+
+    };
+
+    localStorage.setItem(
+        "currentBill",
+        JSON.stringify(bill)
+    );
+
+}
+
+
+/*==========================================
+Load Bill
+==========================================*/
+
+function loadBill(){
+
+    const saved =
+    localStorage.getItem("currentBill");
+
+    if(!saved) return;
+
+    const bill =
+    JSON.parse(saved);
+
+    invoiceInput.value =
+    bill.invoice;
+
+    invoiceDate.value =
+    bill.date;
+
+    discountInput.value =
+    bill.discount;
+
+    gstInput.value =
+    bill.gst;
+
+    if(notes)
+    notes.value=bill.notes;
+
+    itemTable.innerHTML="";
+
+    rowID=0;
+
+    bill.rows.forEach(r=>{
+
+        oldCreateRow();
+
+        const last =
+        itemTable.lastElementChild;
+
+        last.querySelector(".itemName").value =
+        r.item;
+
+        last.querySelector(".qty").value =
+        r.qty;
+
+        last.querySelector(".price").value =
+        r.price;
+
+    });
+
+    calculateBill();
+
+}
+
+
+/*==========================================
+Auto Save
+==========================================*/
+
+document.addEventListener("input",()=>{
+
+    saveBill();
+
+});
+
+
+/*==========================================
+Save Every 10 Seconds
+==========================================*/
+
+setInterval(saveBill,10000);
+
+
+/*==========================================
+Print Bill
+==========================================*/
+
+function printBill(){
+
+    saveBill();
+
+    const bill = document.getElementById("bill").innerHTML;
+
+    const printWindow = window.open("", "_blank");
+
+    printWindow.document.write(`
+    <html>
+
+    <head>
+
+    <title>Invoice</title>
+
+    <style>
+
+    body{
+
+        font-family:Arial;
+
+        padding:30px;
+
+        color:black;
+
+    }
+
+    table{
+
+        width:100%;
+
+        border-collapse:collapse;
+
+    }
+
+    th,td{
+
+        border:1px solid black;
+
+        padding:8px;
+
+    }
+
+    input,
+    textarea,
+    button{
+
+        border:none;
+
+        outline:none;
+
+        resize:none;
+
+        background:white;
+
+        color:black;
+
+        font:inherit;
+
+    }
+
+    </style>
+
+    </head>
+
+    <body>
+
+    ${bill}
+
+    </body>
+
+    </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.focus();
+
+    printWindow.print();
+
+    printWindow.close();
+
+}
+
+
+/*==========================================
+Keyboard Shortcuts
+==========================================*/
+
+document.addEventListener("keydown",function(e){
+
+    if(e.ctrlKey && e.key==="s"){
+
+        e.preventDefault();
+
+        saveBill();
+
+        alert("Bill Saved");
+
+    }
+
+    if(e.ctrlKey && e.key==="p"){
+
+        e.preventDefault();
+
+        printBill();
+
+    }
+
+});
+
+
+/*==========================================
+New Invoice Override
+==========================================*/
+
+const oldNewInvoice = newInvoice;
+
+newInvoice=function(){
+
+    if(confirm("Create New Invoice?")){
+
+        oldNewInvoice();
+
+        discountInput.value=0;
+
+        gstInput.value=0;
+
+        if(notes)
+        notes.value="";
+
+        calculateBill();
+
+        saveBill();
+
+    }
+
+};
+
+
+/*==========================================
+Load Previous Bill On Start
+==========================================*/
+
+window.addEventListener("load",()=>{
+
+    loadBill();
+
+    if(itemTable.children.length===0){
+
+        oldCreateRow();
+
+    }
+
+    calculateBill();
+
+});
+</script>
 
 </body>
 </html>
