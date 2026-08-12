@@ -469,9 +469,9 @@ body {
 }
 
 
-/* =====================================================
-   SETTINGS BUTTON
-===================================================== */
+/* ================================
+   SETTINGS GEAR
+================================ */
 
 #settingsButton {
     position: absolute;
@@ -479,28 +479,20 @@ body {
     z-index: 40;
 
     left: 50%;
-
     bottom: 22px;
 
-    transform:
-        translateX(-50%);
+    transform: translateX(-50%);
 
     width: 58px;
     height: 58px;
 
-    border:
-        1px solid rgba(255,255,255,.18);
-
+    border: 1px solid rgba(255,255,255,.18);
     border-radius: 50%;
 
-    background:
-        rgba(20,20,20,.58);
+    background: rgba(20,20,20,.58);
 
-    backdrop-filter:
-        blur(18px);
-
-    -webkit-backdrop-filter:
-        blur(18px);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
     color: white;
 
@@ -509,20 +501,24 @@ body {
     cursor: pointer;
 
     transition:
-        transform .3s cubic-bezier(.2,.8,.2,1),
-        background .2s ease;
+        opacity .2s ease,
+        transform .3s cubic-bezier(.22,1,.36,1);
 }
 
-#settingsButton.open {
+#settingsButton.hidden {
+    opacity: 0;
+    pointer-events: none;
+
     transform:
         translateX(-50%)
-        rotate(90deg);
+        translateY(20px)
+        scale(.8);
 }
 
 
-/* =====================================================
+/* ================================
    BOTTOM SHEET
-===================================================== */
+================================ */
 
 #controlSheet {
 
@@ -530,13 +526,12 @@ body {
 
     left: 0;
     right: 0;
-
     bottom: 0;
 
     z-index: 30;
 
     padding:
-        18px
+        8px
         18px
         30px;
 
@@ -558,41 +553,79 @@ body {
         saturate(140%);
 
     transform:
-        translateY(100%);
+        translate3d(0, 100%, 0);
 
     transition:
-        transform
-        .5s cubic-bezier(.22,1,.36,1);
+        transform .5s cubic-bezier(.22,1,.36,1);
 
-    will-change:
-        transform;
+    will-change: transform;
 
+    touch-action: none;
 }
 
 #controlSheet.open {
     transform:
-        translateY(0);
+        translate3d(0, 0, 0);
 }
 
 
-/* Handle */
+/* ================================
+   DRAG HANDLE
+================================ */
 
-.sheetHandle {
+#sheetDragHandle {
 
-    width: 42px;
-    height: 4px;
+    width: 60px;
+    height: 32px;
 
-    margin:
-        0 auto 18px;
+    margin: 0 auto 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: grab;
+
+    touch-action: none;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+#sheetDragHandle:active {
+    cursor: grabbing;
+}
+
+#sheetDragHandle span {
+
+    width: 44px;
+    height: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     border-radius: 20px;
 
     background:
-        rgba(255,255,255,.45);
+        rgba(255,255,255,.7);
+
+    color: transparent;
+
+    transition:
+        width .2s ease,
+        background .2s ease;
+}
+
+#sheetDragHandle:hover span {
+    width: 50px;
+    background: white;
 }
 
 
-/* Controls */
+/* ================================
+   CONTROLS
+================================ */
 
 .controls {
 
@@ -613,7 +646,6 @@ body {
     min-height: 72px;
 
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
@@ -643,8 +675,7 @@ body {
 }
 
 .control:active {
-    transform:
-        scale(.94);
+    transform: scale(.94);
 }
 
 .control.active {
@@ -666,19 +697,19 @@ body {
 }
 
 
-/* =====================================================
+/* ================================
    SLIDERS
-===================================================== */
+================================ */
 
 .sliderArea {
 
     max-width: 620px;
 
     margin:
-        17px auto 0;
+        14px auto 0;
 
     padding:
-        14px 16px;
+        13px 16px;
 
     border-radius: 17px;
 
@@ -692,7 +723,7 @@ body {
 
     justify-content: space-between;
 
-    margin-bottom: 9px;
+    margin-bottom: 8px;
 
     color: white;
 
@@ -707,91 +738,6 @@ input[type="range"] {
 
     cursor: pointer;
 }
-
-
-/* =====================================================
-   CAMERA ERROR
-===================================================== */
-
-#cameraMessage {
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    z-index: 50;
-
-    width: 85%;
-
-    padding: 25px;
-
-    text-align: center;
-
-    color: white;
-
-    border-radius: 20px;
-
-    background:
-        rgba(0,0,0,.75);
-
-    display: none;
-}
-
-
-/* =====================================================
-   LOCK INDICATOR
-===================================================== */
-
-#lockIndicator {
-
-    position: absolute;
-
-    top: 70px;
-    left: 50%;
-
-    z-index: 20;
-
-    transform:
-        translateX(-50%)
-        translateY(-15px);
-
-    padding:
-        8px 13px;
-
-    border-radius: 20px;
-
-    background:
-        rgba(0,0,0,.5);
-
-    backdrop-filter:
-        blur(12px);
-
-    color: white;
-
-    font-size: 12px;
-
-    opacity: 0;
-    pointer-events: none;
-
-    transition:
-        opacity .3s ease,
-        transform .3s ease;
-}
-
-#lockIndicator.show {
-
-    opacity: 1;
-
-    transform:
-        translateX(-50%)
-        translateY(0);
-}
-
-
 /* =====================================================
    SMALL PHONES
 ===================================================== */
@@ -954,158 +900,87 @@ input[type="range"] {
          SETTINGS BUTTON
     ================================================= -->
 
-    <button
-        id="settingsButton"
-        aria-label="Open drawing controls">
-
-        ⚙
-
-    </button>
+<!-- SETTINGS BUTTON -->
+<button id="settingsButton" aria-label="Open drawing controls">
+    ⚙
+</button>
 
 
-    <!-- =================================================
-         BOTTOM SHEET
-    ================================================= -->
+<!-- BOTTOM SHEET -->
+<div id="controlSheet">
 
-    <div id="controlSheet">
+    <!-- This is the only thing that can drag the sheet -->
+    <div id="sheetDragHandle" aria-label="Close controls">
+        <span>−</span>
+    </div>
 
-        <div class="sheetHandle"></div>
+    <div class="controls">
 
+        <button class="control" id="transparencyButton">
+            <span class="controlIcon">◐</span>
+            <span class="controlName">Opacity</span>
+        </button>
 
-        <div class="controls">
+        <button class="control" id="flashButton">
+            <span class="controlIcon">🔦</span>
+            <span class="controlName">Flash</span>
+        </button>
 
+        <button class="control" id="gridButton">
+            <span class="controlIcon">#</span>
+            <span class="controlName">Grid</span>
+        </button>
 
-            <!-- Transparency -->
+        <button class="control" id="lockButton">
+            <span class="controlIcon">🔓</span>
+            <span class="controlName">Lock</span>
+        </button>
 
-            <button
-                class="control"
-                id="transparencyButton">
+        <button class="control" id="greyButton">
+            <span class="controlIcon">◑</span>
+            <span class="controlName">Grey</span>
+        </button>
 
-                <span class="controlIcon">
-                    ◐
-                </span>
+        <button class="control" id="resetButton">
+            <span class="controlIcon">↺</span>
+            <span class="controlName">Reset</span>
+        </button>
 
-                <span class="controlName">
-                    Opacity
-                </span>
-
-            </button>
-
-
-            <!-- Flashlight -->
-
-            <button
-                class="control"
-                id="flashButton">
-
-                <span class="controlIcon">
-                    🔦
-                </span>
-
-                <span class="controlName">
-                    Flash
-                </span>
-
-            </button>
+    </div>
 
 
-            <!-- Grid -->
+    <!-- Opacity -->
+    <div class="sliderArea" id="opacityArea">
 
-            <button
-                class="control"
-                id="gridButton">
-
-                <span class="controlIcon">
-                    #
-                </span>
-
-                <span class="controlName">
-                    Grid
-                </span>
-
-            </button>
-
-
-            <!-- Lock -->
-
-            <button
-                class="control"
-                id="lockButton">
-
-                <span class="controlIcon">
-                    🔓
-                </span>
-
-                <span class="controlName">
-                    Lock
-                </span>
-
-            </button>
-
-
-            <!-- Greyscale -->
-
-            <button
-                class="control"
-                id="greyButton">
-
-                <span class="controlIcon">
-                    ◑
-                </span>
-
-                <span class="controlName">
-                    Grey
-                </span>
-
-            </button>
-
-
-            <!-- Reset -->
-
-            <button
-                class="control"
-                id="resetButton">
-
-                <span class="controlIcon">
-                    ↺
-                </span>
-
-                <span class="controlName">
-                    Reset
-                </span>
-
-            </button>
-
+        <div class="sliderTop">
+            <span>Image Transparency</span>
+            <span id="opacityValue">100%</span>
         </div>
 
+        <input
+            id="opacitySlider"
+            type="range"
+            min="10"
+            max="100"
+            value="100">
 
-        <!-- Opacity slider -->
+    </div>
 
-        <div
-            class="sliderArea"
-            id="opacityArea">
 
-            <div class="sliderTop">
+    <!-- GREY -->
+    <div class="sliderArea">
 
-                <span>
-                    Image Transparency
-                </span>
-
-                <span id="opacityValue">
-                    100%
-                </span>
-
-            </div>
-
-            <input
-                id="opacitySlider"
-                type="range"
-                min="10"
-                max="100"
-                value="100">
-
+        <div class="sliderTop">
+            <span>Camera Greyness</span>
+            <span id="greyValue">0%</span>
         </div>
 
+        <input
+            id="greySlider"
+            type="range"
+            min="0"
+            max="100"
+            value="0">
 
     </div>
 
@@ -1113,6 +988,11 @@ input[type="range"] {
 
 
 <script>
+
+/* =====================================================
+   AR DRAWING — COMPLETE JAVASCRIPT
+===================================================== */
+
 
 /* =====================================================
    ELEMENTS
@@ -1145,6 +1025,9 @@ const settingsButton =
 const controlSheet =
     document.getElementById("controlSheet");
 
+const sheetDragHandle =
+    document.getElementById("sheetDragHandle");
+
 const grid =
     document.getElementById("grid");
 
@@ -1175,6 +1058,12 @@ const opacityValue =
 const opacityArea =
     document.getElementById("opacityArea");
 
+const greySlider =
+    document.getElementById("greySlider");
+
+const greyValue =
+    document.getElementById("greyValue");
+
 const changeButton =
     document.getElementById("changeButton");
 
@@ -1186,48 +1075,57 @@ const lockIndicator =
 
 
 /* =====================================================
-   STATE
+   APPLICATION STATE
 ===================================================== */
 
 let cameraStream = null;
 
 let cameraTrack = null;
 
+
+/* Bottom sheet */
+
 let sheetOpen = false;
 
-let gridEnabled = false;
+let sheetDragging = false;
 
-let greyEnabled = false;
+let sheetStartY = 0;
+
+let sheetCurrentY = 0;
+
+let sheetHeight = 0;
+
+
+/* Features */
+
+let gridEnabled = false;
 
 let locked = false;
 
 let torchEnabled = false;
 
-let opacity = 1;
 
-
-/*
-    Image transform state
-*/
+/* Image */
 
 let imageX = 0;
+
 let imageY = 0;
 
 let imageScale = 1;
 
 let imageRotation = 0;
 
+let imageOpacity = 1;
 
-/*
-    Touch state
-*/
 
-let touches = new Map();
+/* Touch */
 
 let startX = 0;
+
 let startY = 0;
 
 let startImageX = 0;
+
 let startImageY = 0;
 
 let startScale = 1;
@@ -1239,8 +1137,26 @@ let startDistance = 0;
 let startAngle = 0;
 
 
+/* Mouse */
+
+let mouseDown = false;
+
+let mouseStartX = 0;
+
+let mouseStartY = 0;
+
+let mouseImageX = 0;
+
+let mouseImageY = 0;
+
+
+/* Prevent accidental old image URLs */
+
+let currentImageURL = null;
+
+
 /* =====================================================
-   LOADING
+   LOADING SCREEN
 ===================================================== */
 
 window.addEventListener("load", () => {
@@ -1266,40 +1182,69 @@ window.addEventListener("load", () => {
 
 imageInput.addEventListener(
     "change",
-    async event => {
+    async (event) => {
 
         const file =
             event.target.files[0];
 
         if (!file) return;
 
+
         if (!file.type.startsWith("image/")) {
 
             alert("Please select an image.");
 
             return;
+
         }
 
 
-        const imageURL =
+        /*
+            Remove previous object URL
+        */
+
+        if (currentImageURL) {
+
+            URL.revokeObjectURL(
+                currentImageURL
+            );
+
+        }
+
+
+        currentImageURL =
             URL.createObjectURL(file);
 
+
         overlayImage.src =
-            imageURL;
+            currentImageURL;
 
 
         /*
-            Reset image
+            Reset everything for the
+            newly selected image.
         */
 
         resetImageTransform();
 
+        resetFeatures();
 
-        welcomeScreen.classList.remove("show");
+
+        /*
+            Move from welcome screen
+            to camera screen.
+        */
+
+        welcomeScreen.classList.remove(
+            "show"
+        );
+
 
         setTimeout(() => {
 
-            cameraScreen.classList.add("show");
+            cameraScreen.classList.add(
+                "show"
+            );
 
         }, 250);
 
@@ -1321,6 +1266,21 @@ imageInput.addEventListener(
 async function startCamera() {
 
     try {
+
+        /*
+            Stop previous stream first.
+        */
+
+        if (cameraStream) {
+
+            cameraStream
+                .getTracks()
+                .forEach(track => {
+                    track.stop();
+                });
+
+        }
+
 
         if (
             !navigator.mediaDevices ||
@@ -1372,7 +1332,11 @@ async function startCamera() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Camera error:",
+            error
+        );
+
 
         cameraMessage.innerHTML = `
             <strong>Camera Access Required</strong>
@@ -1380,6 +1344,7 @@ async function startCamera() {
             Allow camera permission and
             use HTTPS or localhost.
         `;
+
 
         cameraMessage.style.display =
             "block";
@@ -1390,29 +1355,248 @@ async function startCamera() {
 
 
 /* =====================================================
-   SETTINGS SHEET
+   SETTINGS SHEET — OPEN
 ===================================================== */
 
 settingsButton.addEventListener(
     "click",
-    toggleSheet
+    openSheet
 );
 
 
-function toggleSheet() {
+function openSheet() {
 
-    sheetOpen =
-        !sheetOpen;
+    sheetOpen = true;
 
-    controlSheet.classList.toggle(
-        "open",
-        sheetOpen
+    controlSheet.classList.add(
+        "open"
     );
 
-    settingsButton.classList.toggle(
-        "open",
-        sheetOpen
+
+    /*
+        Gear disappears.
+    */
+
+    settingsButton.classList.add(
+        "hidden"
     );
+
+}
+
+
+/* =====================================================
+   SETTINGS SHEET — CLOSE
+===================================================== */
+
+function closeSheet() {
+
+    sheetOpen = false;
+
+    sheetDragging = false;
+
+    sheetCurrentY = 0;
+
+
+    /*
+        Restore CSS transition.
+    */
+
+    controlSheet.style.transition =
+        "";
+
+
+    controlSheet.style.transform =
+        "";
+
+
+    controlSheet.classList.remove(
+        "open"
+    );
+
+
+    /*
+        Gear comes back.
+    */
+
+    settingsButton.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   MINUS HANDLE — CLICK
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "click",
+    () => {
+
+        /*
+            If the user simply taps
+            the minus handle, close.
+        */
+
+        if (!sheetDragging) {
+
+            closeSheet();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   MINUS HANDLE — DRAG START
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "pointerdown",
+    (event) => {
+
+        sheetDragging = true;
+
+        sheetStartY =
+            event.clientY;
+
+        sheetCurrentY = 0;
+
+        sheetHeight =
+            controlSheet.offsetHeight;
+
+
+        /*
+            Capture pointer so dragging
+            remains smooth.
+        */
+
+        sheetDragHandle.setPointerCapture(
+            event.pointerId
+        );
+
+
+        /*
+            Disable CSS animation while
+            the user's finger controls it.
+        */
+
+        controlSheet.style.transition =
+            "none";
+
+
+        event.preventDefault();
+
+    }
+);
+
+
+/* =====================================================
+   MINUS HANDLE — DRAGGING
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "pointermove",
+    (event) => {
+
+        if (!sheetDragging)
+            return;
+
+
+        const delta =
+            event.clientY -
+            sheetStartY;
+
+
+        /*
+            Only allow downward movement.
+        */
+
+        sheetCurrentY =
+            Math.max(
+                0,
+                delta
+            );
+
+
+        /*
+            Don't let the sheet move
+            beyond its own height.
+        */
+
+        sheetCurrentY =
+            Math.min(
+                sheetCurrentY,
+                sheetHeight
+            );
+
+
+        controlSheet.style.transform =
+            `translate3d(
+                0,
+                ${sheetCurrentY}px,
+                0
+            )`;
+
+    }
+);
+
+
+/* =====================================================
+   MINUS HANDLE — DRAG END
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "pointerup",
+    finishSheetDrag
+);
+
+sheetDragHandle.addEventListener(
+    "pointercancel",
+    finishSheetDrag
+);
+
+
+function finishSheetDrag() {
+
+    if (!sheetDragging)
+        return;
+
+
+    sheetDragging = false;
+
+
+    /*
+        Restore smooth CSS transition.
+    */
+
+    controlSheet.style.transition =
+        "";
+
+
+    /*
+        If dragged more than 25%,
+        close it.
+    */
+
+    if (
+        sheetCurrentY >
+        sheetHeight * 0.25
+    ) {
+
+        closeSheet();
+
+    } else {
+
+        /*
+            Snap back open.
+        */
+
+        controlSheet.style.transform =
+            "";
+
+    }
 
 }
 
@@ -1425,11 +1609,15 @@ transparencyButton.addEventListener(
     "click",
     () => {
 
-        const visible =
-            opacityArea.style.display !== "none";
+        const hidden =
+            opacityArea.style.display ===
+            "none";
+
 
         opacityArea.style.display =
-            visible ? "none" : "block";
+            hidden
+                ? "block"
+                : "none";
 
     }
 );
@@ -1439,14 +1627,114 @@ opacitySlider.addEventListener(
     "input",
     () => {
 
-        opacity =
-            Number(opacitySlider.value) / 100;
+        const value =
+            Number(
+                opacitySlider.value
+            );
+
+
+        imageOpacity =
+            value / 100;
+
 
         overlayImage.style.opacity =
-            opacity;
+            imageOpacity;
+
 
         opacityValue.textContent =
-            `${opacitySlider.value}%`;
+            `${value}%`;
+
+    }
+);
+
+
+/* =====================================================
+   GREYSCALE
+===================================================== */
+
+greySlider.addEventListener(
+    "input",
+    () => {
+
+        const value =
+            Number(
+                greySlider.value
+            );
+
+
+        /*
+            Convert:
+            0 → normal
+            100 → full grayscale
+        */
+
+        const amount =
+            value / 100;
+
+
+        camera.style.filter =
+            `grayscale(${amount})`;
+
+
+        greyValue.textContent =
+            `${value}%`;
+
+
+        /*
+            Highlight button whenever
+            grayscale is active.
+        */
+
+        greyButton.classList.toggle(
+            "active",
+            value > 0
+        );
+
+    }
+);
+
+
+/* =====================================================
+   GREY BUTTON QUICK TOGGLE
+===================================================== */
+
+greyButton.addEventListener(
+    "click",
+    () => {
+
+        const current =
+            Number(
+                greySlider.value
+            );
+
+
+        if (current > 0) {
+
+            /*
+                Turn grayscale OFF.
+            */
+
+            greySlider.value = 0;
+
+        } else {
+
+            /*
+                Turn grayscale fully ON.
+            */
+
+            greySlider.value = 100;
+
+        }
+
+
+        /*
+            Use the slider's existing
+            logic.
+        */
+
+        greySlider.dispatchEvent(
+            new Event("input")
+        );
 
     }
 );
@@ -1463,39 +1751,16 @@ gridButton.addEventListener(
         gridEnabled =
             !gridEnabled;
 
+
         grid.classList.toggle(
             "active",
             gridEnabled
         );
 
+
         gridButton.classList.toggle(
             "active",
             gridEnabled
-        );
-
-    }
-);
-
-
-/* =====================================================
-   GREYSCALE
-===================================================== */
-
-greyButton.addEventListener(
-    "click",
-    () => {
-
-        greyEnabled =
-            !greyEnabled;
-
-        camera.style.filter =
-            greyEnabled
-                ? "grayscale(1)"
-                : "grayscale(0)";
-
-        greyButton.classList.toggle(
-            "active",
-            greyEnabled
         );
 
     }
@@ -1513,24 +1778,37 @@ lockButton.addEventListener(
         locked =
             !locked;
 
+
         lockButton.classList.toggle(
             "active",
             locked
         );
 
 
-        lockButton.querySelector(
-            ".controlIcon"
-        ).textContent =
-            locked
-                ? "🔒"
-                : "🔓";
+        const icon =
+            lockButton.querySelector(
+                ".controlIcon"
+            );
 
 
-        lockIndicator.classList.toggle(
-            "show",
-            locked
-        );
+        if (icon) {
+
+            icon.textContent =
+                locked
+                    ? "🔒"
+                    : "🔓";
+
+        }
+
+
+        if (lockIndicator) {
+
+            lockIndicator.classList.toggle(
+                "show",
+                locked
+            );
+
+        }
 
     }
 );
@@ -1546,20 +1824,32 @@ flashButton.addEventListener(
 
         if (!cameraTrack) {
 
+            alert(
+                "Camera is not running."
+            );
+
             return;
 
         }
 
 
         /*
-            The torch API is supported only
-            on some mobile browsers/devices.
+            Check whether this camera
+            exposes torch control.
         */
 
-        const capabilities =
-            cameraTrack.getCapabilities
-                ? cameraTrack.getCapabilities()
-                : {};
+        let capabilities = {};
+
+        if (
+            typeof cameraTrack
+                .getCapabilities ===
+            "function"
+        ) {
+
+            capabilities =
+                cameraTrack.getCapabilities();
+
+        }
 
 
         if (!capabilities.torch) {
@@ -1577,6 +1867,7 @@ flashButton.addEventListener(
 
             torchEnabled =
                 !torchEnabled;
+
 
             await cameraTrack.applyConstraints({
 
@@ -1603,12 +1894,46 @@ flashButton.addEventListener(
                 error
             );
 
-            torchEnabled = false;
+
+            torchEnabled =
+                false;
+
+
+            flashButton.classList.remove(
+                "active"
+            );
 
         }
 
     }
 );
+
+
+/* =====================================================
+   IMAGE TRANSFORM
+===================================================== */
+
+function updateImageTransform() {
+
+    imageLayer.style.transform =
+        `translate3d(
+            -50%,
+            -50%,
+            0
+        )
+        translate3d(
+            ${imageX}px,
+            ${imageY}px,
+            0
+        )
+        rotate(
+            ${imageRotation}rad
+        )
+        scale(
+            ${imageScale}
+        )`;
+
+}
 
 
 /* =====================================================
@@ -1624,21 +1949,38 @@ resetButton.addEventListener(
 function resetImageTransform() {
 
     imageX = 0;
+
     imageY = 0;
 
     imageScale = 1;
 
     imageRotation = 0;
 
-    opacity = 1;
+    imageOpacity = 1;
 
-    opacitySlider.value = 100;
 
-    opacityValue.textContent =
-        "100%";
+    /*
+        Reset opacity.
+    */
+
+    if (opacitySlider) {
+
+        opacitySlider.value = 100;
+
+    }
+
+
+    if (opacityValue) {
+
+        opacityValue.textContent =
+            "100%";
+
+    }
+
 
     overlayImage.style.opacity =
         "1";
+
 
     updateImageTransform();
 
@@ -1646,107 +1988,141 @@ function resetImageTransform() {
 
 
 /* =====================================================
-   IMAGE TRANSFORM
+   RESET FEATURES
 ===================================================== */
 
-function updateImageTransform() {
+function resetFeatures() {
 
-    imageLayer.style.transform = `
+    /*
+        Grid
+    */
 
-        translate3d(-50%, -50%, 0)
+    gridEnabled = false;
 
-        translate3d(
-            ${imageX}px,
-            ${imageY}px,
-            0
-        )
+    grid.classList.remove(
+        "active"
+    );
 
-        rotate(${imageRotation}rad)
+    gridButton.classList.remove(
+        "active"
+    );
 
-        scale(${imageScale})
 
-    `;
+    /*
+        Lock
+    */
+
+    locked = false;
+
+    lockButton.classList.remove(
+        "active"
+    );
+
+
+    const lockIcon =
+        lockButton.querySelector(
+            ".controlIcon"
+        );
+
+    if (lockIcon) {
+
+        lockIcon.textContent =
+            "🔓";
+
+    }
+
+
+    if (lockIndicator) {
+
+        lockIndicator.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    /*
+        Torch
+    */
+
+    torchEnabled = false;
+
+    flashButton.classList.remove(
+        "active"
+    );
+
+
+    /*
+        Grayscale
+    */
+
+    if (greySlider) {
+
+        greySlider.value = 0;
+
+    }
+
+
+    if (greyValue) {
+
+        greyValue.textContent =
+            "0%";
+
+    }
+
+
+    camera.style.filter =
+        "grayscale(0)";
+
+
+    /*
+        Opacity section
+    */
+
+    if (opacityArea) {
+
+        opacityArea.style.display =
+            "none";
+
+    }
 
 }
 
 
 /* =====================================================
-   TOUCH HELPERS
-===================================================== */
-
-function getDistance(a, b) {
-
-    return Math.hypot(
-        a.clientX - b.clientX,
-        a.clientY - b.clientY
-    );
-
-}
-
-
-function getAngle(a, b) {
-
-    return Math.atan2(
-        b.clientY - a.clientY,
-        b.clientX - a.clientX
-    );
-
-}
-
-
-function getCenter(a, b) {
-
-    return {
-
-        x:
-            (a.clientX + b.clientX) / 2,
-
-        y:
-            (a.clientY + b.clientY) / 2
-
-    };
-
-}
-
-
-/* =====================================================
-   TOUCH START
+   TOUCH — START
 ===================================================== */
 
 imageLayer.addEventListener(
     "touchstart",
-    event => {
+    (event) => {
 
-        if (locked) return;
+        if (locked)
+            return;
+
 
         event.preventDefault();
 
 
-        touches.clear();
+        /*
+            ONE FINGER
+            = MOVE
+        */
 
-
-        for (
-            const touch of event.touches
+        if (
+            event.touches.length === 1
         ) {
-
-            touches.set(
-                touch.identifier,
-                touch
-            );
-
-        }
-
-
-        if (event.touches.length === 1) {
 
             const touch =
                 event.touches[0];
+
 
             startX =
                 touch.clientX;
 
             startY =
                 touch.clientY;
+
 
             startImageX =
                 imageX;
@@ -1757,7 +2133,14 @@ imageLayer.addEventListener(
         }
 
 
-        if (event.touches.length >= 2) {
+        /*
+            TWO FINGERS
+            = ZOOM + ROTATE
+        */
+
+        if (
+            event.touches.length >= 2
+        ) {
 
             const a =
                 event.touches[0];
@@ -1769,11 +2152,14 @@ imageLayer.addEventListener(
             startDistance =
                 getDistance(a, b);
 
+
             startAngle =
                 getAngle(a, b);
 
+
             startScale =
                 imageScale;
+
 
             startRotation =
                 imageRotation;
@@ -1788,36 +2174,50 @@ imageLayer.addEventListener(
 
 
 /* =====================================================
-   TOUCH MOVE
+   TOUCH — MOVE
 ===================================================== */
 
 imageLayer.addEventListener(
     "touchmove",
-    event => {
+    (event) => {
 
-        if (locked) return;
+        if (locked)
+            return;
+
 
         event.preventDefault();
 
 
-        if (event.touches.length === 1) {
+        /*
+            ONE FINGER
+        */
+
+        if (
+            event.touches.length === 1
+        ) {
 
             const touch =
                 event.touches[0];
 
 
             const dx =
-                touch.clientX - startX;
+                touch.clientX -
+                startX;
+
 
             const dy =
-                touch.clientY - startY;
+                touch.clientY -
+                startY;
 
 
             imageX =
-                startImageX + dx;
+                startImageX +
+                dx;
+
 
             imageY =
-                startImageY + dy;
+                startImageY +
+                dy;
 
 
             updateImageTransform();
@@ -1825,7 +2225,13 @@ imageLayer.addEventListener(
         }
 
 
-        if (event.touches.length >= 2) {
+        /*
+            TWO FINGERS
+        */
+
+        if (
+            event.touches.length >= 2
+        ) {
 
             const a =
                 event.touches[0];
@@ -1835,24 +2241,31 @@ imageLayer.addEventListener(
 
 
             /*
-                PINCH ZOOM
+                ZOOM
             */
 
             const distance =
                 getDistance(a, b);
 
-            const scaleFactor =
-                distance / startDistance;
+
+            if (startDistance > 0) {
+
+                const scaleFactor =
+                    distance /
+                    startDistance;
 
 
-            imageScale =
-                Math.max(
-                    .15,
-                    Math.min(
-                        8,
-                        startScale * scaleFactor
-                    )
-                );
+                imageScale =
+                    Math.max(
+                        0.15,
+                        Math.min(
+                            8,
+                            startScale *
+                            scaleFactor
+                        )
+                    );
+
+            }
 
 
             /*
@@ -1880,33 +2293,40 @@ imageLayer.addEventListener(
 
 
 /* =====================================================
-   TOUCH END
+   TOUCH — END
 ===================================================== */
 
 imageLayer.addEventListener(
     "touchend",
-    event => {
+    (event) => {
 
-        if (locked) return;
+        if (locked)
+            return;
+
 
         event.preventDefault();
 
 
         /*
-            When returning from two fingers
-            to one finger, restart drag position
+            If two fingers become one,
+            restart the drag reference so
+            the image doesn't jump.
         */
 
-        if (event.touches.length === 1) {
+        if (
+            event.touches.length === 1
+        ) {
 
             const touch =
                 event.touches[0];
+
 
             startX =
                 touch.clientX;
 
             startY =
                 touch.clientY;
+
 
             startImageX =
                 imageX;
@@ -1924,31 +2344,56 @@ imageLayer.addEventListener(
 
 
 /* =====================================================
-   MOUSE SUPPORT FOR PC
+   TOUCH HELPERS
 ===================================================== */
 
-let mouseDown = false;
+function getDistance(a, b) {
 
-let mouseStartX = 0;
-let mouseStartY = 0;
+    return Math.hypot(
+        a.clientX -
+        b.clientX,
 
-let mouseImageX = 0;
-let mouseImageY = 0;
+        a.clientY -
+        b.clientY
+    );
 
+}
+
+
+function getAngle(a, b) {
+
+    return Math.atan2(
+        b.clientY -
+        a.clientY,
+
+        b.clientX -
+        a.clientX
+    );
+
+}
+
+
+/* =====================================================
+   MOUSE — START
+===================================================== */
 
 imageLayer.addEventListener(
     "mousedown",
-    event => {
+    (event) => {
 
-        if (locked) return;
+        if (locked)
+            return;
+
 
         mouseDown = true;
+
 
         mouseStartX =
             event.clientX;
 
         mouseStartY =
             event.clientY;
+
 
         mouseImageX =
             imageX;
@@ -1960,21 +2405,38 @@ imageLayer.addEventListener(
 );
 
 
+/* =====================================================
+   MOUSE — MOVE
+===================================================== */
+
 window.addEventListener(
     "mousemove",
-    event => {
+    (event) => {
 
-        if (!mouseDown || locked)
+        if (
+            !mouseDown ||
+            locked
+        ) {
+
             return;
+
+        }
 
 
         imageX =
             mouseImageX +
-            (event.clientX - mouseStartX);
+            (
+                event.clientX -
+                mouseStartX
+            );
+
 
         imageY =
             mouseImageY +
-            (event.clientY - mouseStartY);
+            (
+                event.clientY -
+                mouseStartY
+            );
 
 
         updateImageTransform();
@@ -1982,6 +2444,10 @@ window.addEventListener(
     }
 );
 
+
+/* =====================================================
+   MOUSE — END
+===================================================== */
 
 window.addEventListener(
     "mouseup",
@@ -2007,6 +2473,36 @@ changeButton.addEventListener(
 
     }
 );
+
+
+/* =====================================================
+   INITIAL STATE
+===================================================== */
+
+if (opacityArea) {
+
+    opacityArea.style.display =
+        "none";
+
+}
+
+if (greySlider) {
+
+    greySlider.value = 0;
+
+}
+
+if (greyValue) {
+
+    greyValue.textContent =
+        "0%";
+
+}
+
+camera.style.filter =
+    "grayscale(0)";
+
+updateImageTransform();
 
 </script>
 
