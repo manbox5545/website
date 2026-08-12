@@ -2,448 +2,624 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AR Draw</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AR Drawing</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #050505;
+}
+
+/* =========================
+   LOADING SCREEN
+========================= */
+
+#loadingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at center, #171717 0%, #050505 60%);
+
+    color: white;
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+#loadingScreen.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.logo {
+    font-size: 55px;
+    margin-bottom: 18px;
+    animation: floatLogo 2s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+    0%, 100% {
+        transform: translateY(0);
     }
 
-    body {
-        overflow: hidden;
-        background: #000;
-        font-family: Arial, sans-serif;
-        touch-action: none;
+    50% {
+        transform: translateY(-8px);
     }
+}
 
-    #camera {
-        position: fixed;
-        inset: 0;
+.loadingTitle {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.loadingText {
+    margin-top: 8px;
+    color: #888;
+    font-size: 14px;
+}
+
+.loader {
+    width: 180px;
+    height: 4px;
+    margin-top: 28px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #222;
+}
+
+.loaderBar {
+    width: 0%;
+    height: 100%;
+    background: white;
+    border-radius: 20px;
+    animation: loading 1.8s ease forwards;
+}
+
+@keyframes loading {
+    to {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-        transform: scaleX(-1);
+    }
+}
+
+
+/* =========================
+   WELCOME SCREEN
+========================= */
+
+#welcomeScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at 50% 35%, #202020 0%, #090909 45%, #000 100%);
+
+    color: white;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity 0.6s ease;
+}
+
+#welcomeScreen.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.welcomeBox {
+    width: min(420px, 90%);
+    padding: 42px 30px;
+
+    text-align: center;
+
+    background: rgba(255,255,255,0.055);
+    border: 1px solid rgba(255,255,255,0.1);
+
+    border-radius: 28px;
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,0.5);
+
+    animation: boxAppear 0.7s ease;
+}
+
+@keyframes boxAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(.96);
     }
 
-    #drawCanvas {
-        position: fixed;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-        transform: scaleX(-1);
-        touch-action: none;
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
+}
 
-    #topBar {
-        position: fixed;
-        top: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
+.welcomeIcon {
+    width: 75px;
+    height: 75px;
 
-        display: flex;
-        align-items: center;
-        gap: 10px;
+    margin: 0 auto 22px;
 
-        padding: 10px 15px;
-        border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(12px);
-        color: white;
-    }
+    font-size: 38px;
 
-    #topBar h1 {
-        font-size: 18px;
-        white-space: nowrap;
-    }
+    border-radius: 22px;
 
-    #controls {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.12);
 
-        display: flex;
-        align-items: center;
-        gap: 12px;
+    box-shadow: 0 10px 40px rgba(255,255,255,0.05);
+}
 
-        padding: 12px 16px;
-        border-radius: 25px;
+.welcomeBox h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
 
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(15px);
-    }
+.welcomeBox p {
+    color: #999;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
 
-    button,
-    input {
-        cursor: pointer;
-    }
+.selectButton {
+    width: 100%;
+    padding: 16px;
 
-    button {
-        border: none;
-        color: white;
-        background: #222;
-        padding: 10px 14px;
-        border-radius: 15px;
-        font-size: 14px;
-    }
+    border: none;
+    border-radius: 16px;
 
-    button:hover {
-        background: #444;
-    }
+    background: white;
+    color: black;
 
-    #color {
-        width: 40px;
-        height: 40px;
-        border: none;
-        background: transparent;
-    }
+    font-size: 16px;
+    font-weight: 700;
 
-    #size {
-        width: 100px;
-    }
+    cursor: pointer;
 
-    #message {
-        position: fixed;
-        z-index: 20;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
 
-        padding: 20px;
-        border-radius: 15px;
+.selectButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255,255,255,.15);
+}
 
-        color: white;
-        background: rgba(0, 0, 0, 0.75);
-        text-align: center;
-        max-width: 90%;
-    }
+.selectButton:active {
+    transform: scale(.97);
+}
 
-    #capture {
-        background: #ffffff;
-        color: #000;
-    }
+#imageInput {
+    display: none;
+}
 
-    @media (max-width: 600px) {
-        #topBar h1 {
-            font-size: 15px;
-        }
+.smallText {
+    margin-top: 18px !important;
+    margin-bottom: 0 !important;
+    font-size: 12px !important;
+    color: #666 !important;
+}
 
-        #controls {
-            width: 94%;
-            justify-content: center;
-            gap: 7px;
-        }
 
-        button {
-            padding: 9px 10px;
-            font-size: 12px;
-        }
+/* =========================
+   CAMERA SCREEN
+========================= */
 
-        #size {
-            width: 70px;
-        }
-    }
+#cameraScreen {
+    position: fixed;
+    inset: 0;
+
+    background: black;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity .5s ease;
+}
+
+#cameraScreen.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#camera {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+/* Selected image over camera */
+
+#overlayImage {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    max-width: 70vw;
+    max-height: 70vh;
+
+    object-fit: contain;
+
+    z-index: 5;
+
+    display: none;
+
+    user-select: none;
+    pointer-events: none;
+
+    filter:
+        drop-shadow(0 8px 20px rgba(0,0,0,.5));
+}
+
+/* Camera UI */
+
+.cameraTop {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+
+    display: flex;
+    justify-content: space-between;
+
+    z-index: 10;
+}
+
+.cameraTitle {
+    padding: 11px 16px;
+
+    border-radius: 15px;
+
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(12px);
+
+    color: white;
+    font-size: 14px;
+}
+
+.cameraButton {
+    border: none;
+
+    padding: 11px 16px;
+
+    border-radius: 15px;
+
+    background: rgba(0,0,0,.55);
+    color: white;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(12px);
+}
+
+.cameraButton:hover {
+    background: rgba(255,255,255,.15);
+}
+
+#cameraMessage {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 20;
+
+    color: white;
+
+    text-align: center;
+
+    padding: 25px;
+
+    background: rgba(0,0,0,.7);
+
+    border-radius: 20px;
+
+    display: none;
+}
 </style>
 </head>
 
 <body>
 
-<video id="camera" autoplay playsinline></video>
 
-<canvas id="drawCanvas"></canvas>
+<!-- =========================
+     LOADING
+========================= -->
 
-<div id="topBar">
-    <h1>🎨 AR Draw</h1>
-</div>
+<div id="loadingScreen">
 
-<div id="message">
-    <div>📷 Camera access is required.</div>
-    <br>
-    <button onclick="startCamera()">Start Camera</button>
-</div>
+    <div class="logo">🎨</div>
 
-<div id="controls">
+    <div class="loadingTitle">
+        AR Drawing
+    </div>
 
-    <input id="color" type="color" value="#ff0000">
+    <div class="loadingText">
+        Preparing your creative space...
+    </div>
 
-    <input id="size"
-           type="range"
-           min="1"
-           max="40"
-           value="6">
-
-    <button onclick="clearDrawing()">Clear</button>
-
-    <button onclick="undo()">Undo</button>
-
-    <button id="capture" onclick="captureImage()">
-        📸 Save
-    </button>
+    <div class="loader">
+        <div class="loaderBar"></div>
+    </div>
 
 </div>
+
+
+<!-- =========================
+     WELCOME
+========================= -->
+
+<div id="welcomeScreen">
+
+    <div class="welcomeBox">
+
+        <div class="welcomeIcon">
+            🎨
+        </div>
+
+        <h1>
+            Welcome to AR Drawing
+        </h1>
+
+        <p>
+            Turn your camera into a creative canvas.
+            Select an image and place it over the real world.
+        </p>
+
+        <label class="selectButton">
+
+            Select Image
+
+            <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+            >
+
+        </label>
+
+        <p class="smallText">
+            Your image stays on your device.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     CAMERA
+========================= -->
+
+<div id="cameraScreen">
+
+    <video
+        id="camera"
+        autoplay
+        playsinline>
+    </video>
+
+    <img
+        id="overlayImage"
+        alt="Selected drawing">
+
+    <div class="cameraTop">
+
+        <div class="cameraTitle">
+            🎨 AR Drawing
+        </div>
+
+        <button
+            class="cameraButton"
+            onclick="changeImage()">
+            Change Image
+        </button>
+
+    </div>
+
+    <div id="cameraMessage"></div>
+
+</div>
+
 
 <script>
 
-const video = document.getElementById("camera");
-const canvas = document.getElementById("drawCanvas");
-const ctx = canvas.getContext("2d");
+const loadingScreen =
+    document.getElementById("loadingScreen");
 
-const colorPicker = document.getElementById("color");
-const sizeSlider = document.getElementById("size");
-const message = document.getElementById("message");
+const welcomeScreen =
+    document.getElementById("welcomeScreen");
 
-let drawing = false;
-let lastX = 0;
-let lastY = 0;
+const cameraScreen =
+    document.getElementById("cameraScreen");
 
-let history = [];
+const imageInput =
+    document.getElementById("imageInput");
 
-// --------------------------------------------------
-// CAMERA
-// --------------------------------------------------
+const camera =
+    document.getElementById("camera");
+
+const overlayImage =
+    document.getElementById("overlayImage");
+
+const cameraMessage =
+    document.getElementById("cameraMessage");
+
+let cameraStream = null;
+
+
+/* =========================
+   START APPLICATION
+========================= */
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        loadingScreen.classList.add("hide");
+
+        setTimeout(() => {
+
+            welcomeScreen.classList.add("show");
+
+        }, 400);
+
+    }, 2000);
+
+});
+
+
+/* =========================
+   IMAGE SELECTION
+========================= */
+
+imageInput.addEventListener("change", async (event) => {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+
+        alert("Please select an image.");
+
+        return;
+    }
+
+    const imageURL =
+        URL.createObjectURL(file);
+
+    overlayImage.src = imageURL;
+
+    welcomeScreen.classList.remove("show");
+
+    setTimeout(() => {
+
+        cameraScreen.classList.add("show");
+
+    }, 300);
+
+    await startCamera();
+
+    overlayImage.style.display = "block";
+
+});
+
+
+/* =========================
+   CAMERA
+========================= */
 
 async function startCamera() {
 
     try {
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: {
-                    ideal: "environment"
+        if (!navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia) {
+
+            throw new Error(
+                "Camera API unavailable"
+            );
+        }
+
+        cameraStream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video: {
+                    facingMode: {
+                        ideal: "environment"
+                    },
+
+                    width: {
+                        ideal: 1920
+                    },
+
+                    height: {
+                        ideal: 1080
+                    }
                 },
-                width: {
-                    ideal: 1920
-                },
-                height: {
-                    ideal: 1080
-                }
-            },
-            audio: false
-        });
 
-        video.srcObject = stream;
+                audio: false
 
-        message.style.display = "none";
+            });
 
-        resizeCanvas();
+        camera.srcObject =
+            cameraStream;
 
-    } catch (error) {
+        cameraMessage.style.display =
+            "none";
 
-        message.innerHTML = `
-            ❌ Camera could not be started.<br><br>
-            Allow camera permission and use HTTPS or localhost.
-        `;
+    }
+
+    catch (error) {
 
         console.error(error);
-    }
-}
 
+        cameraMessage.innerHTML = `
+            <h3>Camera Access Required</h3>
+            <br>
+            Allow camera permission and
+            open this website using HTTPS
+            or localhost.
+        `;
 
-// --------------------------------------------------
-// CANVAS
-// --------------------------------------------------
+        cameraMessage.style.display =
+            "block";
 
-function resizeCanvas() {
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-}
-
-window.addEventListener("resize", resizeCanvas);
-
-
-// --------------------------------------------------
-// DRAWING
-// --------------------------------------------------
-
-function getPosition(event) {
-
-    const rect = canvas.getBoundingClientRect();
-
-    let x;
-    let y;
-
-    if (event.touches) {
-
-        x = event.touches[0].clientX - rect.left;
-        y = event.touches[0].clientY - rect.top;
-
-    } else {
-
-        x = event.clientX - rect.left;
-        y = event.clientY - rect.top;
     }
 
-    return {
-        x: x * (canvas.width / rect.width),
-        y: y * (canvas.height / rect.height)
-    };
 }
 
 
-function startDrawing(event) {
+/* =========================
+   CHANGE IMAGE
+========================= */
 
-    event.preventDefault();
+function changeImage() {
 
-    const pos = getPosition(event);
+    imageInput.value = "";
 
-    drawing = true;
+    imageInput.click();
 
-    lastX = pos.x;
-    lastY = pos.y;
-
-    saveHistory();
-}
-
-
-function draw(event) {
-
-    if (!drawing) return;
-
-    event.preventDefault();
-
-    const pos = getPosition(event);
-
-    ctx.strokeStyle = colorPicker.value;
-    ctx.lineWidth = Number(sizeSlider.value);
-
-    ctx.beginPath();
-
-    ctx.moveTo(lastX, lastY);
-
-    ctx.lineTo(pos.x, pos.y);
-
-    ctx.stroke();
-
-    lastX = pos.x;
-    lastY = pos.y;
-}
-
-
-function stopDrawing() {
-
-    drawing = false;
-}
-
-
-// Mouse
-canvas.addEventListener("mousedown", startDrawing);
-canvas.addEventListener("mousemove", draw);
-canvas.addEventListener("mouseup", stopDrawing);
-canvas.addEventListener("mouseleave", stopDrawing);
-
-
-// Touch
-canvas.addEventListener("touchstart", startDrawing, {
-    passive: false
-});
-
-canvas.addEventListener("touchmove", draw, {
-    passive: false
-});
-
-canvas.addEventListener("touchend", stopDrawing);
-
-
-// --------------------------------------------------
-// UNDO
-// --------------------------------------------------
-
-function saveHistory() {
-
-    history.push(
-        ctx.getImageData(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        )
-    );
-
-    if (history.length > 20) {
-        history.shift();
-    }
-}
-
-
-function undo() {
-
-    if (history.length === 0) return;
-
-    const previous = history.pop();
-
-    ctx.putImageData(previous, 0, 0);
-}
-
-
-// --------------------------------------------------
-// CLEAR
-// --------------------------------------------------
-
-function clearDrawing() {
-
-    saveHistory();
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-}
-
-
-// --------------------------------------------------
-// SAVE IMAGE
-// --------------------------------------------------
-
-function captureImage() {
-
-    const output = document.createElement("canvas");
-
-    output.width = video.videoWidth;
-    output.height = video.videoHeight;
-
-    const outCtx = output.getContext("2d");
-
-    // Mirror camera
-    outCtx.translate(output.width, 0);
-    outCtx.scale(-1, 1);
-
-    outCtx.drawImage(
-        video,
-        0,
-        0,
-        output.width,
-        output.height
-    );
-
-    // Draw canvas over camera
-    outCtx.drawImage(
-        canvas,
-        0,
-        0,
-        output.width,
-        output.height
-    );
-
-    const link = document.createElement("a");
-
-    link.download = "ar-drawing.png";
-    link.href = output.toDataURL("image/png");
-
-    link.click();
 }
 
 </script>
