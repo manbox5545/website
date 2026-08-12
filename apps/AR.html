@@ -2,42 +2,55 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>AR Drawing</title>
 
 <style>
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background: #000;
     font-family: Arial, Helvetica, sans-serif;
-    background: #050505;
+    touch-action: none;
 }
 
-/* =========================
-   LOADING SCREEN
-========================= */
+
+/* =====================================================
+   LOADING
+===================================================== */
 
 #loadingScreen {
     position: fixed;
     inset: 0;
     z-index: 100;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
     background:
-        radial-gradient(circle at center, #171717 0%, #050505 60%);
+        radial-gradient(circle at center,
+        #202020 0%,
+        #080808 55%,
+        #000 100%);
 
     color: white;
-    transition: opacity 0.7s ease, visibility 0.7s ease;
+
+    transition:
+        opacity .6s ease,
+        visibility .6s ease;
 }
 
 #loadingScreen.hide {
@@ -46,29 +59,34 @@ html, body {
 }
 
 .logo {
-    font-size: 55px;
-    margin-bottom: 18px;
-    animation: floatLogo 2s ease-in-out infinite;
+    font-size: 58px;
+
+    animation:
+        logoFloat 1.8s ease-in-out infinite;
 }
 
-@keyframes floatLogo {
-    0%, 100% {
+@keyframes logoFloat {
+
+    0%,
+    100% {
         transform: translateY(0);
     }
 
     50% {
-        transform: translateY(-8px);
+        transform: translateY(-9px);
     }
 }
 
 .loadingTitle {
+    margin-top: 15px;
+
     font-size: 28px;
     font-weight: 700;
-    letter-spacing: 1px;
 }
 
 .loadingText {
     margin-top: 8px;
+
     color: #888;
     font-size: 14px;
 }
@@ -76,34 +94,45 @@ html, body {
 .loader {
     width: 180px;
     height: 4px;
+
     margin-top: 28px;
-    border-radius: 20px;
+
     overflow: hidden;
+
+    border-radius: 20px;
+
     background: #222;
 }
 
 .loaderBar {
     width: 0%;
     height: 100%;
-    background: white;
+
     border-radius: 20px;
-    animation: loading 1.8s ease forwards;
+
+    background: white;
+
+    animation:
+        loading 1.8s ease forwards;
 }
 
 @keyframes loading {
+
     to {
         width: 100%;
     }
+
 }
 
 
-/* =========================
-   WELCOME SCREEN
-========================= */
+/* =====================================================
+   WELCOME
+===================================================== */
 
 #welcomeScreen {
     position: fixed;
     inset: 0;
+
     z-index: 50;
 
     display: flex;
@@ -111,14 +140,19 @@ html, body {
     justify-content: center;
 
     background:
-        radial-gradient(circle at 50% 35%, #202020 0%, #090909 45%, #000 100%);
+        radial-gradient(circle at 50% 35%,
+        #202020,
+        #090909 50%,
+        #000);
 
     color: white;
 
     opacity: 0;
     visibility: hidden;
 
-    transition: opacity 0.6s ease;
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
 }
 
 #welcomeScreen.show {
@@ -128,34 +162,45 @@ html, body {
 
 .welcomeBox {
     width: min(420px, 90%);
+
     padding: 42px 30px;
 
     text-align: center;
 
-    background: rgba(255,255,255,0.055);
-    border: 1px solid rgba(255,255,255,0.1);
+    border:
+        1px solid rgba(255,255,255,.1);
 
     border-radius: 28px;
+
+    background:
+        rgba(255,255,255,.055);
 
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
 
     box-shadow:
-        0 30px 80px rgba(0,0,0,0.5);
+        0 30px 80px rgba(0,0,0,.5);
 
-    animation: boxAppear 0.7s ease;
+    animation:
+        welcomeAppear .7s ease;
 }
 
-@keyframes boxAppear {
+@keyframes welcomeAppear {
+
     from {
         opacity: 0;
-        transform: translateY(25px) scale(.96);
+        transform:
+            translateY(25px)
+            scale(.96);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform:
+            translateY(0)
+            scale(1);
     }
+
 }
 
 .welcomeIcon {
@@ -172,29 +217,34 @@ html, body {
 
     border-radius: 22px;
 
-    background: rgba(255,255,255,0.09);
-    border: 1px solid rgba(255,255,255,0.12);
+    background:
+        rgba(255,255,255,.09);
 
-    box-shadow: 0 10px 40px rgba(255,255,255,0.05);
+    border:
+        1px solid rgba(255,255,255,.12);
 }
 
 .welcomeBox h1 {
-    font-size: 32px;
+    font-size: 31px;
     margin-bottom: 12px;
 }
 
 .welcomeBox p {
     color: #999;
+
     font-size: 15px;
     line-height: 1.5;
+
     margin-bottom: 30px;
 }
 
 .selectButton {
+    display: block;
+
     width: 100%;
+
     padding: 16px;
 
-    border: none;
     border-radius: 16px;
 
     background: white;
@@ -212,7 +262,9 @@ html, body {
 
 .selectButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(255,255,255,.15);
+
+    box-shadow:
+        0 10px 30px rgba(255,255,255,.15);
 }
 
 .selectButton:active {
@@ -226,25 +278,27 @@ html, body {
 .smallText {
     margin-top: 18px !important;
     margin-bottom: 0 !important;
+
     font-size: 12px !important;
     color: #666 !important;
 }
 
 
-/* =========================
-   CAMERA SCREEN
-========================= */
+/* =====================================================
+   CAMERA
+===================================================== */
 
 #cameraScreen {
     position: fixed;
     inset: 0;
 
-    background: black;
+    background: #000;
 
     opacity: 0;
     visibility: hidden;
 
-    transition: opacity .5s ease;
+    transition:
+        opacity .5s ease;
 }
 
 #cameraScreen.show {
@@ -260,110 +314,520 @@ html, body {
     height: 100%;
 
     object-fit: cover;
+
+    transition:
+        filter .35s ease;
 }
 
-/* Selected image over camera */
 
-#overlayImage {
+/* =====================================================
+   IMAGE
+===================================================== */
+
+#imageLayer {
     position: absolute;
 
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
-
-    max-width: 70vw;
-    max-height: 70vh;
-
-    object-fit: contain;
-
     z-index: 5;
 
-    display: none;
+    transform:
+        translate3d(-50%, -50%, 0)
+        translate3d(0,0,0)
+        rotate(0deg)
+        scale(1);
 
-    user-select: none;
-    pointer-events: none;
+    transform-origin: center center;
 
-    filter:
-        drop-shadow(0 8px 20px rgba(0,0,0,.5));
+    will-change:
+        transform,
+        opacity;
+
+    touch-action: none;
+
+    transition:
+        opacity .15s linear;
 }
 
-/* Camera UI */
+#overlayImage {
+    display: block;
+
+    max-width: 75vw;
+    max-height: 65vh;
+
+    width: auto;
+    height: auto;
+
+    pointer-events: none;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+
+    filter:
+        drop-shadow(
+            0 8px 18px
+            rgba(0,0,0,.45)
+        );
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+#grid {
+    position: absolute;
+    inset: 0;
+
+    z-index: 4;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity .25s ease;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.18) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.18) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        40px 40px;
+
+    background-position:
+        center center;
+}
+
+#grid.active {
+    opacity: 1;
+}
+
+
+/* =====================================================
+   TOP CAMERA BAR
+===================================================== */
 
 .cameraTop {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
+
+    top: 18px;
+    left: 18px;
+    right: 18px;
+
+    z-index: 20;
 
     display: flex;
+
+    align-items: center;
     justify-content: space-between;
 
-    z-index: 10;
+    pointer-events: none;
 }
 
-.cameraTitle {
-    padding: 11px 16px;
+.cameraTitle,
+.changeButton {
+    pointer-events: auto;
 
-    border-radius: 15px;
+    border:
+        1px solid rgba(255,255,255,.12);
 
-    background: rgba(0,0,0,.5);
-    backdrop-filter: blur(12px);
+    background:
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
 
     color: white;
-    font-size: 14px;
-}
-
-.cameraButton {
-    border: none;
-
-    padding: 11px 16px;
 
     border-radius: 15px;
 
-    background: rgba(0,0,0,.55);
+    padding:
+        10px 14px;
+
+    font-size: 13px;
+}
+
+.changeButton {
+    border: none;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   SETTINGS BUTTON
+===================================================== */
+
+#settingsButton {
+    position: absolute;
+
+    z-index: 40;
+
+    left: 50%;
+
+    bottom: 22px;
+
+    transform:
+        translateX(-50%);
+
+    width: 58px;
+    height: 58px;
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
+    border-radius: 50%;
+
+    background:
+        rgba(20,20,20,.58);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    color: white;
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition:
+        transform .3s cubic-bezier(.2,.8,.2,1),
+        background .2s ease;
+}
+
+#settingsButton.open {
+    transform:
+        translateX(-50%)
+        rotate(90deg);
+}
+
+
+/* =====================================================
+   BOTTOM SHEET
+===================================================== */
+
+#controlSheet {
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: 0;
+
+    z-index: 30;
+
+    padding:
+        18px
+        18px
+        30px;
+
+    border-top:
+        1px solid rgba(255,255,255,.13);
+
+    border-radius:
+        28px 28px 0 0;
+
+    background:
+        rgba(15,15,15,.62);
+
+    backdrop-filter:
+        blur(28px)
+        saturate(140%);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(140%);
+
+    transform:
+        translateY(100%);
+
+    transition:
+        transform
+        .5s cubic-bezier(.22,1,.36,1);
+
+    will-change:
+        transform;
+
+}
+
+#controlSheet.open {
+    transform:
+        translateY(0);
+}
+
+
+/* Handle */
+
+.sheetHandle {
+
+    width: 42px;
+    height: 4px;
+
+    margin:
+        0 auto 18px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.45);
+}
+
+
+/* Controls */
+
+.controls {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+
+    max-width: 620px;
+
+    margin: auto;
+}
+
+.control {
+
+    min-height: 72px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.06);
+
     color: white;
 
     cursor: pointer;
 
-    backdrop-filter: blur(12px);
+    transition:
+        background .18s ease,
+        transform .15s ease,
+        border-color .18s ease;
+
+    -webkit-tap-highlight-color:
+        transparent;
 }
 
-.cameraButton:hover {
-    background: rgba(255,255,255,.15);
+.control:active {
+    transform:
+        scale(.94);
 }
+
+.control.active {
+
+    background:
+        rgba(255,255,255,.18);
+
+    border-color:
+        rgba(255,255,255,.35);
+}
+
+.controlIcon {
+    font-size: 21px;
+}
+
+.controlName {
+    font-size: 11px;
+    color: rgba(255,255,255,.75);
+}
+
+
+/* =====================================================
+   SLIDERS
+===================================================== */
+
+.sliderArea {
+
+    max-width: 620px;
+
+    margin:
+        17px auto 0;
+
+    padding:
+        14px 16px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255,255,255,.05);
+}
+
+.sliderTop {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    color: white;
+
+    font-size: 12px;
+}
+
+input[type="range"] {
+
+    width: 100%;
+
+    accent-color: white;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   CAMERA ERROR
+===================================================== */
 
 #cameraMessage {
+
     position: absolute;
 
     left: 50%;
     top: 50%;
 
-    transform: translate(-50%, -50%);
+    transform:
+        translate(-50%, -50%);
 
-    z-index: 20;
+    z-index: 50;
 
-    color: white;
-
-    text-align: center;
+    width: 85%;
 
     padding: 25px;
 
-    background: rgba(0,0,0,.7);
+    text-align: center;
+
+    color: white;
 
     border-radius: 20px;
 
+    background:
+        rgba(0,0,0,.75);
+
     display: none;
 }
+
+
+/* =====================================================
+   LOCK INDICATOR
+===================================================== */
+
+#lockIndicator {
+
+    position: absolute;
+
+    top: 70px;
+    left: 50%;
+
+    z-index: 20;
+
+    transform:
+        translateX(-50%)
+        translateY(-15px);
+
+    padding:
+        8px 13px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(0,0,0,.5);
+
+    backdrop-filter:
+        blur(12px);
+
+    color: white;
+
+    font-size: 12px;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+}
+
+#lockIndicator.show {
+
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .controls {
+        grid-template-columns:
+            repeat(4, 1fr);
+    }
+
+    .control {
+        min-height: 65px;
+        border-radius: 15px;
+    }
+
+    .controlIcon {
+        font-size: 18px;
+    }
+
+    .controlName {
+        font-size: 10px;
+    }
+
+}
+
 </style>
 </head>
+
 
 <body>
 
 
-<!-- =========================
+<!-- =====================================================
      LOADING
-========================= -->
+===================================================== -->
 
 <div id="loadingScreen">
 
@@ -384,9 +848,9 @@ html, body {
 </div>
 
 
-<!-- =========================
+<!-- =====================================================
      WELCOME
-========================= -->
+===================================================== -->
 
 <div id="welcomeScreen">
 
@@ -402,7 +866,7 @@ html, body {
 
         <p>
             Turn your camera into a creative canvas.
-            Select an image and place it over the real world.
+            Select an image and trace it in the real world.
         </p>
 
         <label class="selectButton">
@@ -412,8 +876,7 @@ html, body {
             <input
                 id="imageInput"
                 type="file"
-                accept="image/*"
-            >
+                accept="image/*">
 
         </label>
 
@@ -426,11 +889,12 @@ html, body {
 </div>
 
 
-<!-- =========================
+<!-- =====================================================
      CAMERA
-========================= -->
+===================================================== -->
 
 <div id="cameraScreen">
+
 
     <video
         id="camera"
@@ -438,9 +902,24 @@ html, body {
         playsinline>
     </video>
 
-    <img
-        id="overlayImage"
-        alt="Selected drawing">
+
+    <!-- Grid -->
+
+    <div id="grid"></div>
+
+
+    <!-- Selected image -->
+
+    <div id="imageLayer">
+
+        <img
+            id="overlayImage"
+            alt="Selected drawing reference">
+
+    </div>
+
+
+    <!-- Top -->
 
     <div class="cameraTop">
 
@@ -449,19 +928,195 @@ html, body {
         </div>
 
         <button
-            class="cameraButton"
-            onclick="changeImage()">
+            class="changeButton"
+            id="changeButton">
+
             Change Image
+
         </button>
 
     </div>
 
+
+    <!-- Lock status -->
+
+    <div id="lockIndicator">
+        🔒 Image Locked
+    </div>
+
+
+    <!-- Error -->
+
     <div id="cameraMessage"></div>
+
+
+    <!-- =================================================
+         SETTINGS BUTTON
+    ================================================= -->
+
+    <button
+        id="settingsButton"
+        aria-label="Open drawing controls">
+
+        ⚙
+
+    </button>
+
+
+    <!-- =================================================
+         BOTTOM SHEET
+    ================================================= -->
+
+    <div id="controlSheet">
+
+        <div class="sheetHandle"></div>
+
+
+        <div class="controls">
+
+
+            <!-- Transparency -->
+
+            <button
+                class="control"
+                id="transparencyButton">
+
+                <span class="controlIcon">
+                    ◐
+                </span>
+
+                <span class="controlName">
+                    Opacity
+                </span>
+
+            </button>
+
+
+            <!-- Flashlight -->
+
+            <button
+                class="control"
+                id="flashButton">
+
+                <span class="controlIcon">
+                    🔦
+                </span>
+
+                <span class="controlName">
+                    Flash
+                </span>
+
+            </button>
+
+
+            <!-- Grid -->
+
+            <button
+                class="control"
+                id="gridButton">
+
+                <span class="controlIcon">
+                    #
+                </span>
+
+                <span class="controlName">
+                    Grid
+                </span>
+
+            </button>
+
+
+            <!-- Lock -->
+
+            <button
+                class="control"
+                id="lockButton">
+
+                <span class="controlIcon">
+                    🔓
+                </span>
+
+                <span class="controlName">
+                    Lock
+                </span>
+
+            </button>
+
+
+            <!-- Greyscale -->
+
+            <button
+                class="control"
+                id="greyButton">
+
+                <span class="controlIcon">
+                    ◑
+                </span>
+
+                <span class="controlName">
+                    Grey
+                </span>
+
+            </button>
+
+
+            <!-- Reset -->
+
+            <button
+                class="control"
+                id="resetButton">
+
+                <span class="controlIcon">
+                    ↺
+                </span>
+
+                <span class="controlName">
+                    Reset
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <!-- Opacity slider -->
+
+        <div
+            class="sliderArea"
+            id="opacityArea">
+
+            <div class="sliderTop">
+
+                <span>
+                    Image Transparency
+                </span>
+
+                <span id="opacityValue">
+                    100%
+                </span>
+
+            </div>
+
+            <input
+                id="opacitySlider"
+                type="range"
+                min="10"
+                max="100"
+                value="100">
+
+        </div>
+
+
+    </div>
 
 </div>
 
 
 <script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const loadingScreen =
     document.getElementById("loadingScreen");
@@ -472,24 +1127,121 @@ const welcomeScreen =
 const cameraScreen =
     document.getElementById("cameraScreen");
 
+const camera =
+    document.getElementById("camera");
+
 const imageInput =
     document.getElementById("imageInput");
 
-const camera =
-    document.getElementById("camera");
+const imageLayer =
+    document.getElementById("imageLayer");
 
 const overlayImage =
     document.getElementById("overlayImage");
 
+const settingsButton =
+    document.getElementById("settingsButton");
+
+const controlSheet =
+    document.getElementById("controlSheet");
+
+const grid =
+    document.getElementById("grid");
+
+const gridButton =
+    document.getElementById("gridButton");
+
+const flashButton =
+    document.getElementById("flashButton");
+
+const lockButton =
+    document.getElementById("lockButton");
+
+const greyButton =
+    document.getElementById("greyButton");
+
+const resetButton =
+    document.getElementById("resetButton");
+
+const transparencyButton =
+    document.getElementById("transparencyButton");
+
+const opacitySlider =
+    document.getElementById("opacitySlider");
+
+const opacityValue =
+    document.getElementById("opacityValue");
+
+const opacityArea =
+    document.getElementById("opacityArea");
+
+const changeButton =
+    document.getElementById("changeButton");
+
 const cameraMessage =
     document.getElementById("cameraMessage");
 
+const lockIndicator =
+    document.getElementById("lockIndicator");
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
 let cameraStream = null;
 
+let cameraTrack = null;
 
-/* =========================
-   START APPLICATION
-========================= */
+let sheetOpen = false;
+
+let gridEnabled = false;
+
+let greyEnabled = false;
+
+let locked = false;
+
+let torchEnabled = false;
+
+let opacity = 1;
+
+
+/*
+    Image transform state
+*/
+
+let imageX = 0;
+let imageY = 0;
+
+let imageScale = 1;
+
+let imageRotation = 0;
+
+
+/*
+    Touch state
+*/
+
+let touches = new Map();
+
+let startX = 0;
+let startY = 0;
+
+let startImageX = 0;
+let startImageY = 0;
+
+let startScale = 1;
+
+let startRotation = 0;
+
+let startDistance = 0;
+
+let startAngle = 0;
+
+
+/* =====================================================
+   LOADING
+===================================================== */
 
 window.addEventListener("load", () => {
 
@@ -501,70 +1253,92 @@ window.addEventListener("load", () => {
 
             welcomeScreen.classList.add("show");
 
-        }, 400);
+        }, 350);
 
-    }, 2000);
+    }, 1900);
 
 });
 
 
-/* =========================
+/* =====================================================
    IMAGE SELECTION
-========================= */
+===================================================== */
 
-imageInput.addEventListener("change", async (event) => {
+imageInput.addEventListener(
+    "change",
+    async event => {
 
-    const file = event.target.files[0];
+        const file =
+            event.target.files[0];
 
-    if (!file) return;
+        if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
+        if (!file.type.startsWith("image/")) {
 
-        alert("Please select an image.");
+            alert("Please select an image.");
 
-        return;
+            return;
+        }
+
+
+        const imageURL =
+            URL.createObjectURL(file);
+
+        overlayImage.src =
+            imageURL;
+
+
+        /*
+            Reset image
+        */
+
+        resetImageTransform();
+
+
+        welcomeScreen.classList.remove("show");
+
+        setTimeout(() => {
+
+            cameraScreen.classList.add("show");
+
+        }, 250);
+
+
+        await startCamera();
+
+
+        overlayImage.style.display =
+            "block";
+
     }
-
-    const imageURL =
-        URL.createObjectURL(file);
-
-    overlayImage.src = imageURL;
-
-    welcomeScreen.classList.remove("show");
-
-    setTimeout(() => {
-
-        cameraScreen.classList.add("show");
-
-    }, 300);
-
-    await startCamera();
-
-    overlayImage.style.display = "block";
-
-});
+);
 
 
-/* =========================
+/* =====================================================
    CAMERA
-========================= */
+===================================================== */
 
 async function startCamera() {
 
     try {
 
-        if (!navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia) {
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ) {
 
             throw new Error(
                 "Camera API unavailable"
             );
+
         }
+
 
         cameraStream =
             await navigator.mediaDevices.getUserMedia({
 
                 video: {
+
                     facingMode: {
                         ideal: "environment"
                     },
@@ -576,30 +1350,35 @@ async function startCamera() {
                     height: {
                         ideal: 1080
                     }
+
                 },
 
                 audio: false
 
             });
 
+
         camera.srcObject =
             cameraStream;
+
+
+        cameraTrack =
+            cameraStream.getVideoTracks()[0];
+
 
         cameraMessage.style.display =
             "none";
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
         cameraMessage.innerHTML = `
-            <h3>Camera Access Required</h3>
-            <br>
+            <strong>Camera Access Required</strong>
+            <br><br>
             Allow camera permission and
-            open this website using HTTPS
-            or localhost.
+            use HTTPS or localhost.
         `;
 
         cameraMessage.style.display =
@@ -610,17 +1389,624 @@ async function startCamera() {
 }
 
 
-/* =========================
-   CHANGE IMAGE
-========================= */
+/* =====================================================
+   SETTINGS SHEET
+===================================================== */
 
-function changeImage() {
+settingsButton.addEventListener(
+    "click",
+    toggleSheet
+);
 
-    imageInput.value = "";
 
-    imageInput.click();
+function toggleSheet() {
+
+    sheetOpen =
+        !sheetOpen;
+
+    controlSheet.classList.toggle(
+        "open",
+        sheetOpen
+    );
+
+    settingsButton.classList.toggle(
+        "open",
+        sheetOpen
+    );
 
 }
+
+
+/* =====================================================
+   OPACITY
+===================================================== */
+
+transparencyButton.addEventListener(
+    "click",
+    () => {
+
+        const visible =
+            opacityArea.style.display !== "none";
+
+        opacityArea.style.display =
+            visible ? "none" : "block";
+
+    }
+);
+
+
+opacitySlider.addEventListener(
+    "input",
+    () => {
+
+        opacity =
+            Number(opacitySlider.value) / 100;
+
+        overlayImage.style.opacity =
+            opacity;
+
+        opacityValue.textContent =
+            `${opacitySlider.value}%`;
+
+    }
+);
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+gridButton.addEventListener(
+    "click",
+    () => {
+
+        gridEnabled =
+            !gridEnabled;
+
+        grid.classList.toggle(
+            "active",
+            gridEnabled
+        );
+
+        gridButton.classList.toggle(
+            "active",
+            gridEnabled
+        );
+
+    }
+);
+
+
+/* =====================================================
+   GREYSCALE
+===================================================== */
+
+greyButton.addEventListener(
+    "click",
+    () => {
+
+        greyEnabled =
+            !greyEnabled;
+
+        camera.style.filter =
+            greyEnabled
+                ? "grayscale(1)"
+                : "grayscale(0)";
+
+        greyButton.classList.toggle(
+            "active",
+            greyEnabled
+        );
+
+    }
+);
+
+
+/* =====================================================
+   LOCK
+===================================================== */
+
+lockButton.addEventListener(
+    "click",
+    () => {
+
+        locked =
+            !locked;
+
+        lockButton.classList.toggle(
+            "active",
+            locked
+        );
+
+
+        lockButton.querySelector(
+            ".controlIcon"
+        ).textContent =
+            locked
+                ? "🔒"
+                : "🔓";
+
+
+        lockIndicator.classList.toggle(
+            "show",
+            locked
+        );
+
+    }
+);
+
+
+/* =====================================================
+   FLASHLIGHT
+===================================================== */
+
+flashButton.addEventListener(
+    "click",
+    async () => {
+
+        if (!cameraTrack) {
+
+            return;
+
+        }
+
+
+        /*
+            The torch API is supported only
+            on some mobile browsers/devices.
+        */
+
+        const capabilities =
+            cameraTrack.getCapabilities
+                ? cameraTrack.getCapabilities()
+                : {};
+
+
+        if (!capabilities.torch) {
+
+            alert(
+                "Flashlight control is not supported by this camera/browser."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            torchEnabled =
+                !torchEnabled;
+
+            await cameraTrack.applyConstraints({
+
+                advanced: [
+                    {
+                        torch:
+                            torchEnabled
+                    }
+                ]
+
+            });
+
+
+            flashButton.classList.toggle(
+                "active",
+                torchEnabled
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Torch error:",
+                error
+            );
+
+            torchEnabled = false;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   RESET IMAGE
+===================================================== */
+
+resetButton.addEventListener(
+    "click",
+    resetImageTransform
+);
+
+
+function resetImageTransform() {
+
+    imageX = 0;
+    imageY = 0;
+
+    imageScale = 1;
+
+    imageRotation = 0;
+
+    opacity = 1;
+
+    opacitySlider.value = 100;
+
+    opacityValue.textContent =
+        "100%";
+
+    overlayImage.style.opacity =
+        "1";
+
+    updateImageTransform();
+
+}
+
+
+/* =====================================================
+   IMAGE TRANSFORM
+===================================================== */
+
+function updateImageTransform() {
+
+    imageLayer.style.transform = `
+
+        translate3d(-50%, -50%, 0)
+
+        translate3d(
+            ${imageX}px,
+            ${imageY}px,
+            0
+        )
+
+        rotate(${imageRotation}rad)
+
+        scale(${imageScale})
+
+    `;
+
+}
+
+
+/* =====================================================
+   TOUCH HELPERS
+===================================================== */
+
+function getDistance(a, b) {
+
+    return Math.hypot(
+        a.clientX - b.clientX,
+        a.clientY - b.clientY
+    );
+
+}
+
+
+function getAngle(a, b) {
+
+    return Math.atan2(
+        b.clientY - a.clientY,
+        b.clientX - a.clientX
+    );
+
+}
+
+
+function getCenter(a, b) {
+
+    return {
+
+        x:
+            (a.clientX + b.clientX) / 2,
+
+        y:
+            (a.clientY + b.clientY) / 2
+
+    };
+
+}
+
+
+/* =====================================================
+   TOUCH START
+===================================================== */
+
+imageLayer.addEventListener(
+    "touchstart",
+    event => {
+
+        if (locked) return;
+
+        event.preventDefault();
+
+
+        touches.clear();
+
+
+        for (
+            const touch of event.touches
+        ) {
+
+            touches.set(
+                touch.identifier,
+                touch
+            );
+
+        }
+
+
+        if (event.touches.length === 1) {
+
+            const touch =
+                event.touches[0];
+
+            startX =
+                touch.clientX;
+
+            startY =
+                touch.clientY;
+
+            startImageX =
+                imageX;
+
+            startImageY =
+                imageY;
+
+        }
+
+
+        if (event.touches.length >= 2) {
+
+            const a =
+                event.touches[0];
+
+            const b =
+                event.touches[1];
+
+
+            startDistance =
+                getDistance(a, b);
+
+            startAngle =
+                getAngle(a, b);
+
+            startScale =
+                imageScale;
+
+            startRotation =
+                imageRotation;
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   TOUCH MOVE
+===================================================== */
+
+imageLayer.addEventListener(
+    "touchmove",
+    event => {
+
+        if (locked) return;
+
+        event.preventDefault();
+
+
+        if (event.touches.length === 1) {
+
+            const touch =
+                event.touches[0];
+
+
+            const dx =
+                touch.clientX - startX;
+
+            const dy =
+                touch.clientY - startY;
+
+
+            imageX =
+                startImageX + dx;
+
+            imageY =
+                startImageY + dy;
+
+
+            updateImageTransform();
+
+        }
+
+
+        if (event.touches.length >= 2) {
+
+            const a =
+                event.touches[0];
+
+            const b =
+                event.touches[1];
+
+
+            /*
+                PINCH ZOOM
+            */
+
+            const distance =
+                getDistance(a, b);
+
+            const scaleFactor =
+                distance / startDistance;
+
+
+            imageScale =
+                Math.max(
+                    .15,
+                    Math.min(
+                        8,
+                        startScale * scaleFactor
+                    )
+                );
+
+
+            /*
+                ROTATION
+            */
+
+            const angle =
+                getAngle(a, b);
+
+
+            imageRotation =
+                startRotation +
+                (angle - startAngle);
+
+
+            updateImageTransform();
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   TOUCH END
+===================================================== */
+
+imageLayer.addEventListener(
+    "touchend",
+    event => {
+
+        if (locked) return;
+
+        event.preventDefault();
+
+
+        /*
+            When returning from two fingers
+            to one finger, restart drag position
+        */
+
+        if (event.touches.length === 1) {
+
+            const touch =
+                event.touches[0];
+
+            startX =
+                touch.clientX;
+
+            startY =
+                touch.clientY;
+
+            startImageX =
+                imageX;
+
+            startImageY =
+                imageY;
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   MOUSE SUPPORT FOR PC
+===================================================== */
+
+let mouseDown = false;
+
+let mouseStartX = 0;
+let mouseStartY = 0;
+
+let mouseImageX = 0;
+let mouseImageY = 0;
+
+
+imageLayer.addEventListener(
+    "mousedown",
+    event => {
+
+        if (locked) return;
+
+        mouseDown = true;
+
+        mouseStartX =
+            event.clientX;
+
+        mouseStartY =
+            event.clientY;
+
+        mouseImageX =
+            imageX;
+
+        mouseImageY =
+            imageY;
+
+    }
+);
+
+
+window.addEventListener(
+    "mousemove",
+    event => {
+
+        if (!mouseDown || locked)
+            return;
+
+
+        imageX =
+            mouseImageX +
+            (event.clientX - mouseStartX);
+
+        imageY =
+            mouseImageY +
+            (event.clientY - mouseStartY);
+
+
+        updateImageTransform();
+
+    }
+);
+
+
+window.addEventListener(
+    "mouseup",
+    () => {
+
+        mouseDown = false;
+
+    }
+);
+
+
+/* =====================================================
+   CHANGE IMAGE
+===================================================== */
+
+changeButton.addEventListener(
+    "click",
+    () => {
+
+        imageInput.value = "";
+
+        imageInput.click();
+
+    }
+);
 
 </script>
 
