@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P-Pay - Dashboard</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:95%;
+    max-width:420px;
+    background:rgba(255,255,255,.12);
+    backdrop-filter:blur(18px);
+    border-radius:25px;
+    padding:25px;
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+    color:white;
+}
+
+.logo{
+    text-align:center;
+    font-size:32px;
+    margin-bottom:25px;
+}
+
+.greeting{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.sub{
+    color:#d8e5ff;
+    margin-top:5px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:linear-gradient(135deg,#00c853,#00e676);
+    border-radius:20px;
+    padding:20px;
+    color:white;
+    margin-bottom:25px;
+}
+
+.card h3{
+    font-weight:normal;
+    opacity:.9;
+}
+
+.balance{
+    font-size:40px;
+    margin-top:12px;
+    font-weight:bold;
+}
+
+.option{
+    width:100%;
+    border:none;
+    padding:18px;
+    margin-top:15px;
+    border-radius:15px;
+    background:rgba(255,255,255,.18);
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.option:hover{
+    transform:scale(1.03);
+    background:rgba(255,255,255,.28);
+}
+
+.logout{
+    margin-top:25px;
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:15px;
+    background:#ff5252;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.logout:hover{
+    background:#ff1744;
+}
+
+.popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.popupBox{
+    width:90%;
+    max-width:330px;
+    background:#fff;
+    color:#222;
+    padding:25px;
+    border-radius:18px;
+    text-align:center;
+}
+
+.popupBox h2{
+    margin-bottom:10px;
+}
+
+.popupBox p{
+    color:#555;
+    margin-bottom:15px;
+}
+
+.popupBox input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    margin-bottom:20px;
+    font-size:16px;
+}
+
+.popupButtons{
+    display:flex;
+    gap:10px;
+}
+
+.popupButtons button{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+#cancelBtn{
+    background:#ccc;
+}
+
+#confirmBtn{
+    background:#2563eb;
+    color:white;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="logo">💳 P-Pay</div>
+
+    <div class="greeting">
+        Hello! <span id="name">User</span>
+    </div>
+
+    <div class="sub">
+        Welcome back.
+    </div>
+
+<div class="card" id="balanceCard" style="display:none;">
+    <h3>Pngal Bank Ballence</h3>
+    <div class="balance">PM.100</div>
+</div>
+
+<button class="option" id="payBtn">
+    💸 Pay to Recipient
+</button>
+
+<button class="option" id="showBalanceBtn">
+    💰 See Balance
+</button>
+<div id="passwordPopup" class="popup">
+
+    <div class="popupBox">
+
+        <h2>View Balance</h2>
+
+        <p>Enter your password</p>
+
+        <input
+            type="password"
+            id="balancePassword"
+            placeholder="Password"
+        >
+
+        <div class="popupButtons">
+            <button id="cancelBtn">Cancel</button>
+            <button id="confirmBtn">Show</button>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="payPopup" class="popup">
+
+    <div class="popupBox">
+
+        <h2>Send Money</h2>
+
+        <input
+            id="recipientName"
+            placeholder="Recipient Username">
+
+        <input
+            id="payAmount"
+            type="number"
+            placeholder="Amount">
+
+        <input
+            id="payPassword"
+            type="password"
+            placeholder="Password">
+
+        <div class="popupButtons">
+
+            <button id="cancelPay">Cancel</button>
+
+            <button id="sendMoney">
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    <button class="logout" id="logout">
+        Logout
+    </button>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut,
+    EmailAuthProvider,
+    reauthenticateWithCredential
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import{
+getDatabase,
+ref,
+get,
+update,
+child
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyBq7UEsIwoudC2g8DRrG7EwqblX9SIDCF8",
+  authDomain: "ticktok-7fb30.firebaseapp.com",
+  databaseURL: "https://ticktok-7fb30-default-rtdb.firebaseio.com",
+  projectId: "ticktok-7fb30",
+  storageBucket: "ticktok-7fb30.firebasestorage.app",
+  messagingSenderId: "493782050714",
+  appId: "1:493782050714:web:2bda69e946d8bdfb50fc23",
+  measurementId: "G-2FYPJB4Y9Y"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db=getDatabase(app);
+onAuthStateChanged(auth,(user)=>{
+
+    if(!user){
+        window.location="login.html";
+        return;
+    }
+
+    const username=user.email.split("@")[0];
+    document.getElementById("name").textContent=username;
+
+});
+
+document.getElementById("logout").onclick=()=>{
+
+    signOut(auth).then(()=>{
+        window.location="login.html";
+    });
+
+};
+document.getElementById("payBtn").onclick = () => {
+
+    document.getElementById("payPopup").style.display = "flex";
+
+    document.getElementById("recipientName").value = "";
+
+    document.getElementById("payAmount").value = "";
+
+    document.getElementById("payPassword").value = "";
+
+};
+document.getElementById("showBalanceBtn").onclick = () => {
+
+    document.getElementById("passwordPopup").style.display = "flex";
+
+    document.getElementById("balancePassword").value = "";
+
+};
+document.getElementById("cancelPay").onclick = () => {
+
+    document.getElementById("payPopup").style.display = "none";
+
+};
+document.getElementById("cancelBtn").onclick = () => {
+
+    document.getElementById("passwordPopup").style.display = "none";
+
+};
+
+document.getElementById("confirmBtn").onclick = async () => {
+
+    const password = document.getElementById("balancePassword").value;
+
+    const user = auth.currentUser;
+
+    if(!password) return;
+
+    try{
+
+        const credential = EmailAuthProvider.credential(
+            user.email,
+            password
+        );
+
+        await reauthenticateWithCredential(user, credential);
+
+        document.getElementById("passwordPopup").style.display = "none";
+        document.getElementById("balanceCard").style.display = "block";
+        const snap=await get(ref(db,"users/"+user.uid));
+
+        document.querySelector(".balance").textContent=
+        "PM."+snap.val().balance;
+
+    }catch{
+
+        alert("Incorrect password.");
+
+    }
+
+};
+document.getElementById("sendMoney").onclick = async () => {
+
+    const recipient =
+        document.getElementById("recipientName").value
+        .trim()
+        .toLowerCase();
+
+    const amount =
+        Number(document.getElementById("payAmount").value);
+
+    const password =
+        document.getElementById("payPassword").value;
+
+    const user = auth.currentUser;
+
+    if(recipient=="" || password=="" || amount<=0){
+
+        alert("Fill all fields.");
+
+        return;
+
+    }
+
+    try{
+
+        const credential =
+        EmailAuthProvider.credential(
+            user.email,
+            password
+        );
+
+        await reauthenticateWithCredential(
+            user,
+            credential
+        );
+
+        const usersSnap =
+        await get(ref(db,"users"));
+
+        let receiverUID = null;
+
+        let receiverData = null;
+
+        usersSnap.forEach((child)=>{
+
+            const data = child.val();
+
+            if(
+                data.username.toLowerCase() ==
+                recipient
+            ){
+
+                receiverUID = child.key;
+
+                receiverData = data;
+
+            }
+
+        });
+
+        if(receiverUID==null){
+
+            alert("Payment Failed.\nRecipient not found.");
+
+            return;
+
+        }
+
+        if(receiverUID===user.uid){
+
+            alert("You cannot pay yourself.");
+
+            return;
+
+        }
+
+        const senderSnap =
+        await get(ref(db,"users/"+user.uid));
+
+        const senderData =
+        senderSnap.val();
+
+        if(senderData.balance<amount){
+
+            alert("Insufficient balance.");
+
+            return;
+
+        }
+
+        await update(
+            ref(db,"users/"+user.uid),
+            {
+                balance:
+                senderData.balance-amount
+            }
+        );
+
+        await update(
+            ref(db,"users/"+receiverUID),
+            {
+                balance:
+                receiverData.balance+amount
+            }
+        );
+
+        document.getElementById("payPopup").style.display="none";
+
+        if(
+            document.getElementById("balanceCard").style.display==="block"
+        ){
+
+            document.querySelector(".balance").textContent =
+            "PM."+(senderData.balance-amount);
+
+        }
+
+        alert(
+            "Payment Successful!\n\nPM."+amount+
+            " sent to "+recipient+"."
+        );
+
+    }
+
+    catch{
+
+        alert("Incorrect password.");
+        console.error(error);
+        alert(error.message);
+
+    }
+
+};
+</script>
+
+</body>
+</html>

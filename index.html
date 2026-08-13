@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="google-site-verification"
+    content="dPTTYWQaXzrELbV7bySa09u456hbkneA8jtPIs8u6Eg"
+>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Mpoxel | Building Digital Experiences</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+    scroll-padding-top:90px;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#070707;
+    color:#fff;
+    overflow-x:hidden;
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root{
+
+    --gold:#FFD54A;
+    --gold-light:#fff1a8;
+    --gold-dark:#d99d00;
+
+    --background:#070707;
+    --surface:#0d0d0d;
+    --surface-2:#121212;
+
+    --border:rgba(255,213,74,.14);
+    --border-hover:rgba(255,213,74,.55);
+
+    --text:#ffffff;
+    --muted:#a3a3a3;
+
+    --max-width:1250px;
+}
+
+
+/* =========================================================
+   BODY BACKGROUND
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    width:450px;
+    height:450px;
+
+    left:-180px;
+    top:-180px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,213,74,.10),
+            transparent 70%
+        );
+
+    pointer-events:none;
+
+    z-index:-2;
+}
+
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:400px;
+    height:400px;
+
+    right:-170px;
+    bottom:-170px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,190,40,.07),
+            transparent 70%
+        );
+
+    pointer-events:none;
+
+    z-index:-2;
+}
+
+
+/* =========================================================
+   SUBTLE GRID
+========================================================= */
+
+body{
+
+    background-color:#070707;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.018) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.018) 1px,
+            transparent 1px
+        );
+
+    background-size:55px 55px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+nav{
+    position:sticky;
+    top:0;
+    z-index:999;
+
+    width:100%;
+    min-height:76px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:
+        0
+        max(25px, calc((100% - var(--max-width)) / 2));
+
+    background:rgba(7,7,7,.42);
+
+    backdrop-filter:
+        blur(22px)
+        saturate(130%);
+
+    -webkit-backdrop-filter:
+        blur(22px)
+        saturate(130%);
+
+    border-bottom:
+        1px solid rgba(255,213,74,.18);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.20);
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:27px;
+
+    font-weight:800;
+
+    letter-spacing:3px;
+
+    color:var(--gold);
+
+    text-shadow:
+        0 0 20px rgba(255,213,74,.18);
+}
+
+
+/* =========================================================
+   NAV LINKS
+========================================================= */
+
+nav a{
+
+    position:relative;
+
+    display:inline-block;
+
+    color:#d8d8d8;
+
+    text-decoration:none;
+
+    margin-left:30px;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    transition:
+        color .2s ease;
+}
+
+
+nav a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    bottom:-7px;
+
+    width:0;
+    height:2px;
+
+    background:var(--gold);
+
+    transition:
+        width .2s ease;
+}
+
+
+nav a:hover{
+
+    color:var(--gold);
+}
+
+
+nav a:hover::after{
+
+    width:100%;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+
+    min-height:calc(100vh - 76px);
+
+    max-width:1250px;
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:
+        80px 25px
+        100px;
+
+    position:relative;
+}
+
+
+/* =========================================================
+   HERO DECORATION
+========================================================= */
+
+.hero::before{
+
+    content:"MPOXEL";
+
+    position:absolute;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(80px,18vw,230px);
+
+    font-weight:800;
+
+    color:rgba(255,213,74,.018);
+
+    white-space:nowrap;
+
+    pointer-events:none;
+
+    user-select:none;
+
+    z-index:0;
+}
+
+
+.hero > div{
+
+    position:relative;
+
+    z-index:1;
+}
+
+
+/* =========================================================
+   HERO TITLE
+========================================================= */
+
+.hero h1{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(42px,7vw,78px);
+
+    line-height:1.08;
+
+    font-weight:800;
+
+    margin-bottom:25px;
+
+    letter-spacing:-2px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #FFD54A 0%,
+            #fff5b5 45%,
+            #FFD54A 100%
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+}
+
+
+/* =========================================================
+   HERO PARAGRAPH
+========================================================= */
+
+.hero p{
+
+    max-width:750px;
+
+    margin:auto;
+
+    color:#bcbcbc;
+
+    font-size:
+        clamp(16px,2vw,20px);
+
+    line-height:1.9;
+}
+
+
+/* =========================================================
+   BUTTON AREA
+========================================================= */
+
+.buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    margin-top:40px;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:150px;
+
+    padding:14px 27px;
+
+    border-radius:50px;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.btn:hover{
+
+    transform:translateY(-3px);
+}
+
+
+/* GOLD BUTTON */
+
+.gold{
+
+    background:var(--gold);
+
+    color:#111;
+
+    box-shadow:
+        0 8px 25px
+        rgba(255,213,74,.12);
+}
+
+
+.gold:hover{
+
+    background:#ffe47b;
+
+    box-shadow:
+        0 12px 30px
+        rgba(255,213,74,.22);
+}
+
+
+/* OUTLINE */
+
+.outline{
+
+    border:
+        1px solid rgba(255,213,74,.6);
+
+    color:var(--gold);
+
+    background:
+        rgba(255,213,74,.025);
+}
+
+
+.outline:hover{
+
+    background:var(--gold);
+
+    color:#111;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section{
+
+    width:100%;
+
+    max-width:1250px;
+
+    margin:auto;
+
+    padding:
+        100px 25px;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.title{
+
+    position:relative;
+
+    text-align:center;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(30px,5vw,43px);
+
+    margin-bottom:55px;
+
+    color:var(--gold);
+
+    letter-spacing:-1px;
+}
+
+
+.title::after{
+
+    content:"";
+
+    display:block;
+
+    width:55px;
+
+    height:3px;
+
+    margin:16px auto 0;
+
+    border-radius:5px;
+
+    background:var(--gold);
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px,1fr)
+        );
+
+    gap:25px;
+
+    align-items:stretch;
+}
+
+
+/* =========================================================
+   GENERAL CARD
+========================================================= */
+
+.card{
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.018)
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:35px;
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:25px;
+    right:25px;
+
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,213,74,.55),
+            transparent
+        );
+
+    opacity:.45;
+}
+
+
+.card:hover{
+
+    transform:translateY(-7px);
+
+    border-color:var(--border-hover);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,213,74,.055),
+            rgba(255,255,255,.02)
+        );
+}
+
+
+.card h3{
+
+    color:var(--gold);
+
+    font-size:21px;
+}
+
+
+.card p{
+
+    color:#b1b1b1;
+
+    line-height:1.85;
+
+    font-size:15px;
+}
+
+
+/* =========================================================
+   FOUNDER
+========================================================= */
+
+#founder .about{
+
+    max-width:850px;
+
+    margin:auto;
+}
+
+
+#founder .card{
+
+    text-align:left;
+
+    border-color:
+        rgba(255,213,74,.22);
+}
+
+
+/* =========================================================
+   SERVICES
+========================================================= */
+
+.services{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px,1fr)
+        );
+
+    gap:22px;
+}
+
+
+.service{
+
+    text-align:center;
+
+    padding:35px 25px;
+}
+
+
+.service h3{
+
+    margin:18px 0 12px;
+
+    color:var(--gold);
+
+    font-size:19px;
+}
+
+
+.service p{
+
+    color:#999;
+
+    line-height:1.8;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   PORTFOLIO
+========================================================= */
+
+.portfolio{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(320px,1fr)
+        );
+
+    gap:28px;
+}
+
+
+.project{
+
+    overflow:hidden;
+
+    padding:0 0 30px;
+}
+
+
+.project h3,
+.project p,
+.project a{
+
+    margin-left:30px;
+
+    margin-right:30px;
+}
+
+
+.project h3{
+
+    margin-top:25px;
+
+    margin-bottom:10px;
+
+    color:#fff;
+
+    font-size:21px;
+}
+
+
+.project p{
+
+    color:#9d9d9d;
+
+    line-height:1.75;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   PROJECT PREVIEW
+========================================================= */
+
+.preview{
+
+    height:210px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:65px;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            #151515,
+            #202020
+        );
+
+    border-bottom:
+        1px solid rgba(255,213,74,.12);
+}
+
+
+.preview::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,213,74,.08),
+            transparent 50%
+        );
+}
+
+
+/* =========================================================
+   PROJECT BUTTON
+========================================================= */
+
+.project a{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-top:25px;
+
+    padding:11px 24px;
+
+    border-radius:50px;
+
+    background:var(--gold);
+
+    color:#111;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+}
+
+
+.project a:hover{
+
+    transform:translateY(-2px);
+
+    background:#fff0a5;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+
+    width:100%;
+
+    margin-top:50px;
+
+    padding:
+        55px 25px;
+
+    text-align:center;
+
+    border-top:
+        1px solid rgba(255,213,74,.13);
+
+    background:#050505;
+}
+
+
+footer h2{
+
+    color:var(--gold);
+}
+
+
+footer p{
+
+    color:#777;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+
+::-webkit-scrollbar-track{
+
+    background:#090909;
+}
+
+
+::-webkit-scrollbar-thumb{
+
+    background:
+        linear-gradient(
+            180deg,
+            #FFD54A,
+            #d99d00
+        );
+
+    border-radius:20px;
+
+    border:2px solid #090909;
+}
+
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff0a6,
+            #FFD54A
+        );
+}
+
+
+html{
+
+    scrollbar-color:
+        #FFD54A
+        #090909;
+
+    scrollbar-width:thin;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:900px){
+
+    nav{
+
+        padding:
+            0 25px;
+    }
+
+    section{
+
+        padding:
+            80px 25px;
+    }
+
+    .hero{
+
+        padding:
+            70px 25px
+            90px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:768px){
+
+    nav{
+
+        min-height:auto;
+
+        padding:
+            17px 20px;
+
+        flex-direction:column;
+
+        gap:14px;
+    }
+
+
+    .logo{
+
+        font-size:23px;
+    }
+
+
+    nav div:last-child{
+
+        display:flex;
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+        gap:15px;
+    }
+
+
+    nav a{
+
+        margin:0;
+
+        font-size:13px;
+    }
+
+
+    .hero{
+
+        min-height:80vh;
+
+        padding:
+            70px 20px;
+    }
+
+
+    .hero h1{
+
+        font-size:42px;
+
+        letter-spacing:-1px;
+    }
+
+
+    .hero p{
+
+        font-size:16px;
+
+        line-height:1.8;
+    }
+
+
+    .buttons{
+
+        flex-direction:column;
+
+        align-items:center;
+
+        gap:8px;
+    }
+
+
+    .btn{
+
+        width:100%;
+
+        max-width:320px;
+    }
+
+
+    section{
+
+        padding:
+            70px 20px;
+    }
+
+
+    .title{
+
+        font-size:31px;
+
+        margin-bottom:40px;
+    }
+
+
+    .about,
+    .services,
+    .portfolio{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .card{
+
+        padding:27px;
+    }
+
+
+    .preview{
+
+        height:175px;
+
+        font-size:52px;
+    }
+
+
+    .project h3,
+    .project p,
+    .project a{
+
+        margin-left:25px;
+
+        margin-right:25px;
+    }
+
+
+    footer{
+
+        padding:
+            40px 20px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media(max-width:400px){
+
+    .hero h1{
+
+        font-size:35px;
+    }
+
+
+    .hero p{
+
+        font-size:15px;
+    }
+
+
+    .title{
+
+        font-size:28px;
+    }
+
+
+    .card{
+
+        padding:23px;
+    }
+
+
+    .preview{
+
+        height:160px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    html{
+
+        scroll-behavior:auto;
+    }
+
+
+    *{
+
+        transition:none !important;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav>
+
+    <div class="logo">
+        MPOXEL
+    </div>
+
+    <div>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#services">
+            Services
+        </a>
+
+        <a href="#portfolio">
+            Portfolio
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <h1>
+            Building Digital Experiences
+        </h1>
+
+        <p>
+
+            Mpoxel creates modern websites,
+            interactive 3D experiences, and premium
+            digital solutions that combine creativity
+            with performance.
+
+        </p>
+
+
+        <div class="buttons">
+
+            <a
+                href="#portfolio"
+                class="btn gold"
+            >
+                View Portfolio
+            </a>
+
+
+            <a
+                href="contact.html"
+                class="btn outline"
+            >
+                Contact
+            </a>
+
+
+            <a
+                href="more.html"
+                class="btn outline"
+            >
+                More
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ABOUT
+========================================================= -->
+
+<section id="about">
+
+    <h2 class="title">
+        About Mpoxel
+    </h2>
+
+
+    <div class="about">
+
+
+        <div class="card">
+
+            <h3>
+                Who We Are
+            </h3>
+
+            <br>
+
+            <p>
+
+                Mpoxel is a creative web studio focused
+                on building beautiful, responsive, and
+                high-performance websites. Whether it's
+                a clean business website or an immersive
+                3D experience, our goal is to deliver
+                modern digital products that stand out.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Our Mission
+            </h3>
+
+            <br>
+
+            <p>
+
+                To help businesses and creators establish
+                a strong online presence through elegant
+                design, smooth user experiences, and
+                reliable web technologies.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOUNDER
+========================================================= -->
+
+<section id="founder">
+
+    <h2 class="title">
+        Who Is Behind Mpoxel?
+    </h2>
+
+
+    <div class="about">
+
+        <div class="card">
+
+            <h3>
+                Who Am I?
+            </h3>
+
+            <br>
+
+            <p>
+
+                I am Manvir Sharma, a 14-year-old web
+                developer with a dream of building a
+                successful technology company. Mpoxel
+                is my own company, and I currently own
+                100% of its shares. Since it is a private
+                company, anyone interested in purchasing
+                shares can contact me directly.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     SERVICES
+========================================================= -->
+
+<section id="services">
+
+    <h2 class="title">
+        Services
+    </h2>
+
+
+    <div class="services">
+
+
+        <div class="card service">
+
+            <h3>
+                🌐 2D Websites
+            </h3>
+
+            <p>
+
+                Responsive websites with modern UI
+                and optimized performance.
+
+            </p>
+
+        </div>
+
+
+        <div class="card service">
+
+            <h3>
+                🚀 3D Websites
+            </h3>
+
+            <p>
+
+                Interactive Three.js experiences that
+                make your brand unforgettable.
+
+            </p>
+
+        </div>
+
+
+        <div class="card service">
+
+            <h3>
+                🎨 Branding
+            </h3>
+
+            <p>
+
+                Professional logos and digital identity
+                for businesses and creators.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PORTFOLIO
+========================================================= -->
+
+<section id="portfolio">
+
+    <h2 class="title">
+        Portfolio
+    </h2>
+
+
+    <div class="portfolio">
+
+
+        <!-- 2D WEBSITE -->
+
+        <div class="card project">
+
+            <div class="preview">
+                🌐
+            </div>
+
+
+            <h3>
+                2D Website
+            </h3>
+
+
+            <p>
+
+                A responsive business website featuring
+                clean layouts, modern design, and an
+                intuitive user experience.
+
+            </p>
+
+
+            <a
+                href="https://rmm-join.github.io/RMM/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Visit Project
+            </a>
+
+        </div>
+
+
+        <!-- 3D WEBSITE -->
+
+        <div class="card project">
+
+            <div class="preview">
+                🚀
+            </div>
+
+
+            <h3>
+                3D Website
+            </h3>
+
+
+            <p>
+
+                An interactive Three.js experience
+                showcasing immersive graphics and
+                real-time 3D environments.
+
+            </p>
+
+
+            <a
+                href="https://rmm-join.github.io/rwf/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Visit Project
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <h2>
+        MPOXEL
+    </h2>
+
+    <br>
+
+
+    <h2>
+        A website by Manvir Sharma
+    </h2>
+
+    <br>
+
+
+    <p>
+        Making the Impossible Possible.
+    </p>
+
+    <br>
+
+
+    <p>
+        © 2026 Mpoxel. All rights reserved.
+    </p>
+
+    <br>
+
+
+    <p>
+        Last Updated: 18 July 2026
+    </p>
+
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,2510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>AR Drawing</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    touch-action: none;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+#loadingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at center,
+        #202020 0%,
+        #080808 55%,
+        #000 100%);
+
+    color: white;
+
+    transition:
+        opacity .6s ease,
+        visibility .6s ease;
+}
+
+#loadingScreen.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.logo {
+    font-size: 58px;
+
+    animation:
+        logoFloat 1.8s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+}
+
+.loadingTitle {
+    margin-top: 15px;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.loadingText {
+    margin-top: 8px;
+
+    color: #888;
+    font-size: 14px;
+}
+
+.loader {
+    width: 180px;
+    height: 4px;
+
+    margin-top: 28px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #222;
+}
+
+.loaderBar {
+    width: 0%;
+    height: 100%;
+
+    border-radius: 20px;
+
+    background: white;
+
+    animation:
+        loading 1.8s ease forwards;
+}
+
+@keyframes loading {
+
+    to {
+        width: 100%;
+    }
+
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+#welcomeScreen {
+    position: fixed;
+    inset: 0;
+
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at 50% 35%,
+        #202020,
+        #090909 50%,
+        #000);
+
+    color: white;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity .5s ease,
+        visibility .5s ease;
+}
+
+#welcomeScreen.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.welcomeBox {
+    width: min(420px, 90%);
+
+    padding: 42px 30px;
+
+    text-align: center;
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    border-radius: 28px;
+
+    background:
+        rgba(255,255,255,.055);
+
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.5);
+
+    animation:
+        welcomeAppear .7s ease;
+}
+
+@keyframes welcomeAppear {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(25px)
+            scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+.welcomeIcon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+
+    border-radius: 22px;
+
+    background:
+        rgba(255,255,255,.09);
+
+    border:
+        1px solid rgba(255,255,255,.12);
+}
+
+.welcomeBox h1 {
+    font-size: 31px;
+    margin-bottom: 12px;
+}
+
+.welcomeBox p {
+    color: #999;
+
+    font-size: 15px;
+    line-height: 1.5;
+
+    margin-bottom: 30px;
+}
+
+.selectButton {
+    display: block;
+
+    width: 100%;
+
+    padding: 16px;
+
+    border-radius: 16px;
+
+    background: white;
+    color: black;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.selectButton:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 30px rgba(255,255,255,.15);
+}
+
+.selectButton:active {
+    transform: scale(.97);
+}
+
+#imageInput {
+    display: none;
+}
+
+.smallText {
+    margin-top: 18px !important;
+    margin-bottom: 0 !important;
+
+    font-size: 12px !important;
+    color: #666 !important;
+}
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+#cameraScreen {
+    position: fixed;
+    inset: 0;
+
+    background: #000;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity .5s ease;
+}
+
+#cameraScreen.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#camera {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        filter .35s ease;
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+#imageLayer {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    z-index: 5;
+
+    transform:
+        translate3d(-50%, -50%, 0)
+        translate3d(0,0,0)
+        rotate(0deg)
+        scale(1);
+
+    transform-origin: center center;
+
+    will-change:
+        transform,
+        opacity;
+
+    touch-action: none;
+
+    transition:
+        opacity .15s linear;
+}
+
+#overlayImage {
+    display: block;
+
+    max-width: 75vw;
+    max-height: 65vh;
+
+    width: auto;
+    height: auto;
+
+    pointer-events: none;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+
+    filter:
+        drop-shadow(
+            0 8px 18px
+            rgba(0,0,0,.45)
+        );
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+#grid {
+    position: absolute;
+    inset: 0;
+
+    z-index: 4;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity .25s ease;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.18) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.18) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        40px 40px;
+
+    background-position:
+        center center;
+}
+
+#grid.active {
+    opacity: 1;
+}
+
+
+/* =====================================================
+   TOP CAMERA BAR
+===================================================== */
+
+.cameraTop {
+    position: absolute;
+
+    top: 18px;
+    left: 18px;
+    right: 18px;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    pointer-events: none;
+}
+
+.cameraTitle,
+.changeButton {
+    pointer-events: auto;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    background:
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(16px);
+
+    -webkit-backdrop-filter:
+        blur(16px);
+
+    color: white;
+
+    border-radius: 15px;
+
+    padding:
+        10px 14px;
+
+    font-size: 13px;
+}
+
+.changeButton {
+    border: none;
+
+    cursor: pointer;
+}
+
+
+/* ================================
+   SETTINGS GEAR
+================================ */
+
+#settingsButton {
+    position: absolute;
+
+    z-index: 40;
+
+    left: 50%;
+    bottom: 22px;
+
+    transform: translateX(-50%);
+
+    width: 58px;
+    height: 58px;
+
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 50%;
+
+    background: rgba(20,20,20,.58);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    color: white;
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition:
+        opacity .2s ease,
+        transform .3s cubic-bezier(.22,1,.36,1);
+}
+
+#settingsButton.hidden {
+    opacity: 0;
+    pointer-events: none;
+
+    transform:
+        translateX(-50%)
+        translateY(20px)
+        scale(.8);
+}
+
+
+/* ================================
+   BOTTOM SHEET
+================================ */
+
+#controlSheet {
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 30;
+
+    padding:
+        8px
+        18px
+        30px;
+
+    border-top:
+        1px solid rgba(255,255,255,.13);
+
+    border-radius:
+        28px 28px 0 0;
+
+    background:
+        rgba(15,15,15,.62);
+
+    backdrop-filter:
+        blur(28px)
+        saturate(140%);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(140%);
+
+    transform:
+        translate3d(0, 100%, 0);
+
+    transition:
+        transform .5s cubic-bezier(.22,1,.36,1);
+
+    will-change: transform;
+
+    touch-action: none;
+}
+
+#controlSheet.open {
+    transform:
+        translate3d(0, 0, 0);
+}
+
+
+/* ================================
+   DRAG HANDLE
+================================ */
+
+#sheetDragHandle {
+
+    width: 60px;
+    height: 32px;
+
+    margin: 0 auto 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: grab;
+
+    touch-action: none;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+#sheetDragHandle:active {
+    cursor: grabbing;
+}
+
+#sheetDragHandle span {
+
+    width: 44px;
+    height: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.7);
+
+    color: transparent;
+
+    transition:
+        width .2s ease,
+        background .2s ease;
+}
+
+#sheetDragHandle:hover span {
+    width: 50px;
+    background: white;
+}
+
+
+/* ================================
+   CONTROLS
+================================ */
+
+.controls {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+
+    max-width: 620px;
+
+    margin: auto;
+}
+
+.control {
+
+    min-height: 72px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        background .18s ease,
+        transform .15s ease,
+        border-color .18s ease;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+.control:active {
+    transform: scale(.94);
+}
+
+.control.active {
+
+    background:
+        rgba(255,255,255,.18);
+
+    border-color:
+        rgba(255,255,255,.35);
+}
+
+.controlIcon {
+    font-size: 21px;
+}
+
+.controlName {
+    font-size: 11px;
+    color: rgba(255,255,255,.75);
+}
+
+
+/* ================================
+   SLIDERS
+================================ */
+
+.sliderArea {
+
+    max-width: 620px;
+
+    margin:
+        14px auto 0;
+
+    padding:
+        13px 16px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255,255,255,.05);
+}
+
+.sliderTop {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+    color: white;
+
+    font-size: 12px;
+}
+
+input[type="range"] {
+
+    width: 100%;
+
+    accent-color: white;
+
+    cursor: pointer;
+}
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .controls {
+        grid-template-columns:
+            repeat(4, 1fr);
+    }
+
+    .control {
+        min-height: 65px;
+        border-radius: 15px;
+    }
+
+    .controlIcon {
+        font-size: 18px;
+    }
+
+    .controlName {
+        font-size: 10px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOADING
+===================================================== -->
+
+<div id="loadingScreen">
+
+    <div class="logo">🎨</div>
+
+    <div class="loadingTitle">
+        AR Drawing
+    </div>
+
+    <div class="loadingText">
+        Preparing your creative space...
+    </div>
+
+    <div class="loader">
+        <div class="loaderBar"></div>
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     WELCOME
+===================================================== -->
+
+<div id="welcomeScreen">
+
+    <div class="welcomeBox">
+
+        <div class="welcomeIcon">
+            🎨
+        </div>
+
+        <h1>
+            Welcome to AR Drawing
+        </h1>
+
+        <p>
+            Turn your camera into a creative canvas.
+            Select an image and trace it in the real world.
+        </p>
+
+        <label class="selectButton">
+
+            Select Image
+
+            <input
+                id="imageInput"
+                type="file"
+                accept="image/*">
+
+        </label>
+
+        <p class="smallText">
+            Your image stays on your device.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CAMERA
+===================================================== -->
+
+<div id="cameraScreen">
+
+
+    <video
+        id="camera"
+        autoplay
+        playsinline>
+    </video>
+
+
+    <!-- Grid -->
+
+    <div id="grid"></div>
+
+
+    <!-- Selected image -->
+
+    <div id="imageLayer">
+
+        <img
+            id="overlayImage"
+            alt="Selected drawing reference">
+
+    </div>
+
+
+    <!-- Top -->
+
+    <div class="cameraTop">
+
+        <div class="cameraTitle">
+            🎨 AR Drawing
+        </div>
+
+        <button
+            class="changeButton"
+            id="changeButton">
+
+            Change Image
+
+        </button>
+
+    </div>
+
+
+    <!-- Lock status -->
+
+    <div id="lockIndicator">
+        🔒 Image Locked
+    </div>
+
+
+    <!-- Error -->
+
+    <div id="cameraMessage"></div>
+
+
+    <!-- =================================================
+         SETTINGS BUTTON
+    ================================================= -->
+
+<!-- SETTINGS BUTTON -->
+<button id="settingsButton" aria-label="Open drawing controls">
+    ⚙
+</button>
+
+
+<!-- BOTTOM SHEET -->
+<div id="controlSheet">
+
+    <!-- This is the only thing that can drag the sheet -->
+    <div id="sheetDragHandle" aria-label="Close controls">
+        <span>−</span>
+    </div>
+
+    <div class="controls">
+
+        <button class="control" id="transparencyButton">
+            <span class="controlIcon">◐</span>
+            <span class="controlName">Opacity</span>
+        </button>
+
+        <button class="control" id="flashButton">
+            <span class="controlIcon">🔦</span>
+            <span class="controlName">Flash</span>
+        </button>
+
+        <button class="control" id="gridButton">
+            <span class="controlIcon">#</span>
+            <span class="controlName">Grid</span>
+        </button>
+
+        <button class="control" id="lockButton">
+            <span class="controlIcon">🔓</span>
+            <span class="controlName">Lock</span>
+        </button>
+
+        <button class="control" id="greyButton">
+            <span class="controlIcon">◑</span>
+            <span class="controlName">Grey</span>
+        </button>
+
+        <button class="control" id="resetButton">
+            <span class="controlIcon">↺</span>
+            <span class="controlName">Reset</span>
+        </button>
+
+    </div>
+
+
+    <!-- Opacity -->
+    <div class="sliderArea" id="opacityArea">
+
+        <div class="sliderTop">
+            <span>Image Transparency</span>
+            <span id="opacityValue">100%</span>
+        </div>
+
+        <input
+            id="opacitySlider"
+            type="range"
+            min="10"
+            max="100"
+            value="100">
+
+    </div>
+
+
+    <!-- GREY -->
+    <div class="sliderArea">
+
+        <div class="sliderTop">
+            <span>Camera Greyness</span>
+            <span id="greyValue">0%</span>
+        </div>
+
+        <input
+            id="greySlider"
+            type="range"
+            min="0"
+            max="100"
+            value="0">
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   AR DRAWING — COMPLETE JAVASCRIPT
+===================================================== */
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loadingScreen =
+    document.getElementById("loadingScreen");
+
+const welcomeScreen =
+    document.getElementById("welcomeScreen");
+
+const cameraScreen =
+    document.getElementById("cameraScreen");
+
+const camera =
+    document.getElementById("camera");
+
+const imageInput =
+    document.getElementById("imageInput");
+
+const imageLayer =
+    document.getElementById("imageLayer");
+
+const overlayImage =
+    document.getElementById("overlayImage");
+
+const settingsButton =
+    document.getElementById("settingsButton");
+
+const controlSheet =
+    document.getElementById("controlSheet");
+
+const sheetDragHandle =
+    document.getElementById("sheetDragHandle");
+
+const grid =
+    document.getElementById("grid");
+
+const gridButton =
+    document.getElementById("gridButton");
+
+const flashButton =
+    document.getElementById("flashButton");
+
+const lockButton =
+    document.getElementById("lockButton");
+
+const greyButton =
+    document.getElementById("greyButton");
+
+const resetButton =
+    document.getElementById("resetButton");
+
+const transparencyButton =
+    document.getElementById("transparencyButton");
+
+const opacitySlider =
+    document.getElementById("opacitySlider");
+
+const opacityValue =
+    document.getElementById("opacityValue");
+
+const opacityArea =
+    document.getElementById("opacityArea");
+
+const greySlider =
+    document.getElementById("greySlider");
+
+const greyValue =
+    document.getElementById("greyValue");
+
+const changeButton =
+    document.getElementById("changeButton");
+
+const cameraMessage =
+    document.getElementById("cameraMessage");
+
+const lockIndicator =
+    document.getElementById("lockIndicator");
+
+
+/* =====================================================
+   APPLICATION STATE
+===================================================== */
+
+let cameraStream = null;
+
+let cameraTrack = null;
+
+
+/* Bottom sheet */
+
+let sheetOpen = false;
+
+let sheetDragging = false;
+
+let sheetStartY = 0;
+
+let sheetCurrentY = 0;
+
+let sheetHeight = 0;
+
+
+/* Features */
+
+let gridEnabled = false;
+
+let locked = false;
+
+let torchEnabled = false;
+
+
+/* Image */
+
+let imageX = 0;
+
+let imageY = 0;
+
+let imageScale = 1;
+
+let imageRotation = 0;
+
+let imageOpacity = 1;
+
+
+/* Touch */
+
+let startX = 0;
+
+let startY = 0;
+
+let startImageX = 0;
+
+let startImageY = 0;
+
+let startScale = 1;
+
+let startRotation = 0;
+
+let startDistance = 0;
+
+let startAngle = 0;
+
+
+/* Mouse */
+
+let mouseDown = false;
+
+let mouseStartX = 0;
+
+let mouseStartY = 0;
+
+let mouseImageX = 0;
+
+let mouseImageY = 0;
+
+
+/* Prevent accidental old image URLs */
+
+let currentImageURL = null;
+
+
+/* =====================================================
+   LOADING SCREEN
+===================================================== */
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        loadingScreen.classList.add("hide");
+
+        setTimeout(() => {
+
+            welcomeScreen.classList.add("show");
+
+        }, 350);
+
+    }, 1900);
+
+});
+
+
+/* =====================================================
+   IMAGE SELECTION
+===================================================== */
+
+imageInput.addEventListener(
+    "change",
+    async (event) => {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) return;
+
+
+        if (!file.type.startsWith("image/")) {
+
+            alert("Please select an image.");
+
+            return;
+
+        }
+
+
+        /*
+            Remove previous object URL
+        */
+
+        if (currentImageURL) {
+
+            URL.revokeObjectURL(
+                currentImageURL
+            );
+
+        }
+
+
+        currentImageURL =
+            URL.createObjectURL(file);
+
+
+        overlayImage.src =
+            currentImageURL;
+
+
+        /*
+            Reset everything for the
+            newly selected image.
+        */
+
+        resetImageTransform();
+
+        resetFeatures();
+
+
+        /*
+            Move from welcome screen
+            to camera screen.
+        */
+
+        welcomeScreen.classList.remove(
+            "show"
+        );
+
+
+        setTimeout(() => {
+
+            cameraScreen.classList.add(
+                "show"
+            );
+
+        }, 250);
+
+
+        await startCamera();
+
+
+        overlayImage.style.display =
+            "block";
+
+    }
+);
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+async function startCamera() {
+
+    try {
+
+        /*
+            Stop previous stream first.
+        */
+
+        if (cameraStream) {
+
+            cameraStream
+                .getTracks()
+                .forEach(track => {
+                    track.stop();
+                });
+
+        }
+
+
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ) {
+
+            throw new Error(
+                "Camera API unavailable"
+            );
+
+        }
+
+
+        cameraStream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video: {
+
+                    facingMode: {
+                        ideal: "environment"
+                    },
+
+                    width: {
+                        ideal: 1920
+                    },
+
+                    height: {
+                        ideal: 1080
+                    }
+
+                },
+
+                audio: false
+
+            });
+
+
+        camera.srcObject =
+            cameraStream;
+
+
+        cameraTrack =
+            cameraStream.getVideoTracks()[0];
+
+
+        cameraMessage.style.display =
+            "none";
+
+
+    } catch (error) {
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+
+        cameraMessage.innerHTML = `
+            <strong>Camera Access Required</strong>
+            <br><br>
+            Allow camera permission and
+            use HTTPS or localhost.
+        `;
+
+
+        cameraMessage.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =====================================================
+   SETTINGS SHEET — OPEN
+===================================================== */
+
+settingsButton.addEventListener(
+    "click",
+    openSheet
+);
+
+
+function openSheet() {
+
+    sheetOpen = true;
+
+    controlSheet.classList.add(
+        "open"
+    );
+
+
+    /*
+        Gear disappears.
+    */
+
+    settingsButton.classList.add(
+        "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   SETTINGS SHEET — CLOSE
+===================================================== */
+
+function closeSheet() {
+
+    sheetOpen = false;
+
+    sheetDragging = false;
+
+    sheetCurrentY = 0;
+
+
+    /*
+        Restore CSS transition.
+    */
+
+    controlSheet.style.transition =
+        "";
+
+
+    controlSheet.style.transform =
+        "";
+
+
+    controlSheet.classList.remove(
+        "open"
+    );
+
+
+    /*
+        Gear comes back.
+    */
+
+    settingsButton.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   MINUS HANDLE — CLICK
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "click",
+    () => {
+
+        /*
+            If the user simply taps
+            the minus handle, close.
+        */
+
+        if (!sheetDragging) {
+
+            closeSheet();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   MINUS HANDLE — DRAG START
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "pointerdown",
+    (event) => {
+
+        sheetDragging = true;
+
+        sheetStartY =
+            event.clientY;
+
+        sheetCurrentY = 0;
+
+        sheetHeight =
+            controlSheet.offsetHeight;
+
+
+        /*
+            Capture pointer so dragging
+            remains smooth.
+        */
+
+        sheetDragHandle.setPointerCapture(
+            event.pointerId
+        );
+
+
+        /*
+            Disable CSS animation while
+            the user's finger controls it.
+        */
+
+        controlSheet.style.transition =
+            "none";
+
+
+        event.preventDefault();
+
+    }
+);
+
+
+/* =====================================================
+   MINUS HANDLE — DRAGGING
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "pointermove",
+    (event) => {
+
+        if (!sheetDragging)
+            return;
+
+
+        const delta =
+            event.clientY -
+            sheetStartY;
+
+
+        /*
+            Only allow downward movement.
+        */
+
+        sheetCurrentY =
+            Math.max(
+                0,
+                delta
+            );
+
+
+        /*
+            Don't let the sheet move
+            beyond its own height.
+        */
+
+        sheetCurrentY =
+            Math.min(
+                sheetCurrentY,
+                sheetHeight
+            );
+
+
+        controlSheet.style.transform =
+            `translate3d(
+                0,
+                ${sheetCurrentY}px,
+                0
+            )`;
+
+    }
+);
+
+
+/* =====================================================
+   MINUS HANDLE — DRAG END
+===================================================== */
+
+sheetDragHandle.addEventListener(
+    "pointerup",
+    finishSheetDrag
+);
+
+sheetDragHandle.addEventListener(
+    "pointercancel",
+    finishSheetDrag
+);
+
+
+function finishSheetDrag() {
+
+    if (!sheetDragging)
+        return;
+
+
+    sheetDragging = false;
+
+
+    /*
+        Restore smooth CSS transition.
+    */
+
+    controlSheet.style.transition =
+        "";
+
+
+    /*
+        If dragged more than 25%,
+        close it.
+    */
+
+    if (
+        sheetCurrentY >
+        sheetHeight * 0.25
+    ) {
+
+        closeSheet();
+
+    } else {
+
+        /*
+            Snap back open.
+        */
+
+        controlSheet.style.transform =
+            "";
+
+    }
+
+}
+
+
+/* =====================================================
+   OPACITY
+===================================================== */
+
+transparencyButton.addEventListener(
+    "click",
+    () => {
+
+        const hidden =
+            opacityArea.style.display ===
+            "none";
+
+
+        opacityArea.style.display =
+            hidden
+                ? "block"
+                : "none";
+
+    }
+);
+
+
+opacitySlider.addEventListener(
+    "input",
+    () => {
+
+        const value =
+            Number(
+                opacitySlider.value
+            );
+
+
+        imageOpacity =
+            value / 100;
+
+
+        overlayImage.style.opacity =
+            imageOpacity;
+
+
+        opacityValue.textContent =
+            `${value}%`;
+
+    }
+);
+
+
+/* =====================================================
+   GREYSCALE
+===================================================== */
+
+greySlider.addEventListener(
+    "input",
+    () => {
+
+        const value =
+            Number(
+                greySlider.value
+            );
+
+
+        /*
+            Convert:
+            0 → normal
+            100 → full grayscale
+        */
+
+        const amount =
+            value / 100;
+
+
+        overlayImage.style.filter =
+            `grayscale(${amount})`;
+
+
+        greyValue.textContent =
+            `${value}%`;
+
+
+        /*
+            Highlight button whenever
+            grayscale is active.
+        */
+
+        greyButton.classList.toggle(
+            "active",
+            value > 0
+        );
+
+    }
+);
+
+
+/* =====================================================
+   GREY BUTTON QUICK TOGGLE
+===================================================== */
+
+greyButton.addEventListener(
+    "click",
+    () => {
+
+        const current =
+            Number(
+                greySlider.value
+            );
+
+
+        if (current > 0) {
+
+            /*
+                Turn grayscale OFF.
+            */
+
+            greySlider.value = 0;
+
+        } else {
+
+            /*
+                Turn grayscale fully ON.
+            */
+
+            greySlider.value = 100;
+
+        }
+
+
+        /*
+            Use the slider's existing
+            logic.
+        */
+
+        greySlider.dispatchEvent(
+            new Event("input")
+        );
+
+    }
+);
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+gridButton.addEventListener(
+    "click",
+    () => {
+
+        gridEnabled =
+            !gridEnabled;
+
+
+        grid.classList.toggle(
+            "active",
+            gridEnabled
+        );
+
+
+        gridButton.classList.toggle(
+            "active",
+            gridEnabled
+        );
+
+    }
+);
+
+
+/* =====================================================
+   LOCK
+===================================================== */
+
+lockButton.addEventListener(
+    "click",
+    () => {
+
+        locked =
+            !locked;
+
+
+        lockButton.classList.toggle(
+            "active",
+            locked
+        );
+
+
+        const icon =
+            lockButton.querySelector(
+                ".controlIcon"
+            );
+
+
+        if (icon) {
+
+            icon.textContent =
+                locked
+                    ? "🔒"
+                    : "🔓";
+
+        }
+
+
+        if (lockIndicator) {
+
+            lockIndicator.classList.toggle(
+                "show",
+                locked
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FLASHLIGHT
+===================================================== */
+
+flashButton.addEventListener(
+    "click",
+    async () => {
+
+        if (!cameraTrack) {
+
+            alert(
+                "Camera is not running."
+            );
+
+            return;
+
+        }
+
+
+        /*
+            Check whether this camera
+            exposes torch control.
+        */
+
+        let capabilities = {};
+
+        if (
+            typeof cameraTrack
+                .getCapabilities ===
+            "function"
+        ) {
+
+            capabilities =
+                cameraTrack.getCapabilities();
+
+        }
+
+
+        if (!capabilities.torch) {
+
+            alert(
+                "Flashlight control is not supported by this camera/browser."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            torchEnabled =
+                !torchEnabled;
+
+
+            await cameraTrack.applyConstraints({
+
+                advanced: [
+                    {
+                        torch:
+                            torchEnabled
+                    }
+                ]
+
+            });
+
+
+            flashButton.classList.toggle(
+                "active",
+                torchEnabled
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Torch error:",
+                error
+            );
+
+
+            torchEnabled =
+                false;
+
+
+            flashButton.classList.remove(
+                "active"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   IMAGE TRANSFORM
+===================================================== */
+
+function updateImageTransform() {
+
+    imageLayer.style.transform =
+        `translate3d(
+            -50%,
+            -50%,
+            0
+        )
+        translate3d(
+            ${imageX}px,
+            ${imageY}px,
+            0
+        )
+        rotate(
+            ${imageRotation}rad
+        )
+        scale(
+            ${imageScale}
+        )`;
+
+}
+
+
+/* =====================================================
+   RESET IMAGE
+===================================================== */
+
+resetButton.addEventListener(
+    "click",
+    resetImageTransform
+);
+
+
+function resetImageTransform() {
+
+    imageX = 0;
+
+    imageY = 0;
+
+    imageScale = 1;
+
+    imageRotation = 0;
+
+    imageOpacity = 1;
+
+
+    /*
+        Reset opacity.
+    */
+
+    if (opacitySlider) {
+
+        opacitySlider.value = 100;
+
+    }
+
+
+    if (opacityValue) {
+
+        opacityValue.textContent =
+            "100%";
+
+    }
+
+
+    overlayImage.style.opacity =
+        "1";
+
+
+    updateImageTransform();
+
+}
+
+
+/* =====================================================
+   RESET FEATURES
+===================================================== */
+
+function resetFeatures() {
+
+    /*
+        Grid
+    */
+
+    gridEnabled = false;
+
+    grid.classList.remove(
+        "active"
+    );
+
+    gridButton.classList.remove(
+        "active"
+    );
+
+
+    /*
+        Lock
+    */
+
+    locked = false;
+
+    lockButton.classList.remove(
+        "active"
+    );
+
+
+    const lockIcon =
+        lockButton.querySelector(
+            ".controlIcon"
+        );
+
+    if (lockIcon) {
+
+        lockIcon.textContent =
+            "🔓";
+
+    }
+
+
+    if (lockIndicator) {
+
+        lockIndicator.classList.remove(
+            "show"
+        );
+
+    }
+
+
+    /*
+        Torch
+    */
+
+    torchEnabled = false;
+
+    flashButton.classList.remove(
+        "active"
+    );
+
+
+    /*
+        Grayscale
+    */
+
+    if (greySlider) {
+
+        greySlider.value = 0;
+
+    }
+
+
+    if (greyValue) {
+
+        greyValue.textContent =
+            "0%";
+
+    }
+
+
+    overlayImage.style.filter =
+        "grayscale(0)";
+
+
+    /*
+        Opacity section
+    */
+
+    if (opacityArea) {
+
+        opacityArea.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =====================================================
+   TOUCH — START
+===================================================== */
+
+imageLayer.addEventListener(
+    "touchstart",
+    (event) => {
+
+        if (locked)
+            return;
+
+
+        event.preventDefault();
+
+
+        /*
+            ONE FINGER
+            = MOVE
+        */
+
+        if (
+            event.touches.length === 1
+        ) {
+
+            const touch =
+                event.touches[0];
+
+
+            startX =
+                touch.clientX;
+
+            startY =
+                touch.clientY;
+
+
+            startImageX =
+                imageX;
+
+            startImageY =
+                imageY;
+
+        }
+
+
+        /*
+            TWO FINGERS
+            = ZOOM + ROTATE
+        */
+
+        if (
+            event.touches.length >= 2
+        ) {
+
+            const a =
+                event.touches[0];
+
+            const b =
+                event.touches[1];
+
+
+            startDistance =
+                getDistance(a, b);
+
+
+            startAngle =
+                getAngle(a, b);
+
+
+            startScale =
+                imageScale;
+
+
+            startRotation =
+                imageRotation;
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   TOUCH — MOVE
+===================================================== */
+
+imageLayer.addEventListener(
+    "touchmove",
+    (event) => {
+
+        if (locked)
+            return;
+
+
+        event.preventDefault();
+
+
+        /*
+            ONE FINGER
+        */
+
+        if (
+            event.touches.length === 1
+        ) {
+
+            const touch =
+                event.touches[0];
+
+
+            const dx =
+                touch.clientX -
+                startX;
+
+
+            const dy =
+                touch.clientY -
+                startY;
+
+
+            imageX =
+                startImageX +
+                dx;
+
+
+            imageY =
+                startImageY +
+                dy;
+
+
+            updateImageTransform();
+
+        }
+
+
+        /*
+            TWO FINGERS
+        */
+
+        if (
+            event.touches.length >= 2
+        ) {
+
+            const a =
+                event.touches[0];
+
+            const b =
+                event.touches[1];
+
+
+            /*
+                ZOOM
+            */
+
+            const distance =
+                getDistance(a, b);
+
+
+            if (startDistance > 0) {
+
+                const scaleFactor =
+                    distance /
+                    startDistance;
+
+
+                imageScale =
+                    Math.max(
+                        0.15,
+                        Math.min(
+                            8,
+                            startScale *
+                            scaleFactor
+                        )
+                    );
+
+            }
+
+
+            /*
+                ROTATION
+            */
+
+            const angle =
+                getAngle(a, b);
+
+
+            imageRotation =
+                startRotation +
+                (angle - startAngle);
+
+
+            updateImageTransform();
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   TOUCH — END
+===================================================== */
+
+imageLayer.addEventListener(
+    "touchend",
+    (event) => {
+
+        if (locked)
+            return;
+
+
+        event.preventDefault();
+
+
+        /*
+            If two fingers become one,
+            restart the drag reference so
+            the image doesn't jump.
+        */
+
+        if (
+            event.touches.length === 1
+        ) {
+
+            const touch =
+                event.touches[0];
+
+
+            startX =
+                touch.clientX;
+
+            startY =
+                touch.clientY;
+
+
+            startImageX =
+                imageX;
+
+            startImageY =
+                imageY;
+
+        }
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   TOUCH HELPERS
+===================================================== */
+
+function getDistance(a, b) {
+
+    return Math.hypot(
+        a.clientX -
+        b.clientX,
+
+        a.clientY -
+        b.clientY
+    );
+
+}
+
+
+function getAngle(a, b) {
+
+    return Math.atan2(
+        b.clientY -
+        a.clientY,
+
+        b.clientX -
+        a.clientX
+    );
+
+}
+
+
+/* =====================================================
+   MOUSE — START
+===================================================== */
+
+imageLayer.addEventListener(
+    "mousedown",
+    (event) => {
+
+        if (locked)
+            return;
+
+
+        mouseDown = true;
+
+
+        mouseStartX =
+            event.clientX;
+
+        mouseStartY =
+            event.clientY;
+
+
+        mouseImageX =
+            imageX;
+
+        mouseImageY =
+            imageY;
+
+    }
+);
+
+
+/* =====================================================
+   MOUSE — MOVE
+===================================================== */
+
+window.addEventListener(
+    "mousemove",
+    (event) => {
+
+        if (
+            !mouseDown ||
+            locked
+        ) {
+
+            return;
+
+        }
+
+
+        imageX =
+            mouseImageX +
+            (
+                event.clientX -
+                mouseStartX
+            );
+
+
+        imageY =
+            mouseImageY +
+            (
+                event.clientY -
+                mouseStartY
+            );
+
+
+        updateImageTransform();
+
+    }
+);
+
+
+/* =====================================================
+   MOUSE — END
+===================================================== */
+
+window.addEventListener(
+    "mouseup",
+    () => {
+
+        mouseDown = false;
+
+    }
+);
+
+
+/* =====================================================
+   CHANGE IMAGE
+===================================================== */
+
+changeButton.addEventListener(
+    "click",
+    () => {
+
+        imageInput.value = "";
+
+        imageInput.click();
+
+    }
+);
+
+
+/* =====================================================
+   INITIAL STATE
+===================================================== */
+
+if (opacityArea) {
+
+    opacityArea.style.display =
+        "none";
+
+}
+
+if (greySlider) {
+
+    greySlider.value = 0;
+
+}
+
+if (greyValue) {
+
+    greyValue.textContent =
+        "0%";
+
+}
+
+overlayImage.style.filter =
+    "grayscale(0)";
+
+updateImageTransform();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>CAMPLAGUE</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #000;
+
+    color: white;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    touch-action: manipulation;
+}
+
+
+/* =====================================================
+   LOADING SCREEN
+===================================================== */
+
+#loadingScreen {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #000;
+
+    transition:
+        opacity .7s ease,
+        visibility .7s ease;
+}
+
+#loadingScreen.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loadingAura {
+    position: absolute;
+
+    width: 70vw;
+    height: 70vw;
+
+    max-width: 650px;
+    max-height: 650px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,255,130,.22),
+            rgba(0,220,255,.16),
+            rgba(0,70,255,.10),
+            transparent 70%
+        );
+
+    filter: blur(45px);
+
+    animation:
+        auraPulse 3s ease-in-out infinite,
+        auraRotate 8s linear infinite;
+}
+
+.loadingContent {
+    position: relative;
+
+    z-index: 2;
+
+    text-align: center;
+}
+
+.logo {
+    font-size:
+        clamp(45px, 12vw, 105px);
+
+    font-weight: 900;
+
+    letter-spacing: 5px;
+
+    background:
+        linear-gradient(
+            100deg,
+            #00ff88,
+            #00f5d4,
+            #00cfff,
+            #0066ff,
+            #00ff88
+        );
+
+    background-size: 300% 300%;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+
+    animation:
+        gradientMove 4s ease infinite,
+        logoFloat 2s ease-in-out infinite;
+}
+
+.loadingSubtitle {
+    margin-top: 16px;
+
+    color:
+        rgba(180,255,240,.55);
+
+    font-size: 11px;
+
+    letter-spacing: 5px;
+
+    text-transform: uppercase;
+}
+
+.loader {
+    width: min(280px,65vw);
+
+    height: 4px;
+
+    margin:
+        38px auto 0;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+.loaderBar {
+    width: 0%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00ff88,
+            #00f5d4,
+            #00cfff,
+            #0066ff
+        );
+
+    box-shadow:
+        0 0 18px rgba(0,255,200,.8);
+
+    animation:
+        loadingProgress 2s
+        cubic-bezier(.22,1,.36,1)
+        forwards;
+}
+
+
+/* =====================================================
+   APP
+===================================================== */
+
+#app {
+    position: fixed;
+
+    inset: 0;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity .6s ease;
+}
+
+#app.show {
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =====================================================
+   GALLERY
+===================================================== */
+
+#galleryScreen {
+    position: absolute;
+
+    inset: 0;
+
+    overflow-y: auto;
+
+    padding:
+        25px 18px
+        110px;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(0,255,180,.08),
+            transparent 35%
+        ),
+        #050505;
+}
+
+.galleryHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 22px;
+}
+
+.galleryTitle {
+    font-size: 27px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #00ff88,
+            #00d9ff,
+            #0066ff
+        );
+
+    -webkit-background-clip: text;
+
+    color: transparent;
+}
+
+.photoCount {
+    color: #777;
+
+    font-size: 12px;
+}
+
+#photoGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 12px;
+}
+
+.photoCard {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background: #111;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    aspect-ratio: 1 / 1;
+
+    animation:
+        photoAppear .35s ease;
+}
+
+.photoCard img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+.photoActions {
+    position: absolute;
+
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+
+    display: flex;
+
+    gap: 7px;
+}
+
+.photoAction {
+    flex: 1;
+
+    min-height: 36px;
+
+    border: 1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 12px;
+
+    background:
+        rgba(0,0,0,.65);
+
+    backdrop-filter:
+        blur(12px);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.photoAction:active {
+    transform: scale(.94);
+}
+
+
+/* =====================================================
+   EMPTY GALLERY
+===================================================== */
+
+#emptyGallery {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    text-align: center;
+
+    width: 90%;
+
+    color: #666;
+}
+
+.emptyIcon {
+    font-size: 55px;
+
+    margin-bottom: 14px;
+
+    opacity: .6;
+}
+
+.emptyTitle {
+    color: #aaa;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.emptyText {
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   CAMERA SCREEN
+===================================================== */
+
+#cameraScreen {
+    position: absolute;
+
+    inset: 0;
+
+    background: #000;
+
+    display: none;
+}
+
+#cameraScreen.active {
+    display: block;
+}
+
+#camera {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* =====================================================
+   CAMERA TOP BAR
+===================================================== */
+
+.cameraTop {
+    position: absolute;
+
+    top: 18px;
+
+    left: 18px;
+    right: 18px;
+
+    z-index: 20;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+}
+
+.cameraTopButton {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    background:
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(16px);
+
+    color: white;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        background .2s ease;
+}
+
+.cameraTopButton:active {
+    transform: scale(.88);
+}
+
+.cameraTools {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.cameraTool {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    background:
+        rgba(0,0,0,.42);
+
+    backdrop-filter:
+        blur(16px);
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    transition:
+        .25s ease;
+}
+
+.cameraTool.active {
+    background:
+        rgba(0,255,180,.22);
+
+    border-color:
+        rgba(0,255,180,.5);
+
+    box-shadow:
+        0 0 20px
+        rgba(0,255,180,.2);
+}
+
+.cameraTool.disabled {
+    opacity: .25;
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   CAMERA BOTTOM
+===================================================== */
+
+.cameraBottom {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: 30px;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 100px;
+}
+
+
+/* =====================================================
+   SHUTTER AREA
+===================================================== */
+
+.cameraControls {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    transition:
+        transform .42s
+        cubic-bezier(.22,1,.36,1);
+}
+
+.cameraControls.filterActive {
+    transform:
+        translateX(-34px);
+}
+
+
+/* =====================================================
+   SHUTTER
+===================================================== */
+
+.shutterOuter {
+    width: 76px;
+    height: 76px;
+
+    border-radius: 50%;
+
+    border:
+        3px solid white;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    transition:
+        transform .18s ease;
+}
+
+.shutterOuter:active {
+    transform: scale(.88);
+}
+
+.shutterInner {
+    width: 62px;
+    height: 62px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    transition:
+        transform .15s ease,
+        border-radius .2s ease;
+}
+
+.shutterOuter.capture
+.shutterInner {
+    transform: scale(.75);
+
+    border-radius: 18px;
+}
+
+
+/* =====================================================
+   FILTER BUTTON
+===================================================== */
+
+.filterButton {
+    width: 76px;
+    height: 76px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.25);
+
+    background:
+        rgba(0,0,0,.45);
+
+    backdrop-filter:
+        blur(18px);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    font-size: 27px;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+
+    transition:
+        transform .42s
+        cubic-bezier(.22,1,.36,1),
+        background .3s ease,
+        border-color .3s ease;
+}
+
+.filterButton.active {
+    background:
+        rgba(255,255,255,.22);
+
+    border-color:
+        rgba(255,255,255,.65);
+
+    transform:
+        scale(.94);
+}
+
+
+/* =====================================================
+   FILTER SLIDER HINT
+===================================================== */
+
+.filterHint {
+    position: absolute;
+
+    bottom: 105px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    color:
+        rgba(255,255,255,.5);
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    white-space: nowrap;
+
+    opacity: 0;
+
+    transition:
+        opacity .3s ease;
+}
+
+.cameraControls.filterActive
+~ .filterHint {
+    opacity: 1;
+}
+
+
+/* =====================================================
+   FLASH MESSAGE
+===================================================== */
+
+#cameraMessage {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    z-index: 100;
+
+    width: min(320px,85vw);
+
+    padding: 18px;
+
+    text-align: center;
+
+    border-radius: 18px;
+
+    background:
+        rgba(0,0,0,.75);
+
+    backdrop-filter:
+        blur(18px);
+
+    color: white;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    display: none;
+}
+
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes loadingProgress {
+
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+
+}
+
+@keyframes gradientMove {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+
+}
+
+@keyframes logoFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+
+}
+
+@keyframes auraPulse {
+
+    0%,
+    100% {
+        transform: scale(.9);
+        opacity: .7;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+}
+
+@keyframes auraRotate {
+
+    from {
+        rotate: 0deg;
+    }
+
+    to {
+        rotate: 360deg;
+    }
+
+}
+
+@keyframes photoAppear {
+
+    from {
+        opacity: 0;
+        transform: scale(.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
+@media (min-width: 700px) {
+
+    #photoGrid {
+        grid-template-columns:
+            repeat(4,1fr);
+
+        max-width: 1000px;
+
+        margin: auto;
+    }
+
+    .galleryHeader {
+        max-width: 1000px;
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 420px) {
+
+    #photoGrid {
+        gap: 8px;
+    }
+
+    .photoCard {
+        border-radius: 14px;
+    }
+
+    .cameraControls {
+        gap: 14px;
+    }
+
+    .shutterOuter,
+    .filterButton {
+        width: 70px;
+        height: 70px;
+    }
+
+    .shutterInner {
+        width: 57px;
+        height: 57px;
+    }
+
+}
+
+#openCameraButton {
+    position: fixed;
+
+    right: 22px;
+    bottom: 22px;
+
+    width: 68px;
+    height: 68px;
+
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.2);
+
+    background:
+        linear-gradient(
+            135deg,
+            #00ff88,
+            #00d9ff,
+            #0066ff
+        );
+
+    color: white;
+
+    font-size: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    z-index: 100;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.5),
+        0 0 25px rgba(0,220,255,.25);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+#openCameraButton:active {
+    transform: scale(.88);
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     LOADING
+===================================================== -->
+
+<div id="loadingScreen">
+
+    <div class="loadingAura"></div>
+
+    <div class="loadingContent">
+
+        <div class="logo">
+            CAMPLAGUE
+        </div>
+
+        <div class="loadingSubtitle">
+            Enter the plague
+        </div>
+
+        <div class="loader">
+            <div class="loaderBar"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     APP
+===================================================== -->
+
+<div id="app">
+
+
+    <!-- =================================================
+         GALLERY
+    ================================================== -->
+
+    <section id="galleryScreen">
+
+        <div class="galleryHeader">
+
+            <div class="galleryTitle">
+                CAMPLAGUE
+            </div>
+
+            <div
+                class="photoCount"
+                id="photoCount">
+                0 photos
+            </div>
+
+        </div>
+
+
+        <div id="photoGrid"></div>
+
+
+        <div id="emptyGallery">
+
+            <div class="emptyIcon">
+                📷
+            </div>
+
+            <div class="emptyTitle">
+                No photos yet
+            </div>
+
+            <div class="emptyText">
+                Capture your first moment
+                with CAMPLAGUE.
+            </div>
+
+        </div>
+
+        <button id="openCameraButton" aria-label="Take photo">
+            📷
+        </button>
+
+    </section>
+
+
+    <!-- =================================================
+         CAMERA
+    ================================================== -->
+
+    <section id="cameraScreen">
+
+        <video
+            id="camera"
+            autoplay
+            playsinline>
+        </video>
+
+
+        <!-- TOP -->
+
+        <div class="cameraTop">
+
+            <!-- GALLERY -->
+
+            <button
+                class="cameraTopButton"
+                id="galleryButton"
+                aria-label="Open photos">
+
+                🖼️
+
+            </button>
+
+
+            <!-- CAMERA TOOLS -->
+
+            <div class="cameraTools">
+
+                <button
+                    class="cameraTool"
+                    id="flipButton"
+                    aria-label="Flip camera">
+
+                    🔄
+
+                </button>
+
+
+                <button
+                    class="cameraTool"
+                    id="flashButton"
+                    aria-label="Toggle flashlight">
+
+                    🔦
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div id="cameraMessage"></div>
+
+
+        <!-- =================================================
+             BOTTOM CAMERA CONTROLS
+        ================================================== -->
+
+        <div class="cameraBottom">
+
+            <div
+                class="cameraControls"
+                id="cameraControls">
+
+
+                <!-- SHUTTER -->
+
+                <button
+                    class="shutterOuter"
+                    id="shutterButton"
+                    aria-label="Take photo">
+
+                    <span
+                        class="shutterInner">
+                    </span>
+
+                </button>
+
+
+                <!-- FILTER -->
+
+                <button
+                    class="filterButton"
+                    id="filterButton"
+                    aria-label="Toggle black and white">
+
+                    ◐
+
+                </button>
+
+
+            </div>
+
+
+            <div class="filterHint">
+                BLACK & WHITE
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+<!-- =====================================================
+     HIDDEN CANVAS
+===================================================== -->
+
+<canvas
+    id="captureCanvas"
+    style="display:none">
+</canvas>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loadingScreen =
+    document.getElementById(
+        "loadingScreen"
+    );
+
+const app =
+    document.getElementById(
+        "app"
+    );
+
+const galleryScreen =
+    document.getElementById(
+        "galleryScreen"
+    );
+
+const openCameraButton =
+    document.getElementById(
+        "openCameraButton"
+    );
+
+const cameraScreen =
+    document.getElementById(
+        "cameraScreen"
+    );
+
+const camera =
+    document.getElementById(
+        "camera"
+    );
+
+const photoGrid =
+    document.getElementById(
+        "photoGrid"
+    );
+
+const emptyGallery =
+    document.getElementById(
+        "emptyGallery"
+    );
+
+const photoCount =
+    document.getElementById(
+        "photoCount"
+    );
+
+const galleryButton =
+    document.getElementById(
+        "galleryButton"
+    );
+
+const flipButton =
+    document.getElementById(
+        "flipButton"
+    );
+
+const flashButton =
+    document.getElementById(
+        "flashButton"
+    );
+
+const shutterButton =
+    document.getElementById(
+        "shutterButton"
+    );
+
+const filterButton =
+    document.getElementById(
+        "filterButton"
+    );
+
+const cameraControls =
+    document.getElementById(
+        "cameraControls"
+    );
+
+const captureCanvas =
+    document.getElementById(
+        "captureCanvas"
+    );
+
+const cameraMessage =
+    document.getElementById(
+        "cameraMessage"
+    );
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let db = null;
+
+let cameraStream = null;
+
+let cameraTrack = null;
+
+let facingMode =
+    "environment";
+
+let torchEnabled = false;
+
+let bwEnabled = false;
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        setTimeout(() => {
+
+            loadingScreen
+                .classList
+                .add("hide");
+
+            setTimeout(() => {
+
+                app
+                    .classList
+                    .add("show");
+
+            }, 350);
+
+        }, 2100);
+
+    }
+);
+
+
+/* =====================================================
+   INDEXED DB
+===================================================== */
+
+function openDatabase() {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const request =
+                indexedDB.open(
+                    "CAMPLAGUE_DB",
+                    1
+                );
+
+
+            request.onupgradeneeded =
+                event => {
+
+                    const database =
+                        event.target.result;
+
+                    if (
+                        !database.objectStoreNames
+                            .contains("photos")
+                    ) {
+
+                        database.createObjectStore(
+                            "photos",
+                            {
+                                keyPath: "id",
+                                autoIncrement: true
+                            }
+                        );
+
+                    }
+
+                };
+
+
+            request.onsuccess =
+                event => {
+
+                    db =
+                        event.target.result;
+
+                    resolve(db);
+
+                };
+
+
+            request.onerror =
+                () => {
+
+                    reject(
+                        request.error
+                    );
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   SAVE PHOTO
+===================================================== */
+
+function savePhoto(blob) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const transaction =
+                db.transaction(
+                    ["photos"],
+                    "readwrite"
+                );
+
+            const store =
+                transaction.objectStore(
+                    "photos"
+                );
+
+
+            const request =
+                store.add({
+
+                    blob: blob,
+
+                    createdAt:
+                        Date.now()
+
+                });
+
+
+            request.onsuccess =
+                () => {
+
+                    resolve(
+                        request.result
+                    );
+
+                };
+
+
+            request.onerror =
+                () => {
+
+                    reject(
+                        request.error
+                    );
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   GET ALL PHOTOS
+===================================================== */
+
+function getPhotos() {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const transaction =
+                db.transaction(
+                    ["photos"],
+                    "readonly"
+                );
+
+            const store =
+                transaction.objectStore(
+                    "photos"
+                );
+
+            const request =
+                store.getAll();
+
+
+            request.onsuccess =
+                () => {
+
+                    resolve(
+                        request.result
+                            .reverse()
+                    );
+
+                };
+
+
+            request.onerror =
+                () => {
+
+                    reject(
+                        request.error
+                    );
+
+                };
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   DELETE PHOTO
+===================================================== */
+
+function deletePhoto(id) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const transaction =
+                db.transaction(
+                    ["photos"],
+                    "readwrite"
+                );
+
+            const store =
+                transaction.objectStore(
+                    "photos"
+                );
+
+
+            const request =
+                store.delete(id);
+
+
+            request.onsuccess =
+                () => resolve();
+
+
+            request.onerror =
+                () => reject(
+                    request.error
+                );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   RENDER GALLERY
+===================================================== */
+
+async function renderGallery() {
+
+    const photos =
+        await getPhotos();
+
+
+    photoGrid.innerHTML = "";
+
+
+    photoCount.textContent =
+        `${photos.length} ${
+            photos.length === 1
+                ? "photo"
+                : "photos"
+        }`;
+
+
+    emptyGallery.style.display =
+        photos.length === 0
+            ? "block"
+            : "none";
+
+
+    photos.forEach(photo => {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+        card.className =
+            "photoCard";
+
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        const url =
+            URL.createObjectURL(
+                photo.blob
+            );
+
+        image.src = url;
+
+
+        const actions =
+            document.createElement(
+                "div"
+            );
+
+        actions.className =
+            "photoActions";
+
+
+        /* DOWNLOAD */
+
+        const download =
+            document.createElement(
+                "button"
+            );
+
+        download.className =
+            "photoAction";
+
+        download.textContent =
+            "⬇️ Save";
+
+
+        download.onclick =
+            () => {
+
+                const link =
+                    document.createElement(
+                        "a"
+                    );
+
+                link.href = url;
+
+                link.download =
+                    `camplague-${photo.id}.jpg`;
+
+                link.click();
+
+            };
+
+
+        /* DELETE */
+
+        const remove =
+            document.createElement(
+                "button"
+            );
+
+        remove.className =
+            "photoAction";
+
+        remove.textContent =
+            "🗑️ Delete";
+
+
+        remove.onclick =
+            async () => {
+
+                await deletePhoto(
+                    photo.id
+                );
+
+                URL.revokeObjectURL(
+                    url
+                );
+
+                renderGallery();
+
+            };
+
+
+        actions.appendChild(
+            download
+        );
+
+        actions.appendChild(
+            remove
+        );
+
+
+        card.appendChild(
+            image
+        );
+
+        card.appendChild(
+            actions
+        );
+
+
+        photoGrid.appendChild(
+            card
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   CAMERA START
+===================================================== */
+
+async function startCamera() {
+
+    try {
+
+        stopCamera();
+
+
+        cameraStream =
+            await navigator
+                .mediaDevices
+                .getUserMedia({
+
+                    video: {
+
+                        facingMode:
+                            facingMode,
+
+                        width: {
+                            ideal: 1920
+                        },
+
+                        height: {
+                            ideal: 1080
+                        }
+
+                    },
+
+                    audio: false
+
+                });
+
+
+        camera.srcObject =
+            cameraStream;
+
+
+        cameraTrack =
+            cameraStream
+                .getVideoTracks()[0];
+
+
+        torchEnabled = false;
+
+        updateFlashButton();
+
+
+        cameraMessage.style.display =
+            "none";
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        showCameraMessage(
+            "Camera access failed.<br><br>" +
+            "Please allow camera permission " +
+            "and use HTTPS or localhost."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   STOP CAMERA
+===================================================== */
+
+function stopCamera() {
+
+    if (!cameraStream)
+        return;
+
+
+    cameraStream
+        .getTracks()
+        .forEach(
+            track =>
+                track.stop()
+        );
+
+
+    cameraStream = null;
+
+    cameraTrack = null;
+
+}
+
+
+/* =====================================================
+   SHOW CAMERA
+===================================================== */
+
+async function openCamera() {
+
+    galleryScreen.style.display =
+        "none";
+
+    cameraScreen.classList.add(
+        "active"
+    );
+
+    await startCamera();
+
+}
+
+openCameraButton.addEventListener(
+    "click",
+    openCamera
+);
+/* =====================================================
+   SHOW GALLERY
+===================================================== */
+
+function openGallery() {
+
+    stopCamera();
+
+    cameraScreen.classList.remove(
+        "active"
+    );
+
+    galleryScreen.style.display =
+        "block";
+
+    renderGallery();
+
+}
+
+
+/* =====================================================
+   GALLERY BUTTON
+===================================================== */
+
+galleryButton.addEventListener(
+    "click",
+    openGallery
+);
+
+
+/* =====================================================
+   FLIP CAMERA
+===================================================== */
+
+flipButton.addEventListener(
+    "click",
+    async () => {
+
+        facingMode =
+            facingMode === "environment"
+                ? "user"
+                : "environment";
+
+
+        /*
+            Front camera:
+            flashlight disabled.
+        */
+
+        await startCamera();
+
+    }
+);
+
+
+/* =====================================================
+   FLASHLIGHT SUPPORT
+===================================================== */
+
+function updateFlashButton() {
+
+    if (!cameraTrack) {
+
+        flashButton.classList
+            .add("disabled");
+
+        return;
+
+    }
+
+
+    const capabilities =
+        typeof cameraTrack
+            .getCapabilities ===
+            "function"
+
+            ? cameraTrack
+                .getCapabilities()
+
+            : {};
+
+
+    /*
+        Torch is normally available
+        only on supported rear cameras.
+    */
+
+    const frontCamera =
+        facingMode === "user";
+
+
+    if (
+        frontCamera ||
+        !capabilities.torch
+    ) {
+
+        flashButton.classList
+            .add("disabled");
+
+        torchEnabled = false;
+
+        return;
+
+    }
+
+
+    flashButton.classList
+        .remove("disabled");
+
+}
+
+
+/* =====================================================
+   FLASHLIGHT
+===================================================== */
+
+flashButton.addEventListener(
+    "click",
+    async () => {
+
+        if (!cameraTrack)
+            return;
+
+
+        const capabilities =
+            cameraTrack
+                .getCapabilities();
+
+
+        if (!capabilities.torch)
+            return;
+
+
+        torchEnabled =
+            !torchEnabled;
+
+
+        try {
+
+            await cameraTrack
+                .applyConstraints({
+
+                    advanced: [
+                        {
+                            torch:
+                                torchEnabled
+                        }
+                    ]
+
+                });
+
+
+            flashButton
+                .classList
+                .toggle(
+                    "active",
+                    torchEnabled
+                );
+
+
+        } catch (error) {
+
+            torchEnabled = false;
+
+            flashButton
+                .classList
+                .remove(
+                    "active"
+                );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   BLACK & WHITE FILTER
+===================================================== */
+
+filterButton.addEventListener(
+    "click",
+    toggleFilter
+);
+
+
+function toggleFilter() {
+
+    bwEnabled =
+        !bwEnabled;
+
+
+    filterButton
+        .classList
+        .toggle(
+            "active",
+            bwEnabled
+        );
+
+
+    cameraControls
+        .classList
+        .toggle(
+            "filterActive",
+            bwEnabled
+        );
+
+}
+
+
+/* =====================================================
+   CAPTURE PHOTO
+===================================================== */
+
+shutterButton.addEventListener(
+    "click",
+    capturePhoto
+);
+
+
+async function capturePhoto() {
+
+    if (!camera.videoWidth)
+        return;
+
+
+    /*
+        Shutter animation
+    */
+
+    shutterButton
+        .classList
+        .add("capture");
+
+
+    setTimeout(() => {
+
+        shutterButton
+            .classList
+            .remove("capture");
+
+    }, 180);
+
+
+    const width =
+        camera.videoWidth;
+
+    const height =
+        camera.videoHeight;
+
+
+    captureCanvas.width =
+        width;
+
+    captureCanvas.height =
+        height;
+
+
+    const context =
+        captureCanvas
+            .getContext("2d");
+
+
+    /*
+        Mirror selfie camera
+        so front camera behaves
+        naturally.
+    */
+
+    if (facingMode === "user") {
+
+        context.translate(
+            width,
+            0
+        );
+
+        context.scale(
+            -1,
+            1
+        );
+
+    }
+
+
+    /*
+        Apply B&W only to
+        the captured photo.
+    */
+
+    if (bwEnabled) {
+
+        context.filter =
+            "grayscale(1)";
+
+    } else {
+
+        context.filter =
+            "none";
+
+    }
+
+
+    context.drawImage(
+        camera,
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    context.filter =
+        "none";
+
+
+    const blob =
+        await new Promise(
+            resolve => {
+
+                captureCanvas
+                    .toBlob(
+                        resolve,
+                        "image/jpeg",
+                        .92
+                    );
+
+            }
+        );
+
+
+    if (!blob)
+        return;
+
+
+    try {
+
+        await savePhoto(
+            blob
+        );
+
+        /*
+            Small gallery update
+            without leaving camera.
+        */
+
+        console.log(
+            "Photo saved locally:",
+            blob.size,
+            "bytes"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Save failed:",
+            error
+        );
+
+        showCameraMessage(
+            "Could not save the photo."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CAMERA MESSAGE
+===================================================== */
+
+function showCameraMessage(
+    message
+) {
+
+    cameraMessage.innerHTML =
+        message;
+
+    cameraMessage.style.display =
+        "block";
+
+
+    setTimeout(() => {
+
+        cameraMessage.style.display =
+            "none";
+
+    }, 3000);
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+(async function init() {
+
+    try {
+
+        await openDatabase();
+
+        await renderGallery();
+
+    } catch (error) {
+
+        console.error(
+            "Database error:",
+            error
+        );
+
+        alert(
+            "CAMPLAGUE could not initialize local storage."
+        );
+
+    }
+
+})();
+
+
+</script>
+
+</body>
+</html>

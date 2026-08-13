@@ -2,300 +2,984 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Games | Mpoxel</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Apps | MPOXEL</title>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet"
+>
 
 <style>
 
+/* =====================================================
+   BASIC RESET
+===================================================== */
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    width:100%;
+    min-height:100%;
 }
 
 body{
-font-family:Poppins,sans-serif;
-background:#07111f;
-color:white;
-overflow-x:hidden;
+    width:100%;
+    min-height:100vh;
+
+    font-family:Poppins,sans-serif;
+
+    color:#ffffff;
+
+    background:#070b13;
+
+    /* IMPORTANT:
+       No overflow:hidden here.
+       Browser can naturally scroll. */
 }
 
-body::before{
-content:"";
-position:fixed;
-inset:0;
-background:
-radial-gradient(circle at 20% 20%,#00c3ff33,transparent 35%),
-radial-gradient(circle at 80% 70%,#8b5cf633,transparent 35%),
-linear-gradient(180deg,#07111f,#03070d);
-z-index:-2;
+
+/* =====================================================
+   SIMPLE BACKGROUND
+===================================================== */
+
+body{
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(0,180,255,.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(120,70,255,.08),
+            transparent 30%
+        ),
+        #070b13;
 }
 
-body::after{
-content:"";
-position:fixed;
-inset:0;
-background-image:
-linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-background-size:40px 40px;
-z-index:-1;
+
+/* =====================================================
+   TOP NAV
+===================================================== */
+
+.navbar{
+
+    width:100%;
+
+    min-height:72px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 6%;
+
+    background:#0b111d;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
 }
 
-nav{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:25px 8%;
-background:rgba(0,0,0,.25);
-backdrop-filter:blur(20px);
-border-bottom:1px solid rgba(255,255,255,.08);
-position:sticky;
-top:0;
-}
 
 .logo{
-font-family:Orbitron,sans-serif;
-font-size:30px;
-font-weight:700;
-letter-spacing:3px;
-color:#4fd6ff;
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:25px;
+
+    font-weight:700;
+
+    letter-spacing:3px;
+
+    color:#5bdcff;
 }
 
-.back{
-text-decoration:none;
-color:white;
-padding:12px 24px;
-border-radius:50px;
-background:#1699ff;
-transition:.3s;
+
+.back-button{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px 20px;
+
+    border-radius:8px;
+
+    background:#168cff;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
 }
 
-.back:hover{
-transform:translateY(-4px);
-box-shadow:0 10px 30px #1699ff55;
+
+.back-button:hover{
+
+    background:#36a2ff;
+
+    transform:translateY(-2px);
 }
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.main{
+
+    width:100%;
+
+    max-width:1250px;
+
+    margin:0 auto;
+
+    padding:
+        70px 30px
+        100px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
 
 .hero{
-padding:90px 20px;
-text-align:center;
+
+    text-align:center;
+
+    margin-bottom:80px;
 }
+
+
+.hero-badge{
+
+    display:inline-block;
+
+    padding:7px 15px;
+
+    margin-bottom:20px;
+
+    border-radius:50px;
+
+    border:
+        1px solid rgba(91,220,255,.3);
+
+    background:
+        rgba(91,220,255,.07);
+
+    color:#5bdcff;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    letter-spacing:2px;
+}
+
 
 .hero h1{
-font-family:Orbitron,sans-serif;
-font-size:60px;
-color:#4fd6ff;
-margin-bottom:20px;
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:
+        clamp(40px,7vw,76px);
+
+    line-height:1.1;
+
+    margin-bottom:20px;
+
+    color:#ffffff;
 }
+
+
+.hero h1 span{
+
+    color:#5bdcff;
+}
+
 
 .hero p{
-font-size:20px;
-opacity:.85;
-max-width:700px;
-margin:auto;
-line-height:1.8;
+
+    max-width:700px;
+
+    margin:auto;
+
+    color:#9ca9ba;
+
+    font-size:
+        clamp(15px,2vw,19px);
+
+    line-height:1.8;
 }
 
-section{
-padding:70px 8%;
+
+/* =====================================================
+   SECTION HEADER
+===================================================== */
+
+.section-header{
+
+    display:flex;
+
+    align-items:end;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    margin-bottom:30px;
 }
 
-.title{
-font-family:Orbitron,sans-serif;
-font-size:38px;
-margin-bottom:35px;
-color:#4fd6ff;
+
+.section-header h2{
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:
+        clamp(25px,4vw,36px);
+
+    color:#ffffff;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:30px;
+
+.section-header p{
+
+    color:#77869a;
+
+    font-size:14px;
 }
 
-.card{
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.08);
-border-radius:25px;
-padding:30px;
-backdrop-filter:blur(18px);
-transition:.35s;
+
+/* =====================================================
+   APP GRID
+===================================================== */
+
+.apps{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px,1fr)
+        );
+
+    gap:22px;
 }
 
-.card:hover{
-transform:translateY(-10px) scale(1.02);
-border-color:#4fd6ff;
-box-shadow:0 15px 40px rgba(79,214,255,.25);
+
+/* =====================================================
+   APP CARD
+===================================================== */
+
+.app-card{
+
+    position:relative;
+
+    min-height:380px;
+
+    padding:30px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:#0d1522;
+
+    border:
+        1px solid #1b293b;
+
+    border-radius:18px;
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
 }
 
-.icon{
-font-size:75px;
-margin-bottom:15px;
+
+.app-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#36bfff;
+
+    background:#101b2b;
 }
 
-.card h2{
-color:#4fd6ff;
-margin-bottom:10px;
+
+/* =====================================================
+   CARD TOP
+===================================================== */
+
+.card-top{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:25px;
 }
 
-.card p{
-opacity:.85;
-line-height:1.8;
+
+.app-icon{
+
+    width:65px;
+
+    height:65px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:16px;
+
+    background:#152336;
+
+    border:
+        1px solid #24364c;
+
+    font-size:34px;
 }
 
-.play{
-display:inline-block;
-margin-top:25px;
-padding:12px 28px;
-background:#4fd6ff;
-color:#07111f;
-font-weight:bold;
-border-radius:40px;
-text-decoration:none;
-transition:.3s;
+
+.app-number{
+
+    color:#53657a;
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:12px;
+
+    letter-spacing:1px;
 }
 
-.play:hover{
-background:white;
-transform:scale(1.05);
+
+/* =====================================================
+   CARD CONTENT
+===================================================== */
+
+.app-card h3{
+
+    font-family:Orbitron,sans-serif;
+
+    font-size:21px;
+
+    line-height:1.4;
+
+    color:#5bdcff;
+
+    margin-bottom:15px;
 }
 
-footer{
-margin-top:70px;
-padding:40px;
-text-align:center;
-border-top:1px solid rgba(255,255,255,.08);
-opacity:.7;
+
+.app-card p{
+
+    color:#8d9bad;
+
+    font-size:14px;
+
+    line-height:1.8;
 }
 
-@media(max-width:700px){
 
-.hero h1{
-font-size:42px;
+.creator{
+
+    margin-top:20px;
+
+    color:#c3cedb !important;
+
+    font-size:13px !important;
 }
 
-.hero p{
-font-size:17px;
+
+/* =====================================================
+   CARD BUTTON
+===================================================== */
+
+.open-button{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    width:100%;
+
+    margin-top:auto;
+
+    padding:13px 18px;
+
+    border-radius:9px;
+
+    background:#5bdcff;
+
+    color:#06101a;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
 }
+
+
+.open-button:hover{
+
+    background:#ffffff;
+
+    transform:translateY(-2px);
+}
+
+
+/* =====================================================
+   CARD ACCENT
+===================================================== */
+
+.app-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:25px;
+    right:25px;
+
+    height:2px;
+
+    background:#5bdcff;
+
+    opacity:.5;
+
+    border-radius:0 0 10px 10px;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer{
+
+    width:100%;
+
+    padding:45px 20px;
+
+    text-align:center;
+
+    background:#050912;
+
+    border-top:
+        1px solid #182333;
+}
+
+
+.footer-logo{
+
+    font-family:Orbitron,sans-serif;
+
+    color:#5bdcff;
+
+    font-size:22px;
+
+    letter-spacing:3px;
+
+    margin-bottom:15px;
+}
+
+
+.footer p{
+
+    color:#647286;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media(max-width:800px){
+
+    .navbar{
+
+        padding:0 20px;
+    }
+
+    .main{
+
+        padding:
+            55px 20px
+            75px;
+    }
+
+    .hero{
+
+        margin-bottom:60px;
+    }
+
+    .apps{
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0,1fr)
+            );
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:620px){
+
+    .navbar{
+
+        min-height:65px;
+    }
+
+
+    .logo{
+
+        font-size:20px;
+
+        letter-spacing:2px;
+    }
+
+
+    .back-button{
+
+        padding:9px 14px;
+
+        font-size:12px;
+    }
+
+
+    .main{
+
+        padding:
+            45px 16px
+            65px;
+    }
+
+
+    .hero{
+
+        margin-bottom:50px;
+    }
+
+
+    .hero h1{
+
+        font-size:40px;
+    }
+
+
+    .hero p{
+
+        font-size:15px;
+    }
+
+
+    .section-header{
+
+        display:block;
+
+        margin-bottom:22px;
+    }
+
+
+    .section-header h2{
+
+        margin-bottom:7px;
+    }
+
+
+    .apps{
+
+        grid-template-columns:1fr;
+
+        gap:16px;
+    }
+
+
+    .app-card{
+
+        min-height:350px;
+
+        padding:25px;
+    }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+===================================================== */
+
+@media(max-width:380px){
+
+    .hero h1{
+
+        font-size:34px;
+    }
+
+
+    .app-card{
+
+        padding:22px;
+    }
+
+
+    .app-icon{
+
+        width:58px;
+
+        height:58px;
+
+        font-size:30px;
+    }
+}
+
+
+/* =====================================================
+   REDUCE MOTION
+===================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+    *{
+
+        transition:none !important;
+    }
 
 }
 
 </style>
 </head>
+
+
 <body>
 
-<nav>
 
-<div class="logo">MPOXEL</div>
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
 
-<a class="back" href="/more.html">← Back</a>
+<header class="navbar">
 
-</nav>
+    <div class="logo">
+        MPOXEL
+    </div>
 
-<div class="hero">
+    <a
+        href="/more.html"
+        class="back-button"
+    >
+        ← Back
+    </a>
 
-<h1>App Room</h1>
+</header>
 
-<p>
-Welcome to the Mpoxel App Room. Explore apps developed by our studio.
-</p>
 
-</div>
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
-<section>
+<main class="main">
 
-<h2 class="title">Available Apps</h2>
 
-<div class="grid">
+    <!-- HERO -->
 
-<div class="card">
+    <section class="hero">
 
-<div class="icon">💳</div>
+        <div class="hero-badge">
+            MPOXEL APPLICATIONS
+        </div>
 
-<h2>FAKE PAYMENT APP</h2>
+        <h1>
+            App <span>Room</span>
+        </h1>
 
-<p>
-Experience a realistic fake payment application with a stylish banking interface, balance display, transaction history, animations, and a premium modern design for entertainment and demonstrations.
-</p>
+        <p>
+            Explore applications created by Mpoxel.
+            Open an app and discover what we've built.
+        </p>
 
-<br>
+    </section>
 
-<p><b>👤 Made by Manvir Sharma</b></p>
 
-<a class="play" href="login.html">
-▶ Open App
-</a>
+    <!-- APP SECTION -->
 
-</div>
+    <section>
 
-</div>
+        <div class="section-header">
 
-<br>
+            <div>
 
-<div class="card">
+                <h2>
+                    Available Apps
+                </h2>
 
-<div class="icon">📸</div>
+                <p>
+                    3 applications currently available
+                </p>
 
-<h2>AR DRAWING APP</h2>
+            </div>
 
-<p>
-Use your camera to draw any drawing while tracing it on seeing on to your camra.
-</p>
+        </div>
 
-<br>
 
-<p><b>👤 Made by Manvir Sharma</b></p>
+        <div class="apps">
 
-<a class="play" href="AR.html">
-▶ Open App
-</a>
 
-</div>
+            <!-- =================================================
+                 PAYMENT APP
+            ================================================== -->
 
-</div>
+            <article class="app-card">
 
-<br>
+                <div class="card-top">
 
-<div class="card">
+                    <div class="app-icon">
+                        💳
+                    </div>
 
-<div class="icon">📜</div>
+                    <div class="app-number">
+                        APP 01
+                    </div>
 
-<h2>BILL MAKER</h2>
+                </div>
 
-<p>
-It is a real life bill maker in which you can make bills, extract PDFs, and save it. Explore more with open app button
-</p>
 
-<br>
+                <h3>
+                    FAKE PAYMENT APP
+                </h3>
 
-<p><b>👤 Made by Manvir Sharma</b></p>
 
-<a class="play" href="bill.html">
-▶ Open App
-</a>
+                <p>
+                    Experience a realistic payment-style
+                    interface featuring a balance display,
+                    transaction history, animations and a
+                    modern banking-inspired design.
+                </p>
 
-</div>
 
-</div>
-  
-</section>
+                <p class="creator">
+                    👤 Made by <b>Manvir Sharma</b>
+                </p>
 
-  
-<footer>
 
-<h2 style="color:#4fd6ff;">MPOXEL</h2>
+                <a
+                    href="payment_app/login.html"
+                    class="open-button"
+                >
+                    ▶ Open App
+                </a>
 
-<br>
+            </article>
 
-<p>Apps developed by Manvir Sharma.</p>
 
-<br>
+            <!-- =================================================
+                 AR DRAWING
+            ================================================== -->
 
-<p>© 2026 Mpoxel</p>
+            <article class="app-card">
+
+                <div class="card-top">
+
+                    <div class="app-icon">
+                        📸
+                    </div>
+
+                    <div class="app-number">
+                        APP 02
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    AR DRAWING APP
+                </h3>
+
+
+                <p>
+                    Use your camera to trace and draw images
+                    while viewing the reference through your
+                    camera.
+                </p>
+
+
+                <p class="creator">
+                    👤 Made by <b>Manvir Sharma</b>
+                </p>
+
+
+                <a
+                    href="ar/AR.html"
+                    class="open-button"
+                >
+                    ▶ Open App
+                </a>
+
+            </article>
+
+
+            <!-- =================================================
+                 BILL MAKER
+            ================================================== -->
+
+            <article class="app-card">
+
+                <div class="card-top">
+
+                    <div class="app-icon">
+                        📜
+                    </div>
+
+                    <div class="app-number">
+                        APP 03
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    BILL MAKER
+                </h3>
+
+
+                <p>
+                    Create professional-looking bills,
+                    generate PDF documents, save your work,
+                    and explore the available billing tools.
+                </p>
+
+
+                <p class="creator">
+                    👤 Made by <b>Manvir Sharma</b>
+                </p>
+
+
+                <a
+                    href="bill/bill.html"
+                    class="open-button"
+                >
+                    ▶ Open App
+                </a>
+
+            </article>
+
+            <!-- =================================================
+                 CAMPLAGUE
+            ================================================== -->
+                    
+            <article class="app-card">
+            
+                <div class="card-top">
+                
+                    <div class="app-icon">
+                        📷
+                    </div>
+                
+                    <div class="app-number">
+                        APP 04
+                    </div>
+                
+                </div>
+            
+            
+                <h3>
+                    CAMPLAGUE
+                </h3>
+            
+            
+                <p>
+                    <!-- YAHAN PURANE CAMPLAGUE APP KI EXACT DESCRIPTION -->
+                </p>
+            
+            
+                <p class="creator">
+                    👤 Made by <b>Manvir Sharma</b>
+                </p>
+            
+            
+                <a
+                    href="camera/app.html"
+                    class="open-button"
+                >
+                    ▶ Open App
+                </a>
+            
+            </article>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="footer">
+
+    <div class="footer-logo">
+        MPOXEL
+    </div>
+
+    <p>
+        Apps developed by Manvir Sharma.
+    </p>
+
+    <p>
+        © 2026 Mpoxel
+    </p>
 
 </footer>
+
 
 </body>
 </html>

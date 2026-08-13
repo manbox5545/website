@@ -1,274 +1,1211 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
 <title>Games | Mpoxel</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
 
 <style>
 
+/* =========================================================
+   RESET
+========================================================= */
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
+
+
+html{
+
+    scroll-behavior:smooth;
+
+    scroll-padding-top:90px;
+
+}
+
 
 body{
-font-family:Poppins,sans-serif;
-background:#07111f;
-color:white;
-overflow-x:hidden;
+
+    min-height:100vh;
+
+    font-family:'Poppins',sans-serif;
+
+    color:#fff;
+
+    background:#050a12;
+
+    overflow-x:hidden;
+
 }
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root{
+
+    --blue:#4fd6ff;
+
+    --blue-light:#c8f5ff;
+
+    --blue-dark:#1699ff;
+
+    --background:#050a12;
+
+    --surface:#0b1420;
+
+    --border:rgba(79,214,255,.14);
+
+    --border-hover:rgba(79,214,255,.55);
+
+    --muted:#8e9baa;
+
+    --max-width:1250px;
+
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
 
 body::before{
-content:"";
-position:fixed;
-inset:0;
-background:
-radial-gradient(circle at 20% 20%,#00c3ff33,transparent 35%),
-radial-gradient(circle at 80% 70%,#8b5cf633,transparent 35%),
-linear-gradient(180deg,#07111f,#03070d);
-z-index:-2;
+
+    content:"";
+
+    position:fixed;
+
+    width:500px;
+    height:500px;
+
+    top:-210px;
+    left:-210px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,195,255,.13),
+            transparent 70%
+        );
+
+    pointer-events:none;
+
+    z-index:-2;
+
 }
+
 
 body::after{
-content:"";
-position:fixed;
-inset:0;
-background-image:
-linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-background-size:40px 40px;
-z-index:-1;
+
+    content:"";
+
+    position:fixed;
+
+    width:450px;
+    height:450px;
+
+    right:-210px;
+    bottom:-210px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(120,70,255,.10),
+            transparent 70%
+        );
+
+    pointer-events:none;
+
+    z-index:-2;
+
 }
+
+
+/* =========================================================
+   SUBTLE GRID
+========================================================= */
+
+body{
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.017) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.017) 1px,
+            transparent 1px
+        );
+
+    background-size:55px 55px;
+
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
 
 nav{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:25px 8%;
-background:rgba(0,0,0,.25);
-backdrop-filter:blur(20px);
-border-bottom:1px solid rgba(255,255,255,.08);
-position:sticky;
-top:0;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    width:100%;
+
+    min-height:76px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        0
+        max(
+            20px,
+            calc((100% - var(--max-width)) / 2)
+        );
+
+    background:
+        rgba(5,10,18,.55);
+
+    backdrop-filter:
+        blur(20px)
+        saturate(130%);
+
+    -webkit-backdrop-filter:
+        blur(20px)
+        saturate(130%);
+
+    border-bottom:
+        1px solid rgba(79,214,255,.14);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.18);
+
 }
+
+
+/* =========================================================
+   LOGO
+========================================================= */
 
 .logo{
-font-family:Orbitron,sans-serif;
-font-size:30px;
-font-weight:700;
-letter-spacing:3px;
-color:#4fd6ff;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:27px;
+
+    font-weight:800;
+
+    letter-spacing:3px;
+
+    color:var(--blue);
+
+    text-shadow:
+        0 0 22px rgba(79,214,255,.18);
+
 }
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
 
 .back{
-text-decoration:none;
-color:white;
-padding:12px 24px;
-border-radius:50px;
-background:#1699ff;
-transition:.3s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px 21px;
+
+    border-radius:50px;
+
+    background:
+        rgba(22,153,255,.9);
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+
 }
+
 
 .back:hover{
-transform:translateY(-4px);
-box-shadow:0 10px 30px #1699ff55;
+
+    transform:translateY(-3px);
+
+    background:#32a9ff;
+
+    box-shadow:
+        0 8px 25px
+        rgba(22,153,255,.25);
+
 }
+
+
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero{
-padding:90px 20px;
-text-align:center;
+
+    position:relative;
+
+    width:100%;
+
+    max-width:1050px;
+
+    min-height:480px;
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:
+        80px 25px
+        60px;
+
 }
+
+
+.hero::before{
+
+    content:"GAMES";
+
+    position:absolute;
+
+    z-index:-1;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(90px,19vw,230px);
+
+    font-weight:800;
+
+    color:rgba(79,214,255,.018);
+
+    pointer-events:none;
+
+    user-select:none;
+
+    white-space:nowrap;
+
+}
+
 
 .hero h1{
-font-family:Orbitron,sans-serif;
-font-size:60px;
-color:#4fd6ff;
-margin-bottom:20px;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(40px,7vw,70px);
+
+    line-height:1.1;
+
+    letter-spacing:-1px;
+
+    margin-bottom:24px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #4fd6ff,
+            #d9f8ff,
+            #4fd6ff
+        );
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
 }
+
 
 .hero p{
-font-size:20px;
-opacity:.85;
-max-width:700px;
-margin:auto;
-line-height:1.8;
+
+    width:100%;
+
+    max-width:700px;
+
+    margin:auto;
+
+    color:#a5b3c2;
+
+    font-size:
+        clamp(15px,2vw,19px);
+
+    line-height:1.9;
+
 }
+
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
 
 section{
-padding:70px 8%;
+
+    width:100%;
+
+    max-width:var(--max-width);
+
+    margin:auto;
+
+    padding:
+        60px 25px
+        100px;
+
 }
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
 
 .title{
-font-family:Orbitron,sans-serif;
-font-size:38px;
-margin-bottom:35px;
-color:#4fd6ff;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(28px,5vw,40px);
+
+    color:var(--blue);
+
+    margin-bottom:40px;
+
+    letter-spacing:-.5px;
+
 }
+
+
+.title::after{
+
+    content:"";
+
+    display:block;
+
+    width:50px;
+
+    height:3px;
+
+    margin-top:14px;
+
+    border-radius:10px;
+
+    background:var(--blue);
+
+}
+
+
+/* =========================================================
+   GAME GRID
+========================================================= */
 
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:30px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px,1fr)
+        );
+
+    gap:25px;
+
 }
+
+
+/* =========================================================
+   GAME CARD
+========================================================= */
 
 .card{
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.08);
-border-radius:25px;
-padding:30px;
-backdrop-filter:blur(18px);
-transition:.35s;
+
+    position:relative;
+
+    min-height:395px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:35px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius:22px;
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+
 }
+
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:25px;
+
+    right:25px;
+
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(79,214,255,.65),
+            transparent
+        );
+
+    opacity:.5;
+
+}
+
 
 .card:hover{
-transform:translateY(-10px) scale(1.02);
-border-color:#4fd6ff;
-box-shadow:0 15px 40px rgba(79,214,255,.25);
+
+    transform:translateY(-7px);
+
+    border-color:var(--border-hover);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(79,214,255,.06),
+            rgba(255,255,255,.018)
+        );
+
 }
+
+
+/* =========================================================
+   GAME ICON
+========================================================= */
 
 .icon{
-font-size:75px;
-margin-bottom:15px;
+
+    width:75px;
+
+    height:75px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:24px;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #122538,
+            #0c1825
+        );
+
+    border:
+        1px solid
+        rgba(79,214,255,.17);
+
+    font-size:39px;
+
 }
+
+
+/* =========================================================
+   GAME TITLE
+========================================================= */
 
 .card h2{
-color:#4fd6ff;
-margin-bottom:10px;
+
+    font-family:'Orbitron',sans-serif;
+
+    color:var(--blue);
+
+    font-size:22px;
+
+    line-height:1.35;
+
+    margin-bottom:15px;
+
 }
+
+
+/* =========================================================
+   GAME DESCRIPTION
+========================================================= */
 
 .card p{
-opacity:.85;
-line-height:1.8;
+
+    color:#98a7b7;
+
+    font-size:14px;
+
+    line-height:1.85;
+
 }
+
+
+.creator{
+
+    margin-top:20px;
+
+    color:#d1d9e2 !important;
+
+    font-size:13px !important;
+
+}
+
+
+/* =========================================================
+   PLAY BUTTON
+========================================================= */
 
 .play{
-display:inline-block;
-margin-top:25px;
-padding:12px 28px;
-background:#4fd6ff;
-color:#07111f;
-font-weight:bold;
-border-radius:40px;
-text-decoration:none;
-transition:.3s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:100%;
+
+    margin-top:auto;
+
+    padding:13px 20px;
+
+    border-radius:12px;
+
+    background:var(--blue);
+
+    color:#06111a;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+
 }
+
 
 .play:hover{
-background:white;
-transform:scale(1.05);
+
+    transform:translateY(-2px);
+
+    background:#fff;
+
+    box-shadow:
+        0 8px 25px
+        rgba(79,214,255,.18);
+
 }
 
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
 footer{
-margin-top:70px;
-padding:40px;
-text-align:center;
-border-top:1px solid rgba(255,255,255,.08);
-opacity:.7;
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:
+        50px 20px;
+
+    text-align:center;
+
+    background:#040910;
+
+    border-top:
+        1px solid rgba(79,214,255,.12);
+
 }
+
+
+footer h2{
+
+    font-family:'Orbitron',sans-serif;
+
+    color:var(--blue);
+
+    font-size:23px;
+
+}
+
+
+footer p{
+
+    color:#718093;
+
+    font-size:13px;
+
+    line-height:1.8;
+
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+
+::-webkit-scrollbar-track{
+
+    background:#050a12;
+
+}
+
+
+::-webkit-scrollbar-thumb{
+
+    background:
+        linear-gradient(
+            180deg,
+            #4fd6ff,
+            #168cff
+        );
+
+    border-radius:20px;
+
+    border:
+        2px solid #050a12;
+
+}
+
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+        linear-gradient(
+            180deg,
+            #d4f8ff,
+            #4fd6ff
+        );
+
+}
+
+
+html{
+
+    scrollbar-width:thin;
+
+    scrollbar-color:
+        #4fd6ff
+        #050a12;
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:850px){
+
+    nav{
+
+        padding:
+            0 22px;
+
+    }
+
+
+    section{
+
+        padding:
+            55px 22px
+            80px;
+
+    }
+
+
+    .hero{
+
+        min-height:430px;
+
+        padding:
+            70px 22px
+            50px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:700px){
 
-.hero h1{
-font-size:42px;
+    nav{
+
+        min-height:68px;
+
+        padding:
+            0 18px;
+
+    }
+
+
+    .logo{
+
+        font-size:21px;
+
+        letter-spacing:2px;
+
+    }
+
+
+    .back{
+
+        padding:
+            9px 16px;
+
+        font-size:12px;
+
+    }
+
+
+    .hero{
+
+        min-height:420px;
+
+        padding:
+            60px 20px
+            40px;
+
+    }
+
+
+    .hero h1{
+
+        font-size:40px;
+
+        line-height:1.15;
+
+    }
+
+
+    .hero p{
+
+        font-size:15px;
+
+        line-height:1.8;
+
+    }
+
+
+    section{
+
+        padding:
+            45px 18px
+            70px;
+
+    }
+
+
+    .title{
+
+        font-size:29px;
+
+        margin-bottom:30px;
+
+    }
+
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+        gap:18px;
+
+    }
+
+
+    .card{
+
+        min-height:370px;
+
+        padding:27px;
+
+        border-radius:18px;
+
+    }
+
+
+    .card h2{
+
+        font-size:20px;
+
+    }
+
+
+    .card p{
+
+        font-size:14px;
+
+        line-height:1.8;
+
+    }
+
+
+    .play{
+
+        padding:12px 16px;
+
+    }
+
+
+    footer{
+
+        padding:
+            40px 18px;
+
+    }
+
 }
 
-.hero p{
-font-size:17px;
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media(max-width:380px){
+
+    .hero h1{
+
+        font-size:34px;
+
+    }
+
+
+    .hero p{
+
+        font-size:14px;
+
+    }
+
+
+    .card{
+
+        padding:23px;
+
+    }
+
+
+    .icon{
+
+        width:64px;
+
+        height:64px;
+
+        font-size:33px;
+
+    }
+
 }
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    html{
+
+        scroll-behavior:auto;
+
+    }
+
+
+    *{
+
+        transition:none !important;
+
+    }
 
 }
 
 </style>
+
 </head>
+
+
 <body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
 
 <nav>
 
-<div class="logo">MPOXEL</div>
+    <div class="logo">
+        MPOXEL
+    </div>
 
-<a class="back" href="/more.html">← Back</a>
+
+    <a
+        class="back"
+        href="/more.html"
+    >
+        ← Back
+    </a>
 
 </nav>
 
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
 <div class="hero">
 
-<h1>Games Room</h1>
+    <div>
 
-<p>
-Welcome to the Mpoxel Games Room. Explore games developed by our studio.
-</p>
+        <h1>
+            Games Room
+        </h1>
+
+
+        <p>
+
+            Welcome to the Mpoxel Games Room.
+            Explore games developed by our studio.
+
+        </p>
+
+    </div>
 
 </div>
+
+
+<!-- =========================================================
+     AVAILABLE GAMES
+========================================================= -->
 
 <section>
 
-<h2 class="title">Available Games</h2>
+    <h2 class="title">
+        Available Games
+    </h2>
 
-<div class="grid">
 
-<div class="card">
+    <div class="grid">
 
-<div class="icon">🖱️</div>
 
-<h2>CLICK MASTER GAME</h2>
+        <!-- =================================================
+             CLICK MASTER
+        ================================================== -->
 
-<p>
-Build your clicking empire by earning coins, unlocking achievements, purchasing auto-clickers, decorating your room, and upgrading your themes.
-</p>
+        <div class="card">
 
-<br>
+            <div class="icon">
+                🖱️
+            </div>
 
-<p><b>👤 Made by Manvir Sharma</b></p>
 
-<a class="play" href="game.html">
-▶ Play Game
-</a>
+            <h2>
+                CLICK MASTER GAME
+            </h2>
 
-</div>
 
-</div>
+            <p>
 
-<div class="card">
+                Build your clicking empire by earning
+                coins, unlocking achievements, purchasing
+                auto-clickers, decorating your room, and
+                upgrading your themes.
 
-<div class="icon">📚</div>
+            </p>
 
-<h2>10th Class experiments</h2>
 
-<p>
-some science book experiments from NCERT textbook from class 10th which offers you practical knoledge about science and its theories
-</p>
+            <p class="creator">
 
-<br>
+                👤 Made by
+                <b>Manvir Sharma</b>
 
-<p><b>👤 Made by Manvir Sharma</b></p>
+            </p>
 
-<a class="play" href="main.html">
-▶ Play Game
-</a>
 
-</div>
+            <a
+                class="play"
+                href="game.html"
+            >
+                ▶ Play Game
+            </a>
 
-</div>
+        </div>
+
+
+        <!-- =================================================
+             10TH CLASS EXPERIMENTS
+        ================================================== -->
+
+        <div class="card">
+
+            <div class="icon">
+                📚
+            </div>
+
+
+            <h2>
+                10th Class Experiments
+            </h2>
+
+
+            <p>
+
+                Some science book experiments from
+                the NCERT textbook for Class 10th,
+                offering practical knowledge about
+                science and its theories.
+
+            </p>
+
+
+            <p class="creator">
+
+                👤 Made by
+                <b>Manvir Sharma</b>
+
+            </p>
+
+
+            <a
+                class="play"
+                href="main.html"
+            >
+                ▶ Play Game
+            </a>
+
+        </div>
+
+
+    </div>
 
 </section>
 
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
 <footer>
 
-<h2 style="color:#4fd6ff;">MPOXEL</h2>
+    <h2>
+        MPOXEL
+    </h2>
 
-<br>
+    <br>
 
-<p>Games developed by Manvir Sharma.</p>
 
-<br>
+    <p>
+        Games developed by Manvir Sharma.
+    </p>
 
-<p>© 2026 Mpoxel</p>
+    <br>
+
+
+    <p>
+        © 2026 Mpoxel
+    </p>
 
 </footer>
+
 
 </body>
 </html>
