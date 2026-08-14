@@ -1,418 +1,683 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>10th Class Experiments</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
-
 <style>
 
+/* =========================================================
+   PERFORMANCE RESET
+========================================================= */
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Poppins,sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
+    min-height:100vh;
 
-background:
-linear-gradient(135deg,#091428,#0b2747,#02111f);
+    padding:35px;
 
-min-height:100vh;
-padding:40px;
+    color:#fff;
 
-color:white;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
+    background:
+        #071322;
 }
+
+
+/* =========================================================
+   TITLE
+========================================================= */
 
 h1{
 
-text-align:center;
-font-size:55px;
-font-weight:900;
-letter-spacing:3px;
+    text-align:center;
 
-margin-bottom:45px;
+    margin-bottom:45px;
 
-background:linear-gradient(90deg,#00e0ff,#00ff9d);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+    font-size:
+        clamp(34px,6vw,55px);
 
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    color:#00e0ff;
 }
+
+
+/* =========================================================
+   DEPARTMENT
+========================================================= */
 
 .department{
 
-margin-bottom:55px;
+    margin-bottom:45px;
 
-background:rgba(255,255,255,.08);
+    padding:25px;
 
-backdrop-filter:blur(18px);
+    background:#0c1b2d;
 
-border:1px solid rgba(255,255,255,.15);
+    border:1px solid #1b354d;
 
-border-radius:25px;
-
-padding:25px;
-
-box-shadow:
-0 20px 60px rgba(0,0,0,.35);
-
+    border-radius:20px;
 }
+
+
+/* =========================================================
+   DEPARTMENT TITLES
+========================================================= */
 
 .department h2{
 
-font-size:35px;
-margin-bottom:25px;
+    margin-bottom:25px;
+
+    font-size:32px;
 
 }
 
 .physics h2{
-color:#43b7ff;
+    color:#43b7ff;
 }
 
 .chemistry h2{
-color:#2dff83;
+    color:#2dff83;
 }
 
 .biology h2{
-color:#ff6db5;
+    color:#ff6db5;
 }
+
+
+/* =========================================================
+   CHAPTER
+========================================================= */
 
 .chapter{
 
-background:rgba(255,255,255,.05);
+    margin-bottom:18px;
 
-border-radius:18px;
+    padding:18px;
 
-padding:18px;
+    background:#102235;
 
-margin-bottom:20px;
+    border:1px solid #1b354d;
 
-border:1px solid rgba(255,255,255,.08);
-
-transition:.3s;
-
+    border-radius:14px;
 }
 
-.chapter:hover{
 
-transform:translateY(-5px);
-
-background:rgba(255,255,255,.08);
-
-}
+/* =========================================================
+   CHAPTER TITLE
+========================================================= */
 
 .chapter h3{
 
-margin-bottom:15px;
-font-size:22px;
+    margin-bottom:15px;
+
+    font-size:21px;
+
+    line-height:1.4;
 
 }
+
+
+/* =========================================================
+   EXPERIMENT LIST
+========================================================= */
 
 .exp-list{
 
-display:flex;
-flex-wrap:wrap;
-gap:12px;
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
 
 }
 
-/* Hidden until link exists */
+
+/* =========================================================
+   HIDE EMPTY LINKS
+========================================================= */
 
 .exp-list a:not([href]),
 .exp-list a[href=""]{
 
-display:none;
+    display:none;
 
 }
+
+
+/* =========================================================
+   EXPERIMENT BUTTON
+========================================================= */
 
 .exp-list a{
 
-text-decoration:none;
+    display:inline-block;
 
-padding:13px 22px;
+    padding:11px 19px;
 
-background:linear-gradient(135deg,#00d4ff,#006eff);
+    background:#087fc4;
 
-border-radius:50px;
+    border-radius:30px;
 
-color:white;
+    color:#fff;
 
-font-weight:600;
+    text-decoration:none;
 
-transition:.3s;
+    font-size:14px;
 
-box-shadow:0 8px 18px rgba(0,0,0,.25);
+    font-weight:600;
+
+}
+
+
+/* =========================================================
+   SIMPLE HOVER
+========================================================= */
+
+@media (hover:hover){
+
+    .exp-list a:hover{
+
+        background:#00a7ef;
+
+    }
+
+    .chapter:hover{
+
+        border-color:#28506d;
+
+    }
 
 }
 
-.exp-list a:hover{
 
-transform:translateY(-3px) scale(1.05);
-
-box-shadow:0 12px 30px rgba(0,0,0,.45);
-
-}
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:700px){
 
-body{
-padding:18px;
+    body{
+
+        padding:18px;
+
+    }
+
+    h1{
+
+        margin-bottom:30px;
+
+        font-size:34px;
+
+        line-height:1.2;
+
+    }
+
+    .department{
+
+        padding:18px;
+
+        margin-bottom:25px;
+
+        border-radius:16px;
+
+    }
+
+    .department h2{
+
+        font-size:27px;
+
+        margin-bottom:20px;
+
+    }
+
+    .chapter{
+
+        padding:16px;
+
+        margin-bottom:14px;
+
+    }
+
+    .chapter h3{
+
+        font-size:19px;
+
+    }
+
+    .exp-list{
+
+        gap:8px;
+
+    }
+
+    .exp-list a{
+
+        padding:10px 15px;
+
+        font-size:13px;
+
+    }
+
 }
 
-h1{
 
-font-size:34px;
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
 
-}
+@media(max-width:380px){
 
-.department h2{
+    body{
 
-font-size:28px;
+        padding:14px;
 
-}
+    }
+
+    h1{
+
+        font-size:29px;
+
+    }
+
+    .department{
+
+        padding:14px;
+
+    }
+
+    .department h2{
+
+        font-size:24px;
+
+    }
+
+    .chapter{
+
+        padding:14px;
+
+    }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
-<h1>ALL 10TH CLASS EXPERIMENTS</h1>
 
-<!-- ========================= -->
-<!-- PHYSICS -->
-<!-- ========================= -->
+<h1>
+    ALL 10TH CLASS EXPERIMENTS
+</h1>
+
+
+<!-- =======================================================
+     PHYSICS
+======================================================== -->
 
 <section class="department physics">
 
-<h2>⚡ Physics</h2>
+    <h2>
+        ⚡ Physics
+    </h2>
 
-<div class="chapter">
-<h3>1. Light – Reflection and Refraction</h3>
 
-<div class="exp-list">
+    <div class="chapter">
 
-<a href="">Experiment 1</a>
-<a href="">Experiment 2</a>
-<a href="">Experiment 3</a>
+        <h3>
+            1. Light – Reflection and Refraction
+        </h3>
 
-</div>
+        <div class="exp-list">
 
-</div>
+            <a href="">
+                Experiment 1
+            </a>
 
-<div class="chapter">
-<h3>2. Human Eye and Colourful World</h3>
+            <a href="">
+                Experiment 2
+            </a>
 
-<div class="exp-list">
+            <a href="">
+                Experiment 3
+            </a>
 
-<a href="">Experiment 1</a>
-<a href="">Experiment 2</a>
+        </div>
 
-</div>
+    </div>
 
-</div>
 
-<div class="chapter">
-<h3>3. Electricity</h3>
+    <div class="chapter">
 
-<div class="exp-list">
+        <h3>
+            2. Human Eye and Colourful World
+        </h3>
 
-<a href="">Experiment 1</a>
-<a href="">Experiment 2</a>
+        <div class="exp-list">
 
-</div>
+            <a href="">
+                Experiment 1
+            </a>
 
-</div>
+            <a href="">
+                Experiment 2
+            </a>
 
-<div class="chapter">
-<h3>4. Magnetic Effects of Electric Current</h3>
+        </div>
 
-<div class="exp-list">
+    </div>
 
-<a href="">Experiment 1</a>
 
-</div>
+    <div class="chapter">
 
-</div>
+        <h3>
+            3. Electricity
+        </h3>
 
-<div class="chapter">
-<h3>5. Sources of Energy</h3>
+        <div class="exp-list">
 
-<div class="exp-list">
+            <a href="">
+                Experiment 1
+            </a>
 
-<a href="">Experiment 1</a>
+            <a href="">
+                Experiment 2
+            </a>
 
-</div>
+        </div>
 
-</div>
+    </div>
+
+
+    <div class="chapter">
+
+        <h3>
+            4. Magnetic Effects of Electric Current
+        </h3>
+
+        <div class="exp-list">
+
+            <a href="">
+                Experiment 1
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="chapter">
+
+        <h3>
+            5. Sources of Energy
+        </h3>
+
+        <div class="exp-list">
+
+            <a href="">
+                Experiment 1
+            </a>
+
+        </div>
+
+    </div>
 
 </section>
 
-<!-- ========================= -->
-<!-- CHEMISTRY -->
-<!-- ========================= -->
+
+
+<!-- =======================================================
+     CHEMISTRY
+======================================================== -->
 
 <section class="department chemistry">
 
-<h2>🧪 Chemistry</h2>
+    <h2>
+        🧪 Chemistry
+    </h2>
 
-<div class="chapter">
 
-<h3>1. Chemical Reactions and Equations</h3>
+    <div class="chapter">
 
-<div class="exp-list">
+        <h3>
+            1. Chemical Reactions and Equations
+        </h3>
 
-<a href="activity_1.1.html">Experiment 1</a>
+        <div class="exp-list">
 
-<a href="">Experiment 2</a>
+            <a href="activity_1.1.html">
+                Experiment 1
+            </a>
 
-</div>
+            <a href="">
+                Experiment 2
+            </a>
 
-</div>
+        </div>
 
-<div class="chapter">
+    </div>
 
-<h3>2. Acids, Bases and Salts</h3>
 
-<div class="exp-list">
+    <div class="chapter">
 
-<a href="">Experiment 1</a>
+        <h3>
+            2. Acids, Bases and Salts
+        </h3>
 
-<a href="">Experiment 2</a>
+        <div class="exp-list">
 
-<a href="">Experiment 3</a>
+            <a href="">
+                Experiment 1
+            </a>
 
-</div>
+            <a href="">
+                Experiment 2
+            </a>
 
-</div>
+            <a href="">
+                Experiment 3
+            </a>
 
-<div class="chapter">
+        </div>
 
-<h3>3. Metals and Non-Metals</h3>
+    </div>
 
-<div class="exp-list">
 
-<a href="">Experiment 1</a>
+    <div class="chapter">
 
-</div>
+        <h3>
+            3. Metals and Non-Metals
+        </h3>
 
-</div>
+        <div class="exp-list">
 
-<div class="chapter">
+            <a href="">
+                Experiment 1
+            </a>
 
-<h3>4. Carbon and its Compounds</h3>
+        </div>
 
-<div class="exp-list">
+    </div>
 
-<a href="">Experiment 1</a>
 
-</div>
+    <div class="chapter">
 
-</div>
+        <h3>
+            4. Carbon and its Compounds
+        </h3>
 
-<div class="chapter">
+        <div class="exp-list">
 
-<h3>5. Periodic Classification of Elements</h3>
+            <a href="">
+                Experiment 1
+            </a>
 
-<div class="exp-list">
+        </div>
 
-<a href="">Experiment 1</a>
+    </div>
 
-</div>
 
-</div>
+    <div class="chapter">
+
+        <h3>
+            5. Periodic Classification of Elements
+        </h3>
+
+        <div class="exp-list">
+
+            <a href="">
+                Experiment 1
+            </a>
+
+        </div>
+
+    </div>
 
 </section>
 
-<!-- ========================= -->
-<!-- BIOLOGY -->
-<!-- ========================= -->
+
+
+<!-- =======================================================
+     BIOLOGY
+======================================================== -->
 
 <section class="department biology">
 
-<h2>🌿 Biology</h2>
+    <h2>
+        🌿 Biology
+    </h2>
 
-<div class="chapter">
 
-<h3>1. Life Processes</h3>
+    <div class="chapter">
 
-<div class="exp-list">
+        <h3>
+            1. Life Processes
+        </h3>
 
-<a href="">Experiment 1</a>
+        <div class="exp-list">
 
-<a href="">Experiment 2</a>
+            <a href="">
+                Experiment 1
+            </a>
 
-</div>
+            <a href="">
+                Experiment 2
+            </a>
 
-</div>
+        </div>
 
-<div class="chapter">
+    </div>
 
-<h3>2. Control and Coordination</h3>
 
-<div class="exp-list">
+    <div class="chapter">
 
-<a href="">Experiment 1</a>
+        <h3>
+            2. Control and Coordination
+        </h3>
 
-</div>
+        <div class="exp-list">
 
-</div>
+            <a href="">
+                Experiment 1
+            </a>
 
-<div class="chapter">
+        </div>
 
-<h3>3. How do Organisms Reproduce?</h3>
+    </div>
 
-<div class="exp-list">
 
-<a href="">Experiment 1</a>
+    <div class="chapter">
 
-</div>
+        <h3>
+            3. How do Organisms Reproduce?
+        </h3>
 
-</div>
+        <div class="exp-list">
 
-<div class="chapter">
+            <a href="">
+                Experiment 1
+            </a>
 
-<h3>4. Heredity and Evolution</h3>
+        </div>
 
-<div class="exp-list">
+    </div>
 
-<a href="">Experiment 1</a>
 
-</div>
+    <div class="chapter">
 
-</div>
+        <h3>
+            4. Heredity and Evolution
+        </h3>
 
-<div class="chapter">
+        <div class="exp-list">
 
-<h3>5. Our Environment</h3>
+            <a href="">
+                Experiment 1
+            </a>
 
-<div class="exp-list">
+        </div>
 
-<a href="">Experiment 1</a>
+    </div>
 
-</div>
 
-</div>
+    <div class="chapter">
 
-<div class="chapter">
+        <h3>
+            5. Our Environment
+        </h3>
 
-<h3>6. Sustainable Management of Natural Resources</h3>
+        <div class="exp-list">
 
-<div class="exp-list">
+            <a href="">
+                Experiment 1
+            </a>
 
-<a href="">Experiment 1</a>
+        </div>
 
-</div>
+    </div>
 
-</div>
+
+    <div class="chapter">
+
+        <h3>
+            6. Sustainable Management of Natural Resources
+        </h3>
+
+        <div class="exp-list">
+
+            <a href="">
+                Experiment 1
+            </a>
+
+        </div>
+
+    </div>
 
 </section>
 
+
 </body>
+
 </html>
