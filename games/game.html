@@ -2,655 +2,1849 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+      maximum-scale=1.0,user-scalable=no">
+
 <title>Click Kingdom</title>
 
 <style>
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Arial,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --bg:#080b12;
+    --panel:#111722;
+    --panel2:#171e2b;
+    --border:rgba(255,255,255,.08);
+    --text:#fff;
+    --muted:#8e99aa;
+    --gold:#ffd54a;
+    --gold2:#ff9800;
+    --blue:#4facfe;
+    --green:#45e09f;
+    --danger:#ff5577;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-background:#181818;
-color:white;
-display:flex;
-justify-content:center;
-padding:30px;
-transition:.5s;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,193,7,.08),transparent 30%),
+        radial-gradient(circle at 100% 20%,rgba(79,172,254,.08),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    padding:18px;
+    overflow-x:hidden;
+    transition:.5s;
 }
+
+/* =========================
+   GAME CONTAINER
+========================= */
 
 #game{
-width:900px;
-display:grid;
-grid-template-columns:1fr 320px;
-gap:20px;
+    width:100%;
+    max-width:1150px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 350px;
+    gap:18px;
 }
 
-#left,#right{
-background:#252525;
-padding:20px;
-border-radius:15px;
-box-shadow:0 0 20px rgba(0,0,0,.4);
+/* =========================
+   PANELS
+========================= */
+
+#left,
+#right{
+    background:rgba(17,23,34,.92);
+    border:1px solid var(--border);
+    border-radius:24px;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35),
+        inset 0 1px rgba(255,255,255,.03);
 }
 
-h1{
-margin-bottom:20px;
+#left{
+    padding:28px;
+    min-height:700px;
+}
+
+#right{
+    padding:22px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:25px;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:900;
+}
+
+.logo span{
+    color:var(--gold);
+}
+
+.level{
+    background:rgba(255,213,74,.1);
+    border:1px solid rgba(255,213,74,.2);
+    padding:8px 13px;
+    border-radius:50px;
+    color:var(--gold);
+    font-size:13px;
+    font-weight:bold;
+}
+
+/* =========================
+   MONEY
+========================= */
+
+.moneyBox{
+    text-align:center;
+    margin:5px 0 25px;
+}
+
+.moneyLabel{
+    color:var(--muted);
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:2px;
 }
 
 .money{
-font-size:35px;
-margin-bottom:20px;
-color:gold;
+    font-size:clamp(42px,8vw,72px);
+    font-weight:900;
+    color:var(--gold);
+    text-shadow:
+        0 0 30px rgba(255,213,74,.15);
+    line-height:1.1;
+    margin-top:5px;
+}
+
+.money.pop{
+    animation:moneyPop .18s ease;
+}
+
+@keyframes moneyPop{
+    50%{
+        transform:scale(1.06);
+    }
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-bottom:28px;
+}
+
+.statCard{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:15px;
+    padding:13px;
+    text-align:center;
+}
+
+.statIcon{
+    font-size:19px;
+}
+
+.statValue{
+    margin-top:5px;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.statName{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:3px;
+}
+
+/* =========================
+   CLICK AREA
+========================= */
+
+.clickArea{
+    text-align:center;
+    position:relative;
+    padding:5px 0 25px;
+}
+
+.clickHint{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:18px;
 }
 
 #clickBtn{
-width:220px;
-height:220px;
-border:none;
-border-radius:50%;
-font-size:30px;
-cursor:pointer;
-background:linear-gradient(#ffd54f,#ff9800);
-transition:.15s;
+    width:min(280px,70vw);
+    height:min(280px,70vw);
+    border:0;
+    border-radius:50%;
+    cursor:pointer;
+
+    background:
+        radial-gradient(circle at 35% 25%,
+        #ffe98a,
+        #ffd54f 35%,
+        #ff9800 100%);
+
+    color:#392500;
+    font-size:30px;
+    font-weight:900;
+
+    box-shadow:
+        0 18px 45px rgba(255,152,0,.22),
+        inset 0 7px 15px rgba(255,255,255,.35),
+        inset 0 -10px 20px rgba(180,80,0,.18);
+
+    transition:
+        transform .08s,
+        box-shadow .15s;
+}
+
+#clickBtn:hover{
+    transform:scale(1.035);
 }
 
 #clickBtn:active{
-transform:scale(.92);
+    transform:scale(.91);
+    box-shadow:
+        0 5px 15px rgba(255,152,0,.2),
+        inset 0 8px 20px rgba(0,0,0,.2);
 }
 
-.shopItem{
-background:#333;
-padding:12px;
-margin:12px 0;
-border-radius:10px;
-cursor:pointer;
-transition:.25s;
+.clickEmoji{
+    display:block;
+    font-size:48px;
+    margin-bottom:5px;
 }
 
-.shopItem:hover{
-background:#444;
+/* =========================
+   STREAK
+========================= */
+
+.streak{
+    margin:5px auto 0;
+    width:max-content;
+    padding:7px 14px;
+    border-radius:50px;
+    background:rgba(255,85,119,.1);
+    color:#ff7894;
+    font-size:12px;
+    font-weight:bold;
+    opacity:.3;
+    transition:.3s;
+}
+
+.streak.active{
+    opacity:1;
+    transform:scale(1.05);
+}
+
+/* =========================
+   ROOM
+========================= */
+
+.roomTitle{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.roomTitle h2{
+    font-size:17px;
+}
+
+.roomTitle span{
+    font-size:11px;
+    color:var(--green);
 }
 
 #room{
-margin-top:30px;
-height:220px;
-background:#555;
-border-radius:15px;
-position:relative;
-overflow:hidden;
+    height:240px;
+    background:#222;
+    border-radius:18px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:inset 0 0 50px rgba(0,0,0,.3);
 }
 
 #wall{
-position:absolute;
-top:0;
-width:100%;
-height:65%;
-background:#777;
-transition:.5s;
+    position:absolute;
+    top:0;
+    width:100%;
+    height:67%;
+    background:
+        linear-gradient(135deg,#686868,#777);
+    transition:.5s;
 }
 
 #floor{
-position:absolute;
-bottom:0;
-width:100%;
-height:35%;
-background:#5c4033;
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:33%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #543b2f 0px,
+            #543b2f 35px,
+            #624737 36px,
+            #624737 70px
+        );
 }
 
 #tv{
-position:absolute;
-width:90px;
-height:60px;
-background:black;
-border:5px solid #333;
-left:40%;
-top:40%;
-display:none;
+    position:absolute;
+    width:105px;
+    height:68px;
+    background:
+        linear-gradient(135deg,#17202d,#000);
+    border:5px solid #181818;
+    border-radius:5px;
+    left:50%;
+    top:35%;
+    transform:translateX(-50%);
+    display:none;
+    box-shadow:
+        0 0 25px rgba(70,180,255,.35);
 }
+
+#tv::after{
+    content:"";
+    position:absolute;
+    width:25px;
+    height:4px;
+    background:#222;
+    bottom:-12px;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.lamp{
+    position:absolute;
+    right:30px;
+    top:35px;
+    font-size:35px;
+    filter:drop-shadow(0 0 12px gold);
+}
+
+/* =========================
+   SHOP
+========================= */
+
+.shopHeader{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:15px;
+}
+
+.shopHeader h2{
+    font-size:21px;
+}
+
+.shopCount{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.shopItem{
+    position:relative;
+    background:linear-gradient(
+        145deg,
+        rgba(255,255,255,.045),
+        rgba(255,255,255,.015)
+    );
+
+    border:1px solid var(--border);
+    padding:15px;
+    margin:10px 0;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.18s;
+    overflow:hidden;
+}
+
+.shopItem::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:3px;
+    background:var(--gold);
+    opacity:.7;
+}
+
+.shopItem:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,213,74,.3);
+    background:rgba(255,255,255,.07);
+}
+
+.shopItem:active{
+    transform:scale(.98);
+}
+
+.shopTop{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.shopIcon{
+    width:40px;
+    height:40px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,213,74,.1);
+    font-size:21px;
+}
+
+.shopName{
+    font-weight:bold;
+    font-size:14px;
+}
+
+.shopDescription{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:2px;
+}
+
+.shopPrice{
+    margin-top:10px;
+    color:var(--gold);
+    font-size:13px;
+    font-weight:bold;
+}
+
+.shopOwned{
+    float:right;
+    color:#aaa;
+    font-size:11px;
+}
+
+/* =========================
+   INFO CARDS
+========================= */
+
+.infoGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:15px;
+}
+
+.info{
+    background:var(--panel2);
+    padding:13px;
+    border-radius:13px;
+    border:1px solid var(--border);
+}
+
+.infoTitle{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.infoValue{
+    color:white;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+
+.achievementTitle{
+    margin-top:22px;
+    margin-bottom:12px;
+    font-size:18px;
+}
+
+#achievements{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+
+.badge{
+    padding:7px 9px;
+    border-radius:8px;
+    background:rgba(255,213,74,.1);
+    border:1px solid rgba(255,213,74,.15);
+    color:#ffe57a;
+    font-size:10px;
+    font-weight:bold;
+}
+
+/* =========================
+   POPUP
+========================= */
 
 #achievement{
-position:fixed;
-top:-100px;
-left:50%;
-transform:translateX(-50%);
-background:gold;
-color:black;
-padding:15px 30px;
-font-size:20px;
-border-radius:12px;
-transition:.5s;
-font-weight:bold;
+    position:fixed;
+    z-index:1000;
+    top:-100px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#ffd54f;
+    color:#241900;
+    padding:13px 22px;
+    border-radius:14px;
+    font-weight:900;
+    box-shadow:0 10px 35px rgba(0,0,0,.35);
+    transition:.45s;
+    white-space:nowrap;
 }
 
-.stat{
-margin-top:20px;
-line-height:35px;
-}
+/* =========================
+   FLOATING MONEY
+========================= */
 
 .floatMoney{
-
-position:fixed;
-
-font-size:28px;
-
-font-weight:bold;
-
-color:gold;
-
-pointer-events:none;
-
-animation:floatUp .8s linear forwards;
-
+    position:fixed;
+    z-index:999;
+    font-size:24px;
+    font-weight:900;
+    color:var(--gold);
+    pointer-events:none;
+    animation:floatUp .8s ease-out forwards;
+    text-shadow:0 2px 8px rgba(0,0,0,.5);
 }
 
 @keyframes floatUp{
 
-0%{
+    0%{
+        opacity:1;
+        transform:translate(-50%,0) scale(.8);
+    }
 
-opacity:1;
-transform:translateY(0);
+    50%{
+        transform:translate(-50%,-45px) scale(1.15);
+    }
+
+    100%{
+        opacity:0;
+        transform:translate(-50%,-100px) scale(1);
+    }
+}
+
+/* =========================
+   PARTICLE
+========================= */
+
+.particle{
+    position:fixed;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    pointer-events:none;
+    background:var(--gold);
+    animation:particle .65s ease-out forwards;
+}
+
+@keyframes particle{
+
+    to{
+        opacity:0;
+        transform:
+            translate(var(--x),var(--y))
+            scale(.1);
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    body{
+        padding:10px;
+    }
+
+    #game{
+        grid-template-columns:1fr;
+        gap:12px;
+    }
+
+    #left{
+        min-height:auto;
+        padding:20px;
+    }
+
+    #right{
+        padding:18px;
+    }
+
+    #clickBtn{
+        width:min(260px,72vw);
+        height:min(260px,72vw);
+    }
 
 }
 
-100%{
+/* =========================
+   SMALL MOBILE
+========================= */
 
-opacity:0;
-transform:translateY(-100px);
+@media(max-width:500px){
+
+    body{
+        padding:7px;
+    }
+
+    #left,
+    #right{
+        border-radius:18px;
+    }
+
+    #left{
+        padding:16px;
+    }
+
+    #right{
+        padding:15px;
+    }
+
+    .header{
+        margin-bottom:18px;
+    }
+
+    .logo{
+        font-size:20px;
+    }
+
+    .level{
+        font-size:10px;
+        padding:7px 10px;
+    }
+
+    .money{
+        font-size:48px;
+    }
+
+    .stats{
+        gap:6px;
+    }
+
+    .statCard{
+        padding:10px 5px;
+    }
+
+    .statValue{
+        font-size:14px;
+    }
+
+    .statName{
+        font-size:9px;
+    }
+
+    #clickBtn{
+        width:72vw;
+        height:72vw;
+        max-width:260px;
+        max-height:260px;
+        font-size:25px;
+    }
+
+    .clickEmoji{
+        font-size:42px;
+    }
+
+    #room{
+        height:190px;
+    }
+
+    .shopItem{
+        padding:13px;
+    }
+
+    .shopIcon{
+        width:36px;
+        height:36px;
+        font-size:18px;
+    }
+
+    .shopName{
+        font-size:13px;
+    }
 
 }
 
+/* =========================
+   VERY SMALL
+========================= */
+
+@media(max-width:350px){
+
+    .money{
+        font-size:40px;
+    }
+
+    #clickBtn{
+        width:70vw;
+        height:70vw;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .stats .statCard:last-child{
+        grid-column:span 2;
+    }
+
 }
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation:none !important;
+        transition:none !important;
+    }
+
+}
+
 </style>
 </head>
+
 <body>
 
 <div id="achievement"></div>
 
 <div id="game">
 
+<!-- =========================
+     LEFT GAME AREA
+========================= -->
+
 <div id="left">
 
-<h1>🖱 Click Kingdom</h1>
+    <div class="header">
 
-<div class="money">
-💰 <span id="money">0</span>
+        <div class="logo">
+            🖱 <span>Click</span> Kingdom
+        </div>
+
+        <div class="level">
+            👑 KINGDOM
+        </div>
+
+    </div>
+
+
+    <div class="moneyBox">
+
+        <div class="moneyLabel">
+            Your Treasure
+        </div>
+
+        <div class="money" id="money">
+            0
+        </div>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="statCard">
+            <div class="statIcon">🖱️</div>
+            <div class="statValue" id="clicks">0</div>
+            <div class="statName">CLICKS</div>
+        </div>
+
+        <div class="statCard">
+            <div class="statIcon">🤖</div>
+            <div class="statValue" id="autoOwned">0</div>
+            <div class="statName">ROBOTS</div>
+        </div>
+
+        <div class="statCard">
+            <div class="statIcon">⚡</div>
+            <div class="statValue" id="speedLevel">0</div>
+            <div class="statName">SPEED</div>
+        </div>
+
+    </div>
+
+
+    <div class="clickArea">
+
+        <div class="clickHint">
+            Tap the golden button to earn coins
+        </div>
+
+        <button id="clickBtn">
+
+            <span class="clickEmoji">
+                🖱️
+            </span>
+
+            CLICK
+
+        </button>
+
+        <div class="streak" id="streak">
+            🔥 STREAK ×1
+        </div>
+
+    </div>
+
+
+    <div class="roomTitle">
+
+        <h2>
+            🏠 Your Room
+        </h2>
+
+        <span>
+            ● LIVE
+        </span>
+
+    </div>
+
+
+    <div id="room">
+
+        <div id="wall"></div>
+
+        <div id="floor"></div>
+
+        <div class="lamp">
+            💡
+        </div>
+
+        <div id="tv"></div>
+
+    </div>
+
 </div>
 
-<button id="clickBtn">CLICK</button>
 
-<div class="stat">
-Total Clicks:
-<span id="clicks">0</span>
-</div>
-
-<div id="room">
-<div id="wall"></div>
-<div id="floor"></div>
-<div id="tv"></div>
-</div>
-
-</div>
+<!-- =========================
+     SHOP
+========================= -->
 
 <div id="right">
 
-<h2>🛒 Shop</h2>
+    <div class="shopHeader">
 
-<div class="shopItem" onclick="buyTV()">
-📺 TV
-<br>
-Price:
-<span id="tvPrice">150</span>
+        <h2>
+            🛒 Shop
+        </h2>
+
+        <div class="shopCount">
+            UPGRADE YOUR KINGDOM
+        </div>
+
+    </div>
+
+
+    <div class="shopItem"
+         onclick="buyTV()">
+
+        <div class="shopTop">
+
+            <div class="shopIcon">
+                📺
+            </div>
+
+            <div>
+
+                <div class="shopName">
+                    Luxury TV
+                </div>
+
+                <div class="shopDescription">
+                    Add entertainment to your room
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="shopPrice">
+            💰 150 coins
+        </div>
+
+    </div>
+
+
+    <div class="shopItem"
+         onclick="paintWall()">
+
+        <div class="shopTop">
+
+            <div class="shopIcon">
+                🎨
+            </div>
+
+            <div>
+
+                <div class="shopName">
+                    Wall Paint
+                </div>
+
+                <div class="shopDescription">
+                    Give your room a fresh look
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="shopPrice">
+            💰 100 coins
+        </div>
+
+    </div>
+
+
+    <div class="shopItem"
+         onclick="buyAuto()">
+
+        <div class="shopTop">
+
+            <div class="shopIcon">
+                🤖
+            </div>
+
+            <div>
+
+                <div class="shopName">
+                    Auto Clicker
+                </div>
+
+                <div class="shopDescription">
+                    Earn coins automatically
+
+                    <span class="shopOwned">
+                        Owned: <span id="autoOwned2">0</span>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="shopPrice">
+            💰 <span id="autoPrice">50</span> coins
+        </div>
+
+    </div>
+
+
+    <div class="shopItem"
+         onclick="buySpeed()">
+
+        <div class="shopTop">
+
+            <div class="shopIcon">
+                ⚡
+            </div>
+
+            <div>
+
+                <div class="shopName">
+                    Auto Speed
+                </div>
+
+                <div class="shopDescription">
+                    Make your robots faster
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="shopPrice">
+            💰 <span id="speedPrice">200</span> coins
+        </div>
+
+    </div>
+
+
+    <div class="shopItem"
+         onclick="buyTheme()">
+
+        <div class="shopTop">
+
+            <div class="shopIcon">
+                🌈
+            </div>
+
+            <div>
+
+                <div class="shopName">
+                    Theme Upgrade
+                </div>
+
+                <div class="shopDescription">
+                    Unlock a new kingdom style
+
+                    <span class="shopOwned">
+                        Level: <span id="themeLevel">0</span>/2
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="shopPrice">
+            💰 <span id="themePrice">500</span> coins
+        </div>
+
+    </div>
+
+
+    <div class="infoGrid">
+
+        <div class="info">
+
+            <div class="infoTitle">
+                💵 MONEY / SEC
+            </div>
+
+            <div class="infoValue"
+                 id="mps">
+                0
+            </div>
+
+        </div>
+
+        <div class="info">
+
+            <div class="infoTitle">
+                📈 TOTAL EARNED
+            </div>
+
+            <div class="infoValue"
+                 id="earned">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <h2 class="achievementTitle">
+        🏆 Achievements
+    </h2>
+
+    <div id="achievements">
+        <div class="badge">
+            No achievements yet
+        </div>
+    </div>
+
 </div>
 
-<div class="shopItem" onclick="paintWall()">
-🎨 Wall Paint
-<br>
-Price:
-<span id="paintPrice">100</span>
 </div>
 
-<div class="shopItem" onclick="buyAuto()">
-🤖 Auto Clicker
-<br>
-Owned:
-<span id="autoOwned">0</span>
-<br>
-Price:
-<span id="autoPrice">50</span>
-</div>
-
-<div class="shopItem" onclick="buySpeed()">
-⚡ Auto Speed
-<br>
-Level:
-<span id="speedLevel">0</span>
-<br>
-Price:
-<span id="speedPrice">200</span>
-</div>
-
-<div class="shopItem" onclick="buyTheme()">
-🌈 Theme Upgrade
-<br>
-Level:
-<span id="themeLevel">0</span>/2
-<br>
-Price:
-<span id="themePrice">500</span>
-</div>
-
-<div class="shopItem">
-💵 Money/sec
-<br>
-<span id="mps">0</span>
-</div>
-
-<div class="shopItem">
-📈 Total Earned
-<br>
-<span id="earned">0</span>
-</div>
-
-<hr style="margin:20px 0;">
-
-<h2>🏆 Achievements</h2>
-
-<div id="achievements">
-None Yet
-</div>
-
-</div>
-
-</div>
 
 <script>
 
-let game={
-money:0,
-earned:0,
-clicks:0,
+/* =========================
+   GAME DATA
+========================= */
 
-tv:false,
-paint:false,
+let game = {
 
-auto:0,
-autoPrice:50,
+    money:0,
+    earned:0,
+    clicks:0,
 
-speed:0,
-speedPrice:200,
-speedDelay:1000,
+    tv:false,
+    paint:false,
 
-theme:0,
-themePrice:500,
+    auto:0,
+    autoPrice:50,
 
-achievements:[]
-}
+    speed:0,
+    speedPrice:200,
+    speedDelay:1000,
+
+    theme:0,
+    themePrice:500,
+
+    achievements:[]
+
+};
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const moneyEl =
+    document.getElementById("money");
+
+const clicksEl =
+    document.getElementById("clicks");
+
+const autoOwnedEl =
+    document.getElementById("autoOwned");
+
+const autoOwned2El =
+    document.getElementById("autoOwned2");
+
+const autoPriceEl =
+    document.getElementById("autoPrice");
+
+const speedLevelEl =
+    document.getElementById("speedLevel");
+
+const speedPriceEl =
+    document.getElementById("speedPrice");
+
+const themeLevelEl =
+    document.getElementById("themeLevel");
+
+const themePriceEl =
+    document.getElementById("themePrice");
+
+const earnedEl =
+    document.getElementById("earned");
+
+const mpsEl =
+    document.getElementById("mps");
+
+const achievementEl =
+    document.getElementById("achievement");
+
+const achievementsEl =
+    document.getElementById("achievements");
+
+const clickBtn =
+    document.getElementById("clickBtn");
+
+const streakEl =
+    document.getElementById("streak");
+
+const tvEl =
+    document.getElementById("tv");
+
+const wallEl =
+    document.getElementById("wall");
+
+
+/* =========================
+   SAVE
+========================= */
 
 function save(){
-localStorage.setItem("clickGame",JSON.stringify(game))
+
+    localStorage.setItem(
+        "clickGame",
+        JSON.stringify(game)
+    );
+
 }
+
+
+/* =========================
+   LOAD
+========================= */
 
 function load(){
 
-let data=localStorage.getItem("clickGame");
+    const data =
+        localStorage.getItem("clickGame");
 
-if(data){
+    if(!data)
+        return;
 
-game=JSON.parse(data);
+    try{
 
-update();
+        game =
+            JSON.parse(data);
 
-if(game.tv)
-document.getElementById("tv").style.display="block";
+    }catch{
 
-if(game.paint)
-document.getElementById("wall").style.background="#8bc34a";
+        return;
+
+    }
+
+    if(game.tv)
+        tvEl.style.display="block";
+
+    if(game.paint)
+        wallEl.style.background="#8bc34a";
+
+    applyTheme();
 
 }
 
-}
+
+/* =========================
+   UPDATE UI
+========================= */
 
 function update(){
 
-money.innerHTML=Math.floor(game.money);
+    moneyEl.textContent =
+        Math.floor(game.money);
 
-clicks.innerHTML=game.clicks;
+    clicksEl.textContent =
+        game.clicks;
 
-autoOwned.innerHTML=game.auto;
+    autoOwnedEl.textContent =
+        game.auto;
 
-autoPrice.innerHTML=Math.floor(game.autoPrice);
+    autoOwned2El.textContent =
+        game.auto;
 
-speedLevel.innerHTML=game.speed;
+    autoPriceEl.textContent =
+        Math.floor(game.autoPrice);
 
-speedPrice.innerHTML=Math.floor(game.speedPrice);
+    speedLevelEl.textContent =
+        game.speed;
 
-themeLevel.innerHTML=game.theme;
+    speedPriceEl.textContent =
+        Math.floor(game.speedPrice);
 
-themePrice.innerHTML=Math.floor(game.themePrice);
+    themeLevelEl.textContent =
+        game.theme;
 
-earned.innerHTML=Math.floor(game.earned);
+    themePriceEl.textContent =
+        Math.floor(game.themePrice);
+
+    earnedEl.textContent =
+        Math.floor(game.earned);
+
+    mpsEl.textContent =
+        Math.round(
+            game.auto *
+            (1000/game.speedDelay)
+        );
+
+    renderAchievements();
 
 }
+
+
+/* =========================
+   MAIN CLICK
+========================= */
 
 clickBtn.onclick=function(e){
 
-game.money++;
+    game.money++;
+    game.earned++;
+    game.clicks++;
 
-game.earned++;
+    floatingMoney(
+        e.clientX,
+        e.clientY,
+        "+1"
+    );
 
-game.clicks++;
+    createParticles(
+        e.clientX,
+        e.clientY
+    );
 
-floatingMoney(
-e.clientX,
-e.clientY,
-"+1"
-);
+    moneyEl.classList.remove("pop");
 
-checkAchievements();
+    void moneyEl.offsetWidth;
 
-update();
+    moneyEl.classList.add("pop");
 
-save();
+    update();
 
-}
+    checkAchievements();
+
+    save();
+
+};
+
+
+/* =========================
+   STREAK
+========================= */
+
+let lastClick=0;
+let streak=0;
+
+clickBtn.addEventListener("click",()=>{
+
+    const now=Date.now();
+
+    if(now-lastClick<1200){
+
+        streak++;
+
+    }else{
+
+        streak=1;
+
+    }
+
+    lastClick=now;
+
+    if(streak>1){
+
+        streakEl.textContent=
+            "🔥 STREAK ×"+streak;
+
+        streakEl.classList.add("active");
+
+    }
+
+    setTimeout(()=>{
+
+        if(Date.now()-lastClick>=1200){
+
+            streak=0;
+
+            streakEl.classList.remove("active");
+
+        }
+
+    },1300);
+
+});
+
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
 
 function unlock(name){
 
-if(game.achievements.includes(name))
-return;
+    if(game.achievements.includes(name))
+        return;
 
-game.achievements.push(name);
+    game.achievements.push(name);
 
-achievement.innerHTML="🏆 "+name;
+    achievementEl.innerHTML=
+        "🏆 "+name;
 
-achievement.style.top="20px";
+    achievementEl.style.top="18px";
 
-setTimeout(()=>{
-achievement.style.top="-100px";
-},2500);
+    setTimeout(()=>{
 
-document.getElementById("achievements").innerHTML=
-game.achievements.join("<br>");
+        achievementEl.style.top="-100px";
+
+    },2200);
+
+    renderAchievements();
 
 }
+
+
+function renderAchievements(){
+
+    if(game.achievements.length===0){
+
+        achievementsEl.innerHTML=
+            `<div class="badge">
+                No achievements yet
+             </div>`;
+
+        return;
+
+    }
+
+    achievementsEl.innerHTML=
+        game.achievements
+        .map(x=>`<div class="badge">🏆 ${x}</div>`)
+        .join("");
+
+}
+
 
 function checkAchievements(){
 
-if(game.theme>=1)
-unlock("New Look");
+    if(game.theme>=1)
+        unlock("New Look");
 
-if(game.theme>=2)
-unlock("Ultimate Style");
+    if(game.theme>=2)
+        unlock("Ultimate Style");
 
-if(game.earned>=1000)
-unlock("Business Started");
+    if(game.earned>=1000)
+        unlock("Business Started");
 
-if(game.earned>=5000)
-unlock("Money Machine");
+    if(game.earned>=5000)
+        unlock("Money Machine");
 
-if(game.earned>=50000)
-unlock("Millionaire Mindset");
+    if(game.earned>=50000)
+        unlock("Millionaire Mindset");
 
-if(game.auto>=25)
-unlock("Factory");
+    if(game.auto>=25)
+        unlock("Factory");
 
-if(game.auto>=100)
-unlock("Automation Empire");
+    if(game.auto>=100)
+        unlock("Automation Empire");
 
-if(game.clicks==1)
-unlock("First Click");
+    if(game.clicks>=1)
+        unlock("First Click");
 
-if(game.clicks==10)
-unlock("Click Beginner");
+    if(game.clicks>=10)
+        unlock("Click Beginner");
 
-if(game.clicks==100)
-unlock("100 Clicks");
+    if(game.clicks>=100)
+        unlock("100 Clicks");
 
-if(game.money>=1000)
-unlock("Rich");
+    if(game.money>=1000)
+        unlock("Rich");
 
-if(game.auto>=1)
-unlock("Automation Begins");
+    if(game.auto>=1)
+        unlock("Automation Begins");
 
-if(game.auto>=10)
-unlock("Robot Army");
+    if(game.auto>=10)
+        unlock("Robot Army");
 
-if(game.speed>=1)
-unlock("Speed I");
+    if(game.speed>=1)
+        unlock("Speed I");
 
-if(game.speed>=5)
-unlock("Speed Master");
+    if(game.speed>=5)
+        unlock("Speed Master");
 
-if(game.money>=10000)
-unlock("10K Coins");
+    if(game.money>=10000)
+        unlock("10K Coins");
 
-if(game.money>=100000)
-unlock("100K Coins");
+    if(game.money>=100000)
+        unlock("100K Coins");
 
 }
+
+
+/* =========================
+   TV
+========================= */
 
 function buyTV(){
 
-if(game.tv)return;
+    if(game.tv){
 
-if(game.money<150)return alert("Not enough money!");
+        alert("You already own the TV!");
 
-game.money-=150;
+        return;
 
-game.tv=true;
+    }
 
-tv.style.display="block";
+    if(game.money<150){
 
-unlock("Bought TV");
+        alert("Not enough coins!");
 
-update();
+        return;
 
-save();
+    }
+
+    game.money-=150;
+
+    game.tv=true;
+
+    tvEl.style.display="block";
+
+    unlock("Bought TV");
+
+    update();
+
+    save();
 
 }
+
+
+/* =========================
+   PAINT
+========================= */
 
 function paintWall(){
 
-if(game.paint)return;
+    if(game.paint){
 
-if(game.money<100)return alert("Not enough money!");
+        alert("Your wall is already painted!");
 
-game.money-=100;
+        return;
 
-game.paint=true;
+    }
 
-wall.style.background="#8bc34a";
+    if(game.money<100){
 
-unlock("Painted Wall");
+        alert("Not enough coins!");
 
-update();
+        return;
 
-save();
+    }
+
+    game.money-=100;
+
+    game.paint=true;
+
+    wallEl.style.background="#8bc34a";
+
+    unlock("Painted Wall");
+
+    update();
+
+    save();
 
 }
+
+
+/* =========================
+   AUTO CLICKER
+========================= */
 
 function buyAuto(){
 
-if(game.money<game.autoPrice){
-alert("Not enough money!");
-return;
+    if(game.money<game.autoPrice){
+
+        alert("Not enough coins!");
+
+        return;
+
+    }
+
+    game.money-=game.autoPrice;
+
+    game.auto++;
+
+    game.autoPrice=
+        Math.floor(
+            game.autoPrice*1.4
+        );
+
+    unlock("Bought Auto Clicker");
+
+    update();
+
+    restartAuto();
+
+    save();
+
 }
 
-game.money-=game.autoPrice;
 
-game.auto++;
-
-game.autoPrice=Math.floor(game.autoPrice*1.4);
-
-unlock("Bought Auto Clicker");
-
-update();
-save();
-
-}
+/* =========================
+   SPEED
+========================= */
 
 function buySpeed(){
 
-if(game.money<game.speedPrice){
-alert("Not enough money!");
-return;
+    if(game.money<game.speedPrice){
+
+        alert("Not enough coins!");
+
+        return;
+
+    }
+
+    game.money-=game.speedPrice;
+
+    game.speed++;
+
+    if(game.speedDelay>50){
+
+        game.speedDelay*=.8;
+
+    }
+
+    game.speedPrice=
+        Math.floor(
+            game.speedPrice*1.7
+        );
+
+    unlock("Speed Upgrade");
+
+    restartAuto();
+
+    update();
+
+    save();
+
 }
 
-game.money-=game.speedPrice;
 
-game.speed++;
-
-if(game.speedDelay>50){
-game.speedDelay*=0.8;
-}
-
-if(game.speed%2==0){
-game.speedPrice*=2;
-}
-
-unlock("Speed Upgrade");
-
-restartAuto();
-
-update();
-
-save();
-
-}
+/* =========================
+   THEMES
+========================= */
 
 function buyTheme(){
 
-if(game.theme>=2){
+    if(game.theme>=2){
 
-alert("Maximum Theme!");
+        alert("Maximum theme reached!");
 
-return;
+        return;
 
-}
+    }
 
-if(game.money<game.themePrice){
+    if(game.money<game.themePrice){
 
-alert("Not enough money!");
+        alert("Not enough coins!");
 
-return;
+        return;
 
-}
+    }
 
-game.money-=game.themePrice;
+    game.money-=game.themePrice;
 
-game.theme++;
+    game.theme++;
 
-themeLevel.innerHTML=game.theme;
+    if(game.theme===1){
 
-if(game.theme==1){
+        game.themePrice=2500;
 
-document.body.style.background="#0d1b2a";
+        unlock("Modern Theme");
 
-document.getElementById("left").style.background="#1b263b";
+    }else{
 
-document.getElementById("right").style.background="#1b263b";
+        unlock("Ultimate Theme");
 
-clickBtn.style.background="linear-gradient(#00e5ff,#2979ff)";
+    }
 
-themePrice.innerHTML="2500";
+    applyTheme();
 
-game.themePrice=2500;
+    update();
 
-unlock("Modern Theme");
-
-}
-
-else{
-
-document.body.style.background="linear-gradient(135deg,#2b1055,#7597de)";
-
-left.style.background="rgba(255,255,255,.15)";
-
-right.style.background="rgba(255,255,255,.15)";
-
-document.getElementById("left").style.backdropFilter="blur(15px)";
-
-document.getElementById("right").style.backdropFilter="blur(15px)";
-
-clickBtn.style.background="linear-gradient(#ff00cc,#3333ff)";
-
-unlock("Ultimate Theme");
+    save();
 
 }
 
-update();
 
-save();
+function applyTheme(){
+
+    if(game.theme===0){
+
+        document.body.style.background=
+            `
+            radial-gradient(
+                circle at 20% 0%,
+                rgba(255,193,7,.08),
+                transparent 30%
+            ),
+            #080b12
+            `;
+
+        document
+            .querySelectorAll("#left,#right")
+            .forEach(x=>{
+                x.style.background=
+                    "rgba(17,23,34,.92)";
+            });
+
+        clickBtn.style.background=
+            "radial-gradient(circle at 35% 25%,#ffe98a,#ffd54f 35%,#ff9800)";
+
+    }
+
+    if(game.theme===1){
+
+        document.body.style.background=
+            `
+            radial-gradient(
+                circle at 20% 0%,
+                rgba(0,229,255,.12),
+                transparent 35%
+            ),
+            #07111f
+            `;
+
+        document
+            .querySelectorAll("#left,#right")
+            .forEach(x=>{
+                x.style.background=
+                    "rgba(12,28,48,.95)";
+            });
+
+        clickBtn.style.background=
+            "radial-gradient(circle at 35% 25%,#70f5ff,#00c6ff 45%,#2979ff)";
+
+    }
+
+    if(game.theme===2){
+
+        document.body.style.background=
+            `
+            radial-gradient(
+                circle at 20% 0%,
+                rgba(255,0,204,.15),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #16051f,
+                #071a3d
+            )
+            `;
+
+        document
+            .querySelectorAll("#left,#right")
+            .forEach(x=>{
+                x.style.background=
+                    "rgba(255,255,255,.08)";
+                x.style.backdropFilter=
+                    "blur(18px)";
+            });
+
+        clickBtn.style.background=
+            "radial-gradient(circle at 35% 25%,#ff8bea,#ff00cc 45%,#3333ff)";
+
+    }
 
 }
+
+
+/* =========================
+   FLOATING MONEY
+========================= */
 
 function floatingMoney(x,y,text){
 
-let div=document.createElement("div");
+    const div=
+        document.createElement("div");
 
-div.className="floatMoney";
+    div.className="floatMoney";
 
-div.innerHTML=text;
+    div.textContent=text;
 
-div.style.left=x+"px";
+    div.style.left=x+"px";
 
-div.style.top=y+"px";
+    div.style.top=y+"px";
 
-document.body.appendChild(div);
+    document.body.appendChild(div);
 
-setTimeout(()=>{
-div.remove();
-},800);
+    setTimeout(()=>{
+        div.remove();
+    },800);
 
 }
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+function createParticles(x,y){
+
+    for(let i=0;i<8;i++){
+
+        const p=
+            document.createElement("div");
+
+        p.className="particle";
+
+        p.style.left=x+"px";
+        p.style.top=y+"px";
+
+        const angle=
+            Math.random()*Math.PI*2;
+
+        const distance=
+            35+Math.random()*65;
+
+        p.style.setProperty(
+            "--x",
+            Math.cos(angle)*distance+"px"
+        );
+
+        p.style.setProperty(
+            "--y",
+            Math.sin(angle)*distance+"px"
+        );
+
+        document.body.appendChild(p);
+
+        setTimeout(()=>{
+            p.remove();
+        },700);
+
+    }
+
+}
+
+
+/* =========================
+   AUTO LOOP
+========================= */
 
 let autoLoop;
 
-let moneyLoop;
-
 function restartAuto(){
 
-clearInterval(autoLoop);
+    clearInterval(autoLoop);
 
-autoLoop=setInterval(function(){
+    autoLoop=
+        setInterval(()=>{
 
-if(game.auto>0){
+            if(game.auto<=0)
+                return;
 
-game.money+=game.auto;
+            game.money+=game.auto;
 
-game.earned+=game.auto;
+            game.earned+=game.auto;
 
-game.clicks+=game.auto;
+            game.clicks+=game.auto;
 
-checkAchievements();
+            checkAchievements();
 
-update();
+            update();
 
-save();
+            save();
+
+        },game.speedDelay);
 
 }
 
-},game.speedDelay);
 
-}
-
-moneyLoop=setInterval(function(){
-
-mps.innerHTML=Math.round(game.auto*(1000/game.speedDelay));
-
-},300);
-
-restartAuto();
-
-update();
-save();
+/* =========================
+   START
+========================= */
 
 load();
 
 update();
+
+restartAuto();
 
 </script>
 
