@@ -4,34 +4,14 @@
 <head>
 
 <meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Games | Mpoxel</title>
-
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
->
-
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
->
-
 
 <style>
 
 /* =========================================================
-   RESET
+   PERFORMANCE-FIRST RESET
 ========================================================= */
 
 *{
@@ -40,28 +20,16 @@
     box-sizing:border-box;
 }
 
-
 html{
-
     scroll-behavior:smooth;
-
-    scroll-padding-top:90px;
-
 }
 
-
 body{
-
     min-height:100vh;
-
-    font-family:'Poppins',sans-serif;
-
+    font-family:Arial,Helvetica,sans-serif;
     color:#fff;
-
     background:#050a12;
-
     overflow-x:hidden;
-
 }
 
 
@@ -70,105 +38,30 @@ body{
 ========================================================= */
 
 :root{
-
     --blue:#4fd6ff;
-
-    --blue-light:#c8f5ff;
-
     --blue-dark:#1699ff;
-
-    --background:#050a12;
-
+    --bg:#050a12;
     --surface:#0b1420;
-
     --border:rgba(79,214,255,.14);
-
-    --border-hover:rgba(79,214,255,.55);
-
     --muted:#8e9baa;
-
     --max-width:1250px;
-
 }
 
 
 /* =========================================================
-   BACKGROUND
-========================================================= */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    width:500px;
-    height:500px;
-
-    top:-210px;
-    left:-210px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(0,195,255,.13),
-            transparent 70%
-        );
-
-    pointer-events:none;
-
-    z-index:-2;
-
-}
-
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:450px;
-    height:450px;
-
-    right:-210px;
-    bottom:-210px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(120,70,255,.10),
-            transparent 70%
-        );
-
-    pointer-events:none;
-
-    z-index:-2;
-
-}
-
-
-/* =========================================================
-   SUBTLE GRID
+   SIMPLE BACKGROUND
+   No giant fixed gradients
+   No backdrop filters
 ========================================================= */
 
 body{
-
-    background-image:
-
+    background:
         linear-gradient(
-            rgba(255,255,255,.017) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,.017) 1px,
-            transparent 1px
+            135deg,
+            #050a12 0%,
+            #07101b 50%,
+            #050a12 100%
         );
-
-    background-size:55px 55px;
-
 }
 
 
@@ -177,47 +70,25 @@ body{
 ========================================================= */
 
 nav{
-
     position:sticky;
-
     top:0;
-
     z-index:1000;
 
     width:100%;
-
-    min-height:76px;
+    min-height:70px;
 
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
 
-    padding:
-        0
-        max(
-            20px,
-            calc((100% - var(--max-width)) / 2)
-        );
+    padding:0 max(
+        18px,
+        calc((100% - var(--max-width)) / 2)
+    );
 
-    background:
-        rgba(5,10,18,.55);
+    background:#070d16;
 
-    backdrop-filter:
-        blur(20px)
-        saturate(130%);
-
-    -webkit-backdrop-filter:
-        blur(20px)
-        saturate(130%);
-
-    border-bottom:
-        1px solid rgba(79,214,255,.14);
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.18);
-
+    border-bottom:1px solid rgba(79,214,255,.14);
 }
 
 
@@ -226,20 +97,10 @@ nav{
 ========================================================= */
 
 .logo{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:27px;
-
+    font-size:25px;
     font-weight:800;
-
     letter-spacing:3px;
-
     color:var(--blue);
-
-    text-shadow:
-        0 0 22px rgba(79,214,255,.18);
-
 }
 
 
@@ -248,46 +109,30 @@ nav{
 ========================================================= */
 
 .back{
-
     display:inline-flex;
-
     align-items:center;
-
     justify-content:center;
 
-    padding:10px 21px;
+    padding:9px 19px;
 
-    border-radius:50px;
+    border-radius:30px;
 
-    background:
-        rgba(22,153,255,.9);
+    background:#1699ff;
 
     color:#fff;
-
     text-decoration:none;
 
     font-size:14px;
-
     font-weight:600;
 
     transition:
-        transform .2s ease,
-        background .2s ease,
-        box-shadow .2s ease;
-
+        background .15s ease,
+        transform .15s ease;
 }
 
-
 .back:hover{
-
-    transform:translateY(-3px);
-
     background:#32a9ff;
-
-    box-shadow:
-        0 8px 25px
-        rgba(22,153,255,.25);
-
+    transform:translateY(-2px);
 }
 
 
@@ -296,103 +141,52 @@ nav{
 ========================================================= */
 
 .hero{
-
-    position:relative;
-
     width:100%;
-
     max-width:1050px;
 
-    min-height:480px;
+    min-height:430px;
 
     margin:auto;
 
     display:flex;
-
     align-items:center;
-
     justify-content:center;
 
     text-align:center;
 
-    padding:
-        80px 25px
-        60px;
-
+    padding:70px 20px 50px;
 }
 
 
-.hero::before{
-
-    content:"GAMES";
-
-    position:absolute;
-
-    z-index:-1;
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(90px,19vw,230px);
-
-    font-weight:800;
-
-    color:rgba(79,214,255,.018);
-
-    pointer-events:none;
-
-    user-select:none;
-
-    white-space:nowrap;
-
-}
-
+/* =========================================================
+   HERO CONTENT
+========================================================= */
 
 .hero h1{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(40px,7vw,70px);
+    font-size:clamp(40px,7vw,70px);
 
     line-height:1.1;
 
+    margin-bottom:22px;
+
+    color:var(--blue);
+
+    font-weight:800;
+
     letter-spacing:-1px;
-
-    margin-bottom:24px;
-
-    background:
-        linear-gradient(
-            110deg,
-            #4fd6ff,
-            #d9f8ff,
-            #4fd6ff
-        );
-
-    -webkit-background-clip:text;
-
-    background-clip:text;
-
-    -webkit-text-fill-color:transparent;
-
 }
 
-
 .hero p{
-
     width:100%;
-
     max-width:700px;
 
     margin:auto;
 
     color:#a5b3c2;
 
-    font-size:
-        clamp(15px,2vw,19px);
+    font-size:17px;
 
-    line-height:1.9;
-
+    line-height:1.8;
 }
 
 
@@ -401,17 +195,14 @@ nav{
 ========================================================= */
 
 section{
-
     width:100%;
-
     max-width:var(--max-width);
 
     margin:auto;
 
     padding:
-        60px 25px
-        100px;
-
+        50px 20px
+        80px;
 }
 
 
@@ -420,37 +211,28 @@ section{
 ========================================================= */
 
 .title{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(28px,5vw,40px);
+    font-size:36px;
 
     color:var(--blue);
 
-    margin-bottom:40px;
+    margin-bottom:35px;
 
-    letter-spacing:-.5px;
-
+    font-weight:800;
 }
 
-
 .title::after{
-
     content:"";
 
     display:block;
 
-    width:50px;
-
+    width:45px;
     height:3px;
 
-    margin-top:14px;
+    margin-top:12px;
 
-    border-radius:10px;
+    border-radius:5px;
 
     background:var(--blue);
-
 }
 
 
@@ -459,17 +241,12 @@ section{
 ========================================================= */
 
 .grid{
-
     display:grid;
 
     grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(300px,1fr)
-        );
+        repeat(2,minmax(0,1fr));
 
-    gap:25px;
-
+    gap:22px;
 }
 
 
@@ -478,77 +255,29 @@ section{
 ========================================================= */
 
 .card{
-
-    position:relative;
-
-    min-height:395px;
+    min-height:360px;
 
     display:flex;
-
     flex-direction:column;
 
-    padding:35px;
+    padding:30px;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.045),
-            rgba(255,255,255,.015)
-        );
+    background:#0b1420;
 
-    border:
-        1px solid var(--border);
+    border:1px solid var(--border);
 
-    border-radius:22px;
+    border-radius:18px;
 
     transition:
-        transform .25s ease,
-        border-color .25s ease,
-        background .25s ease;
-
+        transform .15s ease,
+        border-color .15s ease;
 }
-
-
-.card::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-
-    left:25px;
-
-    right:25px;
-
-    height:1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(79,214,255,.65),
-            transparent
-        );
-
-    opacity:.5;
-
-}
-
 
 .card:hover{
+    transform:translateY(-4px);
 
-    transform:translateY(-7px);
-
-    border-color:var(--border-hover);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(79,214,255,.06),
-            rgba(255,255,255,.018)
-        );
-
+    border-color:
+        rgba(79,214,255,.45);
 }
 
 
@@ -557,34 +286,22 @@ section{
 ========================================================= */
 
 .icon{
-
-    width:75px;
-
-    height:75px;
+    width:70px;
+    height:70px;
 
     display:flex;
-
     align-items:center;
-
     justify-content:center;
 
-    margin-bottom:24px;
+    margin-bottom:22px;
 
-    border-radius:18px;
+    border-radius:16px;
 
-    background:
-        linear-gradient(
-            145deg,
-            #122538,
-            #0c1825
-        );
+    background:#102030;
 
-    border:
-        1px solid
-        rgba(79,214,255,.17);
+    border:1px solid rgba(79,214,255,.15);
 
-    font-size:39px;
-
+    font-size:36px;
 }
 
 
@@ -593,43 +310,34 @@ section{
 ========================================================= */
 
 .card h2{
-
-    font-family:'Orbitron',sans-serif;
-
     color:var(--blue);
 
-    font-size:22px;
+    font-size:21px;
 
     line-height:1.35;
 
-    margin-bottom:15px;
-
+    margin-bottom:14px;
 }
 
 
 /* =========================================================
-   GAME DESCRIPTION
+   DESCRIPTION
 ========================================================= */
 
 .card p{
-
     color:#98a7b7;
 
     font-size:14px;
 
-    line-height:1.85;
-
+    line-height:1.75;
 }
 
-
 .creator{
-
-    margin-top:20px;
+    margin-top:18px;
 
     color:#d1d9e2 !important;
 
     font-size:13px !important;
-
 }
 
 
@@ -638,20 +346,18 @@ section{
 ========================================================= */
 
 .play{
-
-    display:inline-flex;
+    display:flex;
 
     align-items:center;
-
     justify-content:center;
 
     width:100%;
 
     margin-top:auto;
 
-    padding:13px 20px;
+    padding:12px 18px;
 
-    border-radius:12px;
+    border-radius:10px;
 
     background:var(--blue);
 
@@ -664,23 +370,14 @@ section{
     font-weight:700;
 
     transition:
-        transform .2s ease,
-        background .2s ease,
-        box-shadow .2s ease;
-
+        background .15s ease,
+        transform .15s ease;
 }
 
-
 .play:hover{
-
-    transform:translateY(-2px);
-
     background:#fff;
 
-    box-shadow:
-        0 8px 25px
-        rgba(79,214,255,.18);
-
+    transform:translateY(-2px);
 }
 
 
@@ -689,13 +386,9 @@ section{
 ========================================================= */
 
 footer{
-
     width:100%;
 
-    margin-top:20px;
-
-    padding:
-        50px 20px;
+    padding:45px 20px;
 
     text-align:center;
 
@@ -703,29 +396,20 @@ footer{
 
     border-top:
         1px solid rgba(79,214,255,.12);
-
 }
-
 
 footer h2{
-
-    font-family:'Orbitron',sans-serif;
-
     color:var(--blue);
 
-    font-size:23px;
-
+    font-size:22px;
 }
 
-
 footer p{
-
     color:#718093;
 
     font-size:13px;
 
     line-height:1.8;
-
 }
 
 
@@ -734,56 +418,16 @@ footer p{
 ========================================================= */
 
 ::-webkit-scrollbar{
-
-    width:10px;
-
+    width:8px;
 }
-
 
 ::-webkit-scrollbar-track{
-
     background:#050a12;
-
 }
-
 
 ::-webkit-scrollbar-thumb{
-
-    background:
-        linear-gradient(
-            180deg,
-            #4fd6ff,
-            #168cff
-        );
-
+    background:#168cff;
     border-radius:20px;
-
-    border:
-        2px solid #050a12;
-
-}
-
-
-::-webkit-scrollbar-thumb:hover{
-
-    background:
-        linear-gradient(
-            180deg,
-            #d4f8ff,
-            #4fd6ff
-        );
-
-}
-
-
-html{
-
-    scrollbar-width:thin;
-
-    scrollbar-color:
-        #4fd6ff
-        #050a12;
-
 }
 
 
@@ -794,30 +438,17 @@ html{
 @media(max-width:850px){
 
     nav{
-
-        padding:
-            0 22px;
-
+        padding:0 20px;
     }
-
-
-    section{
-
-        padding:
-            55px 22px
-            80px;
-
-    }
-
 
     .hero{
+        min-height:400px;
+    }
 
-        min-height:430px;
-
+    section{
         padding:
-            70px 22px
-            50px;
-
+            45px 20px
+            70px;
     }
 
 }
@@ -830,169 +461,85 @@ html{
 @media(max-width:700px){
 
     nav{
+        min-height:65px;
 
-        min-height:68px;
-
-        padding:
-            0 18px;
-
+        padding:0 16px;
     }
-
 
     .logo{
-
-        font-size:21px;
-
+        font-size:20px;
         letter-spacing:2px;
-
     }
-
 
     .back{
-
-        padding:
-            9px 16px;
-
+        padding:8px 15px;
         font-size:12px;
-
     }
-
 
     .hero{
-
-        min-height:420px;
+        min-height:390px;
 
         padding:
-            60px 20px
+            55px 18px
             40px;
-
     }
-
 
     .hero h1{
-
         font-size:40px;
-
-        line-height:1.15;
-
     }
-
 
     .hero p{
-
         font-size:15px;
-
-        line-height:1.8;
-
+        line-height:1.75;
     }
-
 
     section{
-
         padding:
-            45px 18px
-            70px;
-
+            40px 16px
+            60px;
     }
-
 
     .title{
-
         font-size:29px;
-
-        margin-bottom:30px;
-
+        margin-bottom:28px;
     }
-
 
     .grid{
-
         grid-template-columns:1fr;
-
-        gap:18px;
-
+        gap:16px;
     }
-
 
     .card{
-
-        min-height:370px;
-
-        padding:27px;
-
-        border-radius:18px;
-
-    }
-
-
-    .card h2{
-
-        font-size:20px;
-
-    }
-
-
-    .card p{
-
-        font-size:14px;
-
-        line-height:1.8;
-
-    }
-
-
-    .play{
-
-        padding:12px 16px;
-
-    }
-
-
-    footer{
-
-        padding:
-            40px 18px;
-
+        min-height:350px;
+        padding:25px;
+        border-radius:16px;
     }
 
 }
 
 
 /* =========================================================
-   SMALL PHONES
+   VERY SMALL PHONES
 ========================================================= */
 
 @media(max-width:380px){
 
     .hero h1{
-
         font-size:34px;
-
     }
-
 
     .hero p{
-
         font-size:14px;
-
     }
-
 
     .card{
-
-        padding:23px;
-
+        padding:22px;
     }
 
-
     .icon{
-
-        width:64px;
-
-        height:64px;
-
-        font-size:33px;
-
+        width:62px;
+        height:62px;
+        font-size:32px;
     }
 
 }
@@ -1005,16 +552,11 @@ html{
 @media(prefers-reduced-motion:reduce){
 
     html{
-
         scroll-behavior:auto;
-
     }
 
-
     *{
-
         transition:none !important;
-
     }
 
 }
@@ -1036,7 +578,6 @@ html{
     <div class="logo">
         MPOXEL
     </div>
-
 
     <a
         class="back"
@@ -1060,12 +601,9 @@ html{
             Games Room
         </h1>
 
-
         <p>
-
             Welcome to the Mpoxel Games Room.
             Explore games developed by our studio.
-
         </p>
 
     </div>
@@ -1087,9 +625,7 @@ html{
     <div class="grid">
 
 
-        <!-- =================================================
-             CLICK MASTER
-        ================================================== -->
+        <!-- CLICK MASTER -->
 
         <div class="card">
 
@@ -1097,29 +633,21 @@ html{
                 🖱️
             </div>
 
-
             <h2>
                 CLICK MASTER GAME
             </h2>
 
-
             <p>
-
                 Build your clicking empire by earning
                 coins, unlocking achievements, purchasing
                 auto-clickers, decorating your room, and
                 upgrading your themes.
-
             </p>
-
 
             <p class="creator">
-
                 👤 Made by
                 <b>Manvir Sharma</b>
-
             </p>
-
 
             <a
                 class="play"
@@ -1131,9 +659,7 @@ html{
         </div>
 
 
-        <!-- =================================================
-             10TH CLASS EXPERIMENTS
-        ================================================== -->
+        <!-- 10TH CLASS EXPERIMENTS -->
 
         <div class="card">
 
@@ -1141,29 +667,21 @@ html{
                 📚
             </div>
 
-
             <h2>
                 10th Class Experiments
             </h2>
 
-
             <p>
-
                 Some science book experiments from
                 the NCERT textbook for Class 10th,
                 offering practical knowledge about
                 science and its theories.
-
             </p>
-
 
             <p class="creator">
-
                 👤 Made by
                 <b>Manvir Sharma</b>
-
             </p>
-
 
             <a
                 class="play"
@@ -1192,13 +710,11 @@ html{
 
     <br>
 
-
     <p>
         Games developed by Manvir Sharma.
     </p>
 
     <br>
-
 
     <p>
         © 2026 Mpoxel
