@@ -1061,6 +1061,69 @@ body {
 
 
 
+
+.gallerySectionTitle{
+    max-width:1000px;
+    margin:28px auto 12px;
+    color:rgba(180,255,240,.62);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+#videoGrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    max-width:1000px;
+    margin:0 auto;
+}
+.videoCard{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+    background:#111;
+    border:1px solid rgba(255,255,255,.08);
+    aspect-ratio:9/16;
+}
+.videoCard video{
+    width:100%;height:100%;display:block;object-fit:cover;
+}
+.videoCard::after{
+    content:"▶";
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+    background:rgba(0,255,180,.18);border:1px solid rgba(0,255,180,.45);
+    color:#8fffd3;backdrop-filter:blur(12px);pointer-events:none;
+}
+.videoCard .photoActions{z-index:2}
+#videoPreview{
+    position:fixed;inset:0;z-index:21000;display:none;align-items:center;justify-content:center;
+    padding:18px;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);
+}
+#videoPreview.active{display:flex}
+.videoPreviewFrame{
+    position:relative;width:min(94vw,720px);height:min(90vh,900px);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:22px;
+    background:#050505;border:1px solid rgba(0,255,180,.18);box-shadow:0 0 40px rgba(0,255,180,.08);
+}
+#previewVideo{width:100%;height:100%;object-fit:contain;background:#000}
+.videoControls{
+    position:absolute;left:14px;right:14px;bottom:14px;z-index:3;display:flex;align-items:center;gap:9px;
+    padding:9px;border:1px solid rgba(0,255,180,.18);border-radius:16px;
+    background:rgba(5,5,5,.76);backdrop-filter:blur(16px);
+}
+.videoControlButton{
+    width:40px;height:40px;flex:0 0 40px;border-radius:12px;border:1px solid rgba(0,255,180,.28);
+    background:rgba(0,255,180,.10);color:#8fffd3;font-size:16px;cursor:pointer;
+}
+.videoControlButton:active{transform:scale(.92);background:rgba(0,255,180,.2)}
+.videoSeek{flex:1;accent-color:#00ff88;min-width:0}
+@media(max-width:420px){
+    #videoGrid{gap:8px}
+    .videoCard{border-radius:14px}
+    .videoControls{left:9px;right:9px;bottom:9px}
+}
+
 /* =====================================================
    HAMOOD!! GREEN SCREEN EFFECT
 ===================================================== */
@@ -1317,6 +1380,8 @@ body {
 
         <div id="photoGrid"></div>
 
+        <div class="gallerySectionTitle" id="videoSectionTitle">🎬 HAMOOD RECORDINGS</div>
+        <div id="videoGrid"></div>
 
         <div id="emptyGallery">
 
@@ -1514,6 +1579,18 @@ body {
     </div>
 </div>
 
+<div id="videoPreview" aria-hidden="true">
+    <div class="videoPreviewFrame" id="videoPreviewFrame">
+        <button class="previewClose" id="videoPreviewClose" aria-label="Close video preview">✕</button>
+        <video id="previewVideo" playsinline preload="metadata"></video>
+        <div class="videoControls">
+            <button class="videoControlButton" id="videoPlayPause" type="button">▶</button>
+            <input class="videoSeek" id="videoSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Video progress">
+            <button class="videoControlButton" id="videoMute" type="button">🔊</button>
+        </div>
+    </div>
+</div>
+
 <canvas
     id="captureCanvas"
     style="display:none">
@@ -1571,6 +1648,9 @@ const photoCount =
         "photoCount"
     );
 
+const videoGrid = document.getElementById("videoGrid");
+const videoSectionTitle = document.getElementById("videoSectionTitle");
+
 const galleryButton =
     document.getElementById(
         "galleryButton"
@@ -1621,6 +1701,13 @@ const imagePreview = document.getElementById("imagePreview");
 const previewFrame = document.getElementById("previewFrame");
 const previewImage = document.getElementById("previewImage");
 const previewClose = document.getElementById("previewClose");
+const videoPreview = document.getElementById("videoPreview");
+const videoPreviewFrame = document.getElementById("videoPreviewFrame");
+const previewVideo = document.getElementById("previewVideo");
+const videoPreviewClose = document.getElementById("videoPreviewClose");
+const videoPlayPause = document.getElementById("videoPlayPause");
+const videoSeek = document.getElementById("videoSeek");
+const videoMute = document.getElementById("videoMute");
 const effectsButton = document.getElementById("effectsButton");
 const effectsMenu = document.getElementById("effectsMenu");
 const defaultEffectButton = document.getElementById("defaultEffectButton");
@@ -1667,10 +1754,13 @@ let recordingStarted = false;
 let longPressTimer = null;
 let longPressTriggered = false;
 
-const HAMOOD_GREEN_THRESHOLD = 115;
-const HAMOOD_GREEN_DOMINANCE = 1.18;
-const HAMOOD_EDGE_SOFTNESS = 34;
+const HAMOOD_GREEN_THRESHOLD = 105;
+const HAMOOD_GREEN_DOMINANCE = 1.12;
+const HAMOOD_EDGE_SOFTNESS = 42;
 const HAMOOD_SCALE = 0.82;
+const HAMOOD_PROCESS_MAX_WIDTH = 360;
+const HAMOOD_RENDER_FPS = 30;
+let hamoodLastRenderTime = 0;
 
 
 
@@ -1890,6 +1980,26 @@ function getPhotos() {
 }
 
 
+function getVideos() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(["videos"], "readonly");
+        const store = transaction.objectStore("videos");
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result.reverse());
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function deleteVideo(id) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(["videos"], "readwrite");
+        const store = transaction.objectStore("videos");
+        const request = store.delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
 /* =====================================================
    DELETE PHOTO
 ===================================================== */
@@ -1951,8 +2061,9 @@ async function renderGallery() {
         }`;
 
 
+    const existingVideos = await getVideos();
     emptyGallery.style.display =
-        photos.length === 0
+        (photos.length === 0 && existingVideos.length === 0)
             ? "block"
             : "none";
 
@@ -2081,6 +2192,44 @@ async function renderGallery() {
 
     });
 
+    const videos = await getVideos();
+    videoGrid.innerHTML = "";
+    videoSectionTitle.style.display = videos.length ? "block" : "none";
+
+    videos.forEach(videoRecord => {
+        const card = document.createElement("div");
+        card.className = "videoCard";
+
+        const video = document.createElement("video");
+        const url = URL.createObjectURL(videoRecord.blob);
+        video.src = url;
+        video.muted = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+
+        video.addEventListener("click", event => {
+            event.stopPropagation();
+            openVideoPreview(url);
+        });
+
+        const actions = document.createElement("div");
+        actions.className = "photoActions";
+
+        const remove = document.createElement("button");
+        remove.className = "photoAction";
+        remove.textContent = "🗑️ Delete";
+        remove.onclick = async () => {
+            await deleteVideo(videoRecord.id);
+            URL.revokeObjectURL(url);
+            renderGallery();
+        };
+
+        actions.appendChild(remove);
+        card.appendChild(video);
+        card.appendChild(actions);
+        videoGrid.appendChild(card);
+    });
+
 }
 
 
@@ -2143,126 +2292,197 @@ previewImage.addEventListener("pointermove",e=>{
 previewImage.addEventListener("pointerup",()=>previewDragging=false);
 previewImage.addEventListener("pointercancel",()=>previewDragging=false);
 
+function openVideoPreview(url) {
+    previewVideo.src = url;
+    previewVideo.currentTime = 0;
+    previewVideo.muted = false;
+    videoPlayPause.textContent = "▶";
+    videoMute.textContent = "🔊";
+    videoSeek.value = 0;
+    videoPreview.classList.add("active");
+    videoPreview.setAttribute("aria-hidden", "false");
+}
+
+function closeVideoPreview() {
+    previewVideo.pause();
+    previewVideo.removeAttribute("src");
+    previewVideo.load();
+    videoPreview.classList.remove("active");
+    videoPreview.setAttribute("aria-hidden", "true");
+}
+
+videoPreviewClose.addEventListener("click", closeVideoPreview);
+videoPreview.addEventListener("click", e => {
+    if (e.target === videoPreview) closeVideoPreview();
+});
+videoPlayPause.addEventListener("click", () => {
+    if (previewVideo.paused) {
+        previewVideo.play().catch(() => {});
+    } else {
+        previewVideo.pause();
+    }
+});
+previewVideo.addEventListener("play", () => videoPlayPause.textContent = "⏸");
+previewVideo.addEventListener("pause", () => videoPlayPause.textContent = "▶");
+previewVideo.addEventListener("timeupdate", () => {
+    if (previewVideo.duration) videoSeek.value = (previewVideo.currentTime / previewVideo.duration) * 100;
+});
+videoSeek.addEventListener("input", () => {
+    if (previewVideo.duration) previewVideo.currentTime = (Number(videoSeek.value) / 100) * previewVideo.duration;
+});
+videoMute.addEventListener("click", () => {
+    previewVideo.muted = !previewVideo.muted;
+    videoMute.textContent = previewVideo.muted ? "🔇" : "🔊";
+});
+
 /* =====================================================
    CAMERA START
 ===================================================== */
 
 async function startCamera() {
 
-    try {
+    stopCamera();
 
-        stopCamera();
-
-        // IMPORTANT: request CAMERA separately from MICROPHONE.
-        // If microphone permission is blocked, the camera should
-        // still open normally instead of making getUserMedia fail.
-        let videoStream = null;
-
-        try {
-            videoStream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: { ideal: facingMode },
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 }
-                },
-                audio: false
-            });
-        } catch (firstError) {
-            console.warn("Preferred camera request failed:", firstError);
-
-            // Some browsers/devices reject facingMode or ideal constraints.
-            // Retry with the simplest possible camera request.
-            videoStream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: false
-            });
-        }
-
-        cameraStream = videoStream;
-
-        // Microphone is requested independently. This is needed for
-        // HAMOOD recordings, but it must not prevent the camera from opening.
-        try {
-            const micStream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
-                video: false
-            });
-
-            micStream.getAudioTracks().forEach(track => {
-                cameraStream.addTrack(track);
-            });
-
-        } catch (micError) {
-            console.warn("Microphone permission unavailable:", micError);
-            showCameraMessage(
-                "Camera is working. Microphone permission is unavailable, so recordings will not contain your microphone audio."
-            );
-        }
-
-        camera.srcObject = cameraStream;
-        camera.muted = true;
-
-        camera.classList.toggle(
-            "frontCamera",
-            facingMode === "user"
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showCameraMessage(
+            "Camera is not available in this browser.<br><br>" +
+            "Make sure CAMPLAGUE is opened over HTTPS."
         );
+        return;
+    }
 
-        cameraTrack =
-            cameraStream.getVideoTracks()[0];
+    if (!window.isSecureContext) {
+        showCameraMessage(
+            "CAMPLAGUE is not running in a secure context.<br><br>" +
+            "Open the hosted HTTPS address, not a file:// address."
+        );
+        return;
+    }
 
-        torchEnabled = false;
-        updateFlashButton();
+    cameraMessage.style.display = "none";
 
-        // Wait until the camera has real dimensions before creating
-        // the HAMOOD compositing canvas.
-        if (camera.readyState < 1) {
-            await new Promise(resolve => {
-                const onLoaded = () => {
-                    camera.removeEventListener("loadedmetadata", onLoaded);
-                    resolve();
-                };
-                camera.addEventListener("loadedmetadata", onLoaded);
-            });
+    let videoStream = null;
+    let lastCameraError = null;
+
+    // Mobile browsers can be picky about camera constraints.
+    // Try the requested lens first, then progressively simpler requests.
+    const cameraRequests = [
+        {
+            video: {
+                facingMode: { exact: facingMode },
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            },
+            audio: false
+        },
+        {
+            video: {
+                facingMode: facingMode,
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            },
+            audio: false
+        },
+        {
+            video: true,
+            audio: false
         }
+    ];
 
-        if (hamoodEnabled) {
-            resizeCompositeCanvas();
-            setupHamoodAudio();
+    for (const constraints of cameraRequests) {
+        try {
+            videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+            break;
+        } catch (error) {
+            lastCameraError = error;
+            console.warn("Camera request failed:", constraints, error);
         }
+    }
 
-        // Only clear the message if there isn't a microphone warning.
-        if (cameraStream.getAudioTracks().length) {
-            cameraMessage.style.display = "none";
-        }
+    if (!videoStream) {
+        console.error("All camera requests failed:", lastCameraError);
 
-    } catch (error) {
+        let message = "Camera could not be started.<br><br>";
+        const name = lastCameraError?.name || "UnknownError";
 
-        console.error("Camera start failed:", error);
-
-        let message =
-            "Camera could not be started.<br><br>";
-
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (name === "NotAllowedError" || name === "PermissionDeniedError") {
             message +=
-                "This browser page cannot access the camera. Open CAMPLAGUE through HTTPS or http://localhost — not by double-clicking the HTML file.";
-        } else if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+                "The browser is blocking camera access for this website. " +
+                "Open this site's browser permissions and set Camera to Allow, then reload CAMPLAGUE.";
+        } else if (name === "NotReadableError" || name === "TrackStartError") {
             message +=
-                "Camera permission was denied for this site. Open the browser site permissions and set Camera to Allow, then reload the page.";
-        } else if (error.name === "NotFoundError") {
+                "The camera is currently busy. Close other apps using the camera and try again.";
+        } else if (name === "NotFoundError" || name === "OverconstrainedError") {
             message +=
-                "No usable camera was found. Check that your webcam/phone camera is connected and not being used exclusively by another app.";
-        } else if (error.name === "NotReadableError" || error.name === "TrackStartError") {
+                "The requested camera is unavailable. Try switching between front and rear camera.";
+        } else if (name === "SecurityError") {
             message +=
-                "The camera is already being used by another app. Close other camera/video apps and try again.";
-        } else if (error.name === "SecurityError") {
-            message +=
-                "The browser blocked camera access because of the page security context. Use HTTPS or localhost.";
+                "The browser blocked camera access because of the page security settings. Use HTTPS.";
         } else {
             message +=
-                `Browser error: ${error.name || "Unknown error"}. Try reloading CAMPLAGUE and checking the site's camera permission.`;
+                `Browser error: ${name}. Reload the page and try again.`;
         }
 
         showCameraMessage(message);
+        return;
+    }
+
+    cameraStream = videoStream;
+    cameraTrack = videoStream.getVideoTracks()[0] || null;
+
+    // Do NOT request microphone until the camera is already working.
+    // A microphone permission failure must never break the camera.
+    try {
+        const micStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+            },
+            video: false
+        });
+
+        micStream.getAudioTracks().forEach(track => {
+            cameraStream.addTrack(track);
+        });
+
+    } catch (micError) {
+        console.warn("Microphone unavailable:", micError);
+    }
+
+    camera.srcObject = cameraStream;
+    camera.muted = true;
+    camera.playsInline = true;
+
+    camera.classList.toggle(
+        "frontCamera",
+        facingMode === "user"
+    );
+
+    torchEnabled = false;
+    updateFlashButton();
+
+    try {
+        await camera.play();
+    } catch (playError) {
+        console.warn("Camera autoplay/play failed:", playError);
+    }
+
+    if (camera.readyState < 1) {
+        await new Promise(resolve => {
+            const timeout = setTimeout(resolve, 3000);
+            const onLoaded = () => {
+                clearTimeout(timeout);
+                camera.removeEventListener("loadedmetadata", onLoaded);
+                resolve();
+            };
+            camera.addEventListener("loadedmetadata", onLoaded);
+        });
+    }
+
+    if (hamoodEnabled) {
+        resizeCompositeCanvas();
+        setupHamoodAudio();
     }
 }
 
@@ -2724,203 +2944,88 @@ function drawCover(
 }
 
 
-function drawHamoodWithChromaKey(
-    context,
-    video,
-    canvasWidth,
-    canvasHeight
-) {
+function drawHamoodWithChromaKey(context, video, canvasWidth, canvasHeight) {
+    if (!video.videoWidth || !video.videoHeight) return;
 
-    if (
-        !video.videoWidth ||
-        !video.videoHeight
-    )
-        return;
+    const targetHeight = canvasHeight * HAMOOD_SCALE;
+    const targetWidth = targetHeight * video.videoWidth / video.videoHeight;
+    const x = (canvasWidth - targetWidth) / 2;
+    const y = canvasHeight - targetHeight;
 
-    const targetHeight =
-        canvasHeight * HAMOOD_SCALE;
+    const scale = Math.min(1, HAMOOD_PROCESS_MAX_WIDTH / video.videoWidth);
+    const bufferWidth = Math.max(1, Math.round(video.videoWidth * scale));
+    const bufferHeight = Math.max(1, Math.round(video.videoHeight * scale));
 
-    const targetWidth =
-        targetHeight *
-        video.videoWidth /
-        video.videoHeight;
-
-    const x =
-        (canvasWidth - targetWidth) / 2;
-
-    const y =
-        canvasHeight - targetHeight;
-
-    const bufferWidth =
-        Math.max(1, Math.ceil(targetWidth));
-
-    const bufferHeight =
-        Math.max(1, Math.ceil(targetHeight));
-
-    if (
-        !drawHamoodWithChromaKey.buffer ||
+    if (!drawHamoodWithChromaKey.buffer ||
         drawHamoodWithChromaKey.buffer.width !== bufferWidth ||
-        drawHamoodWithChromaKey.buffer.height !== bufferHeight
-    ) {
-
-        drawHamoodWithChromaKey.buffer =
-            document.createElement("canvas");
-
-        drawHamoodWithChromaKey.buffer.width =
-            bufferWidth;
-
-        drawHamoodWithChromaKey.buffer.height =
-            bufferHeight;
-
-        drawHamoodWithChromaKey.bufferContext =
-            drawHamoodWithChromaKey.buffer
-                .getContext("2d", {
-                    willReadFrequently: true
-                });
-
+        drawHamoodWithChromaKey.buffer.height !== bufferHeight) {
+        drawHamoodWithChromaKey.buffer = document.createElement("canvas");
+        drawHamoodWithChromaKey.buffer.width = bufferWidth;
+        drawHamoodWithChromaKey.buffer.height = bufferHeight;
+        drawHamoodWithChromaKey.bufferContext = drawHamoodWithChromaKey.buffer.getContext("2d", { willReadFrequently: true });
     }
 
-    const buffer =
-        drawHamoodWithChromaKey.buffer;
+    const buffer = drawHamoodWithChromaKey.buffer;
+    const bufferContext = drawHamoodWithChromaKey.bufferContext;
+    bufferContext.clearRect(0, 0, bufferWidth, bufferHeight);
+    bufferContext.drawImage(video, 0, 0, bufferWidth, bufferHeight);
 
-    const bufferContext =
-        drawHamoodWithChromaKey.bufferContext;
+    const image = bufferContext.getImageData(0, 0, bufferWidth, bufferHeight);
+    const pixels = image.data;
 
-    bufferContext.clearRect(
-        0,
-        0,
-        buffer.width,
-        buffer.height
-    );
-
-    bufferContext.drawImage(
-        video,
-        0,
-        0,
-        buffer.width,
-        buffer.height
-    );
-
-    const image =
-        bufferContext.getImageData(
-            0,
-            0,
-            buffer.width,
-            buffer.height
-        );
-
-    const pixels =
-        image.data;
-
-    for (
-        let i = 0;
-        i < pixels.length;
-        i += 4
-    ) {
-
-        const red = pixels[i];
-        const green = pixels[i + 1];
-        const blue = pixels[i + 2];
-
-        const greenStrength =
-            green - (red + blue) / 2;
-
-        const isGreen =
-            green > HAMOOD_GREEN_THRESHOLD &&
-            green > red * HAMOOD_GREEN_DOMINANCE &&
-            green > blue * HAMOOD_GREEN_DOMINANCE &&
-            greenStrength > 18;
+    for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
+        const greenStrength = g - Math.max(r, b);
+        const isGreen = g > HAMOOD_GREEN_THRESHOLD &&
+                        g > r * HAMOOD_GREEN_DOMINANCE &&
+                        g > b * HAMOOD_GREEN_DOMINANCE &&
+                        greenStrength > 10;
 
         if (isGreen) {
-
-            const edgeAmount =
-                Math.min(
-                    1,
-                    greenStrength /
-                    HAMOOD_EDGE_SOFTNESS
-                );
-
-            pixels[i + 3] =
-                Math.round(
-                    (1 - edgeAmount) * 255
-                );
-
+            const alpha = Math.max(0, Math.min(255, 255 - greenStrength * 10));
+            pixels[i + 3] = alpha;
         } else {
-
             pixels[i + 3] = 255;
-
         }
-
     }
 
-    bufferContext.putImageData(
-        image,
-        0,
-        0
-    );
-
-    context.drawImage(
-        buffer,
-        x,
-        y,
-        targetWidth,
-        targetHeight
-    );
-
+    bufferContext.putImageData(image, 0, 0);
+    context.save();
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(buffer, x, y, targetWidth, targetHeight);
+    context.restore();
 }
 
 
-function renderHamoodFrame() {
+function renderHamoodFrame(now = performance.now()) {
+    if (!hamoodEnabled) return;
 
-    if (!hamoodEnabled)
+    if (now - hamoodLastRenderTime < (1000 / HAMOOD_RENDER_FPS)) {
+        hamoodAnimationFrame = requestAnimationFrame(renderHamoodFrame);
         return;
+    }
+    hamoodLastRenderTime = now;
 
-    if (
-        camera.videoWidth &&
-        camera.videoHeight
-    ) {
-
-        resizeCompositeCanvas();
-
-        const context =
-            compositeCanvas.getContext("2d");
-
-        context.clearRect(
-            0,
-            0,
-            compositeCanvas.width,
-            compositeCanvas.height
-        );
-
-        drawCover(
-            context,
-            camera,
-            camera.videoWidth,
-            camera.videoHeight,
-            compositeCanvas.width,
-            compositeCanvas.height
-        );
-
-        if (
-            hamoodVideo.readyState >= 2
-        ) {
-
-            drawHamoodWithChromaKey(
-                context,
-                hamoodVideo,
-                compositeCanvas.width,
-                compositeCanvas.height
-            );
-
+    if (camera.videoWidth && camera.videoHeight) {
+        const context = compositeCanvas.getContext("2d");
+        if (compositeCanvas.width !== camera.videoWidth || compositeCanvas.height !== camera.videoHeight) {
+            resizeCompositeCanvas();
         }
 
+        context.clearRect(0, 0, compositeCanvas.width, compositeCanvas.height);
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = "high";
+        drawCover(context, camera, camera.videoWidth, camera.videoHeight, compositeCanvas.width, compositeCanvas.height);
+
+        if (hamoodVideo.readyState >= 2) {
+            drawHamoodWithChromaKey(context, hamoodVideo, compositeCanvas.width, compositeCanvas.height);
+        }
     }
 
-    hamoodAnimationFrame =
-        requestAnimationFrame(
-            renderHamoodFrame
-        );
-
+    hamoodAnimationFrame = requestAnimationFrame(renderHamoodFrame);
 }
 
 
@@ -3154,7 +3259,7 @@ async function startRecording() {
         await setupHamoodAudio();
 
         const canvasStream =
-            compositeCanvas.captureStream(30);
+            compositeCanvas.captureStream(HAMOOD_RENDER_FPS);
 
         const mixedStream =
             new MediaStream(
@@ -3246,32 +3351,8 @@ async function startRecording() {
 
                 }
 
-                const url =
-                    URL.createObjectURL(
-                        blob
-                    );
-
-                const downloadLink =
-                    document.createElement("a");
-
-                downloadLink.href = url;
-                downloadLink.download =
-                    `hamood-${Date.now()}.webm`;
-
-                document.body.appendChild(
-                    downloadLink
-                );
-
-                downloadLink.click();
-
-                downloadLink.remove();
-
-                setTimeout(() => {
-                    URL.revokeObjectURL(url);
-                }, 5000);
-
                 showCameraMessage(
-                    "HAMOOD!! recording saved."
+                    "HAMOOD!! recording saved to your gallery."
                 );
 
                 recordingStarted = false;
