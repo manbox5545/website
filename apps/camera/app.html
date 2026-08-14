@@ -574,11 +574,6 @@ body {
         cubic-bezier(.22,1,.36,1);
 }
 
-.cameraControls.filterActive {
-    transform:
-        translateX(-34px);
-}
-
 
 /* =====================================================
    SHUTTER
@@ -1251,6 +1246,27 @@ const cameraMessage =
         "cameraMessage"
     );
 
+const imagePreview =
+    document.getElementById(
+        "imagePreview"
+    );
+
+const previewFrame =
+    document.getElementById(
+        "previewFrame"
+    );
+
+const previewImage =
+    document.getElementById(
+        "previewImage"
+    );
+
+const previewClose =
+    document.getElementById(
+        "previewClose"
+    );
+
+
 
 /* =====================================================
    STATE
@@ -1268,6 +1284,16 @@ let facingMode =
 let torchEnabled = false;
 
 let bwEnabled = false;
+
+let previewZoom = 1;
+let previewPanX = 0;
+let previewPanY = 0;
+let previewDragging = false;
+let previewDragStartX = 0;
+let previewDragStartY = 0;
+let previewStartPanX = 0;
+let previewStartPanY = 0;
+
 
 
 /* =====================================================
@@ -1561,6 +1587,28 @@ async function renderGallery() {
 
         image.src = url;
 
+        image.addEventListener(
+            "click",
+            event => {
+                event.stopPropagation();
+                openImagePreview(url);
+            }
+        );
+
+        card.addEventListener(
+            "click",
+            event => {
+                if (
+                    event.target.closest(".photoActions")
+                ) {
+                    return;
+                }
+
+                openImagePreview(url);
+            }
+        );
+
+
 
         const actions =
             document.createElement(
@@ -1659,6 +1707,247 @@ async function renderGallery() {
 
 }
 
+
+
+/* =====================================================
+   IMAGE PREVIEW
+===================================================== */
+
+function updatePreviewTransform() {
+
+    previewImage.style.transform =
+        `translate(${previewPanX}px, ${previewPanY}px) ` +
+        `scale(${previewZoom})`;
+
+    previewImage.classList.toggle(
+        "zoomed",
+        previewZoom > 1
+    );
+}
+
+function resetPreviewZoom() {
+
+    previewZoom = 1;
+    previewPanX = 0;
+    previewPanY = 0;
+
+    updatePreviewTransform();
+}
+
+function openImagePreview(url) {
+
+    previewImage.src = url;
+
+    resetPreviewZoom();
+
+    imagePreview.classList.add("active");
+    imagePreview.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+}
+
+function closeImagePreview() {
+
+    imagePreview.classList.remove("active");
+    imagePreview.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    previewImage.src = "";
+    resetPreviewZoom();
+}
+
+function changePreviewZoom(amount, centerX = 0, centerY = 0) {
+
+    const oldZoom = previewZoom;
+
+    previewZoom = Math.min(
+        5,
+        Math.max(
+            1,
+            previewZoom + amount
+        )
+    );
+
+    if (previewZoom === oldZoom)
+        return;
+
+    /*
+       Keep the point under the cursor
+       roughly fixed while zooming.
+    */
+    if (centerX || centerY) {
+
+        const zoomRatio =
+            previewZoom / oldZoom;
+
+        previewPanX =
+            centerX -
+            (centerX - previewPanX) *
+            zoomRatio;
+
+        previewPanY =
+            centerY -
+            (centerY - previewPanY) *
+            zoomRatio;
+    }
+
+    if (previewZoom === 1) {
+
+        previewPanX = 0;
+        previewPanY = 0;
+    }
+
+    updatePreviewTransform();
+}
+
+/* Mouse wheel zoom */
+previewFrame.addEventListener(
+    "wheel",
+    event => {
+
+        event.preventDefault();
+
+        const rect =
+            previewFrame.getBoundingClientRect();
+
+        const x =
+            event.clientX -
+            rect.left -
+            rect.width / 2;
+
+        const y =
+            event.clientY -
+            rect.top -
+            rect.height / 2;
+
+        changePreviewZoom(
+            event.deltaY < 0
+                ? 0.35
+                : -0.35,
+            x,
+            y
+        );
+    },
+    { passive: false }
+);
+
+/* Click image to zoom in/out */
+previewImage.addEventListener(
+    "click",
+    event => {
+
+        event.stopPropagation();
+
+        if (previewZoom === 1) {
+            changePreviewZoom(
+                1,
+                0,
+                0
+            );
+        } else {
+            resetPreviewZoom();
+        }
+    }
+);
+
+/* Drag a zoomed image */
+previewImage.addEventListener(
+    "pointerdown",
+    event => {
+
+        if (previewZoom <= 1)
+            return;
+
+        previewDragging = true;
+
+        previewDragStartX =
+            event.clientX;
+
+        previewDragStartY =
+            event.clientY;
+
+        previewStartPanX =
+            previewPanX;
+
+        previewStartPanY =
+            previewPanY;
+
+        previewImage.setPointerCapture(
+            event.pointerId
+        );
+    }
+);
+
+previewImage.addEventListener(
+    "pointermove",
+    event => {
+
+        if (!previewDragging)
+            return;
+
+        previewPanX =
+            previewStartPanX +
+            event.clientX -
+            previewDragStartX;
+
+        previewPanY =
+            previewStartPanY +
+            event.clientY -
+            previewDragStartY;
+
+        updatePreviewTransform();
+    }
+);
+
+previewImage.addEventListener(
+    "pointerup",
+    () => {
+        previewDragging = false;
+    }
+);
+
+previewImage.addEventListener(
+    "pointercancel",
+    () => {
+        previewDragging = false;
+    }
+);
+
+/* Click outside the preview frame closes it */
+imagePreview.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            imagePreview
+        ) {
+            closeImagePreview();
+        }
+    }
+);
+
+previewClose.addEventListener(
+    "click",
+    closeImagePreview
+);
+
+/* Escape closes the preview */
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape" &&
+            imagePreview.classList.contains("active")
+        ) {
+            closeImagePreview();
+        }
+    }
+);
 
 /* =====================================================
    CAMERA START
@@ -1959,7 +2248,23 @@ flashButton.addEventListener(
 
 filterButton.addEventListener(
     "click",
-    toggleFilter
+    () => {
+
+        /*
+           First click enables B&W mode and
+           moves the B&W button into the
+           capture position.
+
+           Once active, the same B&W button
+           is the actual B&W shutter.
+        */
+        if (!bwEnabled) {
+            toggleFilter();
+            return;
+        }
+
+        capturePhoto(true);
+    }
 );
 
 
@@ -1968,7 +2273,6 @@ function toggleFilter() {
     bwEnabled =
         !bwEnabled;
 
-
     filterButton
         .classList
         .toggle(
@@ -1976,28 +2280,40 @@ function toggleFilter() {
             bwEnabled
         );
 
-
     cameraControls
         .classList
         .toggle(
             "filterActive",
             bwEnabled
         );
-
 }
+
+/*
+   The original/default shutter stays a
+   normal-color shutter. If B&W mode is active,
+   tapping it returns the controls to normal mode
+   and takes a normal-color photo.
+*/
+shutterButton.addEventListener(
+    "click",
+    () => {
+
+        if (bwEnabled) {
+            toggleFilter();
+            capturePhoto(false);
+            return;
+        }
+
+        capturePhoto(false);
+    }
+);
 
 
 /* =====================================================
    CAPTURE PHOTO
 ===================================================== */
 
-shutterButton.addEventListener(
-    "click",
-    capturePhoto
-);
-
-
-async function capturePhoto() {
+async function capturePhoto(useBW = bwEnabled) {
 
     if (!camera.videoWidth)
         return;
@@ -2007,14 +2323,19 @@ async function capturePhoto() {
         Shutter animation
     */
 
-    shutterButton
+    const activeShutter =
+        useBW && bwEnabled
+            ? filterButton
+            : shutterButton;
+
+    activeShutter
         .classList
         .add("capture");
 
 
     setTimeout(() => {
 
-        shutterButton
+        activeShutter
             .classList
             .remove("capture");
 
@@ -2066,7 +2387,7 @@ async function capturePhoto() {
         the captured photo.
     */
 
-    if (bwEnabled) {
+    if (useBW) {
 
         context.filter =
             "grayscale(1)";
