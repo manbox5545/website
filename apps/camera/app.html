@@ -422,6 +422,11 @@ body {
     object-fit: cover;
 }
 
+#camera.frontCamera {
+    transform: scaleX(-1);
+}
+
+
 
 /* =====================================================
    CAMERA TOP BAR
@@ -574,10 +579,7 @@ body {
         cubic-bezier(.22,1,.36,1);
 }
 
-.cameraControls.filterActive {
-    transform:
-        translateX(-34px);
-}
+
 
 
 /* =====================================================
@@ -869,6 +871,174 @@ body {
 .cameraControls.filterActive .filterButton::after{width:57px;height:57px}
 }
 
+
+/* B&W shutter click animation */
+.cameraControls.filterActive .filterButton.capture {
+    transform: scale(.88);
+}
+
+.cameraControls.filterActive .filterButton.capture::after {
+    transform: scale(.72);
+    border-radius: 17px;
+}
+
+.filterButton.capture {
+    transition:
+        transform .12s ease,
+        background .12s ease,
+        border-color .12s ease;
+}
+
+
+/* CENTER SHUTTER + EFFECTS */
+.cameraControls {
+    width: 100%;
+    justify-content: center;
+    transform: none !important;
+}
+
+.effectsArea {
+    position: absolute;
+    right: 22px;
+    bottom: 12px;
+    z-index: 25;
+}
+
+.effectsButton {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(16px);
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+}
+
+.effectsButton:active {
+    transform: scale(.88);
+}
+
+.effectsButton.active {
+    background: rgba(0,255,180,.2);
+    border-color: rgba(0,255,180,.5);
+}
+
+.effectsMenu {
+    position: absolute;
+    right: 0;
+    bottom: 68px;
+    width: 175px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 16px;
+    background: rgba(5,5,5,.88);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px) scale(.95);
+    transform-origin: bottom right;
+    transition: .22s ease;
+}
+
+.effectsMenu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.effectOption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 46px;
+    padding: 7px 9px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.effectOption.active {
+    background: rgba(255,255,255,.1);
+    border-color: rgba(255,255,255,.15);
+}
+
+.effectPreview {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: linear-gradient(135deg,#777,#ddd,#333);
+}
+
+.bwPreview {
+    filter: grayscale(1);
+}
+
+.effectPopup {
+    position: absolute;
+    left: 50%;
+    bottom: 128px;
+    z-index: 30;
+    transform: translate(-50%,10px);
+    padding: 10px 16px;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 22px;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(15px);
+    color: white;
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: .25s ease;
+}
+
+.effectPopup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%,0);
+}
+
+#camera.bwPreviewLive {
+    filter: grayscale(1);
+}
+
+.shutterOuter.capture {
+    transform: scale(.86);
+}
+
+.shutterOuter.capture .shutterInner {
+    transform: scale(.74);
+    border-radius: 18px;
+}
+
+@media (max-width:420px) {
+    .effectsArea {
+        right: 12px;
+        bottom: 10px;
+    }
+
+    .effectsButton {
+        width: 54px;
+        height: 54px;
+    }
+
+    .effectsMenu {
+        bottom: 62px;
+    }
+}
+
 @media (min-width: 700px) {
 
     #photoGrid {
@@ -1123,47 +1293,65 @@ body {
 
         <div class="cameraBottom">
 
-            <div
-                class="cameraControls"
-                id="cameraControls">
+    <div class="cameraControls" id="cameraControls">
 
+        <!-- DEFAULT CENTER SHUTTER -->
+        <button
+            class="shutterOuter"
+            id="shutterButton"
+            aria-label="Take photo">
 
-                <!-- SHUTTER -->
+            <span class="shutterInner"></span>
 
-                <button
-                    class="shutterOuter"
-                    id="shutterButton"
-                    aria-label="Take photo">
+        </button>
 
-                    <span
-                        class="shutterInner">
-                    </span>
+    </div>
 
-                </button>
+    <!-- EFFECTS -->
+    <div class="effectsArea">
 
+        <button
+            class="effectsButton"
+            id="effectsButton"
+            aria-label="Open effects">
+            ✨
+        </button>
 
-                <!-- FILTER -->
+        <div
+            class="effectsMenu"
+            id="effectsMenu"
+            aria-hidden="true">
 
-                <button
-                    class="filterButton"
-                    id="filterButton"
-                    aria-label="Toggle black and white">
+            <button
+                class="effectOption active"
+                id="defaultEffectButton"
+                type="button">
+                <span class="effectPreview normalPreview"></span>
+                <span>Default</span>
+            </button>
 
-                    ◐
-
-                </button>
-
-
-            </div>
-
-
-            <div class="filterHint">
-                BLACK & WHITE
-            </div>
+            <button
+                class="effectOption"
+                id="bwEffectButton"
+                type="button">
+                <span class="effectPreview bwPreview"></span>
+                <span>Black &amp; White</span>
+            </button>
 
         </div>
 
-    </section>
+    </div>
+
+    <div
+        class="effectPopup"
+        id="effectPopup"
+        aria-live="polite">
+        BLACK AND WHITE
+    </div>
+
+</div>
+
+</section>
 
 
 </div>
@@ -1259,12 +1447,6 @@ const shutterButton =
     document.getElementById(
         "shutterButton"
     );
-
-const filterButton =
-    document.getElementById(
-        "filterButton"
-    );
-
 const cameraControls =
     document.getElementById(
         "cameraControls"
@@ -1283,6 +1465,12 @@ const imagePreview = document.getElementById("imagePreview");
 const previewFrame = document.getElementById("previewFrame");
 const previewImage = document.getElementById("previewImage");
 const previewClose = document.getElementById("previewClose");
+const effectsButton = document.getElementById("effectsButton");
+const effectsMenu = document.getElementById("effectsMenu");
+const defaultEffectButton = document.getElementById("defaultEffectButton");
+const bwEffectButton = document.getElementById("bwEffectButton");
+const effectPopup = document.getElementById("effectPopup");
+
 
 
 
@@ -1806,6 +1994,11 @@ async function startCamera() {
         camera.srcObject =
             cameraStream;
 
+        camera.classList.toggle(
+            "frontCamera",
+            facingMode === "user"
+        );
+
 
         cameraTrack =
             cameraStream
@@ -2065,48 +2258,62 @@ flashButton.addEventListener(
    BLACK & WHITE FILTER
 ===================================================== */
 
-filterButton.addEventListener(
-    "click",
-    () => {
-        if (bwEnabled) {
-            capturePhoto(true);
-        } else {
-            toggleFilter();
-        }
+/* EFFECTS */
+effectsButton.addEventListener("click", event => {
+    event.stopPropagation();
+
+    const isOpen = effectsMenu.classList.toggle("open");
+    effectsButton.classList.toggle("active", isOpen);
+    effectsMenu.setAttribute("aria-hidden", String(!isOpen));
+});
+
+defaultEffectButton.addEventListener("click", () => {
+    setEffect(false);
+});
+
+bwEffectButton.addEventListener("click", () => {
+    setEffect(true);
+});
+
+function setEffect(useBW) {
+    bwEnabled = useBW;
+
+    defaultEffectButton.classList.toggle("active", !useBW);
+    bwEffectButton.classList.toggle("active", useBW);
+
+    camera.classList.toggle("bwPreviewLive", useBW);
+
+    if (useBW) {
+        effectPopup.classList.add("show");
+        clearTimeout(setEffect.popupTimer);
+        setEffect.popupTimer = setTimeout(() => {
+            effectPopup.classList.remove("show");
+        }, 1800);
+    } else {
+        effectPopup.classList.remove("show");
     }
-);
 
-function toggleFilter() {
-    bwEnabled = !bwEnabled;
-
-    filterButton.classList.toggle("active", bwEnabled);
-
-    cameraControls.classList.toggle(
-        "filterActive",
-        bwEnabled
-    );
+    effectsMenu.classList.remove("open");
+    effectsButton.classList.remove("active");
+    effectsMenu.setAttribute("aria-hidden", "true");
 }
 
-shutterButton.addEventListener(
-    "click",
-    () => {
-        if (bwEnabled) {
-            toggleFilter();
-        }
-
-        capturePhoto(false);
+document.addEventListener("click", event => {
+    if (!effectsMenu.contains(event.target) && event.target !== effectsButton) {
+        effectsMenu.classList.remove("open");
+        effectsButton.classList.remove("active");
+        effectsMenu.setAttribute("aria-hidden", "true");
     }
-);
+});
+
+/* CENTER SHUTTER */
+shutterButton.addEventListener("click", () => {
+    capturePhoto(bwEnabled);
+});
 
 /* =====================================================
    CAPTURE PHOTO
 ===================================================== */
-
-shutterButton.addEventListener(
-    "click",
-    capturePhoto
-);
-
 
 async function capturePhoto(useBW = bwEnabled) {
 
@@ -2119,9 +2326,7 @@ async function capturePhoto(useBW = bwEnabled) {
     */
 
     const activeShutter =
-        useBW && bwEnabled
-            ? filterButton
-            : shutterButton;
+        shutterButton;
 
     activeShutter
         .classList
@@ -2162,22 +2367,7 @@ async function capturePhoto(useBW = bwEnabled) {
         naturally.
     */
 
-    if (facingMode === "user") {
-
-        context.translate(
-            width,
-            0
-        );
-
-        context.scale(
-            -1,
-            1
-        );
-
-    }
-
-
-    /*
+        /*
         Apply B&W only to
         the captured photo.
     */
