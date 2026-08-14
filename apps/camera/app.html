@@ -2153,35 +2153,53 @@ async function startCamera() {
 
         stopCamera();
 
+        // IMPORTANT: request CAMERA separately from MICROPHONE.
+        // If microphone permission is blocked, the camera should
+        // still open normally instead of making getUserMedia fail.
+        let videoStream = null;
 
-        cameraStream =
-            await navigator
-                .mediaDevices
-                .getUserMedia({
+        try {
+            videoStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: { ideal: facingMode },
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 }
+                },
+                audio: false
+            });
+        } catch (firstError) {
+            console.warn("Preferred camera request failed:", firstError);
 
-                    video: {
+            // Some browsers/devices reject facingMode or ideal constraints.
+            // Retry with the simplest possible camera request.
+            videoStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: false
+            });
+        }
 
-                        facingMode:
-                            facingMode,
+        cameraStream = videoStream;
 
-                        width: {
-                            ideal: 1920
-                        },
+        // Microphone is requested independently. This is needed for
+        // HAMOOD recordings, but it must not prevent the camera from opening.
+        try {
+            const micStream = await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: false
+            });
 
-                        height: {
-                            ideal: 1080
-                        }
+            micStream.getAudioTracks().forEach(track => {
+                cameraStream.addTrack(track);
+            });
 
-                    },
+        } catch (micError) {
+            console.warn("Microphone permission unavailable:", micError);
+            showCameraMessage(
+                "Camera is working. Microphone permission is unavailable, so recordings will not contain your microphone audio."
+            );
+        }
 
-                    audio: true
-
-                });
-
-
-        camera.srcObject =
-            cameraStream;
-
+        camera.srcObject = cameraStream;
         camera.muted = true;
 
         camera.classList.toggle(
@@ -2189,39 +2207,63 @@ async function startCamera() {
             facingMode === "user"
         );
 
-
         cameraTrack =
-            cameraStream
-                .getVideoTracks()[0];
-
+            cameraStream.getVideoTracks()[0];
 
         torchEnabled = false;
-
         updateFlashButton();
+
+        // Wait until the camera has real dimensions before creating
+        // the HAMOOD compositing canvas.
+        if (camera.readyState < 1) {
+            await new Promise(resolve => {
+                const onLoaded = () => {
+                    camera.removeEventListener("loadedmetadata", onLoaded);
+                    resolve();
+                };
+                camera.addEventListener("loadedmetadata", onLoaded);
+            });
+        }
 
         if (hamoodEnabled) {
             resizeCompositeCanvas();
             setupHamoodAudio();
         }
 
-        cameraMessage.style.display =
-            "none";
-
+        // Only clear the message if there isn't a microphone warning.
+        if (cameraStream.getAudioTracks().length) {
+            cameraMessage.style.display = "none";
+        }
 
     } catch (error) {
 
-        console.error(
-            error
-        );
+        console.error("Camera start failed:", error);
 
-        showCameraMessage(
-            "Camera access failed.<br><br>" +
-            "Please allow camera permission " +
-            "and use HTTPS or localhost."
-        );
+        let message =
+            "Camera could not be started.<br><br>";
 
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            message +=
+                "This browser page cannot access the camera. Open CAMPLAGUE through HTTPS or http://localhost — not by double-clicking the HTML file.";
+        } else if (error.name === "NotAllowedError" || error.name === "PermissionDeniedError") {
+            message +=
+                "Camera permission was denied for this site. Open the browser site permissions and set Camera to Allow, then reload the page.";
+        } else if (error.name === "NotFoundError") {
+            message +=
+                "No usable camera was found. Check that your webcam/phone camera is connected and not being used exclusively by another app.";
+        } else if (error.name === "NotReadableError" || error.name === "TrackStartError") {
+            message +=
+                "The camera is already being used by another app. Close other camera/video apps and try again.";
+        } else if (error.name === "SecurityError") {
+            message +=
+                "The browser blocked camera access because of the page security context. Use HTTPS or localhost.";
+        } else {
+            message +=
+                `Browser error: ${error.name || "Unknown error"}. Try reloading CAMPLAGUE and checking the site's camera permission.`;
+        }
+
+        showCameraMessage(message);
     }
-
 }
 
 
@@ -3034,10 +3076,7 @@ function endShutterPress() {
 
     }
 
-    if (
-        !longPressTriggered &&
-        !hamoodEnabled
-    ) {
+    if (!longPressTriggered) {
 
         capturePhoto(bwEnabled);
 
