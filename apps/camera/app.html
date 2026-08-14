@@ -1061,69 +1061,6 @@ body {
 
 
 
-
-.gallerySectionTitle{
-    max-width:1000px;
-    margin:28px auto 12px;
-    color:rgba(180,255,240,.62);
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:2px;
-}
-#videoGrid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-    max-width:1000px;
-    margin:0 auto;
-}
-.videoCard{
-    position:relative;
-    overflow:hidden;
-    border-radius:18px;
-    background:#111;
-    border:1px solid rgba(255,255,255,.08);
-    aspect-ratio:9/16;
-}
-.videoCard video{
-    width:100%;height:100%;display:block;object-fit:cover;
-}
-.videoCard::after{
-    content:"▶";
-    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
-    background:rgba(0,255,180,.18);border:1px solid rgba(0,255,180,.45);
-    color:#8fffd3;backdrop-filter:blur(12px);pointer-events:none;
-}
-.videoCard .photoActions{z-index:2}
-#videoPreview{
-    position:fixed;inset:0;z-index:21000;display:none;align-items:center;justify-content:center;
-    padding:18px;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);
-}
-#videoPreview.active{display:flex}
-.videoPreviewFrame{
-    position:relative;width:min(94vw,720px);height:min(90vh,900px);
-    display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:22px;
-    background:#050505;border:1px solid rgba(0,255,180,.18);box-shadow:0 0 40px rgba(0,255,180,.08);
-}
-#previewVideo{width:100%;height:100%;object-fit:contain;background:#000}
-.videoControls{
-    position:absolute;left:14px;right:14px;bottom:14px;z-index:3;display:flex;align-items:center;gap:9px;
-    padding:9px;border:1px solid rgba(0,255,180,.18);border-radius:16px;
-    background:rgba(5,5,5,.76);backdrop-filter:blur(16px);
-}
-.videoControlButton{
-    width:40px;height:40px;flex:0 0 40px;border-radius:12px;border:1px solid rgba(0,255,180,.28);
-    background:rgba(0,255,180,.10);color:#8fffd3;font-size:16px;cursor:pointer;
-}
-.videoControlButton:active{transform:scale(.92);background:rgba(0,255,180,.2)}
-.videoSeek{flex:1;accent-color:#00ff88;min-width:0}
-@media(max-width:420px){
-    #videoGrid{gap:8px}
-    .videoCard{border-radius:14px}
-    .videoControls{left:9px;right:9px;bottom:9px}
-}
-
 /* =====================================================
    HAMOOD!! GREEN SCREEN EFFECT
 ===================================================== */
@@ -1380,8 +1317,6 @@ body {
 
         <div id="photoGrid"></div>
 
-        <div class="gallerySectionTitle" id="videoSectionTitle">🎬 HAMOOD RECORDINGS</div>
-        <div id="videoGrid"></div>
 
         <div id="emptyGallery">
 
@@ -1579,18 +1514,6 @@ body {
     </div>
 </div>
 
-<div id="videoPreview" aria-hidden="true">
-    <div class="videoPreviewFrame" id="videoPreviewFrame">
-        <button class="previewClose" id="videoPreviewClose" aria-label="Close video preview">✕</button>
-        <video id="previewVideo" playsinline preload="metadata"></video>
-        <div class="videoControls">
-            <button class="videoControlButton" id="videoPlayPause" type="button">▶</button>
-            <input class="videoSeek" id="videoSeek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Video progress">
-            <button class="videoControlButton" id="videoMute" type="button">🔊</button>
-        </div>
-    </div>
-</div>
-
 <canvas
     id="captureCanvas"
     style="display:none">
@@ -1648,9 +1571,6 @@ const photoCount =
         "photoCount"
     );
 
-const videoGrid = document.getElementById("videoGrid");
-const videoSectionTitle = document.getElementById("videoSectionTitle");
-
 const galleryButton =
     document.getElementById(
         "galleryButton"
@@ -1701,13 +1621,6 @@ const imagePreview = document.getElementById("imagePreview");
 const previewFrame = document.getElementById("previewFrame");
 const previewImage = document.getElementById("previewImage");
 const previewClose = document.getElementById("previewClose");
-const videoPreview = document.getElementById("videoPreview");
-const videoPreviewFrame = document.getElementById("videoPreviewFrame");
-const previewVideo = document.getElementById("previewVideo");
-const videoPreviewClose = document.getElementById("videoPreviewClose");
-const videoPlayPause = document.getElementById("videoPlayPause");
-const videoSeek = document.getElementById("videoSeek");
-const videoMute = document.getElementById("videoMute");
 const effectsButton = document.getElementById("effectsButton");
 const effectsMenu = document.getElementById("effectsMenu");
 const defaultEffectButton = document.getElementById("defaultEffectButton");
@@ -1754,13 +1667,10 @@ let recordingStarted = false;
 let longPressTimer = null;
 let longPressTriggered = false;
 
-const HAMOOD_GREEN_THRESHOLD = 105;
-const HAMOOD_GREEN_DOMINANCE = 1.12;
-const HAMOOD_EDGE_SOFTNESS = 42;
+const HAMOOD_GREEN_THRESHOLD = 115;
+const HAMOOD_GREEN_DOMINANCE = 1.18;
+const HAMOOD_EDGE_SOFTNESS = 34;
 const HAMOOD_SCALE = 0.82;
-const HAMOOD_PROCESS_MAX_WIDTH = 360;
-const HAMOOD_RENDER_FPS = 30;
-let hamoodLastRenderTime = 0;
 
 
 
@@ -1980,26 +1890,6 @@ function getPhotos() {
 }
 
 
-function getVideos() {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(["videos"], "readonly");
-        const store = transaction.objectStore("videos");
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result.reverse());
-        request.onerror = () => reject(request.error);
-    });
-}
-
-function deleteVideo(id) {
-    return new Promise((resolve, reject) => {
-        const transaction = db.transaction(["videos"], "readwrite");
-        const store = transaction.objectStore("videos");
-        const request = store.delete(id);
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-    });
-}
-
 /* =====================================================
    DELETE PHOTO
 ===================================================== */
@@ -2061,9 +1951,8 @@ async function renderGallery() {
         }`;
 
 
-    const existingVideos = await getVideos();
     emptyGallery.style.display =
-        (photos.length === 0 && existingVideos.length === 0)
+        photos.length === 0
             ? "block"
             : "none";
 
@@ -2192,44 +2081,6 @@ async function renderGallery() {
 
     });
 
-    const videos = await getVideos();
-    videoGrid.innerHTML = "";
-    videoSectionTitle.style.display = videos.length ? "block" : "none";
-
-    videos.forEach(videoRecord => {
-        const card = document.createElement("div");
-        card.className = "videoCard";
-
-        const video = document.createElement("video");
-        const url = URL.createObjectURL(videoRecord.blob);
-        video.src = url;
-        video.muted = true;
-        video.playsInline = true;
-        video.preload = "metadata";
-
-        video.addEventListener("click", event => {
-            event.stopPropagation();
-            openVideoPreview(url);
-        });
-
-        const actions = document.createElement("div");
-        actions.className = "photoActions";
-
-        const remove = document.createElement("button");
-        remove.className = "photoAction";
-        remove.textContent = "🗑️ Delete";
-        remove.onclick = async () => {
-            await deleteVideo(videoRecord.id);
-            URL.revokeObjectURL(url);
-            renderGallery();
-        };
-
-        actions.appendChild(remove);
-        card.appendChild(video);
-        card.appendChild(actions);
-        videoGrid.appendChild(card);
-    });
-
 }
 
 
@@ -2291,49 +2142,6 @@ previewImage.addEventListener("pointermove",e=>{
 });
 previewImage.addEventListener("pointerup",()=>previewDragging=false);
 previewImage.addEventListener("pointercancel",()=>previewDragging=false);
-
-function openVideoPreview(url) {
-    previewVideo.src = url;
-    previewVideo.currentTime = 0;
-    previewVideo.muted = false;
-    videoPlayPause.textContent = "▶";
-    videoMute.textContent = "🔊";
-    videoSeek.value = 0;
-    videoPreview.classList.add("active");
-    videoPreview.setAttribute("aria-hidden", "false");
-}
-
-function closeVideoPreview() {
-    previewVideo.pause();
-    previewVideo.removeAttribute("src");
-    previewVideo.load();
-    videoPreview.classList.remove("active");
-    videoPreview.setAttribute("aria-hidden", "true");
-}
-
-videoPreviewClose.addEventListener("click", closeVideoPreview);
-videoPreview.addEventListener("click", e => {
-    if (e.target === videoPreview) closeVideoPreview();
-});
-videoPlayPause.addEventListener("click", () => {
-    if (previewVideo.paused) {
-        previewVideo.play().catch(() => {});
-    } else {
-        previewVideo.pause();
-    }
-});
-previewVideo.addEventListener("play", () => videoPlayPause.textContent = "⏸");
-previewVideo.addEventListener("pause", () => videoPlayPause.textContent = "▶");
-previewVideo.addEventListener("timeupdate", () => {
-    if (previewVideo.duration) videoSeek.value = (previewVideo.currentTime / previewVideo.duration) * 100;
-});
-videoSeek.addEventListener("input", () => {
-    if (previewVideo.duration) previewVideo.currentTime = (Number(videoSeek.value) / 100) * previewVideo.duration;
-});
-videoMute.addEventListener("click", () => {
-    previewVideo.muted = !previewVideo.muted;
-    videoMute.textContent = previewVideo.muted ? "🔇" : "🔊";
-});
 
 /* =====================================================
    CAMERA START
@@ -2944,88 +2752,203 @@ function drawCover(
 }
 
 
-function drawHamoodWithChromaKey(context, video, canvasWidth, canvasHeight) {
-    if (!video.videoWidth || !video.videoHeight) return;
+function drawHamoodWithChromaKey(
+    context,
+    video,
+    canvasWidth,
+    canvasHeight
+) {
 
-    const targetHeight = canvasHeight * HAMOOD_SCALE;
-    const targetWidth = targetHeight * video.videoWidth / video.videoHeight;
-    const x = (canvasWidth - targetWidth) / 2;
-    const y = canvasHeight - targetHeight;
+    if (
+        !video.videoWidth ||
+        !video.videoHeight
+    )
+        return;
 
-    const scale = Math.min(1, HAMOOD_PROCESS_MAX_WIDTH / video.videoWidth);
-    const bufferWidth = Math.max(1, Math.round(video.videoWidth * scale));
-    const bufferHeight = Math.max(1, Math.round(video.videoHeight * scale));
+    const targetHeight =
+        canvasHeight * HAMOOD_SCALE;
 
-    if (!drawHamoodWithChromaKey.buffer ||
+    const targetWidth =
+        targetHeight *
+        video.videoWidth /
+        video.videoHeight;
+
+    const x =
+        (canvasWidth - targetWidth) / 2;
+
+    const y =
+        canvasHeight - targetHeight;
+
+    const bufferWidth =
+        Math.max(1, Math.ceil(targetWidth));
+
+    const bufferHeight =
+        Math.max(1, Math.ceil(targetHeight));
+
+    if (
+        !drawHamoodWithChromaKey.buffer ||
         drawHamoodWithChromaKey.buffer.width !== bufferWidth ||
-        drawHamoodWithChromaKey.buffer.height !== bufferHeight) {
-        drawHamoodWithChromaKey.buffer = document.createElement("canvas");
-        drawHamoodWithChromaKey.buffer.width = bufferWidth;
-        drawHamoodWithChromaKey.buffer.height = bufferHeight;
-        drawHamoodWithChromaKey.bufferContext = drawHamoodWithChromaKey.buffer.getContext("2d", { willReadFrequently: true });
+        drawHamoodWithChromaKey.buffer.height !== bufferHeight
+    ) {
+
+        drawHamoodWithChromaKey.buffer =
+            document.createElement("canvas");
+
+        drawHamoodWithChromaKey.buffer.width =
+            bufferWidth;
+
+        drawHamoodWithChromaKey.buffer.height =
+            bufferHeight;
+
+        drawHamoodWithChromaKey.bufferContext =
+            drawHamoodWithChromaKey.buffer
+                .getContext("2d", {
+                    willReadFrequently: true
+                });
+
     }
 
-    const buffer = drawHamoodWithChromaKey.buffer;
-    const bufferContext = drawHamoodWithChromaKey.bufferContext;
-    bufferContext.clearRect(0, 0, bufferWidth, bufferHeight);
-    bufferContext.drawImage(video, 0, 0, bufferWidth, bufferHeight);
+    const buffer =
+        drawHamoodWithChromaKey.buffer;
 
-    const image = bufferContext.getImageData(0, 0, bufferWidth, bufferHeight);
-    const pixels = image.data;
+    const bufferContext =
+        drawHamoodWithChromaKey.bufferContext;
 
-    for (let i = 0; i < pixels.length; i += 4) {
-        const r = pixels[i];
-        const g = pixels[i + 1];
-        const b = pixels[i + 2];
-        const greenStrength = g - Math.max(r, b);
-        const isGreen = g > HAMOOD_GREEN_THRESHOLD &&
-                        g > r * HAMOOD_GREEN_DOMINANCE &&
-                        g > b * HAMOOD_GREEN_DOMINANCE &&
-                        greenStrength > 10;
+    bufferContext.clearRect(
+        0,
+        0,
+        buffer.width,
+        buffer.height
+    );
+
+    bufferContext.drawImage(
+        video,
+        0,
+        0,
+        buffer.width,
+        buffer.height
+    );
+
+    const image =
+        bufferContext.getImageData(
+            0,
+            0,
+            buffer.width,
+            buffer.height
+        );
+
+    const pixels =
+        image.data;
+
+    for (
+        let i = 0;
+        i < pixels.length;
+        i += 4
+    ) {
+
+        const red = pixels[i];
+        const green = pixels[i + 1];
+        const blue = pixels[i + 2];
+
+        const greenStrength =
+            green - (red + blue) / 2;
+
+        const isGreen =
+            green > HAMOOD_GREEN_THRESHOLD &&
+            green > red * HAMOOD_GREEN_DOMINANCE &&
+            green > blue * HAMOOD_GREEN_DOMINANCE &&
+            greenStrength > 18;
 
         if (isGreen) {
-            const alpha = Math.max(0, Math.min(255, 255 - greenStrength * 10));
-            pixels[i + 3] = alpha;
+
+            const edgeAmount =
+                Math.min(
+                    1,
+                    greenStrength /
+                    HAMOOD_EDGE_SOFTNESS
+                );
+
+            pixels[i + 3] =
+                Math.round(
+                    (1 - edgeAmount) * 255
+                );
+
         } else {
+
             pixels[i + 3] = 255;
+
         }
+
     }
 
-    bufferContext.putImageData(image, 0, 0);
-    context.save();
-    context.imageSmoothingEnabled = true;
-    context.imageSmoothingQuality = "high";
-    context.drawImage(buffer, x, y, targetWidth, targetHeight);
-    context.restore();
+    bufferContext.putImageData(
+        image,
+        0,
+        0
+    );
+
+    context.drawImage(
+        buffer,
+        x,
+        y,
+        targetWidth,
+        targetHeight
+    );
+
 }
 
 
-function renderHamoodFrame(now = performance.now()) {
-    if (!hamoodEnabled) return;
+function renderHamoodFrame() {
 
-    if (now - hamoodLastRenderTime < (1000 / HAMOOD_RENDER_FPS)) {
-        hamoodAnimationFrame = requestAnimationFrame(renderHamoodFrame);
+    if (!hamoodEnabled)
         return;
-    }
-    hamoodLastRenderTime = now;
 
-    if (camera.videoWidth && camera.videoHeight) {
-        const context = compositeCanvas.getContext("2d");
-        if (compositeCanvas.width !== camera.videoWidth || compositeCanvas.height !== camera.videoHeight) {
-            resizeCompositeCanvas();
+    if (
+        camera.videoWidth &&
+        camera.videoHeight
+    ) {
+
+        resizeCompositeCanvas();
+
+        const context =
+            compositeCanvas.getContext("2d");
+
+        context.clearRect(
+            0,
+            0,
+            compositeCanvas.width,
+            compositeCanvas.height
+        );
+
+        drawCover(
+            context,
+            camera,
+            camera.videoWidth,
+            camera.videoHeight,
+            compositeCanvas.width,
+            compositeCanvas.height
+        );
+
+        if (
+            hamoodVideo.readyState >= 2
+        ) {
+
+            drawHamoodWithChromaKey(
+                context,
+                hamoodVideo,
+                compositeCanvas.width,
+                compositeCanvas.height
+            );
+
         }
 
-        context.clearRect(0, 0, compositeCanvas.width, compositeCanvas.height);
-        context.imageSmoothingEnabled = true;
-        context.imageSmoothingQuality = "high";
-        drawCover(context, camera, camera.videoWidth, camera.videoHeight, compositeCanvas.width, compositeCanvas.height);
-
-        if (hamoodVideo.readyState >= 2) {
-            drawHamoodWithChromaKey(context, hamoodVideo, compositeCanvas.width, compositeCanvas.height);
-        }
     }
 
-    hamoodAnimationFrame = requestAnimationFrame(renderHamoodFrame);
+    hamoodAnimationFrame =
+        requestAnimationFrame(
+            renderHamoodFrame
+        );
+
 }
 
 
@@ -3259,7 +3182,7 @@ async function startRecording() {
         await setupHamoodAudio();
 
         const canvasStream =
-            compositeCanvas.captureStream(HAMOOD_RENDER_FPS);
+            compositeCanvas.captureStream(30);
 
         const mixedStream =
             new MediaStream(
@@ -3351,8 +3274,32 @@ async function startRecording() {
 
                 }
 
+                const url =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+                const downloadLink =
+                    document.createElement("a");
+
+                downloadLink.href = url;
+                downloadLink.download =
+                    `hamood-${Date.now()}.webm`;
+
+                document.body.appendChild(
+                    downloadLink
+                );
+
+                downloadLink.click();
+
+                downloadLink.remove();
+
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                }, 5000);
+
                 showCameraMessage(
-                    "HAMOOD!! recording saved to your gallery."
+                    "HAMOOD!! recording saved."
                 );
 
                 recordingStarted = false;
@@ -3686,6 +3633,185 @@ function showCameraMessage(
 })();
 
 
+</script>
+
+
+<style>
+body.isRecording #shutterButton{
+    border-color:#00ff88 !important;
+    box-shadow:0 0 0 6px rgba(0,255,136,.12),0 0 30px rgba(0,255,136,.55);
+}
+body.isRecording #shutterButton .shutterInner{
+    background:#ff304f !important;
+    border-radius:16px !important;
+}
+.videoDownloadButton{
+    border:1px solid rgba(0,255,180,.28);
+    background:linear-gradient(135deg,rgba(0,255,136,.18),rgba(0,210,255,.16));
+    color:#fff;
+    border-radius:12px;
+    padding:9px 12px;
+    cursor:pointer;
+}
+</style>
+
+<script>
+/* =====================================================
+   UNIVERSAL VIDEO RECORDING / DOWNLOAD SUPPORT
+   Long-press the shutter in ANY effect or Default mode.
+   ===================================================== */
+(function(){
+    let pressTimer = null;
+    let recording = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let recordStartedAt = 0;
+    const HOLD_MS = 500;
+
+    function getRecordingMimeType(){
+        const types = [
+            "video/webm;codecs=vp8,opus",
+            "video/webm;codecs=vp9,opus",
+            "video/webm"
+        ];
+        return types.find(t => MediaRecorder.isTypeSupported(t)) || "";
+    }
+
+    async function startUniversalRecording(){
+        if (recording) return;
+        if (!window.cameraStream || !window.captureCanvas) return;
+
+        try {
+            const canvasStream = window.captureCanvas.captureStream(30);
+            const tracks = [...canvasStream.getVideoTracks()];
+
+            // Keep microphone + any available effect audio.
+            if (window.recordAudioStream) {
+                window.recordAudioStream.getAudioTracks().forEach(t => tracks.push(t));
+            } else if (window.cameraStream.getAudioTracks) {
+                window.cameraStream.getAudioTracks().forEach(t => tracks.push(t));
+            }
+
+            const stream = new MediaStream(tracks);
+            const mimeType = getRecordingMimeType();
+
+            mediaRecorder = new MediaRecorder(
+                stream,
+                mimeType ? {mimeType, videoBitsPerSecond: 6000000} : undefined
+            );
+
+            recordedChunks = [];
+            mediaRecorder.ondataavailable = e => {
+                if (e.data && e.data.size) recordedChunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                const blob = new Blob(recordedChunks, {
+                    type: mediaRecorder.mimeType || "video/webm"
+                });
+
+                // Use the app's existing local video storage when available.
+                if (typeof window.saveVideo === "function") {
+                    try { await window.saveVideo(blob); } catch(e) { console.error(e); }
+                }
+
+                // Also expose it for the existing gallery implementation.
+                if (typeof window.renderVideos === "function") {
+                    try { await window.renderVideos(); } catch(e) {}
+                }
+
+                window.lastRecordedVideoBlob = blob;
+                recordedChunks = [];
+            };
+
+            mediaRecorder.start(250);
+            recording = true;
+            recordStartedAt = performance.now();
+            document.body.classList.add("isRecording");
+            if (window.showCameraMessage) window.showCameraMessage("🔴 RECORDING");
+        } catch(err) {
+            console.error("Recording failed:", err);
+            if (window.showCameraMessage) window.showCameraMessage("Could not start video recording.");
+        }
+    }
+
+    function stopUniversalRecording(){
+        if (!recording) return;
+        recording = false;
+        document.body.classList.remove("isRecording");
+        if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+    }
+
+    function installLongPress(){
+        const button = document.getElementById("shutterButton");
+        if (!button || button.dataset.universalRecordingInstalled) return;
+
+        button.dataset.universalRecordingInstalled = "1";
+
+        const begin = e => {
+            if (e) e.preventDefault();
+            clearTimeout(pressTimer);
+            pressTimer = setTimeout(() => startUniversalRecording(), HOLD_MS);
+        };
+
+        const end = e => {
+            if (e) e.preventDefault();
+            clearTimeout(pressTimer);
+            if (recording) {
+                stopUniversalRecording();
+                return;
+            }
+            // Short tap retains the app's normal photo behavior.
+            if (typeof window.capturePhoto === "function") {
+                try { window.capturePhoto(window.bwEnabled || false); } catch(_) {}
+            }
+        };
+
+        button.addEventListener("pointerdown", begin, {passive:false});
+        button.addEventListener("pointerup", end, {passive:false});
+        button.addEventListener("pointercancel", () => {
+            clearTimeout(pressTimer);
+            if (recording) stopUniversalRecording();
+        }, {passive:false});
+        button.addEventListener("pointerleave", () => {
+            clearTimeout(pressTimer);
+            if (recording) stopUniversalRecording();
+        }, {passive:false});
+        button.addEventListener("contextmenu", e => e.preventDefault());
+    }
+
+    window.addEventListener("load", () => {
+        setTimeout(installLongPress, 500);
+    });
+})();
+</script>
+
+
+<script>
+(function(){
+  function addVideoDownloads(){
+    document.querySelectorAll("video").forEach(v=>{
+      if(v.id==="camera" || v.dataset.downloadAttached) return;
+      if(!v.src && !v.currentSrc) return;
+      v.dataset.downloadAttached="1";
+      const b=document.createElement("button");
+      b.className="videoDownloadButton";
+      b.textContent="⬇️ Save video";
+      b.addEventListener("click",()=>{
+        const url=v.currentSrc||v.src;
+        if(!url) return;
+        const a=document.createElement("a");
+        a.href=url;
+        a.download="camplague-video.webm";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      });
+      v.parentElement?.appendChild(b);
+    });
+  }
+  setInterval(addVideoDownloads,1500);
+})();
 </script>
 
 </body>
