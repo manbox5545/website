@@ -1060,6 +1060,123 @@ body {
 }
 
 
+
+/* =====================================================
+   HAMOOD!! GREEN SCREEN EFFECT
+===================================================== */
+
+#hamoodVideo{
+    display:none;
+    position:absolute;
+    width:1px;
+    height:1px;
+    opacity:0;
+    pointer-events:none;
+}
+
+#compositeCanvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:none;
+    z-index:5;
+    background:#000;
+}
+
+#camera.hamoodActive{
+    visibility:hidden;
+}
+
+#compositeCanvas.hamoodActive{
+    display:block;
+}
+
+.hamoodBadge{
+    position:absolute;
+    left:50%;
+    top:88px;
+    z-index:35;
+    transform:translate(-50%,-8px);
+    padding:8px 14px;
+    border:1px solid rgba(0,255,180,.35);
+    border-radius:20px;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(14px);
+    color:#8fffd3;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2px;
+    opacity:0;
+    visibility:hidden;
+    transition:.25s ease;
+    pointer-events:none;
+}
+
+.hamoodBadge.show{
+    opacity:1;
+    visibility:visible;
+    transform:translate(-50%,0);
+}
+
+#recordingIndicator{
+    position:absolute;
+    left:50%;
+    top:18px;
+    z-index:40;
+    transform:translateX(-50%);
+    display:none;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border-radius:20px;
+    background:rgba(0,0,0,.7);
+    border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(14px);
+    font-size:11px;
+    letter-spacing:1.5px;
+}
+
+#recordingIndicator.active{
+    display:flex;
+}
+
+.recordingDot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#ff334f;
+    box-shadow:0 0 12px rgba(255,51,79,.8);
+    animation:recordingPulse 1s ease-in-out infinite;
+}
+
+@keyframes recordingPulse{
+    0%,100%{opacity:1;transform:scale(1)}
+    50%{opacity:.45;transform:scale(.72)}
+}
+
+.hamoodOption .effectPreview{
+    background:linear-gradient(135deg,#20d66b,#39f2c2,#111);
+    position:relative;
+    overflow:hidden;
+}
+
+.hamoodOption .effectPreview::after{
+    content:"🕺";
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    font-size:18px;
+    background:rgba(0,255,90,.16);
+}
+
+.hamoodOption.active{
+    background:rgba(0,255,160,.13);
+    border-color:rgba(0,255,160,.4);
+}
+
 /* =====================================================
    MOBILE
 ===================================================== */
@@ -1234,8 +1351,26 @@ body {
         <video
             id="camera"
             autoplay
-            playsinline>
+            playsinline
+            muted>
         </video>
+
+        <canvas id="compositeCanvas"></canvas>
+
+        <video
+            id="hamoodVideo"
+            src="hamood.mp4"
+            playsinline
+            preload="auto"
+            loop>
+        </video>
+
+        <div class="hamoodBadge" id="hamoodBadge">HAMOOD!!</div>
+
+        <div id="recordingIndicator">
+            <span class="recordingDot"></span>
+            <span>RECORDING</span>
+        </div>
 
 
         <!-- TOP -->
@@ -1336,6 +1471,14 @@ body {
                 type="button">
                 <span class="effectPreview bwPreview"></span>
                 <span>Black &amp; White</span>
+            </button>
+
+            <button
+                class="effectOption hamoodOption"
+                id="hamoodEffectButton"
+                type="button">
+                <span class="effectPreview"></span>
+                <span>HAMOOD!!</span>
             </button>
 
         </div>
@@ -1461,6 +1604,19 @@ const cameraMessage =
     document.getElementById(
         "cameraMessage"
     );
+
+const compositeCanvas =
+    document.getElementById("compositeCanvas");
+
+const hamoodVideo =
+    document.getElementById("hamoodVideo");
+
+const hamoodBadge =
+    document.getElementById("hamoodBadge");
+
+const recordingIndicator =
+    document.getElementById("recordingIndicator");
+
 const imagePreview = document.getElementById("imagePreview");
 const previewFrame = document.getElementById("previewFrame");
 const previewImage = document.getElementById("previewImage");
@@ -1498,6 +1654,23 @@ let previewDragStartX = 0;
 let previewDragStartY = 0;
 let previewStartPanX = 0;
 let previewStartPanY = 0;
+
+let hamoodEnabled = false;
+let hamoodAnimationFrame = null;
+let hamoodAudioContext = null;
+let hamoodAudioDestination = null;
+let hamoodMicSource = null;
+let hamoodVideoSource = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordingStarted = false;
+let longPressTimer = null;
+let longPressTriggered = false;
+
+const HAMOOD_GREEN_THRESHOLD = 115;
+const HAMOOD_GREEN_DOMINANCE = 1.18;
+const HAMOOD_EDGE_SOFTNESS = 34;
+const HAMOOD_SCALE = 0.82;
 
 
 
@@ -1541,7 +1714,7 @@ function openDatabase() {
             const request =
                 indexedDB.open(
                     "CAMPLAGUE_DB",
-                    1
+                    2
                 );
 
 
@@ -1558,6 +1731,21 @@ function openDatabase() {
 
                         database.createObjectStore(
                             "photos",
+                            {
+                                keyPath: "id",
+                                autoIncrement: true
+                            }
+                        );
+
+                    }
+
+                    if (
+                        !database.objectStoreNames
+                            .contains("videos")
+                    ) {
+
+                        database.createObjectStore(
+                            "videos",
                             {
                                 keyPath: "id",
                                 autoIncrement: true
@@ -1986,13 +2174,15 @@ async function startCamera() {
 
                     },
 
-                    audio: false
+                    audio: true
 
                 });
 
 
         camera.srcObject =
             cameraStream;
+
+        camera.muted = true;
 
         camera.classList.toggle(
             "frontCamera",
@@ -2009,6 +2199,10 @@ async function startCamera() {
 
         updateFlashButton();
 
+        if (hamoodEnabled) {
+            resizeCompositeCanvas();
+            setupHamoodAudio();
+        }
 
         cameraMessage.style.display =
             "none";
@@ -2083,6 +2277,10 @@ openCameraButton.onclick = openCamera;
 ===================================================== */
 
 function openGallery() {
+
+    if (hamoodEnabled) {
+        stopHamood();
+    }
 
     stopCamera();
 
@@ -2255,10 +2453,9 @@ flashButton.addEventListener(
 
 
 /* =====================================================
-   BLACK & WHITE FILTER
+   EFFECTS
 ===================================================== */
 
-/* EFFECTS */
 effectsButton.addEventListener("click", event => {
     event.stopPropagation();
 
@@ -2268,29 +2465,67 @@ effectsButton.addEventListener("click", event => {
 });
 
 defaultEffectButton.addEventListener("click", () => {
-    setEffect(false);
+    setEffect("default");
 });
 
 bwEffectButton.addEventListener("click", () => {
-    setEffect(true);
+    setEffect("bw");
 });
 
-function setEffect(useBW) {
-    bwEnabled = useBW;
+const hamoodEffectButton =
+    document.getElementById("hamoodEffectButton");
 
-    defaultEffectButton.classList.toggle("active", !useBW);
-    bwEffectButton.classList.toggle("active", useBW);
+hamoodEffectButton.addEventListener("click", () => {
+    setEffect("hamood");
+});
 
-    camera.classList.toggle("bwPreviewLive", useBW);
+function setEffect(effect) {
 
-    if (useBW) {
-        effectPopup.classList.add("show");
-        clearTimeout(setEffect.popupTimer);
-        setEffect.popupTimer = setTimeout(() => {
-            effectPopup.classList.remove("show");
-        }, 1800);
+    bwEnabled = effect === "bw";
+    const enableHamood = effect === "hamood";
+
+    defaultEffectButton.classList.toggle(
+        "active",
+        effect === "default"
+    );
+
+    bwEffectButton.classList.toggle(
+        "active",
+        effect === "bw"
+    );
+
+    hamoodEffectButton.classList.toggle(
+        "active",
+        enableHamood
+    );
+
+    camera.classList.toggle(
+        "bwPreviewLive",
+        effect === "bw"
+    );
+
+    if (enableHamood) {
+        startHamood();
     } else {
-        effectPopup.classList.remove("show");
+        stopHamood();
+
+        if (effect === "bw") {
+
+            effectPopup.textContent =
+                "BLACK AND WHITE";
+
+            effectPopup.classList.add("show");
+
+            clearTimeout(setEffect.popupTimer);
+
+            setEffect.popupTimer =
+                setTimeout(() => {
+                    effectPopup.classList.remove("show");
+                }, 1800);
+
+        } else {
+            effectPopup.classList.remove("show");
+        }
     }
 
     effectsMenu.classList.remove("open");
@@ -2299,12 +2534,840 @@ function setEffect(useBW) {
 }
 
 document.addEventListener("click", event => {
-    if (!effectsMenu.contains(event.target) && event.target !== effectsButton) {
+
+    if (
+        !effectsMenu.contains(event.target) &&
+        event.target !== effectsButton
+    ) {
+
         effectsMenu.classList.remove("open");
         effectsButton.classList.remove("active");
-        effectsMenu.setAttribute("aria-hidden", "true");
+
+        effectsMenu.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
     }
+
 });
+
+
+/* =====================================================
+   HAMOOD!! GREEN SCREEN
+===================================================== */
+
+function startHamood() {
+
+    hamoodEnabled = true;
+
+    camera.classList.add("hamoodActive");
+    compositeCanvas.classList.add("hamoodActive");
+    hamoodBadge.classList.add("show");
+
+    hamoodVideo.currentTime = 0;
+    hamoodVideo.muted = false;
+
+    hamoodVideo.play().catch(error => {
+        console.warn(
+            "HAMOOD video could not play:",
+            error
+        );
+    });
+
+    resizeCompositeCanvas();
+
+    if (!hamoodAnimationFrame) {
+        renderHamoodFrame();
+    }
+
+    setupHamoodAudio();
+
+}
+
+
+function stopHamood() {
+
+    hamoodEnabled = false;
+
+    if (hamoodAnimationFrame) {
+        cancelAnimationFrame(
+            hamoodAnimationFrame
+        );
+        hamoodAnimationFrame = null;
+    }
+
+    hamoodVideo.pause();
+    hamoodVideo.currentTime = 0;
+
+    camera.classList.remove("hamoodActive");
+    compositeCanvas.classList.remove("hamoodActive");
+    hamoodBadge.classList.remove("show");
+
+    if (recordingStarted) {
+        stopRecording();
+    }
+
+    teardownHamoodAudio();
+
+}
+
+
+function resizeCompositeCanvas() {
+
+    if (!camera.videoWidth || !camera.videoHeight)
+        return;
+
+    compositeCanvas.width =
+        camera.videoWidth;
+
+    compositeCanvas.height =
+        camera.videoHeight;
+
+}
+
+
+function drawCover(
+    context,
+    source,
+    sourceWidth,
+    sourceHeight,
+    destinationWidth,
+    destinationHeight
+) {
+
+    const sourceRatio =
+        sourceWidth / sourceHeight;
+
+    const destinationRatio =
+        destinationWidth / destinationHeight;
+
+    let sx = 0;
+    let sy = 0;
+    let sw = sourceWidth;
+    let sh = sourceHeight;
+
+    if (sourceRatio > destinationRatio) {
+
+        sw =
+            sourceHeight *
+            destinationRatio;
+
+        sx =
+            (sourceWidth - sw) / 2;
+
+    } else {
+
+        sh =
+            sourceWidth /
+            destinationRatio;
+
+        sy =
+            (sourceHeight - sh) / 2;
+
+    }
+
+    context.drawImage(
+        source,
+        sx,
+        sy,
+        sw,
+        sh,
+        0,
+        0,
+        destinationWidth,
+        destinationHeight
+    );
+
+}
+
+
+function drawHamoodWithChromaKey(
+    context,
+    video,
+    canvasWidth,
+    canvasHeight
+) {
+
+    if (
+        !video.videoWidth ||
+        !video.videoHeight
+    )
+        return;
+
+    const targetHeight =
+        canvasHeight * HAMOOD_SCALE;
+
+    const targetWidth =
+        targetHeight *
+        video.videoWidth /
+        video.videoHeight;
+
+    const x =
+        (canvasWidth - targetWidth) / 2;
+
+    const y =
+        canvasHeight - targetHeight;
+
+    const bufferWidth =
+        Math.max(1, Math.ceil(targetWidth));
+
+    const bufferHeight =
+        Math.max(1, Math.ceil(targetHeight));
+
+    if (
+        !drawHamoodWithChromaKey.buffer ||
+        drawHamoodWithChromaKey.buffer.width !== bufferWidth ||
+        drawHamoodWithChromaKey.buffer.height !== bufferHeight
+    ) {
+
+        drawHamoodWithChromaKey.buffer =
+            document.createElement("canvas");
+
+        drawHamoodWithChromaKey.buffer.width =
+            bufferWidth;
+
+        drawHamoodWithChromaKey.buffer.height =
+            bufferHeight;
+
+        drawHamoodWithChromaKey.bufferContext =
+            drawHamoodWithChromaKey.buffer
+                .getContext("2d", {
+                    willReadFrequently: true
+                });
+
+    }
+
+    const buffer =
+        drawHamoodWithChromaKey.buffer;
+
+    const bufferContext =
+        drawHamoodWithChromaKey.bufferContext;
+
+    bufferContext.clearRect(
+        0,
+        0,
+        buffer.width,
+        buffer.height
+    );
+
+    bufferContext.drawImage(
+        video,
+        0,
+        0,
+        buffer.width,
+        buffer.height
+    );
+
+    const image =
+        bufferContext.getImageData(
+            0,
+            0,
+            buffer.width,
+            buffer.height
+        );
+
+    const pixels =
+        image.data;
+
+    for (
+        let i = 0;
+        i < pixels.length;
+        i += 4
+    ) {
+
+        const red = pixels[i];
+        const green = pixels[i + 1];
+        const blue = pixels[i + 2];
+
+        const greenStrength =
+            green - (red + blue) / 2;
+
+        const isGreen =
+            green > HAMOOD_GREEN_THRESHOLD &&
+            green > red * HAMOOD_GREEN_DOMINANCE &&
+            green > blue * HAMOOD_GREEN_DOMINANCE &&
+            greenStrength > 18;
+
+        if (isGreen) {
+
+            const edgeAmount =
+                Math.min(
+                    1,
+                    greenStrength /
+                    HAMOOD_EDGE_SOFTNESS
+                );
+
+            pixels[i + 3] =
+                Math.round(
+                    (1 - edgeAmount) * 255
+                );
+
+        } else {
+
+            pixels[i + 3] = 255;
+
+        }
+
+    }
+
+    bufferContext.putImageData(
+        image,
+        0,
+        0
+    );
+
+    context.drawImage(
+        buffer,
+        x,
+        y,
+        targetWidth,
+        targetHeight
+    );
+
+}
+
+
+function renderHamoodFrame() {
+
+    if (!hamoodEnabled)
+        return;
+
+    if (
+        camera.videoWidth &&
+        camera.videoHeight
+    ) {
+
+        resizeCompositeCanvas();
+
+        const context =
+            compositeCanvas.getContext("2d");
+
+        context.clearRect(
+            0,
+            0,
+            compositeCanvas.width,
+            compositeCanvas.height
+        );
+
+        drawCover(
+            context,
+            camera,
+            camera.videoWidth,
+            camera.videoHeight,
+            compositeCanvas.width,
+            compositeCanvas.height
+        );
+
+        if (
+            hamoodVideo.readyState >= 2
+        ) {
+
+            drawHamoodWithChromaKey(
+                context,
+                hamoodVideo,
+                compositeCanvas.width,
+                compositeCanvas.height
+            );
+
+        }
+
+    }
+
+    hamoodAnimationFrame =
+        requestAnimationFrame(
+            renderHamoodFrame
+        );
+
+}
+
+
+window.addEventListener(
+    "resize",
+    () => {
+        if (hamoodEnabled) {
+            resizeCompositeCanvas();
+        }
+    }
+);
+
+
+/* =====================================================
+   HAMOOD AUDIO MIXER
+===================================================== */
+
+async function setupHamoodAudio() {
+
+    if (hamoodAudioContext)
+        return;
+
+    if (!cameraStream)
+        return;
+
+    try {
+
+        const AudioContextClass =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (!AudioContextClass)
+            return;
+
+        hamoodAudioContext =
+            new AudioContextClass();
+
+        hamoodAudioDestination =
+            hamoodAudioContext
+                .createMediaStreamDestination();
+
+        hamoodMicSource =
+            hamoodAudioContext
+                .createMediaStreamSource(
+                    cameraStream
+                );
+
+        hamoodMicSource.connect(
+            hamoodAudioDestination
+        );
+
+        if (
+            typeof hamoodVideo.captureStream ===
+            "function"
+        ) {
+
+            const videoStream =
+                hamoodVideo.captureStream();
+
+            if (
+                videoStream.getAudioTracks().length
+            ) {
+
+                hamoodVideoSource =
+                    hamoodAudioContext
+                        .createMediaStreamSource(
+                            videoStream
+                        );
+
+                hamoodVideoSource.connect(
+                    hamoodAudioDestination
+                );
+
+            }
+
+        }
+
+        await hamoodAudioContext.resume();
+
+    } catch (error) {
+
+        console.error(
+            "HAMOOD audio setup failed:",
+            error
+        );
+
+    }
+
+}
+
+
+function teardownHamoodAudio() {
+
+    if (hamoodMicSource) {
+        try {
+            hamoodMicSource.disconnect();
+        } catch {}
+    }
+
+    if (hamoodVideoSource) {
+        try {
+            hamoodVideoSource.disconnect();
+        } catch {}
+    }
+
+    if (hamoodAudioContext) {
+        hamoodAudioContext.close().catch(() => {});
+    }
+
+    hamoodAudioContext = null;
+    hamoodAudioDestination = null;
+    hamoodMicSource = null;
+    hamoodVideoSource = null;
+
+}
+
+
+/* =====================================================
+   LONG-PRESS RECORDING
+===================================================== */
+
+function beginShutterPress() {
+
+    clearTimeout(longPressTimer);
+
+    longPressTriggered = false;
+
+    if (!hamoodEnabled)
+        return;
+
+    longPressTimer =
+        setTimeout(() => {
+
+            longPressTriggered = true;
+            startRecording();
+
+        }, 500);
+
+}
+
+
+function endShutterPress() {
+
+    clearTimeout(longPressTimer);
+
+    if (
+        hamoodEnabled &&
+        recordingStarted
+    ) {
+
+        stopRecording();
+        return;
+
+    }
+
+    if (
+        !longPressTriggered &&
+        !hamoodEnabled
+    ) {
+
+        capturePhoto(bwEnabled);
+
+    }
+
+}
+
+
+shutterButton.addEventListener(
+    "pointerdown",
+    event => {
+
+        event.preventDefault();
+
+        shutterButton.setPointerCapture?.(
+            event.pointerId
+        );
+
+        beginShutterPress();
+
+    }
+);
+
+
+shutterButton.addEventListener(
+    "pointerup",
+    event => {
+
+        event.preventDefault();
+
+        endShutterPress();
+
+    }
+);
+
+
+shutterButton.addEventListener(
+    "pointercancel",
+    () => {
+
+        clearTimeout(longPressTimer);
+
+        if (recordingStarted) {
+            stopRecording();
+        }
+
+    }
+);
+
+
+shutterButton.addEventListener(
+    "click",
+    event => {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+    }
+);
+
+
+async function startRecording() {
+
+    if (recordingStarted)
+        return;
+
+    if (!hamoodEnabled)
+        return;
+
+    if (!camera.videoWidth)
+        return;
+
+    try {
+
+        await setupHamoodAudio();
+
+        const canvasStream =
+            compositeCanvas.captureStream(30);
+
+        const mixedStream =
+            new MediaStream(
+                canvasStream.getVideoTracks()
+            );
+
+        if (
+            hamoodAudioDestination
+        ) {
+
+            hamoodAudioDestination
+                .stream
+                .getAudioTracks()
+                .forEach(track => {
+
+                    mixedStream.addTrack(track);
+
+                });
+
+        }
+
+        const mimeTypes = [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm"
+        ];
+
+        const supportedType =
+            mimeTypes.find(
+                type =>
+                    MediaRecorder.isTypeSupported(
+                        type
+                    )
+            );
+
+        mediaRecorder =
+            supportedType
+                ? new MediaRecorder(
+                    mixedStream,
+                    {
+                        mimeType:
+                            supportedType,
+                        videoBitsPerSecond:
+                            6000000
+                    }
+                )
+                : new MediaRecorder(
+                    mixedStream
+                );
+
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable =
+            event => {
+
+                if (event.data.size > 0) {
+                    recordedChunks.push(
+                        event.data
+                    );
+                }
+
+            };
+
+        mediaRecorder.onstop =
+            async () => {
+
+                const blob =
+                    new Blob(
+                        recordedChunks,
+                        {
+                            type:
+                                mediaRecorder.mimeType ||
+                                "video/webm"
+                        }
+                    );
+
+                try {
+
+                    await saveRecording(
+                        blob
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Recording save failed:",
+                        error
+                    );
+
+                }
+
+                const url =
+                    URL.createObjectURL(
+                        blob
+                    );
+
+                const downloadLink =
+                    document.createElement("a");
+
+                downloadLink.href = url;
+                downloadLink.download =
+                    `hamood-${Date.now()}.webm`;
+
+                document.body.appendChild(
+                    downloadLink
+                );
+
+                downloadLink.click();
+
+                downloadLink.remove();
+
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                }, 5000);
+
+                showCameraMessage(
+                    "HAMOOD!! recording saved."
+                );
+
+                recordingStarted = false;
+
+                recordingIndicator.classList.remove(
+                    "active"
+                );
+
+            };
+
+        mediaRecorder.onerror =
+            event => {
+
+                console.error(
+                    "Recording error:",
+                    event.error
+                );
+
+                recordingStarted = false;
+
+                recordingIndicator.classList.remove(
+                    "active"
+                );
+
+                showCameraMessage(
+                    "Recording failed."
+                );
+
+            };
+
+        mediaRecorder.start(100);
+
+        recordingStarted = true;
+
+        recordingIndicator.classList.add(
+            "active"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not start recording:",
+            error
+        );
+
+        recordingStarted = false;
+
+        showCameraMessage(
+            "Could not start recording."
+        );
+
+    }
+
+}
+
+
+function stopRecording() {
+
+    clearTimeout(longPressTimer);
+
+    if (
+        mediaRecorder &&
+        mediaRecorder.state !== "inactive"
+    ) {
+
+        mediaRecorder.stop();
+
+    }
+
+}
+
+
+function saveRecording(blob) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            if (!db) {
+                reject(
+                    new Error(
+                        "Database is not ready."
+                    )
+                );
+                return;
+            }
+
+            const transaction =
+                db.transaction(
+                    ["videos"],
+                    "readwrite"
+                );
+
+            const store =
+                transaction.objectStore(
+                    "videos"
+                );
+
+            const request =
+                store.add({
+                    blob: blob,
+                    createdAt: Date.now(),
+                    type: "HAMOOD!!"
+                });
+
+            request.onsuccess =
+                () => resolve(
+                    request.result
+                );
+
+            request.onerror =
+                () => reject(
+                    request.error
+                );
+
+        }
+    );
+
+}
+
+
+hamoodVideo.addEventListener(
+    "ended",
+    () => {
+
+        if (hamoodEnabled) {
+
+            hamoodVideo.currentTime = 0;
+
+            hamoodVideo.play().catch(() => {});
+
+        }
+
+    }
+);
+
 
 /* CENTER SHUTTER */
 shutterButton.addEventListener("click", () => {
