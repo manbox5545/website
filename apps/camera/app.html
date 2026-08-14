@@ -1317,6 +1317,19 @@ body {
 
         <div id="photoGrid"></div>
 
+        <section id="videosSection">
+            <div class="galleryHeader videosHeader">
+                <div class="galleryTitle">VIDEOS</div>
+                <div class="photoCount" id="videoCount">0 videos</div>
+            </div>
+            <div id="videoGrid"></div>
+            <div id="emptyVideos" class="emptyVideos">
+                <div class="emptyIcon">🎥</div>
+                <div class="emptyTitle">No videos yet</div>
+                <div class="emptyText">Long-press the shutter to record a video.</div>
+            </div>
+        </section>
+
 
         <div id="emptyGallery">
 
@@ -1571,6 +1584,10 @@ const photoCount =
         "photoCount"
     );
 
+const videoGrid = document.getElementById("videoGrid");
+const emptyVideos = document.getElementById("emptyVideos");
+const videoCount = document.getElementById("videoCount");
+
 const galleryButton =
     document.getElementById(
         "galleryButton"
@@ -1666,6 +1683,16 @@ let recordedChunks = [];
 let recordingStarted = false;
 let longPressTimer = null;
 let longPressTriggered = false;
+
+let videoRecording = false;
+let videoPressTimer = null;
+let videoPressTriggered = false;
+let recordCanvas = null;
+let recordContext = null;
+let recordRenderTimer = null;
+let recordingStream = null;
+let recordingMimeType = "video/webm";
+let recordingEffect = "default";
 
 const HAMOOD_GREEN_THRESHOLD = 115;
 const HAMOOD_GREEN_DOMINANCE = 1.18;
@@ -2362,6 +2389,7 @@ function openGallery() {
         "block";
 
     renderGallery();
+    renderVideos();
 
 }
 
@@ -2675,7 +2703,7 @@ function stopHamood() {
     hamoodBadge.classList.remove("show");
 
     if (recordingStarted) {
-        stopRecording();
+        stopVideoRecording();
     }
 
     teardownHamoodAudio();
@@ -2688,11 +2716,12 @@ function resizeCompositeCanvas() {
     if (!camera.videoWidth || !camera.videoHeight)
         return;
 
-    compositeCanvas.width =
-        camera.videoWidth;
-
-    compositeCanvas.height =
-        camera.videoHeight;
+    // Keep the processed effect canvas deliberately smaller than the camera stream.
+    // This greatly reduces chroma-key CPU work and keeps recording smooth.
+    const maxWidth = 960;
+    const scale = Math.min(1, maxWidth / camera.videoWidth);
+    compositeCanvas.width = Math.max(2, Math.round(camera.videoWidth * scale));
+    compositeCanvas.height = Math.max(2, Math.round(camera.videoHeight * scale));
 
 }
 
@@ -3067,379 +3096,282 @@ function teardownHamoodAudio() {
 
 
 /* =====================================================
-   LONG-PRESS RECORDING
+   LOCAL VIDEO STORAGE + UNIVERSAL LONG-PRESS RECORDING
 ===================================================== */
 
-function beginShutterPress() {
-
-    clearTimeout(longPressTimer);
-
-    longPressTriggered = false;
-
-    if (!hamoodEnabled)
-        return;
-
-    longPressTimer =
-        setTimeout(() => {
-
-            longPressTriggered = true;
-            startRecording();
-
-        }, 500);
-
-}
-
-
-function endShutterPress() {
-
-    clearTimeout(longPressTimer);
-
-    if (
-        hamoodEnabled &&
-        recordingStarted
-    ) {
-
-        stopRecording();
-        return;
-
-    }
-
-    if (!longPressTriggered) {
-
-        capturePhoto(bwEnabled);
-
-    }
-
-}
-
-
-shutterButton.addEventListener(
-    "pointerdown",
-    event => {
-
-        event.preventDefault();
-
-        shutterButton.setPointerCapture?.(
-            event.pointerId
-        );
-
-        beginShutterPress();
-
-    }
-);
-
-
-shutterButton.addEventListener(
-    "pointerup",
-    event => {
-
-        event.preventDefault();
-
-        endShutterPress();
-
-    }
-);
-
-
-shutterButton.addEventListener(
-    "pointercancel",
-    () => {
-
-        clearTimeout(longPressTimer);
-
-        if (recordingStarted) {
-            stopRecording();
+function saveVideo(blob, effect = recordingEffect) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error("Database is not ready."));
+            return;
         }
+        const tx = db.transaction(["videos"], "readwrite");
+        const store = tx.objectStore("videos");
+        const request = store.add({
+            blob,
+            createdAt: Date.now(),
+            type: effect
+        });
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
 
+function getVideos() {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(["videos"], "readonly");
+        const store = tx.objectStore("videos");
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result.reverse());
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function deleteVideo(id) {
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(["videos"], "readwrite");
+        const request = tx.objectStore("videos").delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function renderVideos() {
+    if (!db || !videoGrid) return;
+    const videos = await getVideos();
+    videoGrid.innerHTML = "";
+    videoCount.textContent = `${videos.length} ${videos.length === 1 ? "video" : "videos"}`;
+    emptyVideos.style.display = videos.length ? "none" : "block";
+
+    videos.forEach(videoRecord => {
+        const card = document.createElement("div");
+        card.className = "videoCard";
+
+        const video = document.createElement("video");
+        video.src = URL.createObjectURL(videoRecord.blob);
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+        video.className = "savedVideo";
+
+        const meta = document.createElement("div");
+        meta.className = "videoMeta";
+        meta.textContent = `${videoRecord.type || "Default"} • ${new Date(videoRecord.createdAt).toLocaleString()}`;
+
+        const actions = document.createElement("div");
+        actions.className = "videoActions";
+
+        const saveButton = document.createElement("button");
+        saveButton.className = "videoAction";
+        saveButton.textContent = "⬇️ Save";
+        saveButton.onclick = () => {
+            const url = video.src;
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `camplague-video-${videoRecord.id}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        };
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "videoAction danger";
+        deleteButton.textContent = "🗑️ Delete";
+        deleteButton.onclick = async () => {
+            await deleteVideo(videoRecord.id);
+            URL.revokeObjectURL(video.src);
+            await renderVideos();
+        };
+
+        actions.append(saveButton, deleteButton);
+        card.append(video, meta, actions);
+        videoGrid.appendChild(card);
+    });
+}
+
+function getRecordingMimeType() {
+    const types = [
+        "video/webm;codecs=vp8,opus",
+        "video/webm;codecs=vp9,opus",
+        "video/webm"
+    ];
+    return types.find(type => MediaRecorder.isTypeSupported(type)) || "";
+}
+
+function ensureRecordCanvas() {
+    if (!recordCanvas) {
+        recordCanvas = document.createElement("canvas");
+        recordCanvas.width = 1280;
+        recordCanvas.height = 720;
+        recordContext = recordCanvas.getContext("2d", { alpha: false });
     }
-);
+    return recordCanvas;
+}
 
+function drawCameraToRecordCanvas() {
+    if (!recordContext || !camera.videoWidth || !camera.videoHeight) return;
+    const w = recordCanvas.width;
+    const h = recordCanvas.height;
+    recordContext.save();
+    recordContext.clearRect(0, 0, w, h);
+    recordContext.filter = bwEnabled ? "grayscale(1)" : "none";
 
-shutterButton.addEventListener(
-    "click",
-    event => {
-
-        event.preventDefault();
-        event.stopPropagation();
-
+    if (facingMode === "user") {
+        recordContext.translate(w, 0);
+        recordContext.scale(-1, 1);
     }
-);
 
+    recordContext.drawImage(camera, 0, 0, w, h);
+    recordContext.restore();
+    recordContext.filter = "none";
+}
 
-async function startRecording() {
+function drawHamoodToRecordCanvas() {
+    if (!compositeCanvas.width || !compositeCanvas.height) return;
+    recordContext.drawImage(compositeCanvas, 0, 0, recordCanvas.width, recordCanvas.height);
+}
 
-    if (recordingStarted)
-        return;
+function renderRecordingFrame() {
+    if (!videoRecording) return;
+    if (hamoodEnabled) drawHamoodToRecordCanvas();
+    else drawCameraToRecordCanvas();
+}
 
-    if (!hamoodEnabled)
-        return;
-
-    if (!camera.videoWidth)
-        return;
+async function startVideoRecording() {
+    if (videoRecording || !camera.videoWidth || !window.MediaRecorder) return;
 
     try {
+        ensureRecordCanvas();
+        recordingEffect = hamoodEnabled ? "HAMOOD!!" : (bwEnabled ? "Black & White" : "Default");
 
-        await setupHamoodAudio();
+        // Give the canvas one valid frame before captureStream starts.
+        renderRecordingFrame();
 
-        const canvasStream =
-            compositeCanvas.captureStream(30);
-
-        const mixedStream =
-            new MediaStream(
-                canvasStream.getVideoTracks()
-            );
-
-        if (
-            hamoodAudioDestination
-        ) {
-
-            hamoodAudioDestination
-                .stream
-                .getAudioTracks()
-                .forEach(track => {
-
-                    mixedStream.addTrack(track);
-
-                });
-
-        }
-
-        const mimeTypes = [
-            "video/webm;codecs=vp9,opus",
-            "video/webm;codecs=vp8,opus",
-            "video/webm"
-        ];
-
-        const supportedType =
-            mimeTypes.find(
-                type =>
-                    MediaRecorder.isTypeSupported(
-                        type
-                    )
-            );
-
-        mediaRecorder =
-            supportedType
-                ? new MediaRecorder(
-                    mixedStream,
-                    {
-                        mimeType:
-                            supportedType,
-                        videoBitsPerSecond:
-                            6000000
-                    }
-                )
-                : new MediaRecorder(
-                    mixedStream
-                );
-
-        recordedChunks = [];
-
-        mediaRecorder.ondataavailable =
-            event => {
-
-                if (event.data.size > 0) {
-                    recordedChunks.push(
-                        event.data
-                    );
-                }
-
-            };
-
-        mediaRecorder.onstop =
-            async () => {
-
-                const blob =
-                    new Blob(
-                        recordedChunks,
-                        {
-                            type:
-                                mediaRecorder.mimeType ||
-                                "video/webm"
-                        }
-                    );
-
-                try {
-
-                    await saveRecording(
-                        blob
-                    );
-
-                } catch (error) {
-
-                    console.error(
-                        "Recording save failed:",
-                        error
-                    );
-
-                }
-
-                const url =
-                    URL.createObjectURL(
-                        blob
-                    );
-
-                const downloadLink =
-                    document.createElement("a");
-
-                downloadLink.href = url;
-                downloadLink.download =
-                    `hamood-${Date.now()}.webm`;
-
-                document.body.appendChild(
-                    downloadLink
-                );
-
-                downloadLink.click();
-
-                downloadLink.remove();
-
-                setTimeout(() => {
-                    URL.revokeObjectURL(url);
-                }, 5000);
-
-                showCameraMessage(
-                    "HAMOOD!! recording saved."
-                );
-
-                recordingStarted = false;
-
-                recordingIndicator.classList.remove(
-                    "active"
-                );
-
-            };
-
-        mediaRecorder.onerror =
-            event => {
-
-                console.error(
-                    "Recording error:",
-                    event.error
-                );
-
-                recordingStarted = false;
-
-                recordingIndicator.classList.remove(
-                    "active"
-                );
-
-                showCameraMessage(
-                    "Recording failed."
-                );
-
-            };
-
-        mediaRecorder.start(100);
-
-        recordingStarted = true;
-
-        recordingIndicator.classList.add(
-            "active"
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Could not start recording:",
-            error
-        );
-
-        recordingStarted = false;
-
-        showCameraMessage(
-            "Could not start recording."
-        );
-
-    }
-
-}
-
-
-function stopRecording() {
-
-    clearTimeout(longPressTimer);
-
-    if (
-        mediaRecorder &&
-        mediaRecorder.state !== "inactive"
-    ) {
-
-        mediaRecorder.stop();
-
-    }
-
-}
-
-
-function saveRecording(blob) {
-
-    return new Promise(
-        (resolve, reject) => {
-
-            if (!db) {
-                reject(
-                    new Error(
-                        "Database is not ready."
-                    )
-                );
-                return;
-            }
-
-            const transaction =
-                db.transaction(
-                    ["videos"],
-                    "readwrite"
-                );
-
-            const store =
-                transaction.objectStore(
-                    "videos"
-                );
-
-            const request =
-                store.add({
-                    blob: blob,
-                    createdAt: Date.now(),
-                    type: "HAMOOD!!"
-                });
-
-            request.onsuccess =
-                () => resolve(
-                    request.result
-                );
-
-            request.onerror =
-                () => reject(
-                    request.error
-                );
-
-        }
-    );
-
-}
-
-
-hamoodVideo.addEventListener(
-    "ended",
-    () => {
+        const canvasStream = recordCanvas.captureStream(30);
+        const tracks = [...canvasStream.getVideoTracks()];
 
         if (hamoodEnabled) {
-
-            hamoodVideo.currentTime = 0;
-
-            hamoodVideo.play().catch(() => {});
-
+            await setupHamoodAudio();
+            if (hamoodAudioDestination) {
+                hamoodAudioDestination.stream.getAudioTracks().forEach(track => tracks.push(track));
+            }
+        } else if (cameraStream) {
+            cameraStream.getAudioTracks().forEach(track => tracks.push(track));
         }
 
+        recordingStream = new MediaStream(tracks);
+        recordingMimeType = getRecordingMimeType();
+        const options = recordingMimeType
+            ? { mimeType: recordingMimeType, videoBitsPerSecond: 4500000 }
+            : { videoBitsPerSecond: 4500000 };
+
+        mediaRecorder = new MediaRecorder(recordingStream, options);
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = event => {
+            if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+        };
+
+        mediaRecorder.onerror = event => {
+            console.error("MediaRecorder error:", event.error);
+            stopVideoRecording(true);
+            showCameraMessage("Video recording failed.");
+        };
+
+        mediaRecorder.onstop = async () => {
+            const mime = mediaRecorder.mimeType || recordingMimeType || "video/webm";
+            const blob = new Blob(recordedChunks, { type: mime });
+            recordedChunks = [];
+
+            if (blob.size > 0) {
+                try {
+                    await saveVideo(blob, recordingEffect);
+                    await renderVideos();
+                    showCameraMessage("Video saved locally in VIDEOS.");
+                } catch (error) {
+                    console.error("Video save failed:", error);
+                    showCameraMessage("Video was recorded but could not be saved locally.");
+                }
+            }
+
+            if (recordingStream) {
+                recordingStream.getTracks().forEach(track => track.stop());
+                recordingStream = null;
+            }
+            mediaRecorder = null;
+        };
+
+        mediaRecorder.start(250);
+        videoRecording = true;
+        recordingStarted = true;
+        recordingIndicator.classList.add("active");
+        document.body.classList.add("isRecording");
+
+        const frameInterval = 1000 / 30;
+        recordRenderTimer = setInterval(renderRecordingFrame, frameInterval);
+    } catch (error) {
+        console.error("Could not start video recording:", error);
+        videoRecording = false;
+        recordingStarted = false;
+        document.body.classList.remove("isRecording");
+        recordingIndicator.classList.remove("active");
+        showCameraMessage("Could not start video recording.");
     }
-);
+}
 
+function stopVideoRecording(fromError = false) {
+    clearInterval(recordRenderTimer);
+    recordRenderTimer = null;
+    videoRecording = false;
+    recordingStarted = false;
+    document.body.classList.remove("isRecording");
+    recordingIndicator.classList.remove("active");
 
-/* CENTER SHUTTER */
-shutterButton.addEventListener("click", () => {
-    capturePhoto(bwEnabled);
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+    } else if (recordingStream) {
+        recordingStream.getTracks().forEach(track => track.stop());
+        recordingStream = null;
+    }
+}
+
+function beginShutterPress() {
+    clearTimeout(videoPressTimer);
+    videoPressTriggered = false;
+    videoPressTimer = setTimeout(() => {
+        videoPressTriggered = true;
+        startVideoRecording();
+    }, 500);
+}
+
+function endShutterPress() {
+    clearTimeout(videoPressTimer);
+    if (videoRecording) {
+        stopVideoRecording();
+        return;
+    }
+    if (!videoPressTriggered) capturePhoto(bwEnabled);
+}
+
+shutterButton.addEventListener("pointerdown", event => {
+    event.preventDefault();
+    shutterButton.setPointerCapture?.(event.pointerId);
+    beginShutterPress();
 });
+
+shutterButton.addEventListener("pointerup", event => {
+    event.preventDefault();
+    endShutterPress();
+});
+
+shutterButton.addEventListener("pointercancel", () => {
+    clearTimeout(videoPressTimer);
+    if (videoRecording) stopVideoRecording();
+});
+
+shutterButton.addEventListener("contextmenu", event => event.preventDefault());
+
+/* Keep the original tap behavior without creating a second recording handler. */
 
 /* =====================================================
    CAPTURE PHOTO
@@ -3616,6 +3548,7 @@ function showCameraMessage(
         await openDatabase();
 
         await renderGallery();
+        await renderVideos();
 
     } catch (error) {
 
@@ -3637,182 +3570,21 @@ function showCameraMessage(
 
 
 <style>
-body.isRecording #shutterButton{
-    border-color:#00ff88 !important;
-    box-shadow:0 0 0 6px rgba(0,255,136,.12),0 0 30px rgba(0,255,136,.55);
-}
-body.isRecording #shutterButton .shutterInner{
-    background:#ff304f !important;
-    border-radius:16px !important;
-}
-.videoDownloadButton{
-    border:1px solid rgba(0,255,180,.28);
-    background:linear-gradient(135deg,rgba(0,255,136,.18),rgba(0,210,255,.16));
-    color:#fff;
-    border-radius:12px;
-    padding:9px 12px;
-    cursor:pointer;
-}
+#videosSection{max-width:1000px;margin:34px auto 0;padding-bottom:40px}
+.videosHeader{margin-bottom:14px}
+#videoGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.videoCard{overflow:hidden;border-radius:18px;background:#0d0d0d;border:1px solid rgba(255,255,255,.08);padding:8px}
+.savedVideo{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:13px;background:#000;accent-color:#00ff88}
+.videoMeta{padding:9px 4px 5px;color:#777;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.videoActions{display:flex;gap:7px}
+.videoAction{flex:1;min-height:36px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;font-size:13px}
+.videoAction:hover{background:rgba(0,255,180,.12);border-color:rgba(0,255,180,.3)}
+.videoAction.danger:hover{background:rgba(255,50,80,.12);border-color:rgba(255,50,80,.3)}
+.emptyVideos{padding:24px 10px;text-align:center;color:#555}
+body.isRecording #shutterButton{border-color:#00ff88!important;box-shadow:0 0 0 6px rgba(0,255,136,.12),0 0 30px rgba(0,255,136,.55)}
+body.isRecording #shutterButton .shutterInner{background:#ff304f!important;border-radius:16px!important}
+@media(max-width:699px){#videosSection{margin-top:26px}#videoGrid{grid-template-columns:1fr}}
 </style>
-
-<script>
-/* =====================================================
-   UNIVERSAL VIDEO RECORDING / DOWNLOAD SUPPORT
-   Long-press the shutter in ANY effect or Default mode.
-   ===================================================== */
-(function(){
-    let pressTimer = null;
-    let recording = false;
-    let mediaRecorder = null;
-    let recordedChunks = [];
-    let recordStartedAt = 0;
-    const HOLD_MS = 500;
-
-    function getRecordingMimeType(){
-        const types = [
-            "video/webm;codecs=vp8,opus",
-            "video/webm;codecs=vp9,opus",
-            "video/webm"
-        ];
-        return types.find(t => MediaRecorder.isTypeSupported(t)) || "";
-    }
-
-    async function startUniversalRecording(){
-        if (recording) return;
-        if (!window.cameraStream || !window.captureCanvas) return;
-
-        try {
-            const canvasStream = window.captureCanvas.captureStream(30);
-            const tracks = [...canvasStream.getVideoTracks()];
-
-            // Keep microphone + any available effect audio.
-            if (window.recordAudioStream) {
-                window.recordAudioStream.getAudioTracks().forEach(t => tracks.push(t));
-            } else if (window.cameraStream.getAudioTracks) {
-                window.cameraStream.getAudioTracks().forEach(t => tracks.push(t));
-            }
-
-            const stream = new MediaStream(tracks);
-            const mimeType = getRecordingMimeType();
-
-            mediaRecorder = new MediaRecorder(
-                stream,
-                mimeType ? {mimeType, videoBitsPerSecond: 6000000} : undefined
-            );
-
-            recordedChunks = [];
-            mediaRecorder.ondataavailable = e => {
-                if (e.data && e.data.size) recordedChunks.push(e.data);
-            };
-
-            mediaRecorder.onstop = async () => {
-                const blob = new Blob(recordedChunks, {
-                    type: mediaRecorder.mimeType || "video/webm"
-                });
-
-                // Use the app's existing local video storage when available.
-                if (typeof window.saveVideo === "function") {
-                    try { await window.saveVideo(blob); } catch(e) { console.error(e); }
-                }
-
-                // Also expose it for the existing gallery implementation.
-                if (typeof window.renderVideos === "function") {
-                    try { await window.renderVideos(); } catch(e) {}
-                }
-
-                window.lastRecordedVideoBlob = blob;
-                recordedChunks = [];
-            };
-
-            mediaRecorder.start(250);
-            recording = true;
-            recordStartedAt = performance.now();
-            document.body.classList.add("isRecording");
-            if (window.showCameraMessage) window.showCameraMessage("🔴 RECORDING");
-        } catch(err) {
-            console.error("Recording failed:", err);
-            if (window.showCameraMessage) window.showCameraMessage("Could not start video recording.");
-        }
-    }
-
-    function stopUniversalRecording(){
-        if (!recording) return;
-        recording = false;
-        document.body.classList.remove("isRecording");
-        if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-    }
-
-    function installLongPress(){
-        const button = document.getElementById("shutterButton");
-        if (!button || button.dataset.universalRecordingInstalled) return;
-
-        button.dataset.universalRecordingInstalled = "1";
-
-        const begin = e => {
-            if (e) e.preventDefault();
-            clearTimeout(pressTimer);
-            pressTimer = setTimeout(() => startUniversalRecording(), HOLD_MS);
-        };
-
-        const end = e => {
-            if (e) e.preventDefault();
-            clearTimeout(pressTimer);
-            if (recording) {
-                stopUniversalRecording();
-                return;
-            }
-            // Short tap retains the app's normal photo behavior.
-            if (typeof window.capturePhoto === "function") {
-                try { window.capturePhoto(window.bwEnabled || false); } catch(_) {}
-            }
-        };
-
-        button.addEventListener("pointerdown", begin, {passive:false});
-        button.addEventListener("pointerup", end, {passive:false});
-        button.addEventListener("pointercancel", () => {
-            clearTimeout(pressTimer);
-            if (recording) stopUniversalRecording();
-        }, {passive:false});
-        button.addEventListener("pointerleave", () => {
-            clearTimeout(pressTimer);
-            if (recording) stopUniversalRecording();
-        }, {passive:false});
-        button.addEventListener("contextmenu", e => e.preventDefault());
-    }
-
-    window.addEventListener("load", () => {
-        setTimeout(installLongPress, 500);
-    });
-})();
-</script>
-
-
-<script>
-(function(){
-  function addVideoDownloads(){
-    document.querySelectorAll("video").forEach(v=>{
-      if(v.id==="camera" || v.dataset.downloadAttached) return;
-      if(!v.src && !v.currentSrc) return;
-      v.dataset.downloadAttached="1";
-      const b=document.createElement("button");
-      b.className="videoDownloadButton";
-      b.textContent="⬇️ Save video";
-      b.addEventListener("click",()=>{
-        const url=v.currentSrc||v.src;
-        if(!url) return;
-        const a=document.createElement("a");
-        a.href=url;
-        a.download="camplague-video.webm";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      });
-      v.parentElement?.appendChild(b);
-    });
-  }
-  setInterval(addVideoDownloads,1500);
-})();
-</script>
 
 </body>
 </html>
