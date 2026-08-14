@@ -574,6 +574,11 @@ body {
         cubic-bezier(.22,1,.36,1);
 }
 
+.cameraControls.filterActive {
+    transform:
+        translateX(-34px);
+}
+
 
 /* =====================================================
    SHUTTER
@@ -844,6 +849,25 @@ body {
 /* =====================================================
    DESKTOP
 ===================================================== */
+
+
+/* IMAGE PREVIEW */
+#imagePreview{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.9);backdrop-filter:blur(14px)}
+#imagePreview.active{display:flex}
+.previewFrame{position:relative;width:min(94vw,1100px);height:min(88vh,900px);display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:20px;background:#080808;border:1px solid rgba(255,255,255,.15)}
+#previewImage{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;cursor:zoom-in;transform-origin:center center;transition:transform .15s ease}
+#previewImage.zoomed{cursor:grab}
+.previewClose{position:absolute;top:12px;right:12px;z-index:3;width:46px;height:46px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(0,0,0,.65);color:white;font-size:23px;cursor:pointer}
+.previewHint{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);padding:7px 12px;border-radius:20px;background:rgba(0,0,0,.6);color:rgba(255,255,255,.65);font-size:10px;white-space:nowrap;pointer-events:none}
+.photoCard img{cursor:zoom-in}
+.cameraControls.filterActive{transform:translateX(38px)}
+.cameraControls.filterActive .filterButton{order:1;border:3px solid white;background:white;color:#111;font-size:0}
+.cameraControls.filterActive .filterButton::after{content:"";display:block;width:62px;height:62px;border-radius:50%;background:#111}
+.cameraControls.filterActive .shutterOuter{order:2}
+@media(max-width:420px){
+.cameraControls.filterActive{transform:translateX(35px)}
+.cameraControls.filterActive .filterButton::after{width:57px;height:57px}
+}
 
 @media (min-width: 700px) {
 
@@ -1149,6 +1173,16 @@ body {
      HIDDEN CANVAS
 ===================================================== -->
 
+
+<!-- IMAGE PREVIEW -->
+<div id="imagePreview" aria-hidden="true">
+    <div class="previewFrame" id="previewFrame">
+        <button class="previewClose" id="previewClose" aria-label="Close preview">✕</button>
+        <img id="previewImage" alt="Photo preview">
+        <div class="previewHint">SCROLL TO ZOOM • CLICK OUTSIDE TO CLOSE</div>
+    </div>
+</div>
+
 <canvas
     id="captureCanvas"
     style="display:none">
@@ -1245,26 +1279,10 @@ const cameraMessage =
     document.getElementById(
         "cameraMessage"
     );
-
-const imagePreview =
-    document.getElementById(
-        "imagePreview"
-    );
-
-const previewFrame =
-    document.getElementById(
-        "previewFrame"
-    );
-
-const previewImage =
-    document.getElementById(
-        "previewImage"
-    );
-
-const previewClose =
-    document.getElementById(
-        "previewClose"
-    );
+const imagePreview = document.getElementById("imagePreview");
+const previewFrame = document.getElementById("previewFrame");
+const previewImage = document.getElementById("previewImage");
+const previewClose = document.getElementById("previewClose");
 
 
 
@@ -1284,7 +1302,6 @@ let facingMode =
 let torchEnabled = false;
 
 let bwEnabled = false;
-
 let previewZoom = 1;
 let previewPanX = 0;
 let previewPanY = 0;
@@ -1587,27 +1604,10 @@ async function renderGallery() {
 
         image.src = url;
 
-        image.addEventListener(
-            "click",
-            event => {
-                event.stopPropagation();
-                openImagePreview(url);
-            }
-        );
-
-        card.addEventListener(
-            "click",
-            event => {
-                if (
-                    event.target.closest(".photoActions")
-                ) {
-                    return;
-                }
-
-                openImagePreview(url);
-            }
-        );
-
+        image.addEventListener("click", event => {
+            event.stopPropagation();
+            openImagePreview(url);
+        });
 
 
         const actions =
@@ -1708,246 +1708,64 @@ async function renderGallery() {
 }
 
 
-
 /* =====================================================
-   IMAGE PREVIEW
-===================================================== */
-
-function updatePreviewTransform() {
-
-    previewImage.style.transform =
-        `translate(${previewPanX}px, ${previewPanY}px) ` +
-        `scale(${previewZoom})`;
-
-    previewImage.classList.toggle(
-        "zoomed",
-        previewZoom > 1
-    );
+   
+/* IMAGE PREVIEW */
+function updatePreviewTransform(){
+    previewImage.style.transform=`translate(${previewPanX}px,${previewPanY}px) scale(${previewZoom})`;
+    previewImage.classList.toggle("zoomed",previewZoom>1);
 }
-
-function resetPreviewZoom() {
-
-    previewZoom = 1;
-    previewPanX = 0;
-    previewPanY = 0;
-
-    updatePreviewTransform();
+function resetPreview(){
+    previewZoom=1; previewPanX=0; previewPanY=0; updatePreviewTransform();
 }
-
-function openImagePreview(url) {
-
-    previewImage.src = url;
-
-    resetPreviewZoom();
-
+function openImagePreview(url){
+    previewImage.src=url;
+    resetPreview();
     imagePreview.classList.add("active");
-    imagePreview.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    imagePreview.setAttribute("aria-hidden","false");
 }
-
-function closeImagePreview() {
-
+function closeImagePreview(){
     imagePreview.classList.remove("active");
-    imagePreview.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    previewImage.src = "";
-    resetPreviewZoom();
+    imagePreview.setAttribute("aria-hidden","true");
+    previewImage.src="";
+    resetPreview();
 }
-
-function changePreviewZoom(amount, centerX = 0, centerY = 0) {
-
-    const oldZoom = previewZoom;
-
-    previewZoom = Math.min(
-        5,
-        Math.max(
-            1,
-            previewZoom + amount
-        )
-    );
-
-    if (previewZoom === oldZoom)
-        return;
-
-    /*
-       Keep the point under the cursor
-       roughly fixed while zooming.
-    */
-    if (centerX || centerY) {
-
-        const zoomRatio =
-            previewZoom / oldZoom;
-
-        previewPanX =
-            centerX -
-            (centerX - previewPanX) *
-            zoomRatio;
-
-        previewPanY =
-            centerY -
-            (centerY - previewPanY) *
-            zoomRatio;
-    }
-
-    if (previewZoom === 1) {
-
-        previewPanX = 0;
-        previewPanY = 0;
-    }
-
+previewClose.addEventListener("click",closeImagePreview);
+imagePreview.addEventListener("click",e=>{
+    if(e.target===imagePreview) closeImagePreview();
+});
+document.addEventListener("keydown",e=>{
+    if(e.key==="Escape" && imagePreview.classList.contains("active")) closeImagePreview();
+});
+previewFrame.addEventListener("wheel",e=>{
+    e.preventDefault();
+    previewZoom=Math.max(1,Math.min(5,previewZoom+(e.deltaY<0?.35:-.35)));
+    if(previewZoom===1){previewPanX=0;previewPanY=0;}
     updatePreviewTransform();
-}
-
-/* Mouse wheel zoom */
-previewFrame.addEventListener(
-    "wheel",
-    event => {
-
-        event.preventDefault();
-
-        const rect =
-            previewFrame.getBoundingClientRect();
-
-        const x =
-            event.clientX -
-            rect.left -
-            rect.width / 2;
-
-        const y =
-            event.clientY -
-            rect.top -
-            rect.height / 2;
-
-        changePreviewZoom(
-            event.deltaY < 0
-                ? 0.35
-                : -0.35,
-            x,
-            y
-        );
-    },
-    { passive: false }
-);
-
-/* Click image to zoom in/out */
-previewImage.addEventListener(
-    "click",
-    event => {
-
-        event.stopPropagation();
-
-        if (previewZoom === 1) {
-            changePreviewZoom(
-                1,
-                0,
-                0
-            );
-        } else {
-            resetPreviewZoom();
-        }
-    }
-);
-
-/* Drag a zoomed image */
-previewImage.addEventListener(
-    "pointerdown",
-    event => {
-
-        if (previewZoom <= 1)
-            return;
-
-        previewDragging = true;
-
-        previewDragStartX =
-            event.clientX;
-
-        previewDragStartY =
-            event.clientY;
-
-        previewStartPanX =
-            previewPanX;
-
-        previewStartPanY =
-            previewPanY;
-
-        previewImage.setPointerCapture(
-            event.pointerId
-        );
-    }
-);
-
-previewImage.addEventListener(
-    "pointermove",
-    event => {
-
-        if (!previewDragging)
-            return;
-
-        previewPanX =
-            previewStartPanX +
-            event.clientX -
-            previewDragStartX;
-
-        previewPanY =
-            previewStartPanY +
-            event.clientY -
-            previewDragStartY;
-
-        updatePreviewTransform();
-    }
-);
-
-previewImage.addEventListener(
-    "pointerup",
-    () => {
-        previewDragging = false;
-    }
-);
-
-previewImage.addEventListener(
-    "pointercancel",
-    () => {
-        previewDragging = false;
-    }
-);
-
-/* Click outside the preview frame closes it */
-imagePreview.addEventListener(
-    "click",
-    event => {
-
-        if (
-            event.target ===
-            imagePreview
-        ) {
-            closeImagePreview();
-        }
-    }
-);
-
-previewClose.addEventListener(
-    "click",
-    closeImagePreview
-);
-
-/* Escape closes the preview */
-document.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key === "Escape" &&
-            imagePreview.classList.contains("active")
-        ) {
-            closeImagePreview();
-        }
-    }
-);
+},{passive:false});
+previewImage.addEventListener("click",e=>{
+    e.stopPropagation();
+    previewZoom=previewZoom===1?2:1;
+    if(previewZoom===1){previewPanX=0;previewPanY=0;}
+    updatePreviewTransform();
+});
+previewImage.addEventListener("pointerdown",e=>{
+    if(previewZoom<=1)return;
+    previewDragging=true;
+    previewDragStartX=e.clientX;
+    previewDragStartY=e.clientY;
+    previewStartPanX=previewPanX;
+    previewStartPanY=previewPanY;
+    previewImage.setPointerCapture(e.pointerId);
+});
+previewImage.addEventListener("pointermove",e=>{
+    if(!previewDragging)return;
+    previewPanX=previewStartPanX+e.clientX-previewDragStartX;
+    previewPanY=previewStartPanY+e.clientY-previewDragStartY;
+    updatePreviewTransform();
+});
+previewImage.addEventListener("pointerup",()=>previewDragging=false);
+previewImage.addEventListener("pointercancel",()=>previewDragging=false);
 
 /* =====================================================
    CAMERA START
@@ -2066,6 +1884,7 @@ openCameraButton.addEventListener(
     "click",
     openCamera
 );
+openCameraButton.onclick = openCamera;
 /* =====================================================
    SHOW GALLERY
 ===================================================== */
@@ -2249,69 +2068,45 @@ flashButton.addEventListener(
 filterButton.addEventListener(
     "click",
     () => {
-
-        /*
-           First click enables B&W mode and
-           moves the B&W button into the
-           capture position.
-
-           Once active, the same B&W button
-           is the actual B&W shutter.
-        */
-        if (!bwEnabled) {
+        if (bwEnabled) {
+            capturePhoto(true);
+        } else {
             toggleFilter();
-            return;
         }
-
-        capturePhoto(true);
     }
 );
 
-
 function toggleFilter() {
+    bwEnabled = !bwEnabled;
 
-    bwEnabled =
-        !bwEnabled;
+    filterButton.classList.toggle("active", bwEnabled);
 
-    filterButton
-        .classList
-        .toggle(
-            "active",
-            bwEnabled
-        );
-
-    cameraControls
-        .classList
-        .toggle(
-            "filterActive",
-            bwEnabled
-        );
+    cameraControls.classList.toggle(
+        "filterActive",
+        bwEnabled
+    );
 }
 
-/*
-   The original/default shutter stays a
-   normal-color shutter. If B&W mode is active,
-   tapping it returns the controls to normal mode
-   and takes a normal-color photo.
-*/
 shutterButton.addEventListener(
     "click",
     () => {
-
         if (bwEnabled) {
             toggleFilter();
-            capturePhoto(false);
-            return;
         }
 
         capturePhoto(false);
     }
 );
 
-
 /* =====================================================
    CAPTURE PHOTO
 ===================================================== */
+
+shutterButton.addEventListener(
+    "click",
+    capturePhoto
+);
+
 
 async function capturePhoto(useBW = bwEnabled) {
 
