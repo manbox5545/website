@@ -23,7 +23,7 @@
 
 
 <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap"
     rel="stylesheet"
 >
 
@@ -57,7 +57,7 @@ body{
 
     color:#fff;
 
-    background:#050a12;
+    background:#070707;
 
     overflow-x:hidden;
 }
@@ -69,21 +69,21 @@ body{
 
 :root{
 
-    --blue:#4fd6ff;
+    --blue:#FFD54A;
 
-    --blue-light:#b7f0ff;
+    --blue-light:#fff1a8;
 
-    --blue-dark:#1699ff;
+    --blue-dark:#d99d00;
 
-    --background:#050a12;
+    --background:#070707;
 
-    --surface:#0b1420;
+    --surface:#0d0d0d;
 
-    --surface-light:#101c2b;
+    --surface-light:#121212;
 
-    --border:rgba(79,214,255,.14);
+    --border:rgba(255,213,74,.14);
 
-    --border-hover:rgba(79,214,255,.55);
+    --border-hover:rgba(255,213,74,.55);
 
     --muted:#8c9bad;
 
@@ -112,7 +112,7 @@ body::before{
     background:
         radial-gradient(
             circle,
-            rgba(0,195,255,.13),
+            rgba(255,213,74,.10),
             transparent 70%
         );
 
@@ -139,7 +139,7 @@ body::after{
     background:
         radial-gradient(
             circle,
-            rgba(110,70,255,.10),
+            rgba(255,190,40,.07),
             transparent 70%
         );
 
@@ -214,7 +214,7 @@ nav{
         saturate(130%);
 
     border-bottom:
-        1px solid rgba(79,214,255,.14);
+        1px solid rgba(255,213,74,.14);
 
     box-shadow:
         0 8px 30px rgba(0,0,0,.18);
@@ -235,10 +235,10 @@ nav{
 
     letter-spacing:3px;
 
-    color:var(--blue);
+    color:var(--gold);
 
     text-shadow:
-        0 0 22px rgba(79,214,255,.18);
+        0 0 22px rgba(255,213,74,.18);
 }
 
 
@@ -280,7 +280,7 @@ nav{
 
     transform:translateY(-3px);
 
-    background:#32a9ff;
+    background:#ffe47b;
 
     box-shadow:
         0 8px 25px
@@ -333,7 +333,7 @@ nav{
 
     font-weight:800;
 
-    color:rgba(79,214,255,.018);
+    color:rgba(255,213,74,.018);
 
     pointer-events:none;
 
@@ -346,20 +346,20 @@ nav{
     font-family:'Orbitron',sans-serif;
 
     font-size:
-        clamp(38px,7vw,70px);
+        clamp(42px,7vw,78px);
 
     line-height:1.1;
 
-    letter-spacing:-1px;
+    letter-spacing:-2px;
 
     margin-bottom:25px;
 
     background:
         linear-gradient(
             110deg,
-            #4fd6ff,
+            #FFD54A,
             #d6f8ff,
-            #4fd6ff
+            #FFD54A
         );
 
     -webkit-background-clip:text;
@@ -378,7 +378,7 @@ nav{
 
     margin:auto;
 
-    color:#a5b2c1;
+    color:#bcbcbc;
 
     font-size:
         clamp(15px,2vw,19px);
@@ -418,7 +418,7 @@ section{
     font-size:
         clamp(28px,5vw,40px);
 
-    color:var(--blue);
+    color:var(--gold);
 
     margin-bottom:40px;
 
@@ -440,7 +440,7 @@ section{
 
     border-radius:10px;
 
-    background:var(--blue);
+    background:var(--gold);
 }
 
 
@@ -532,7 +532,7 @@ section{
     background:
         linear-gradient(
             145deg,
-            rgba(79,214,255,.06),
+            rgba(255,213,74,.055),
             rgba(255,255,255,.018)
         );
 }
@@ -567,7 +567,7 @@ section{
 
     border:
         1px solid
-        rgba(79,214,255,.16);
+        rgba(255,213,74,.16);
 
     font-size:38px;
 
@@ -585,7 +585,7 @@ section{
 
     font-family:'Orbitron',sans-serif;
 
-    color:var(--blue);
+    color:var(--gold);
 
     font-size:24px;
 
@@ -601,7 +601,7 @@ section{
 
     max-width:580px;
 
-    color:#98a7b8;
+    color:#b1b1b1;
 
     font-size:15px;
 
@@ -633,9 +633,9 @@ section{
 
     border-radius:50px;
 
-    background:var(--blue);
+    background:var(--gold);
 
-    color:#06111a;
+    color:#111;
 
     text-decoration:none;
 
@@ -658,7 +658,7 @@ section{
 
     box-shadow:
         0 8px 22px
-        rgba(79,214,255,.18);
+        rgba(255,213,74,.18);
 }
 
 
@@ -680,7 +680,7 @@ footer{
     background:#040910;
 
     border-top:
-        1px solid rgba(79,214,255,.12);
+        1px solid rgba(255,213,74,.12);
 }
 
 
@@ -688,7 +688,7 @@ footer h2{
 
     font-family:'Orbitron',sans-serif;
 
-    color:var(--blue);
+    color:var(--gold);
 
     font-size:23px;
 }
@@ -696,7 +696,7 @@ footer h2{
 
 footer p{
 
-    color:#718093;
+    color:#777;
 
     font-size:13px;
 
@@ -716,7 +716,7 @@ footer p{
 
 ::-webkit-scrollbar-track{
 
-    background:#050a12;
+    background:#070707;
 }
 
 
@@ -725,14 +725,14 @@ footer p{
     background:
         linear-gradient(
             180deg,
-            #4fd6ff,
-            #168cff
+            #FFD54A,
+            #d99d00
         );
 
     border-radius:20px;
 
     border:
-        2px solid #050a12;
+        2px solid #070707;
 }
 
 
@@ -741,8 +741,8 @@ footer p{
     background:
         linear-gradient(
             180deg,
-            #c8f6ff,
-            #4fd6ff
+            #fff0a6,
+            #FFD54A
         );
 }
 
@@ -752,8 +752,8 @@ html{
     scrollbar-width:thin;
 
     scrollbar-color:
-        #4fd6ff
-        #050a12;
+        #FFD54A
+        #070707;
 }
 
 
@@ -964,12 +964,354 @@ html{
     }
 }
 
+
+/* =========================================================
+   MPOXEL CINEMATIC ENTRY
+   Gold only for the entrance; page theme remains blue.
+   ========================================================= */
+
+#mpoxel-entry{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    background:#000;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:auto;
+    opacity:1;
+    transition:opacity .55s ease;
+}
+
+#mpoxel-entry.is-finished{
+    opacity:0;
+    pointer-events:none;
+}
+
+.mpoxel-gate{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:50%;
+    background:linear-gradient(145deg,#111 0%,#070707 60%,#000 100%);
+    will-change:transform;
+    transition:transform .85s cubic-bezier(.77,0,.18,1);
+}
+
+.mpoxel-gate::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:linear-gradient(to bottom,transparent,rgba(255,213,74,.8),transparent);
+}
+
+.mpoxel-gate-left{
+    left:0;
+    transform:translate3d(0,0,0);
+}
+.mpoxel-gate-left::after{right:0}
+
+.mpoxel-gate-right{
+    right:0;
+    transform:translate3d(0,0,0);
+}
+.mpoxel-gate-right::after{left:0}
+
+#mpoxel-entry.is-open .mpoxel-gate-left{
+    transform:translate3d(-100%,0,0);
+}
+#mpoxel-entry.is-open .mpoxel-gate-right{
+    transform:translate3d(100%,0,0);
+}
+
+.mpoxel-entry-logo{
+    font-family:'Orbitron',sans-serif !important;
+    position:relative;
+    z-index:2;
+    width:min(92vw,1100px);
+    padding:0 20px;
+    text-align:center;
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(28px,6vw,78px);
+    line-height:1.15;
+    font-weight:800;
+    letter-spacing:clamp(2px,.7vw,8px);
+    color:#fff;
+    opacity:0;
+    transform:scale(.97);
+    text-shadow:0 0 10px rgba(255,255,255,.85),
+                0 0 28px rgba(255,213,74,.55),
+                0 0 65px rgba(255,213,74,.22);
+    pointer-events:none;
+}
+
+.mpoxel-entry-logo span{color:#FFD54A}
+
+#mpoxel-entry.logo-show .mpoxel-entry-logo{
+    animation:mpoxel-creations-logo 1.15s ease-in-out forwards;
+}
+
+@keyframes mpoxel-creations-logo{
+    0%{opacity:0;transform:scale(.97)}
+    28%{opacity:1;transform:scale(1)}
+    68%{opacity:1;transform:scale(1.01)}
+    100%{opacity:0;transform:scale(1.025)}
+}
+
+@media(max-width:600px){
+    .mpoxel-gate{transition-duration:.72s}
+    .mpoxel-entry-logo{
+        width:100%;
+        padding:0 12px;
+        font-size:clamp(22px,7.5vw,42px);
+        line-height:1.25;
+        letter-spacing:clamp(1px,1vw,4px);
+        white-space:normal;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    #mpoxel-entry{transition:none}
+    .mpoxel-gate{transition:none}
+    .mpoxel-entry-logo{opacity:1}
+}
+
+
+/* Keep folder buttons visibly styled */
+.folder{
+    color:#111;
+    background:var(--gold);
+}
+
+</style>
+
+
+<style id="mpoxel-final-gold-theme">
+:root{
+    --gold:#FFD54A;
+    --gold-light:#fff1a8;
+    --gold-dark:#d99d00;
+    --background:#070707;
+    --surface:#0d0d0d;
+    --surface-light:#121212;
+    --border:rgba(255,213,74,.14);
+    --border-hover:rgba(255,213,74,.55);
+    --muted:#a3a3a3;
+}
+
+/* Entire page */
+body{
+    background-color:#070707 !important;
+    color:#fff !important;
+    background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px) !important;
+    background-size:55px 55px !important;
+}
+
+/* Homepage typography */
+.logo,
+.hero h1,
+.title,
+.card h2,
+footer h2{
+    font-family:'Orbitron',sans-serif !important;
+}
+
+.logo,
+.title,
+.card h2,
+footer h2{
+    color:#FFD54A !important;
+}
+
+.hero h1{
+    color:#FFD54A !important;
+    background:linear-gradient(
+        110deg,
+        #FFD54A 0%,
+        #fff5b5 45%,
+        #FFD54A 100%
+    ) !important;
+    -webkit-background-clip:text !important;
+    background-clip:text !important;
+    -webkit-text-fill-color:transparent !important;
+}
+
+/* Navigation */
+nav{
+    background:rgba(7,7,7,.55) !important;
+    border-bottom-color:rgba(255,213,74,.14) !important;
+}
+
+.back{
+    background:#FFD54A !important;
+    color:#111 !important;
+    border:0 !important;
+    box-shadow:0 8px 25px rgba(255,213,74,.12) !important;
+}
+
+.back:hover{
+    background:#ffe47b !important;
+    color:#111 !important;
+    box-shadow:0 12px 30px rgba(255,213,74,.22) !important;
+}
+
+/* Cards */
+.card{
+    background:linear-gradient(
+        145deg,
+        rgba(255,255,255,.045),
+        rgba(255,255,255,.018)
+    ) !important;
+    border-color:rgba(255,213,74,.14) !important;
+}
+
+.card::before{
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,213,74,.55),
+        transparent
+    ) !important;
+}
+
+.card:hover{
+    border-color:rgba(255,213,74,.55) !important;
+    background:linear-gradient(
+        145deg,
+        rgba(255,213,74,.055),
+        rgba(255,255,255,.02)
+    ) !important;
+}
+
+/* Icons */
+.icon{
+    background:linear-gradient(145deg,#19170e,#0f0e08) !important;
+    border-color:rgba(255,213,74,.16) !important;
+}
+
+/* THE BUTTONS — force gold, including folder buttons */
+.folder,
+a.folder,
+button.folder{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#FFD54A !important;
+    color:#111 !important;
+    border:0 !important;
+    text-decoration:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    box-shadow:0 8px 25px rgba(255,213,74,.12) !important;
+}
+
+.folder:hover,
+a.folder:hover,
+button.folder:hover{
+    background:#fff0a5 !important;
+    color:#111 !important;
+    transform:translateY(-2px) !important;
+    box-shadow:0 12px 30px rgba(255,213,74,.22) !important;
+}
+
+/* Any other action/link buttons on this page */
+.btn,
+a.btn{
+    border-color:rgba(255,213,74,.6) !important;
+}
+
+.gold,
+a.gold{
+    background:#FFD54A !important;
+    color:#111 !important;
+}
+
+.gold:hover,
+a.gold:hover{
+    background:#ffe47b !important;
+    color:#111 !important;
+}
+
+/* Footer + scrollbar */
+footer{
+    background:#050505 !important;
+    border-top-color:rgba(255,213,74,.13) !important;
+}
+
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,#FFD54A,#d99d00) !important;
+}
+
+html{
+    scrollbar-color:#FFD54A #090909 !important;
+}
+</style>
+
+
+<style id="homepage-font-match">
+/* Exact homepage typography */
+html, body{
+    font-family:'Poppins',sans-serif !important;
+}
+
+.logo,
+.hero h1,
+.hero::before,
+.title,
+.card h2,
+.card h3,
+footer h2,
+.back,
+.folder{
+    font-family:'Orbitron',sans-serif !important;
+}
+
+/* Same display weight used by the homepage hero */
+.hero h1{
+    font-weight:800 !important;
+    letter-spacing:-2px !important;
+}
+
+.logo{
+    font-weight:800 !important;
+    letter-spacing:3px !important;
+}
+
+.title{
+    font-weight:800 !important;
+}
+
+/* Keep normal descriptive text in Poppins */
+.hero p,
+.card p,
+footer p,
+nav a{
+    font-family:'Poppins',sans-serif !important;
+}
 </style>
 
 </head>
 
 
 <body>
+
+<!-- =========================================================
+     CINEMATIC ENTRY
+     ========================================================= -->
+<div id="mpoxel-entry" aria-hidden="true">
+    <div class="mpoxel-gate mpoxel-gate-left"></div>
+    <div class="mpoxel-gate mpoxel-gate-right"></div>
+
+    <div class="mpoxel-entry-logo" aria-label="CREATIONS BY MPOXEL.IN">
+        CREATIONS BY <span>MPOXEL.IN</span>
+    </div>
+</div>
+
 
 
 <!-- =====================================================
@@ -1135,5 +1477,90 @@ html{
 </footer>
 
 
+
+<script>
+(() => {
+    const entry = document.getElementById("mpoxel-entry");
+    if (!entry) return;
+
+    const root = document.documentElement;
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // The complete website is underneath this overlay and loads normally.
+    root.style.overflow = "hidden";
+
+    const closeIntro = () => {
+        entry.classList.add("is-finished");
+
+        window.setTimeout(() => {
+            entry.remove();
+            root.style.overflow = "";
+        }, 600);
+    };
+
+    if (reduceMotion) {
+        window.setTimeout(closeIntro, 300);
+        return;
+    }
+
+    // 1. Open both gates first.
+    window.setTimeout(() => {
+        entry.classList.add("is-open");
+    }, 80);
+
+    // 2. Play CREATIONS BY MPOXEL.IN after the gates finish.
+    window.setTimeout(() => {
+        entry.classList.add("logo-show");
+    }, 1000);
+
+    // 3. Reveal the already-loaded website.
+    window.setTimeout(closeIntro, 2200);
+})();
+</script>
+
 </body>
 </html>
+<style>
+/* Final homepage-matching gold theme */
+body{
+    background-color:#070707;
+    color:#fff;
+}
+
+.folder{
+    background:#FFD54A !important;
+    color:#111 !important;
+    border-color:transparent;
+}
+
+.folder:hover{
+    background:#fff0a5 !important;
+    color:#111 !important;
+}
+
+.logo,
+.hero h1,
+.title,
+.card h2,
+footer h2{
+    font-family:'Orbitron',sans-serif;
+}
+
+.hero h1,
+.title,
+.card h2,
+footer h2,
+.logo{
+    color:#FFD54A;
+}
+
+.hero h1{
+    background:linear-gradient(110deg,#FFD54A 0%,#fff5b5 45%,#FFD54A 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+</style>
