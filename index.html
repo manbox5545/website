@@ -1183,12 +1183,153 @@ html{
     }
 }
 
+
+/* =========================================================
+   MPOXEL CINEMATIC ENTRY
+   Sequence:
+   1. Two gates open
+   2. MPOXEL.IN appears on black
+   3. Logo fades out
+   4. Real website is revealed
+   Lightweight: transform + opacity only
+   ========================================================= */
+
+#mpoxel-entry{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    background:#000;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:auto;
+    opacity:1;
+    transition:opacity .55s ease;
+}
+
+#mpoxel-entry.is-finished{
+    opacity:0;
+    pointer-events:none;
+}
+
+.mpoxel-gate{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:50%;
+    background:#080808;
+    will-change:transform;
+    transition:transform .9s cubic-bezier(.77,0,.18,1);
+}
+
+.mpoxel-gate-left{
+    left:0;
+    transform:translate3d(0,0,0);
+    border-right:1px solid rgba(255,213,74,.18);
+}
+
+.mpoxel-gate-right{
+    right:0;
+    transform:translate3d(0,0,0);
+    border-left:1px solid rgba(255,213,74,.18);
+}
+
+#mpoxel-entry.is-open .mpoxel-gate-left{
+    transform:translate3d(-100%,0,0);
+}
+
+#mpoxel-entry.is-open .mpoxel-gate-right{
+    transform:translate3d(100%,0,0);
+}
+
+.mpoxel-entry-logo{
+    position:relative;
+    z-index:2;
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(40px,8vw,105px);
+    font-weight:800;
+    letter-spacing:clamp(3px,1vw,11px);
+    color:#fff;
+    opacity:0;
+    transform:scale(.97);
+    text-align:center;
+    white-space:nowrap;
+    text-shadow:
+        0 0 10px rgba(255,255,255,.85),
+        0 0 28px rgba(255,213,74,.55),
+        0 0 60px rgba(255,213,74,.22);
+    pointer-events:none;
+}
+
+.mpoxel-entry-logo span{
+    color:#FFD54A;
+}
+
+#mpoxel-entry.logo-show .mpoxel-entry-logo{
+    animation:mpoxel-logo 1.15s ease-in-out forwards;
+}
+
+@keyframes mpoxel-logo{
+    0%{
+        opacity:0;
+        transform:scale(.97);
+    }
+    28%{
+        opacity:1;
+        transform:scale(1);
+    }
+    68%{
+        opacity:1;
+        transform:scale(1.01);
+    }
+    100%{
+        opacity:0;
+        transform:scale(1.025);
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    #mpoxel-entry{
+        transition:none;
+    }
+
+    .mpoxel-gate{
+        transition:none;
+    }
+
+    #mpoxel-entry.is-open .mpoxel-gate-left{
+        transform:translate3d(-100%,0,0);
+    }
+
+    #mpoxel-entry.is-open .mpoxel-gate-right{
+        transform:translate3d(100%,0,0);
+    }
+
+    .mpoxel-entry-logo{
+        opacity:1;
+    }
+}
+
 </style>
 
 </head>
 
 
 <body>
+
+<!-- =========================================================
+     MPOXEL CINEMATIC ENTRY
+     ========================================================= -->
+<div id="mpoxel-entry" aria-hidden="true">
+    <div class="mpoxel-gate mpoxel-gate-left"></div>
+    <div class="mpoxel-gate mpoxel-gate-right"></div>
+
+    <div class="mpoxel-entry-logo" aria-label="MPOXEL.IN">
+        MPOXEL<span>.IN</span>
+    </div>
+</div>
+
 
 
 <!-- =========================================================
@@ -1525,6 +1666,58 @@ html{
 
 </footer>
 
+
+
+<script>
+(() => {
+    const entry = document.getElementById("mpoxel-entry");
+    if (!entry) return;
+
+    /*
+      The main website is already underneath this overlay, so the browser
+      can load/render the complete page while the cinematic intro runs.
+    */
+    const root = document.documentElement;
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    root.style.overflow = "hidden";
+
+    const closeIntro = () => {
+        entry.classList.add("is-finished");
+
+        window.setTimeout(() => {
+            entry.remove();
+            root.style.overflow = "";
+        }, 600);
+    };
+
+    if (reduceMotion) {
+        window.setTimeout(closeIntro, 300);
+        return;
+    }
+
+    /*
+      IMPORTANT:
+      Gates open FIRST.
+      Only after the gates are completely open does MPOXEL.IN play.
+    */
+    window.setTimeout(() => {
+        entry.classList.add("is-open");
+    }, 80);
+
+    // 80ms + 900ms gate travel = gates are fully open.
+    window.setTimeout(() => {
+        entry.classList.add("logo-show");
+    }, 1050);
+
+    // Logo animation ends around 2200ms.
+    window.setTimeout(() => {
+        closeIntro();
+    }, 2250);
+})();
+</script>
 
 </body>
 </html>
