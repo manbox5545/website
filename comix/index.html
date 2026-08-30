@@ -112,66 +112,12 @@ body{
     opacity:.65;
     margin-top:24px;
 }
-
-/* =========================
-   PASSWORD
-========================= */
-
-.password{
-    max-width:520px;
-    margin:65px auto 0;
-}
-
-.password label{
-    display:block;
-    font-size:14px;
-    font-weight:1000;
-    margin-bottom:13px;
-}
-
-.password-box{
-    display:flex;
-    background:white;
-    border:3px solid #171717;
-    border-radius:18px;
-    padding:7px;
-    box-shadow:7px 7px 0 #171717;
-}
-
-.password-box input{
-    flex:1;
-    min-width:0;
-    border:0;
-    outline:0;
-    background:transparent;
-    padding:14px;
-    font-size:16px;
-}
-
-.password-box button{
-    border:0;
-    border-radius:12px;
-    background:#171717;
-    color:white;
-    padding:0 25px;
-    font-weight:1000;
-    cursor:pointer;
-}
-
-.error{
-    min-height:25px;
-    margin-top:13px;
-    color:#c62828;
-    font-weight:800;
-    font-size:14px;
-}
-
 /* =========================
    COLLECTION
 ========================= */
 
 .collection{
-    display:none;
+    display:block;
     margin-top:70px;
 }
 
@@ -355,6 +301,59 @@ body{
         display:none;
     }
 }
+
+
+.password-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:rgba(0,0,0,.68);
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+.password-modal.show{display:flex}
+.password-panel{
+    width:min(440px,100%);
+    background:#fff7df;
+    border:4px solid #171717;
+    border-radius:24px;
+    padding:26px;
+    box-shadow:12px 12px 0 #171717;
+}
+.password-panel.shake{
+    animation:comicShake .45s ease-in-out;
+}
+@keyframes comicShake{
+    0%,100%{transform:translateX(0) rotate(0)}
+    15%{transform:translateX(-13px) rotate(-1deg)}
+    30%{transform:translateX(12px) rotate(1deg)}
+    45%{transform:translateX(-10px) rotate(-1deg)}
+    60%{transform:translateX(9px) rotate(1deg)}
+    75%{transform:translateX(-5px) rotate(0)}
+}
+.password-panel h3{margin:0 0 8px;font-size:28px;font-weight:1000}
+.password-panel p{margin:0 0 16px;font-size:14px;font-weight:800;opacity:.65}
+.password-panel input{
+    width:100%;
+    border:3px solid #171717;
+    border-radius:13px;
+    padding:14px;
+    font-size:16px;
+    outline:none;
+}
+.password-actions{display:flex;gap:10px;margin-top:12px}
+.password-actions button{
+    flex:1;
+    min-height:50px;
+    border-radius:12px;
+    font-weight:1000;
+    cursor:pointer;
+}
+.password-enter{background:#171717;color:#fff;border:0}
+.password-cancel{background:#fff;color:#171717;border:3px solid #171717}
+.modal-error{min-height:20px;margin-top:9px;color:#c62828;font-weight:1000;font-size:13px}
 </style>
 </head>
 
@@ -527,84 +526,65 @@ body{
 <div class="content">
 
 <section class="thanks">
-<h1>THANKS<br>FOR BUYING :)</h1>
+<h1>MPOXEL.IN<br>COMICS</h1>
 <p>Your digital collection is waiting.</p>
 </section>
-
-
-<section class="password">
-
-<label>
-ENTER THE PASSWORD THAT THE OWNER GAVE YOU
-</label>
-
-<form class="password-box" id="passwordForm">
-
-<input
-id="password"
-type="password"
-placeholder="Enter password..."
-autocomplete="off"
-required
->
-
-<button type="submit">
-ENTER
-</button>
-
-</form>
-
-<div class="error" id="error"></div>
-
-</section>
-
-
-<section class="collection" id="collection">
+<section class="collection show" id="collection">
 
 <h2>OUR COLLECTION</h2>
 
 <p>Your purchased digital comics</p>
 
+<div class="card">
+    <div class="cover">
+        <div class="cover-small">ROADSIDE CODER</div>
+        <div class="cover-title">ROADSIDE<br>CODER</div>
+        <div class="unit">UNIT 1</div>
+    </div>
+    <div class="info">
+        <h3>ROADSIDE CODER — UNIT 1</h3>
+        <p>Digital Comic • Part 1</p>
+        <button class="view" type="button" data-part="1">VIEW + DOWNLOAD COMIC →</button>
+    </div>
+</div>
 
 <div class="card">
-
-<div class="cover">
-
-<div class="cover-small">
-ROADSIDE CODER
+    <div class="cover">
+        <div class="cover-small">ROADSIDE CODER</div>
+        <div class="cover-title">ROADSIDE<br>CODER</div>
+        <div class="unit">UNIT 2</div>
+    </div>
+    <div class="info">
+        <h3>ROADSIDE CODER — UNIT 2</h3>
+        <p>Digital Comic • Part 2</p>
+        <button class="view" type="button" data-part="2">VIEW + DOWNLOAD COMIC →</button>
+    </div>
 </div>
 
-<div class="cover-title">
-ROADSIDE<br>CODER
+<div class="card">
+    <div class="cover">
+        <div class="cover-small">ROADSIDE CODER</div>
+        <div class="cover-title">ROADSIDE<br>CODER</div>
+        <div class="unit">UNIT 3</div>
+    </div>
+    <div class="info">
+        <h3>ROADSIDE CODER — UNIT 3</h3>
+        <p>Digital Comic • Part 3</p>
+        <button class="view" type="button" data-part="3">VIEW + DOWNLOAD COMIC →</button>
+    </div>
 </div>
 
-<div class="unit">
-UNIT 1
-</div>
-
-</div>
-
-
-<div class="info">
-
-<h3>
-ROADSIDE CODER — UNIT 1
-</h3>
-
-<p>
-Digital Comic • Unit 1
-</p>
-
-<button
-class="view"
-id="viewComic"
-type="button"
->
-VIEW + DOWNLOAD COMIC →
-</button>
-
-</div>
-
+<div class="card">
+    <div class="cover">
+        <div class="cover-small">ROADSIDE CODER</div>
+        <div class="cover-title">ROADSIDE<br>CODER</div>
+        <div class="unit">UNIT 4</div>
+    </div>
+    <div class="info">
+        <h3>ROADSIDE CODER — UNIT 4</h3>
+        <p>Digital Comic • Part 4</p>
+        <button class="view" type="button" data-part="4">VIEW + DOWNLOAD COMIC →</button>
+    </div>
 </div>
 
 </section>
@@ -613,63 +593,113 @@ VIEW + DOWNLOAD COMIC →
 </div>
 
 
+
+
+
+
+</div>
+
+
+
+</div>
+
+<div class="password-modal" id="passwordModal" aria-hidden="true">
+    <div class="password-panel" id="passwordPanel">
+        <h3 id="modalTitle">UNLOCK PART</h3>
+        <p>ENTER THE PASSWORD TO VIEW + DOWNLOAD.</p>
+        <input id="partPassword" type="password" placeholder="Enter password..." autocomplete="off">
+        <div class="modal-error" id="modalError"></div>
+        <div class="password-actions">
+            <button class="password-cancel" id="cancelPassword" type="button">CANCEL</button>
+            <button class="password-enter" id="confirmPassword" type="button">UNLOCK</button>
+        </div>
+    </div>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 
-const PASSWORD = "booboo5545";
+  const PARTS = {
+    1: { password: "dassarupaydeturtare", pdf: "pt1.pdf", filename: "Roadside-Coder-Part-1.pdf" },
+    2: { password: "abbtopoisaayega", pdf: "pt2.pdf", filename: "Roadside-Coder-Part-2.pdf" },
+    3: { password: "kamalhai", pdf: "pt3.pdf", filename: "Roadside-Coder-Part-3.pdf" },
+    4: { password: "www.kamalkhtas.in/manbox55459871725775545", pdf: "pt4.pdf", filename: "Roadside-Coder-Part-4.pdf" }
+  };
 
-const form = document.getElementById("passwordForm");
-const input = document.getElementById("password");
-const error = document.getElementById("error");
-const collection = document.getElementById("collection");
-const viewComic = document.getElementById("viewComic");
+  const modal = document.getElementById("passwordModal");
+  const panel = document.getElementById("passwordPanel");
+  const title = document.getElementById("modalTitle");
+  const input = document.getElementById("partPassword");
+  const error = document.getElementById("modalError");
 
-form.addEventListener("submit",function(e){
+  let selectedPart = null;
 
-    e.preventDefault();
+  function openPassword(part) {
+    selectedPart = part;
+    title.textContent = "UNLOCK PART " + part;
+    input.value = "";
+    error.textContent = "";
+    panel.classList.remove("shake");
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
 
-    if(input.value === PASSWORD){
+    setTimeout(function () {
+      input.focus();
+    }, 80);
+  }
 
-        error.textContent = "";
+  function closePassword() {
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    selectedPart = null;
+  }
 
-        collection.classList.add("show");
+  function unlock() {
+    if (selectedPart === null) return;
 
-        collection.scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
+    const data = PARTS[selectedPart];
 
-    }else{
+    if (input.value === data.password) {
+      window.open(data.pdf, "_blank");
 
-        error.textContent = "WRONG PASSWORD.";
+      const download = document.createElement("a");
+      download.href = data.pdf;
+      download.download = data.filename;
+      document.body.appendChild(download);
+      download.click();
+      download.remove();
 
-        input.value = "";
+      closePassword();
+    } else {
+      error.textContent = "WRONG PASSWORD.";
+      panel.classList.remove("shake");
+      void panel.offsetWidth;
+      panel.classList.add("shake");
+      input.value = "";
+
+      setTimeout(function () {
         input.focus();
-
+      }, 60);
     }
+  }
+
+  document.querySelectorAll(".view").forEach(function (button) {
+    button.addEventListener("click", function () {
+      openPassword(Number(button.dataset.part));
+    });
+  });
+
+  document.getElementById("confirmPassword").addEventListener("click", unlock);
+  document.getElementById("cancelPassword").addEventListener("click", closePassword);
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") unlock();
+    if (e.key === "Escape") closePassword();
+  });
+
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) closePassword();
+  });
 
 });
-
-
-viewComic.addEventListener("click",function(){
-
-    const pdf = "comic.pdf";
-
-    /* Open PDF */
-    window.open(pdf,"_blank");
-
-    /* Download PDF */
-    const download = document.createElement("a");
-
-    download.href = pdf;
-    download.download = "Roadside-Coder-Unit-1.pdf";
-
-    document.body.appendChild(download);
-    download.click();
-    download.remove();
-
-});
-
 </script>
-
 </body>
-</html>
+</html> 
