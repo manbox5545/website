@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Chaos Phone Simulator</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Inter,Arial,sans-serif;background:#111;color:#17202a}
+button,input{font:inherit}.hidden{display:none!important}
+
+/* HOME */
+#home{width:100%;height:100%;position:relative;color:#fff;
+ background:linear-gradient(#0002,#0007),url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2400&q=85") center/cover}
+.status{position:absolute;top:0;left:0;right:0;height:42px;display:flex;align-items:center;padding:0 20px;text-shadow:0 2px 5px #000;z-index:5}
+.homeTime{font-size:14px;font-weight:800}.batteryHome{margin-left:auto}
+.homeClock{position:absolute;top:10%;left:7%;text-shadow:0 5px 20px #0008}
+.bigTime{font-size:clamp(58px,9vw,110px);font-weight:900;letter-spacing:-4px}
+.date{font-size:clamp(15px,2vw,24px);font-weight:700}
+.apps{position:absolute;left:50%;bottom:12%;transform:translateX(-50%);display:flex;gap:24px}
+.icon{width:85px;border:0;background:transparent;color:#fff;cursor:pointer;text-shadow:0 2px 5px #000;display:flex;flex-direction:column;align-items:center;gap:7px}
+.iconBox{width:66px;height:66px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:34px;background:#ffffffdd;box-shadow:0 8px 25px #0005}
+.iconLabel{font-weight:900;font-size:13px}
+
+
+.homeDrawer{
+ position:absolute;inset:0;z-index:15;
+ background:rgba(8,10,15,.72);backdrop-filter:blur(9px);
+ -webkit-backdrop-filter:blur(9px);
+ padding:clamp(28px,7vh,70px) 18px 28px;
+ overflow-y:auto;
+ animation:drawerIn .22s ease-out
+}
+.drawerHandle{width:48px;height:5px;background:#ffffff99;border-radius:99px;margin:0 auto 18px}
+.drawerTitle{color:#fff;font-weight:900;font-size:19px;margin-bottom:17px;display:flex;justify-content:space-between;gap:12px}
+.drawerTitle span{font-size:10px;font-weight:700;opacity:.65;align-self:center}
+.drawerGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:760px;margin:auto}
+.drawerApp{
+ min-height:105px;border:1px solid #ffffff22;border-radius:18px;
+ background:#ffffffdd;color:#17202a;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:8px;cursor:pointer;
+ box-shadow:0 7px 25px #0004
+}
+.drawerApp span{font-size:35px}.drawerApp b{font-size:12px;text-align:center}
+@keyframes drawerIn{from{transform:translateY(100%);opacity:.3}to{transform:translateY(0);opacity:1}}
+@media (orientation:portrait){
+ .apps{bottom:8%}
+ .drawerGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+ .drawerApp{min-height:91px;border-radius:15px}.drawerApp span{font-size:29px}.drawerApp b{font-size:10px}
+ .drawerTitle{font-size:17px}
+}
+@media (max-width:380px) and (orientation:portrait){
+ .drawerGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .drawerApp{min-height:82px}.drawerApp span{font-size:25px}.drawerApp b{font-size:9px}
+}
+/* APP WINDOW */
+#appLayer{position:fixed;inset:0;background:#060708;display:flex;align-items:center;justify-content:center;z-index:20}
+.device{width:100%;height:100%;position:relative;background:#eef1f4;overflow:hidden}
+.close{position:absolute;right:10px;top:8px;width:39px;height:39px;border:0;border-radius:50%;background:#000b;color:#fff;font-size:24px;line-height:39px;z-index:100;cursor:pointer}
+.topbar{height:58px;background:#111827;color:#fff;display:flex;align-items:center;padding:0 60px 0 18px;gap:10px}
+.brand{font-weight:900;letter-spacing:1px}.demo{font-size:10px;background:#f4c430;color:#111;padding:5px 7px;border-radius:6px;font-weight:900}
+.layout{display:flex;height:calc(100% - 58px)}
+.sidebar{width:220px;background:#17202a;padding:15px}
+.appBtn{width:100%;padding:13px;margin-bottom:9px;border:0;border-radius:12px;background:#263445;color:#fff;text-align:left;cursor:pointer;font-weight:900}
+.appBtn.active{background:#3b82f6}
+.workspace{flex:1;min-width:0;overflow-y:scroll;overscroll-behavior:contain;padding:22px}
+.workspace::-webkit-scrollbar,.messages::-webkit-scrollbar{width:9px}
+.workspace::-webkit-scrollbar-thumb,.messages::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:9px}
+.notification{background:#fff;border-radius:15px;padding:13px 15px;color:#17202a;box-shadow:0 3px 12px #0001}
+.notification.unread{border-left:5px solid #3b82f6}
+.notification small{display:block;color:#6b7280;margin-top:5px}
+
+.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 6px 25px #0001;margin-bottom:16px}
+.balance{font-size:42px;font-weight:900;margin:8px 0}.muted{color:#6b7280}
+.tx{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:12px 0;border-bottom:1px solid #e8ebef}.tx:last-child{border:0}
+.plus{color:#16824b;font-weight:900}.minus{color:#c0392b;font-weight:900}
+
+/* SHOP */
+.store{max-width:1050px;margin:auto}.storeHead{display:flex;gap:9px}
+.search{flex:1;min-width:0;border:1px solid #d7dce2;border-radius:12px;padding:12px 14px;background:#fff}
+.cartBtn{border:0;background:#16a34a;color:#fff;border-radius:12px;padding:12px 15px;font-weight:900;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-top:14px}
+.product{background:#fff;border-radius:15px;padding:12px;box-shadow:0 5px 20px #0001}
+.pic{height:90px;border-radius:11px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:43px}
+.product h3{font-size:15px;margin:9px 0 3px}.price{font-weight:900}
+.add{width:100%;margin-top:8px;padding:9px;border:1px solid #16a34a;color:#12823c;background:#fff;border-radius:9px;font-weight:900;cursor:pointer}
+
+/* CHAT */
+.chatWrap{height:100%;display:flex;flex-direction:column;background:#f5f1e8}
+.chatHead{height:62px;flex:none;background:#5c4033;color:#fff;padding:9px 20px;display:flex;align-items:center;gap:12px}
+.avatar{width:43px;height:43px;border-radius:50%;background:#d9b38c;display:flex;align-items:center;justify-content:center;font-size:25px}
+.chatName{font-weight:900}.online{font-size:11px;opacity:.75}
+.messages{flex:1;min-height:0;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+.msg{max-width:min(80%,520px);padding:10px 13px;border-radius:15px;line-height:1.3;box-shadow:0 2px 7px #0001;overflow-wrap:anywhere}
+.them{background:#fff;align-self:flex-start;border-top-left-radius:4px}.me{background:#d9fdd3;align-self:flex-end;border-top-right-radius:4px}
+.typing{flex:none;font-size:11px;color:#777;padding:0 18px 4px}
+.replyArea{flex:none;background:#fff;border-top:1px solid #ddd;padding:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.reply{min-height:44px;border:1px solid #cfcfcf;background:#fafafa;padding:8px 10px;border-radius:12px;text-align:left;cursor:pointer;font-size:13px}
+.reply:hover{background:#eee}
+
+/* MODAL / TOAST */
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:18px;z-index:150}
+.modalBox{background:#fff;border-radius:19px;width:min(500px,100%);max-height:85vh;overflow:auto;padding:20px}
+.actions{display:flex;gap:8px;margin-top:16px}.actions button{flex:1;padding:11px;border:0;border-radius:10px;font-weight:900;cursor:pointer}.primary{background:#16a34a;color:#fff}.secondary{background:#e5e7eb}
+.toast{position:fixed;right:17px;bottom:17px;background:#111827;color:#fff;padding:13px 16px;border-radius:12px;z-index:200;max-width:350px}
+
+/* Standalone app shells: BANK and DLINKIT get one dedicated scroll container. */
+.appFull{position:absolute;inset:0;display:flex;flex-direction:column;min-height:0}
+.appScroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:22px;-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto}
+.appScroll::-webkit-scrollbar{width:10px}
+.appScroll::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:10px}
+.appScroll::-webkit-scrollbar-track{background:#e5e7eb}
+
+
+.fsAppBtn{
+ position:absolute;right:57px;top:9px;width:38px;height:38px;border:0;border-radius:50%;
+ background:#000b;color:#fff;font-size:19px;z-index:101;cursor:pointer
+}
+.screenTimePage{display:flex;justify-content:center}.screenTimePage .card{width:min(900px,100%)}
+#screenGraph{display:block;width:100%;height:360px;background:#f8fafc;border-radius:14px}
+.broken{text-align:center;font-weight:900;font-size:clamp(18px,3vw,30px);padding:18px 4px}
+
+.officeMain{height:calc(100% - 58px);display:flex;flex-direction:column;min-height:0;background:#f2f4f7}
+.officeTabs{flex:none;display:flex;gap:7px;padding:9px;background:#fff;border-bottom:1px solid #ddd}
+.officeTab{border:0;border-radius:10px;padding:10px 13px;background:#e8ebef;font-weight:900;cursor:pointer}
+.officeTab.active{background:#3b82f6;color:#fff}
+.officeSection{flex:1;min-height:0;display:flex;flex-direction:column}
+.officeMessages{flex:1;min-height:0;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
+.bossBubble{max-width:min(78%,620px);padding:11px 14px;border-radius:14px;background:#fff;box-shadow:0 2px 8px #0001;overflow-wrap:anywhere}
+.bossBubble.boss{align-self:flex-start;border-left:4px solid #7c3aed}
+.bossBubble.me{align-self:flex-end;background:#dbeafe;border-right:4px solid #2563eb}
+.bossReplies{flex:none;padding:9px;background:#fff;border-top:1px solid #ddd;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.bossReply{border:1px solid #ccd2d9;background:#fafafa;padding:10px;border-radius:11px;cursor:pointer;font-weight:700}
+.officeFileScroll,.officeWorkScroll{height:100%;padding:16px}
+.fileCard,.workCard{background:#fff;border-radius:15px;padding:15px;margin-bottom:10px;box-shadow:0 2px 10px #0001}
+.workCard{display:flex;align-items:center;gap:12px}.workCard input{width:20px;height:20px}.doneText{text-decoration:line-through;opacity:.55}
+.workProgress{font-weight:900;margin-bottom:14px}
+
+.begooglePage{background:#fff}
+.googleHead{height:58px;flex:none;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 18px;gap:12px}
+.googleLogo{font-size:25px;font-weight:900;letter-spacing:-1px}
+.googleLogo span:nth-child(1){color:#4285f4}.googleLogo span:nth-child(2){color:#34a853}.googleLogo span:nth-child(3){color:#ea4335}
+.googlePage{background:#fff;color:#202124}.googleSearch{max-width:780px;margin:0 auto;padding:35px 18px}
+.googleSearchBox{border:1px solid #dfe1e5;border-radius:24px;padding:12px 16px;font-size:16px;margin-bottom:18px;box-shadow:0 1px 5px #0001}
+.searchBubbles{display:flex;flex-wrap:wrap;gap:8px}.searchBubble{border:1px solid #dadce0;background:#fff;border-radius:18px;padding:9px 12px;color:#3c4043;cursor:pointer}
+.moreBtn{border:0;background:#f1f3f4;border-radius:18px;padding:9px 14px;cursor:pointer;font-weight:700}
+.searchResult{margin-top:20px;border-top:1px solid #eee;padding-top:18px}
+.homeBack{border:0;background:#4285f4;color:#fff;padding:10px 14px;border-radius:9px;font-weight:900;cursor:pointer}
+
+
+/* BEGOOGLER ANSWER SCREEN */
+.googleSearch{min-height:100%;padding-bottom:50px}
+.searchResult{min-height:calc(100vh - 180px)}
+.resultEmpty{min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#5f6368;gap:10px}
+.resultEmpty div{font-size:50px}.resultEmpty span{font-size:13px}
+.fullAnswer{max-width:900px;margin:0 auto;padding:8px 0 30px}
+.backResult{border:0;background:#f1f3f4;color:#3c4043;border-radius:20px;padding:9px 14px;font-weight:800;cursor:pointer;margin-bottom:22px}
+.answerTag{font-size:11px;font-weight:900;color:#4285f4;letter-spacing:1.4px}
+.fullAnswer h1{font-size:clamp(28px,5vw,48px);line-height:1.08;margin:9px 0 18px;color:#202124}
+.answerLead{font-size:clamp(17px,2.2vw,21px);line-height:1.55;color:#3c4043}
+.answerPoints{margin:20px 0;display:grid;gap:9px}
+.answerPoints div{background:#f8f9fa;border-radius:12px;padding:12px 14px;color:#3c4043}
+.aiReview{border:1px solid #d2e3fc;background:#f8fbff;border-radius:16px;padding:16px;margin:22px 0}
+.aiBadge{display:inline-block;font-size:10px;font-weight:900;letter-spacing:1px;background:#1a73e8;color:#fff;padding:5px 8px;border-radius:7px;margin-bottom:8px}
+.aiReview b{display:block;color:#202124}.aiReview p{margin:7px 0 0;line-height:1.45;color:#5f6368;font-size:14px}
+.webTitle{font-size:18px;font-weight:900;margin:26px 0 10px}.webTitle span{font-size:10px;color:#9aa0a6;font-weight:700;margin-left:5px}
+.websiteResults{display:grid;gap:9px}
+.websiteResult{display:flex;align-items:center;gap:12px;border:1px solid #dadce0;border-radius:14px;padding:12px;background:#fff}
+.siteIcon{font-size:22px}.siteText{min-width:0;flex:1}.siteText b,.siteText small,.siteText span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.siteText b{color:#1a0dab}.siteText small{color:#188038;margin-top:3px}.siteText span{color:#70757a;font-size:11px;margin-top:3px}
+.websiteResult button{border:0;background:#f1f3f4;color:#9aa0a6;border-radius:9px;padding:8px 11px;cursor:not-allowed}
+.fictionNote{font-size:11px;color:#9aa0a6;text-align:center;margin-top:15px}
+@media (orientation:portrait){.fullAnswer{padding:4px 0 25px}.googleSearch{padding:18px 13px 35px}.searchResult{min-height:calc(100vh - 130px)}}
+
+/* LANDSCAPE: desktop-like framed app + X */
+@media (orientation:landscape) and (min-width:800px){
+ #appLayer{background:radial-gradient(circle,#303846,#090b0e)}
+ .device{width:min(1180px,94vw);height:min(760px,92vh);border-radius:25px;box-shadow:0 25px 80px #000b;border:1px solid #ffffff18}
+}
+
+/* PORTRAIT: mobile layout */
+@media (orientation:portrait){
+ .topbar{height:54px;padding-left:14px}.layout{height:calc(100% - 54px);display:block}
+ .appScroll{padding:13px;padding-bottom:30px}
+ .sidebar{position:absolute;bottom:0;left:0;right:0;width:100%;height:58px;display:flex;gap:7px;padding:8px;z-index:30}
+ .appBtn{margin:0;padding:9px;text-align:center;font-size:12px}
+ .workspace{height:calc(100% - 58px);padding:13px}
+ .balance{font-size:35px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:9px}.pic{height:78px}
+ .chatHead{height:58px}.replyArea{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .reply{min-height:48px;text-align:center;padding:8px 5px}
+ .apps{bottom:15%}
+}
+@media (max-width:420px) and (orientation:portrait){
+ .replyArea{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:6px}
+ .reply{min-height:46px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="home">
+ <div class="status"><span id="miniTime"></span><span class="batteryHome" id="homeBattery">▮▮▮▮ 100% 🔋</span></div>
+ <div class="homeClock"><div class="bigTime" id="bigTime">00:00</div><div class="date" id="date"></div></div>
+ <div class="apps">
+   <button class="icon launcherIcon" onclick="openAppDrawer()">
+     <span class="iconBox">▦</span><span class="iconLabel">ALL APPS</span>
+   </button>
+ </div>
+ <div id="homeDrawer" class="homeDrawer hidden">
+   <div class="drawerHandle"></div>
+   <div class="drawerTitle">ALL APPS <span>swipe down to hide ☠️</span></div>
+   <div class="drawerGrid">
+     <button class="drawerApp" onclick="openFromDrawer('bank')"><span>🏦</span><b>BANK</b></button>
+     <button class="drawerApp" onclick="openFromDrawer('dlinkit')"><span>🛒</span><b>DLINKIT</b></button>
+     <button class="drawerApp" onclick="openFromDrawer('chat')"><span>💬</span><b>CHAT</b></button>
+     <button class="drawerApp" onclick="openFromDrawer('messages')"><span>✉️</span><b>MESSAGES</b></button>
+     <button class="drawerApp" onclick="openFromDrawer('screentime')"><span>📊</span><b>SCREEN TIME</b></button>
+     <button class="drawerApp" onclick="openFromDrawer('office')"><span>💼</span><b>OFFICE</b></button>
+     <button class="drawerApp" onclick="openFromDrawer('begoogler')"><span>🔎</span><b>BEGOOGLER</b></button>
+     <button class="drawerApp" onclick="toggleFullscreen()"><span>⛶</span><b id="drawerFsLabel">FULLSCREEN</b></button>
+   </div>
+ </div>
+</div>
+
+<div id="appLayer" class="hidden">
+ <div class="device">
+  <button class="close" onclick="closeMain()" title="Close app">×</button>
+  <button class="fsAppBtn" onclick="toggleFullscreen()" id="fsAppBtn">⛶</button>
+
+  <div id="bankWindow" class="hidden appFull">
+   <header class="topbar"><span class="brand">BANK</span><span class="demo">FICTIONAL</span></header>
+   <main class="appScroll" id="bankApp"></main>
+  </div>
+
+  <div id="shopWindow" class="hidden appFull">
+   <header class="topbar"><span class="brand">DLINKIT</span><span class="demo">FICTIONAL</span></header>
+   <main class="appScroll" id="shopApp"></main>
+  </div>
+
+  <div id="screenTimeWindow" class="hidden appFull">
+   <header class="topbar"><span class="brand">SCREEN TIME</span><span class="demo">FICTIONAL</span></header>
+   <main class="appScroll screenTimePage">
+    <div class="card"><h2>Screen Time</h2><p class="muted">The graph is deliberately malfunctioning. Obviously. ☠️</p>
+      <canvas id="screenGraph"></canvas>
+      <div class="broken">SORRY, TAAR TUT GAYA PHONE KA :(</div>
+    </div>
+   </main>
+  </div>
+
+  <div id="officeWindow" class="hidden appFull">
+   <header class="topbar"><span class="brand">OFFICE</span><span class="demo">FICTIONAL</span></header>
+   <main class="officeMain">
+    <div class="officeTabs">
+      <button class="officeTab active" onclick="officeSection('chat')">💬 OFFICE CHAT</button>
+      <button class="officeTab" onclick="officeSection('files')">📁 FILES</button>
+      <button class="officeTab" onclick="officeSection('work')">🧹 WORK</button>
+    </div>
+    <section id="officeChatSection" class="officeSection">
+      <div id="bossMessages" class="officeMessages"></div>
+      <div class="bossReplies" id="bossReplies"></div>
+    </section>
+    <section id="officeFilesSection" class="officeSection hidden">
+      <div class="appScroll officeFileScroll" id="officeFiles"></div>
+    </section>
+    <section id="officeWorkSection" class="officeSection hidden">
+      <div class="appScroll officeWorkScroll" id="officeWork"></div>
+    </section>
+   </main>
+  </div>
+
+  <div id="begooglerWindow" class="hidden appFull begoogler">
+   <header class="googleHead"><span class="googleLogo"><span>BE</span><span>GOO</span><span>GLER</span></span><span class="demo">FICTIONAL</span></header>
+   <main class="appScroll googlePage" id="begooglerPage"></main>
+  </div>
+
+  <div id="chatWindow" class="hidden chatWrap">
+    <div class="chatHead"><div class="avatar">👵</div><div><div class="chatName">Sanki Budhiya</div><div class="online">online • mood: tedha</div></div></div>
+    <div id="messages" class="messages"></div>
+    <div id="typing" class="typing hidden">Sanki Budhiya is typing...</div>
+    <div id="replies" class="replyArea"></div>
+  </div>
+
+  <div id="messagesWindow" class="hidden chatWrap">
+    <div class="chatHead">
+      <div class="avatar">✉️</div>
+      <div style="flex:1"><div class="chatName">MESSAGES</div><div class="online">fictional notification inbox</div></div>
+      <button onclick="markAllRead()" style="border:0;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:900;cursor:pointer">READ ALL</button>
+    </div>
+    <div id="notificationList" class="messages"></div>
+  </div>
+ </div>
+</div>
+
+<div id="modal" class="modal hidden"><div class="modalBox" id="modalBox"></div></div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const KEY='chaos_phone_sim_v3';
+const products=[
+{id:1,name:'Aloo Chips',price:40,emoji:'🥔'},{id:2,name:'Cold Drink',price:55,emoji:'🥤'},
+{id:3,name:'Chocolate',price:90,emoji:'🍫'},{id:4,name:'Bread',price:45,emoji:'🍞'},
+{id:5,name:'Milk',price:35,emoji:'🥛'},{id:6,name:'Ice Cream',price:120,emoji:'🍦'},
+{id:7,name:'Noodles',price:65,emoji:'🍜'},{id:8,name:'Cookies',price:75,emoji:'🍪'}
+];
+let state=JSON.parse(localStorage.getItem(KEY)||'null')||{balance:500,transactions:[],cart:{},orders:[],notifications:[]};
+if(!Array.isArray(state.notifications))state.notifications=[]; if(!state.officeDone)state.officeDone={};
+let shopQuery='';
+
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function money(n){return '₹'+Number(n).toFixed(2)}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+/* Battery deliberately fluctuates wildly for the game. */
+let battery=Math.floor(Math.random()*101);
+function updateClockAndBattery(){
+ const d=new Date(),time=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+ document.getElementById('bigTime').textContent=time;
+ document.getElementById('miniTime').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+ document.getElementById('date').textContent=d.toLocaleDateString([], {weekday:'long',day:'numeric',month:'long'});
+ battery=Math.floor(Math.random()*101);
+ document.getElementById('homeBattery').textContent='▮▮▮▮ '+battery+'% 🔋';
+}
+setInterval(updateClockAndBattery,1000);updateClockAndBattery();
+
+function openMain(which){
+ document.getElementById('home').classList.add('hidden');
+ document.getElementById('appLayer').classList.remove('hidden');
+ ['bankWindow','shopWindow','chatWindow','messagesWindow','screenTimeWindow','officeWindow','begooglerWindow'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+ if(which==='bank'){document.getElementById('bankWindow').classList.remove('hidden');renderBank()}
+ if(which==='dlinkit'){document.getElementById('shopWindow').classList.remove('hidden');renderShop()}
+ if(which==='chat'){document.getElementById('chatWindow').classList.remove('hidden');openChat()}
+ if(which==='messages'){document.getElementById('messagesWindow').classList.remove('hidden');renderNotifications();markAllRead(false)}
+ if(which==='screentime'){document.getElementById('screenTimeWindow').classList.remove('hidden');startScreenGraph()}
+ if(which==='office'){document.getElementById('officeWindow').classList.remove('hidden');initOffice()}
+ if(which==='begoogler'){document.getElementById('begooglerWindow').classList.remove('hidden');renderBegoogler()}
+}
+function closeMain(){
+ document.getElementById('appLayer').classList.add('hidden');
+ document.getElementById('home').classList.remove('hidden');
+}
+
+/* BANK */
+function renderBank(){
+ const tx=state.transactions.slice(0,40);
+ document.getElementById('bankApp').innerHTML=
+ `<div class="card"><div class="muted">FICTIONAL BANK ACCOUNT</div>
+ <div class="balance">${money(state.balance)}</div>
+ <div class="muted">Chandu Misra EMI stream: +money every second.</div></div>
+ <div class="card"><h2>Previous Transactions</h2>
+ ${tx.length?tx.map(t=>`<div class="tx"><div><b>${esc(t.title)}</b><div class="muted">${esc(t.time)}</div></div>
+ <div class="${t.amount>=0?'plus':'minus'}">${t.amount>=0?'+':''}${money(t.amount)}</div></div>`).join(''):
+ '<span class="muted">No transactions yet.</span>'}</div>
+ <div class="card"><h3>Local game data</h3><p class="muted">This simulator uses localStorage. No real bank or payment system is connected.</p>
+ <button class="secondary" style="padding:10px 14px;border:0;border-radius:9px;cursor:pointer" onclick="resetGame()">Reset game</button></div>`;
+}
+
+/* DLINKIT */
+function renderShop(){
+ const list=products.filter(p=>p.name.toLowerCase().includes(shopQuery.toLowerCase()));
+ const count=Object.values(state.cart).reduce((a,b)=>a+b,0);
+ document.getElementById('shopApp').innerHTML=
+ `<div class="store"><div class="storeHead">
+ <input class="search" placeholder="Search groceries..." value="${esc(shopQuery)}" oninput="shopQuery=this.value;renderShop()">
+ <button class="cartBtn" onclick="showCart()">🛒 ${count}</button></div>
+ <div class="card" style="padding:15px;margin-top:13px"><b>⚡ DLINKIT</b> <span class="muted">— jaldi order karo, baad mein sochna ☠️</span></div>
+ <div class="grid">${list.map(p=>`<article class="product"><div class="pic">${p.emoji}</div>
+ <h3>${esc(p.name)}</h3><div class="price">${money(p.price)}</div>
+ <button class="add" onclick="addToCart(${p.id})">ADD</button></article>`).join('')}</div>
+ <div class="card" style="margin-top:16px"><h2>Past Orders</h2>
+ ${state.orders.length?state.orders.slice(0,10).map(o=>`<div class="tx"><div><b>${esc(o.id)}</b>
+ <div class="muted">${esc(o.time)}<br>${esc(o.items)}</div></div><b>${money(o.total)}</b></div>`).join(''):
+ '<span class="muted">No past orders.</span>'}</div></div>`;
+}
+function addToCart(id){state.cart[id]=(state.cart[id]||0)+1;save();renderShop();showToast('Added to cart ☠️')}
+function showCart(){
+ const e=Object.entries(state.cart).filter(([id,q])=>q>0);
+ if(!e.length){openModal('<h2>Cart empty</h2><p class="muted">Pehle kuch ADD toh karo.</p><div class="actions"><button class="secondary" onclick="closeModal()">Close</button></div>');return}
+ const subtotal=e.reduce((s,[id,q])=>s+products.find(p=>p.id==id).price*q,0);
+ const delivery=subtotal<149?30:0,handling=10,total=subtotal+delivery+handling;
+ openModal(`<h2>DLINKIT Cart</h2>${e.map(([id,q])=>{let p=products.find(x=>x.id==id);return `<div class="tx"><span>${p.emoji} ${esc(p.name)} × ${q}</span><b>${money(p.price*q)}</b></div>`}).join('')}
+ <div class="tx"><span>Subtotal</span><b>${money(subtotal)}</b></div><div class="tx"><span>Delivery</span><b>${money(delivery)}</b></div>
+ <div class="tx"><span>Handling</span><b>${money(handling)}</b></div><div class="tx"><b>Total</b><b>${money(total)}</b></div>
+ <div class="actions"><button class="secondary" onclick="closeModal()">Back</button><button class="primary" onclick="placeOrder(${total})">PLACE ORDER</button></div>`);
+}
+function placeOrder(total){
+ if(state.balance<total){openModal('<h2>Insufficient balance ☠️</h2><p>Chandu Misra ki EMI ka wait karo.</p><div class="actions"><button class="secondary" onclick="closeModal()">Close</button></div>');return}
+ const items=Object.entries(state.cart).filter(([id,q])=>q>0).map(([id,q])=>products.find(x=>x.id==id).name+' ×'+q).join(', ');
+ const now=new Date().toLocaleString();
+ state.balance-=total;state.transactions.unshift({title:'DLINKIT ORDER',amount:-total,time:now});
+ state.orders.unshift({id:'ORDER-'+Date.now().toString().slice(-6),time:now,items,total});
+ state.cart={};save();closeModal();renderShop();showToast('ORDER PLACED — amount deducted from BANK ☠️');
+}
+function randomEMI(){
+ const amount=Math.floor(Math.random()*900)+101;
+ state.balance+=amount;
+ state.transactions.unshift({title:'Chandu Misra — EMI',amount,time:new Date().toLocaleTimeString()});
+ state.transactions=state.transactions.slice(0,120);save();
+ if(!document.getElementById('bankWindow').classList.contains('hidden'))renderBank();
+}
+setInterval(randomEMI,1000);
+
+
+/* MESSAGES: 30 fictional, deliberately useless notifications. */
+const funnyNotifications=[
+ '🎉 BADHAI HO! Aapki imaginary lottery ₹700 ki nikli hai. Ab kya karu main? 😭',
+ '📶 Aapke SIM ka signal aaj 3 baar aaya aur 4 baar chala gaya. Kripya iska samman karein.',
+ '💸 WARNING: Aapke fictional bank mein faltu paise aa rahe hain. Kripya ghabraiye.',
+ '🍕 Aapne pizza order nahi kiya, phir bhi pizza ke baare mein socha gaya. Delivery team emotional hai.',
+ '🔋 Battery ne kaha: "Main 1% hoon." Agle second: "Joke tha, 87%."',
+ '🏦 BANK ALERT: Chandu Misra ki EMI phir aa gayi. Kisi ko pata hai ye banda kaun hai?',
+ '🛒 DLINKIT: Aapke cart mein ek item aapko khud nahi pata kisne add kiya. Suspicious aloo detected.',
+ '📱 PHONE UPDATE: Phone ko update karne ki zarurat nahi. Phone khud confuse hai.',
+ '🎁 CONGRATULATIONS! Aap jeet gaye... ek aur notification.',
+ '🚨 IMPORTANT: Aapka phone aapko 5 minute se dekh raha hai. Ab phone ko bhi awkward lag raha hai.',
+ '💰 FALTU CREDIT: Account mein paise aaye. Source: "Pata nahi".',
+ '☕ CHAI ALERT: Chai thandi ho gayi. Ye notification 4 minute late hai. Sorry.',
+ '📦 DELIVERY UPDATE: Delivery boy ne building dhoondi. Building ne delivery boy nahi dhoonda.',
+ '🧾 RECEIPT: Aapne kuch kharida nahi. Phir bhi receipt hai. Technology.',
+ '📡 NETWORK ALERT: Internet chal raha hai. Jab tak aap check karoge, shayad nahi chalega.',
+ '👵 SANKI BUDHIYA: "Phone rakh aur padhai kar." — notification system refuses to elaborate.',
+ '💳 BANK: Balance dekhna band karo. Balance tumhe dekh raha hai.',
+ '🧠 SYSTEM: Aapka dimaag 12 tabs par chal raha hai. 11 tabs unknown.',
+ '🍦 DLINKIT DEAL: Ice cream ko discount mila. Aapko nahi.',
+ '📞 MISSED CALL: Kisi ne call nahi kiya. Phir bhi missed call ka vibe aa raha hai.',
+ '💸 EMI UPDATE: Chandu Misra ne paisa bheja. Chandu Misra ne phir paisa bheja. WHY?',
+ '🎮 GAME ALERT: Aap game khel rahe hain. Game ko bhi pata chal gaya.',
+ '🔔 REMINDER: Ye reminder kis cheez ka hai, reminder ko yaad nahi.',
+ '📊 FINANCIAL REPORT: Income 📈 Expense 📈 Common sense 📉',
+ '🥔 ALOO NEWS: Aloo available hai. Desh filhaal stable hai.',
+ '🚚 DELIVERY: Order "raaste mein" hai. Raasta khud uncertain hai.',
+ '💰 BANK NOTICE: Aaj ka balance kal ke balance se bilkul alag hai. Shocking.',
+ '🧮 CALCULATOR: 2 + 2 = 4. Humne verify kiya. Confidence restored.',
+ '🌧️ WEATHER-LIKE ALERT: Bahar dekho. Weather wahi hai jo bahar hota hai.',
+ '☠️ FINAL WARNING: Aapko ek notification mila hai. Iska koi fayda nahi.'
+];
+
+function pushNotification(){
+ const text=funnyNotifications[state.notifications.length % funnyNotifications.length];
+ const item={text,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),read:false};
+ state.notifications.unshift(item);
+ state.notifications=state.notifications.slice(0,100);
+ save();
+ if(!document.getElementById('messagesWindow').classList.contains('hidden')){
+   renderNotifications();
+ }
+ showToast('✉️ New notification: '+text);
+}
+function renderNotifications(){
+ const box=document.getElementById('notificationList');
+ if(!state.notifications.length){
+   box.innerHTML='<div class="notification"><b>No messages</b><small>Abhi koi faltu notification nahi aayi. Tragedy.</small></div>';
+   return;
+ }
+ box.innerHTML=state.notifications.map((n,i)=>`
+  <div class="notification ${n.read?'':'unread'}">
+   <b>${esc(n.text)}</b><small>${esc(n.time)} ${n.read?'':'• UNREAD'}</small>
+  </div>`).join('');
+}
+function markAllRead(saveIt=true){
+ state.notifications.forEach(n=>n.read=true);
+ if(saveIt)save();
+ renderNotifications();
+}
+setInterval(pushNotification,60000);
+
+/* MODALS */
+function openModal(h){document.getElementById('modalBox').innerHTML=h;document.getElementById('modal').classList.remove('hidden')}
+function closeModal(){document.getElementById('modal').classList.add('hidden')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
+function showToast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.remove('hidden');clearTimeout(window.to);window.to=setTimeout(()=>t.classList.add('hidden'),2600)}
+function resetGame(){if(confirm('Reset all game data?')){localStorage.removeItem(KEY);location.reload()}}
+
+
+
+/* ALL APPS drawer: opens by button or hidden swipe-up gesture, closes by swipe-down. */
+let drawerOpen=false,drawerStartY=0;
+function openAppDrawer(){
+ drawerOpen=true;
+ document.getElementById('homeDrawer').classList.remove('hidden');
+}
+function closeAppDrawer(){
+ drawerOpen=false;
+ document.getElementById('homeDrawer').classList.add('hidden');
+}
+function openFromDrawer(which){
+ closeAppDrawer();
+ openMain(which);
+}
+const homeEl=document.getElementById('home');
+homeEl.addEventListener('touchstart',e=>{
+ if(e.touches.length===1)drawerStartY=e.touches[0].clientY;
+},{passive:true});
+homeEl.addEventListener('touchend',e=>{
+ if(e.changedTouches.length!==1)return;
+ const dy=e.changedTouches[0].clientY-drawerStartY;
+ if(!drawerOpen && dy < -65) openAppDrawer();
+ else if(drawerOpen && dy > 65) closeAppDrawer();
+},{passive:true});
+/* Mouse drag support for desktop testing. */
+let mouseStartY=null;
+homeEl.addEventListener('mousedown',e=>mouseStartY=e.clientY);
+homeEl.addEventListener('mouseup',e=>{
+ if(mouseStartY===null)return;
+ const dy=e.clientY-mouseStartY;mouseStartY=null;
+ if(!drawerOpen && dy < -90)openAppDrawer();
+ else if(drawerOpen && dy > 90)closeAppDrawer();
+});
+document.getElementById('homeDrawer').addEventListener('click',e=>{
+ if(e.target.id==='homeDrawer')closeAppDrawer();
+});
+
+/* FULLSCREEN */
+function updateFullscreenLabels(){
+ const active=document.fullscreenElement;
+ document.getElementById('fsAppBtn').textContent=active?'×':'⛶';
+ const hi=document.getElementById('fsHomeIcon'),hl=document.getElementById('fsHomeLabel'),dl=document.getElementById('drawerFsLabel');
+ if(hi)hi.textContent=active?'×':'⛶';
+ if(hl)hl.textContent=active?'EXIT FULLSCREEN':'FULLSCREEN';
+ if(dl)dl.textContent=active?'EXIT FULLSCREEN':'FULLSCREEN';
+}
+async function toggleFullscreen(){
+ try{
+   if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
+   else await document.exitFullscreen();
+ }catch(e){showToast('Fullscreen unavailable in this browser')}
+ updateFullscreenLabels();
+}
+document.addEventListener('fullscreenchange',updateFullscreenLabels);
+
+/* SCREEN TIME: deliberately fluctuating fictional graph. */
+let graphTimer=null;
+function startScreenGraph(){
+ if(graphTimer)clearInterval(graphTimer);
+ const draw=()=>{
+   const c=document.getElementById('screenGraph');if(!c)return;
+   const r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;
+   const x=c.getContext('2d');x.scale(d,d);const w=r.width,h=r.height;
+   x.clearRect(0,0,w,h);x.strokeStyle='#d8dde5';x.lineWidth=1;
+   for(let i=0;i<6;i++){let y=30+i*(h-60)/5;x.beginPath();x.moveTo(30,y);x.lineTo(w-20,y);x.stroke()}
+   const pts=[];for(let i=0;i<14;i++)pts.push([30+i*(w-55)/13,30+Math.random()*(h-70)]);
+   x.strokeStyle='#4285f4';x.lineWidth=4;x.beginPath();pts.forEach((p,i)=>i?x.lineTo(...p):x.moveTo(...p));x.stroke();
+   x.fillStyle='#4285f4';pts.forEach(p=>{x.beginPath();x.arc(p[0],p[1],4,0,Math.PI*2);x.fill()});
+ };
+ draw();graphTimer=setInterval(draw,900);
+}
+
+/* OFFICE */
+const officeFiles=[
+ ['📄','Boss ka Important Document','VERY_IMPORTANT_FINAL_FINAL2.docx'],
+ ['📊','Monthly Tea Consumption','chai_budget.xlsx'],
+ ['📋','Office Rules','rule_no_17_is_confusing.pdf'],
+ ['🧾','Random Expense Report','expenses_final_REAL_final.xlsx'],
+ ['📁','Do Not Open','mystery_folder.zip'],
+ ['📝','Meeting Notes','meeting_notes_v7.txt'],
+ ['📌','Boss House Instructions','ghar_ka_kaam.pdf']
+];
+const officeTasks=[
+ 'Boss ke ghar ka nala saaf karna',
+ 'Boss ke liye chai banana',
+ 'Boss ke office mein pocha lagana',
+ 'Boss ki medicine unko time par dena',
+ 'Boss ka lunch garam karna',
+ 'Boss ke files alphabetical order mein lagana',
+ 'Boss ke paudhon ko paani dena',
+ 'Boss ke ghar ka remote dhoondhna',
+ 'Boss ka printer “thoda thok kar” theek karna',
+ 'Boss ki 47 unread emails ko dekh kar ignore karna'
+];
+const bossReplies=[
+ 'Boss, aaj kya kaam hai?',
+ 'Salary kab badhegi?',
+ 'Meeting kitne baje hai?',
+ 'Maine file bhej di.',
+ 'Chai ready hai.',
+ 'Aaj office mein kya scene hai?',
+ 'Main ghar ka kaam bhi karunga kya?'
+];
+const bossAnswers=[
+ 'Kaam? Jo screen par likha hai wahi. Aur haan, jaldi.',
+ 'Salary? Pehle ye spreadsheet complete karo.',
+ 'Meeting 5 minute mein hai. Tum abhi kyun pooch rahe ho?',
+ 'Theek hai. Maine dekhi nahi.',
+ 'Chai thandi hui toh meri taraf se complaint jayegi.',
+ 'Scene simple hai: kaam karo, phir kaam karo.',
+ 'Haan. Office ka experience premium package hai.'
+];
+const officeChaos=[
+ 'RAVI: Bhai kisne meri stapler li?',
+ 'NEHA: Tumne khud meri desk par rakhi thi.',
+ 'RAVI: Oh. Theek hai. Sorry.',
+ 'AMAN: Boss aa rahe hain. Sab normal behave karo.',
+ 'NEHA: NORMAL kya hota hai?',
+ 'RAVI: Kisi ne chai banayi?',
+ 'AMAN: Meeting cancel ho gayi.',
+ 'NEHA: 30 second pehle toh meeting thi?',
+ 'RAVI: OFFICE LOGIC.',
+ 'BOSS: Main sab padh raha hoon. 😐'
+];
+let officeChatStarted=false;
+function initOffice(){
+ renderOfficeFiles();renderOfficeWork();
+ if(!officeChatStarted){
+  officeChatStarted=true;
+  officeChaos.forEach((m,i)=>setTimeout(()=>addOfficeBubble('boss',m),i*500));
+ }
+ renderBossReplies();
+}
+function addOfficeBubble(who,text){
+ const b=document.createElement('div');b.className='bossBubble '+(who==='me'?'me':'boss');b.textContent=text;
+ const box=document.getElementById('bossMessages');box.appendChild(b);box.scrollTop=box.scrollHeight;
+}
+function renderBossReplies(){
+ const b=document.getElementById('bossReplies');b.innerHTML='';
+ bossReplies.forEach((q,i)=>{const x=document.createElement('button');x.className='bossReply';x.textContent=q;x.onclick=()=>{addOfficeBubble('me',q);setTimeout(()=>addOfficeBubble('boss',bossAnswers[i]),450);};b.appendChild(x)});
+}
+function officeSection(which){
+ ['officeChatSection','officeFilesSection','officeWorkSection'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+ document.getElementById('office'+which.charAt(0).toUpperCase()+which.slice(1)+'Section').classList.remove('hidden');
+ document.querySelectorAll('.officeTab').forEach(b=>b.classList.remove('active'));
+ const map={chat:0,files:1,work:2};document.querySelectorAll('.officeTab')[map[which]].classList.add('active');
+}
+function renderOfficeFiles(){
+ document.getElementById('officeFiles').innerHTML=officeFiles.map(f=>`<div class="fileCard"><b>${f[0]} ${esc(f[1])}</b><div class="muted">${esc(f[2])}</div></div>`).join('');
+}
+function renderOfficeWork(){
+ const done=state.officeDone||{};
+ const n=officeTasks.filter((_,i)=>done[i]).length;
+ document.getElementById('officeWork').innerHTML=`<div class="workProgress">WORK: ${n}/${officeTasks.length} completed ${n===officeTasks.length?'— ALL WORK DONE ☠️':''}</div>`+
+ officeTasks.map((t,i)=>`<label class="workCard"><input type="checkbox" ${done[i]?'checked':''} onchange="toggleWork(${i},this.checked)"><span class="${done[i]?'doneText':''}">${esc(t)}</span></label>`).join('');
+}
+function toggleWork(i,v){state.officeDone=state.officeDone||{};state.officeDone[i]=v;save();renderOfficeWork()}
+
+/* BEGOOGLER */
+const searches=[
+ 'BHIKHARIYO KI SARKARI JOB KI SARKARI SCHEME',
+ 'BHIKHARIYO KI PENSION SARKARI SCHEME',
+ 'FREE KA KHANA SARKARI SCHEME',
+ 'HOW TO CONVERT BLACK MONEY TO WHITE',
+ 'CHANDU MISRA KI EMI KAHAN SE AATI HAI',
+ 'DLINKIT PAR SABSE FALTU CHEEZ KYA HAI',
+ 'PHONE KI BATTERY HAR SECOND KYUN BADAL RAHI HAI',
+ 'SANKI BUDHIYA KO KAISE MANAYE',
+ 'OFFICE MEIN CHAI BANANA KISKA KAAM HAI'
+];
+
+const begoogleAnswers={
+ 'BHIKHARIYO KI SARKARI JOB KI SARKARI SCHEME':{
+   title:'Sarkari scheme for people without stable income',
+   answer:'Government support usually comes through social-security, food-support, livelihood and employment programmes. Eligibility depends on the person, age, income, location and scheme rules. BEGOOGLER cannot verify a person’s eligibility or submit an application.',
+   points:['Check the official government portal or local government office.','Carry the documents the specific scheme requires.','Never pay an unknown person who promises guaranteed approval.']
+ },
+ 'BHIKHARIYO KI PENSION SARKARI SCHEME':{
+   title:'Pension support',
+   answer:'Some government pension and social-assistance programmes can support eligible people with low income, disability or old age. The exact benefit and eligibility vary by programme and state.',
+   points:['Eligibility is scheme-specific.','Application routes can include government portals or local offices.','Use official sources to confirm the current amount and rules.']
+ },
+ 'FREE KA KHANA SARKARI SCHEME':{
+   title:'Food support',
+   answer:'India has public food-support programmes for eligible households. The exact entitlement depends on the applicable food-security system and the person’s eligibility.',
+   points:['Use the official ration/food-supply channel for your area.','Do not share OTPs or bank details with unofficial callers.','Local rules can differ.']
+ },
+ 'HOW TO CONVERT BLACK MONEY TO WHITE':{
+   title:'Illegal money cannot be made legitimate by a trick',
+   answer:'There is no legitimate shortcut for converting undisclosed or illegally obtained money into lawful money. Properly declaring income, keeping records and using lawful tax/compliance procedures is the appropriate route. BEGOOGLER will not provide methods for hiding or laundering money.',
+   points:['Keep genuine records of income and transactions.','Use lawful tax-compliance channels.','For a real financial situation, ask a qualified tax professional.']
+ },
+ 'CHANDU MISRA KI EMI KAHAN SE AATI HAI':{
+   title:'The mystery of Chandu Misra',
+   answer:'According to the BEGOOGLER universe, Chandu Misra is the legendary EMI machine who sends fictional money into the BANK app every second. In real life, the simulator has no real payment or banking connection.',
+   points:['Source: fictional Chaos Phone Simulator lore.','BANK balance is stored locally in the browser.','No real EMI or bank transfer is happening.']
+ },
+ 'DLINKIT PAR SABSE FALTU CHEEZ KYA HAI':{
+   title:'The most useless thing on DLINKIT',
+   answer:'Official BEGOOGLER research concludes that the most useless thing is probably the thing you add to the cart and immediately forget why you wanted it. Suspicious aloo remains a strong candidate. ☠️',
+   points:['Aloo Chips: useful.','Mystery impulse purchase: questionable.','Buying something only because it is there: maximum chaos.']
+ },
+ 'PHONE KI BATTERY HAR SECOND KYUN BADAL RAHI HAI':{
+   title:'Battery percentage is acting suspicious',
+   answer:'In this simulator, the battery is deliberately randomised every second for chaos. It is not measuring a real phone battery.',
+   points:['The displayed percentage is fictional.','It can jump from very low to very high instantly.','Your real device battery is unaffected.']
+ },
+ 'SANKI BUDHIYA KO KAISE MANAYE':{
+   title:'How to convince Sanki Budhiya',
+   answer:'The most reliable strategy is to speak politely, explain what you actually want, and avoid repeating the same question 47 times. In this simulator, repeated topics make her increasingly irritated.',
+   points:['Start politely.','Give a clear reason.','Do not spam the same question.','Accept that she may still say no. 😤']
+ },
+ 'OFFICE MEIN CHAI BANANA KISKA KAAM HAI':{
+   title:'Who should make tea at the office?',
+   answer:'There is no universal rule that one particular person must make tea. It depends on the workplace, assigned duties and normal team arrangements. In the Chaos Office, however, the boss appears to believe that everything is somehow your job. ☠️',
+   points:['Real workplaces should follow their actual job roles.','Tea duty can be shared or assigned.','Chaos Office logic is not employment law.']
+ }
+};
+
+const begoogleSites=[
+ ['🔵','BEGOOGLER Help','begoogler.example/search','AI-indexed fictional result'],
+ ['🟢','Chaos Knowledge Base','chaos.example/wiki','Fictional reference database'],
+ ['🟣','Government Info Portal','gov.example/schemes','Placeholder — not clickable'],
+ ['🟠','Tech Answers Daily','answers.example/phone','Placeholder — not clickable']
+];
+
+let googleExpanded=false;
+
+function renderBegoogler(){
+ const visible=googleExpanded?searches:searches.slice(0,4);
+ document.getElementById('begooglerPage').innerHTML=`<div class="googleSearch">
+  <div class="googleSearchBox">🔎 Search on BEGOOGLER...</div>
+  <div class="searchBubbles">${visible.map(q=>`<button class="searchBubble" onclick="fakeSearchByIndex(${searches.indexOf(q)})">${esc(q)}</button>`).join('')}</div>
+  ${!googleExpanded?'<button class="moreBtn" style="margin-top:10px" onclick="googleExpanded=true;renderBegoogler()">See all questions</button>':''}
+  ${googleExpanded?'<button class="moreBtn" style="margin-top:10px" onclick="googleExpanded=false;renderBegoogler()">See fewer questions</button>':''}
+  <div class="searchResult" id="googleResult"><div class="resultEmpty"><div>🧠</div><b>Choose any BEGOOGLER question</b><span>Every listed question has a dedicated answer + AI review.</span></div></div>
+ </div>`;
+}
+
+function fakeSearchByIndex(i){
+ const q=searches[Number(i)];
+ if(q)fakeSearch(q);
+}
+
+function fakeSearch(q){
+ const data=begoogleAnswers[q]||{
+   title:'BEGOOGLER answer',
+   answer:'This fictional simulator does not have a verified answer for this question yet.',
+   points:['Try another BEGOOGLER question.']
+ };
+ const ai=`<div class="aiReview"><div class="aiBadge">✦ AI REVIEW</div><b>Answer quality: ${q==='HOW TO CONVERT BLACK MONEY TO WHITE'?'Safety-first':'Chaotic but useful'}</b><p>${q==='HOW TO CONVERT BLACK MONEY TO WHITE'?'The answer avoids instructions for illegal financial activity and points toward lawful compliance.':'The answer matches the fictional Chaos Phone Simulator universe and clearly separates game lore from real-world information.'}</p></div>`;
+ const sites=begoogleSites.map(x=>`<div class="websiteResult"><div class="siteIcon">${x[0]}</div><div class="siteText"><b>${esc(x[1])}</b><small>${esc(x[2])}</small><span>${esc(x[3])}</span></div><button disabled>↗</button></div>`).join('');
+ document.getElementById('googleResult').innerHTML=`
+  <div class="fullAnswer">
+   <button class="backResult" onclick="renderBegoogler()">← BEGOOGLER</button>
+   <div class="answerTag">BEGOOGLER ANSWER</div>
+   <h1>${esc(data.title)}</h1>
+   <div class="answerLead">${esc(data.answer)}</div>
+   <div class="answerPoints">${data.points.map(p=>`<div>✓ ${esc(p)}</div>`).join('')}</div>
+   ${ai}
+   <div class="webTitle">Web results <span>fictional • unclickable</span></div>
+   <div class="websiteResults">${sites}</div>
+   <div class="fictionNote">These website cards are visual results only. They are intentionally unclickable and do not open real websites.</div>
+  </div>`;
+ document.getElementById('begooglerPage').scrollTop=0;
+}
+/* SANKI BUDHIYA: offline deterministic/rule-based reply system.
+   Repeated topics increase irritation, so she becomes increasingly "bhadki hui". */
+const convo=[
+ {q:'Namaste Budhiya ji',r:['Namaste bolo aur seedha kaam batao.','Mujhe namaste se pension nahi milti.','Haan haan, ab kya tod diya?']},
+ {q:'Aap kya kar rahi ho?',r:['Main tumhari galtiyon ka audit kar rahi hoon.','Jo tum nahi kar rahe, wahi kar rahi hoon.','Chashma dhoondh rahi hoon. Mil gaya. Tumhara logic nahi mila.']},
+ {q:'Paise chahiye',r:['Mere paas paise nahi, lecture unlimited hai.','Pehle budget banao, phir barbaad karo.','Chandu Misra se poochho. Woh har jagah EMI daalta hai.']},
+ {q:'Blinkit chalaun?',r:['Tumhe rokne ka mera retirement plan nahi hai.','Haan, phir BANK ko rota dekhna.','Order karo. Delivery charge tumhara intezar kar raha hai.']},
+ {q:'iPhone mil gaya',r:['Sadak par mila hai toh pehle socho, sirf phone dekhkar mat bhago.','Phone mila, akal mili kya?','Pehle phone charge karo, phir chaos charge hoga.']},
+ {q:'Chandu Misra kaun?',r:['EMI ka Maharaja.','Wahi jo paise deta bhi hai aur suspense bhi.','Naam Chandu, hisaab bilkul seedha nahi.']},
+ {q:'Bye',r:['Jaao. Lekin wapas aaoge.','Theek hai, main yahin tedhi rahungi.','Bye. Aur kuch order mat karna.']},
+];
+const generic=[
+ 'Mujhe samajh aa gaya. Ab meri baat bilkul mat maanna.',
+ 'Is sawaal ka jawab tedha hai. Seedha jawab kal milega.',
+ 'Tumne ye kyun poocha? Main khud confuse ho gayi.',
+ 'Haan. Bilkul. Lekin nahi.',
+ 'Iska jawab dene ke liye pehle chai chahiye. ☕',
+ 'Tumhare decisions dekhkar calculator bhi resign kar de.',
+ 'Main budhiya hoon, search engine nahi. Khud socho.',
+ 'Interesting. Galat, par interesting.'
+];
+let replyCounts={};
+let lastTopic='';
+
+function openChat(){
+ const box=document.getElementById('messages');
+ if(!box.children.length)addMsg('them','Kaun hai? Itni der se phone kyun baja raha hai?');
+ renderReplies();
+ requestAnimationFrame(()=>scrollChat(true));
+}
+function addMsg(who,text){
+ const m=document.createElement('div');m.className='msg '+who;m.textContent=text;
+ document.getElementById('messages').appendChild(m);
+}
+function scrollChat(force=false){
+ const box=document.getElementById('messages');
+ box.scrollTop=box.scrollHeight;
+ if(force)requestAnimationFrame(()=>box.scrollTop=box.scrollHeight);
+}
+function renderReplies(){
+ const box=document.getElementById('replies');box.innerHTML='';
+ ['Namaste Budhiya ji','Aap kya kar rahi ho?','Paise chahiye','Blinkit chalaun?','iPhone mil gaya','Chandu Misra kaun?','Bye'].forEach(x=>{
+  const b=document.createElement('button');b.className='reply';b.textContent=x;b.onclick=()=>sendReply(x);box.appendChild(b);
+ });
+}
+function angryReply(text){
+ replyCounts[text]=(replyCounts[text]||0)+1;
+ const n=replyCounts[text];
+ const found=convo.find(x=>x.q===text);
+ let arr=found?found.r:generic;
+ let answer=arr[(n-1)%arr.length];
+ if(n===2)answer='Phir se wahi? '+answer;
+ if(n===3)answer='TEESRI BAAR! '+answer;
+ if(n>=4)answer='BAS KARO! '+answer+' 😤';
+ if(n>=6)answer='Maine '+n+' baar jawab diya hai. AB NEXT TOPIC. 😡';
+ return answer;
+}
+function sendReply(text){
+ addMsg('me',text);
+ const replies=document.getElementById('replies');
+ replies.classList.add('hidden');
+ document.getElementById('typing').classList.remove('hidden');
+ /* Immediately sync the user's sent message into view without requiring scrolling. */
+ requestAnimationFrame(()=>scrollChat(true));
+ setTimeout(()=>{
+   addMsg('them',angryReply(text));
+   document.getElementById('typing').classList.add('hidden');
+   replies.classList.remove('hidden');
+   renderReplies();
+   /* New response automatically moves to bottom; user can then scroll manually. */
+   requestAnimationFrame(()=>scrollChat(true));
+ },500+Math.random()*650);
+}
+
+/* Allow normal manual scrolling in chat and apps. No JS wheel/touch prevention. */
+</script>
+</body>
+</html>
