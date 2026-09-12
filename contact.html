@@ -29,1465 +29,190 @@
 <link rel="icon" type="image/jpg" href="/favicon.jpg">
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-
-html{
-
-    scroll-behavior:smooth;
-
-    scroll-padding-top:90px;
-
-}
-
-
-body{
-
-    min-height:100vh;
-
-    font-family:'Poppins',sans-serif;
-
-    background:#070707;
-
-    color:#fff;
-
-    overflow-x:hidden;
-
-}
-
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
 :root{
-
-    --gold:#FFD54A;
-
-    --gold-light:#fff0a5;
-
-    --gold-dark:#d99d00;
-
-    --background:#070707;
-
-    --surface:#0d0d0d;
-
-    --surface-2:#121212;
-
-    --border:rgba(255,213,74,.14);
-
-    --border-hover:rgba(255,213,74,.55);
-
-    --muted:#999;
-
-    --max-width:1050px;
-
+  --gold:#FFD54A;--gold-light:#fff1a8;--gold-dark:#d99d00;
+  --bg:#060606;--surface:rgba(18,18,18,.72);--text:#fff;--muted:#999;
+  --border:rgba(255,213,74,.14);--border-hover:rgba(255,213,74,.58);
+  --max:1050px;--ease:cubic-bezier(.22,1,.36,1);
 }
-
-
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    width:450px;
-    height:450px;
-
-    top:-180px;
-    left:-180px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,213,74,.11),
-            transparent 70%
-        );
-
-    pointer-events:none;
-
-    z-index:-2;
-
-}
-
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:400px;
-    height:400px;
-
-    right:-180px;
-    bottom:-180px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,190,40,.07),
-            transparent 70%
-        );
-
-    pointer-events:none;
-
-    z-index:-2;
-
-}
-
-
-/* =========================================================
-   SUBTLE GRID
-========================================================= */
-
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
 body{
+  min-height:100vh;font-family:'Poppins',sans-serif;color:var(--text);
+  background:#060606;overflow-x:hidden;
+  background-image:linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:55px 55px;
+}
+body::before,body::after{
+  content:"";position:fixed;pointer-events:none;z-index:-3;border-radius:50%;
+}
+body::before{width:450px;height:450px;left:-190px;top:-190px;background:radial-gradient(circle,rgba(255,213,74,.1),transparent 70%)}
+body::after{width:420px;height:420px;right:-210px;bottom:-210px;background:radial-gradient(circle,rgba(255,190,40,.07),transparent 70%)}
 
-    background-image:
-
-        linear-gradient(
-            rgba(255,255,255,.015) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,.015) 1px,
-            transparent 1px
-        );
-
-    background-size:55px 55px;
-
+/* Interactive background */
+#scene{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.7}
+#scene canvas{display:block;width:100%!important;height:100%!important}
+.scene-vignette{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 50% 25%,transparent 10%,rgba(0,0,0,.18) 55%,rgba(0,0,0,.72) 100%);
 }
 
-
-/* =========================================================
-   NAVBAR
-========================================================= */
+/* Cursor */
+.cursor-dot,.cursor-ring{
+  position:fixed;left:0;top:0;pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);border-radius:50%;opacity:0;
+  transition:opacity .2s ease,transform .18s var(--ease),width .22s var(--ease),height .22s var(--ease),border-color .22s ease;
+}
+.cursor-dot{width:7px;height:7px;background:var(--gold);box-shadow:0 0 18px rgba(255,213,74,.6)}
+.cursor-ring{width:34px;height:34px;border:1px solid rgba(255,213,74,.65)}
+body.cursor-ready .cursor-dot,body.cursor-ready .cursor-ring{opacity:1}
+body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);background:rgba(255,213,74,.045)}
+body.cursor-hover .cursor-dot{transform:translate(-50%,-50%) scale(.65)}
 
 nav{
-
-    position:sticky;
-
-    top:0;
-
-    z-index:1000;
-
-    width:100%;
-
-    min-height:76px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:
-        0
-        max(
-            20px,
-            calc((100% - 1250px) / 2)
-        );
-
-    background:
-        rgba(7,7,7,.55);
-
-    backdrop-filter:
-        blur(20px)
-        saturate(130%);
-
-    -webkit-backdrop-filter:
-        blur(20px)
-        saturate(130%);
-
-    border-bottom:
-        1px solid rgba(255,213,74,.15);
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.18);
-
+  position:sticky;top:0;z-index:1000;width:100%;min-height:76px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 max(20px,calc((100% - 1250px)/2));
+  background:rgba(6,6,6,.58);backdrop-filter:blur(18px) saturate(125%);
+  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  border-bottom:1px solid rgba(255,213,74,.14);
 }
-
-
-.logo{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:27px;
-
-    font-weight:800;
-
-    letter-spacing:3px;
-
-    color:var(--gold);
-
-}
-
-
-nav a{
-
-    color:#ddd;
-
-    text-decoration:none;
-
-    font-size:14px;
-
-    font-weight:600;
-
-    transition:
-        color .2s ease;
-
-}
-
-
-nav a:hover{
-
-    color:var(--gold);
-
-}
-
-
-/* =========================================================
-   MAIN CONTAINER
-========================================================= */
+.logo{font-family:'Orbitron',sans-serif;font-size:27px;font-weight:800;letter-spacing:3px;color:var(--gold);text-shadow:0 0 20px rgba(255,213,74,.16)}
+nav a{color:#d8d8d8;text-decoration:none;font-size:14px;font-weight:600;transition:color .2s ease}
+nav a:hover{color:var(--gold)}
 
 .container{
-
-    width:min(
-        var(--max-width),
-        calc(100% - 40px)
-    );
-
-    margin:
-        70px auto
-        100px;
-
+  width:min(var(--max),calc(100% - 40px));margin:75px auto 100px;position:relative;
 }
-
-
-/* =========================================================
-   PAGE TITLE
-========================================================= */
-
 .title{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(38px,6vw,58px);
-
-    line-height:1.1;
-
-    text-align:center;
-
-    font-weight:800;
-
-    margin-bottom:45px;
-
-    color:var(--gold);
-
-    letter-spacing:-1px;
-
+  font-family:'Orbitron',sans-serif;font-size:clamp(38px,6vw,58px);line-height:1.1;
+  text-align:center;font-weight:800;margin-bottom:45px;color:var(--gold);letter-spacing:-1px;
 }
-
-
-/* =========================================================
-   CONTACT CARD
-========================================================= */
+.title::after{content:"";display:block;width:55px;height:3px;margin:16px auto 0;border-radius:5px;background:var(--gold)}
+.section-kicker{text-align:center;color:#8f8f8f;font-size:10px;font-weight:700;letter-spacing:4px;margin-bottom:14px}
 
 .card{
-
-    width:100%;
-
-    padding:
-        clamp(25px,5vw,40px);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.045),
-            rgba(255,255,255,.015)
-        );
-
-    border:
-        1px solid var(--border);
-
-    border-radius:24px;
-
-    backdrop-filter:blur(12px);
-
-    -webkit-backdrop-filter:blur(12px);
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,.28);
-
+  width:100%;padding:clamp(25px,5vw,40px);
+  background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);box-shadow:0 15px 50px rgba(0,0,0,.28);
+  position:relative;overflow:hidden;transition:transform .35s var(--ease),border-color .3s ease,box-shadow .3s ease;
 }
-
-
-/* =========================================================
-   CONTACT INFO
-========================================================= */
-
-.info{
-
-    display:grid;
-
-    gap:14px;
-
-    margin-bottom:30px;
-
+.card::before{
+  content:"";position:absolute;top:0;left:25px;right:25px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,213,74,.65),transparent);opacity:.6;
 }
+.card:hover{border-color:var(--border-hover);box-shadow:0 20px 65px rgba(0,0,0,.34);transform:translateY(-3px)}
 
+.info{display:grid;gap:14px;margin-bottom:30px}
+.info div{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:17px;line-height:1.7;color:#d5d5d5}
+.info a{color:var(--gold);text-decoration:none;font-weight:600;overflow-wrap:anywhere}
+.info a:hover{color:var(--gold-light)}
 
-.info div{
-
-    display:flex;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:8px;
-
-    font-size:17px;
-
-    line-height:1.7;
-
-    color:#d5d5d5;
-
+.directBtn,.send{
+  width:100%;min-height:58px;padding:14px 20px;border:none;border-radius:14px;
+  cursor:pointer;font-family:Poppins,sans-serif;font-size:16px;font-weight:800;
+  background:linear-gradient(100deg,#FFD54A,#ffb800);color:#111;
+  transition:transform .25s var(--ease),box-shadow .25s ease,background .25s ease;
 }
+.directBtn:hover,.send:hover{transform:translateY(-3px);box-shadow:0 13px 35px rgba(255,213,74,.2)}
+.directBtn:active,.send:active{transform:translateY(0)}
 
-
-.info a{
-
-    color:var(--gold);
-
-    text-decoration:none;
-
-    font-weight:600;
-
-    overflow-wrap:anywhere;
-
+.formBox{max-height:0;overflow:hidden;opacity:0;transition:max-height .55s ease,opacity .35s ease,margin-top .4s ease}
+.formBox.open{max-height:900px;opacity:1;overflow:visible;margin-top:30px}
+.fieldTitle{display:block;margin-top:18px;margin-bottom:8px;color:var(--gold);font-size:14px;font-weight:700}
+.fieldTitle span{color:#888;font-size:12px;font-weight:400}
+input,textarea{
+  width:100%;font-family:Poppins,sans-serif;outline:none;color:#fff;background:#0e0e0e;
+  border:1px solid rgba(255,213,74,.3);transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
 }
-
-
-.info a:hover{
-
-    color:var(--gold-light);
-
-}
-
-
-/* =========================================================
-   DIRECT CONTACT BUTTON
-========================================================= */
-
-.directBtn{
-
-    width:100%;
-
-    min-height:58px;
-
-    padding:14px 20px;
-
-    border:none;
-
-    border-radius:14px;
-
-    cursor:pointer;
-
-    font-family:Poppins,sans-serif;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    background:
-        linear-gradient(
-            100deg,
-            #FFD54A,
-            #ffb800
-        );
-
-    color:#111;
-
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
-
-}
-
-
-.directBtn:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:
-        0 10px 30px
-        rgba(255,213,74,.25);
-
-}
-
-
-.directBtn:active{
-
-    transform:translateY(0);
-
-}
-
-
-/* =========================================================
-   FORM
-========================================================= */
-
-.formBox{
-
-    max-height:0;
-
-    overflow:hidden;
-
-    opacity:0;
-
-    transition:
-        max-height .55s ease,
-        opacity .35s ease,
-        margin-top .4s ease;
-
-}
-
-
-.formBox.open{
-
-    max-height:900px;
-
-    opacity:1;
-
-    overflow:visible;
-
-    margin-top:30px;
-
-}
-
-
-/* =========================================================
-   FIELD LABEL
-========================================================= */
-
-.fieldTitle{
-
-    display:block;
-
-    margin-top:18px;
-
-    margin-bottom:8px;
-
-    color:var(--gold);
-
-    font-size:14px;
-
-    font-weight:700;
-
-    letter-spacing:.2px;
-
-}
-
-
-.fieldTitle span{
-
-    color:#888;
-
-    font-size:12px;
-
-    font-weight:400;
-
-}
-
-
-/* =========================================================
-   INPUTS
-========================================================= */
-
-input,
-textarea{
-
-    width:100%;
-
-    font-family:Poppins,sans-serif;
-
-    outline:none;
-
-    color:#fff;
-
-    background:#101010;
-
-    border:
-        1px solid rgba(255,213,74,.35);
-
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
-
-}
-
-
-input{
-
-    min-height:52px;
-
-    padding:
-        13px 16px;
-
-    border-radius:12px;
-
-    font-size:15px;
-
-}
-
-
-textarea{
-
-    min-height:170px;
-
-    margin-top:8px;
-
-    padding:15px 16px;
-
-    border-radius:14px;
-
-    resize:vertical;
-
-    font-size:15px;
-
-    line-height:1.7;
-
-}
-
-
-input::placeholder,
-textarea::placeholder{
-
-    color:#707070;
-
-}
-
-
-input:focus,
-textarea:focus{
-
-    border-color:var(--gold);
-
-    background:#121212;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(255,213,74,.08);
-
-}
-
-
-/* =========================================================
-   OR
-========================================================= */
-
-.orText{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    margin:20px 0;
-
-    color:#777;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    letter-spacing:2px;
-
-}
-
-
-.orText::before,
-.orText::after{
-
-    content:"";
-
-    flex:1;
-
-    height:1px;
-
-    background:
-        rgba(255,255,255,.08);
-
-}
-
-
-/* =========================================================
-   PUBLIC CHECKBOX
-========================================================= */
-
-.publicCheck{
-
-    display:grid;
-
-    grid-template-columns:
-        22px 1fr;
-
-    align-items:start;
-
-    gap:12px;
-
-    margin-top:22px;
-
-    color:#aaa;
-
-    font-size:13px;
-
-    line-height:1.7;
-
-}
-
-
-.publicCheck input{
-
-    width:20px;
-    height:20px;
-
-    margin:2px 0 0;
-
-    accent-color:var(--gold);
-
-    cursor:pointer;
-
-}
-
-
-.publicCheck b{
-
-    color:var(--gold);
-
-}
-
-
-/* =========================================================
-   SEND BUTTON
-========================================================= */
-
-.send{
-
-    width:100%;
-
-    min-height:56px;
-
-    margin-top:22px;
-
-    padding:14px 20px;
-
-    border:none;
-
-    border-radius:14px;
-
-    cursor:pointer;
-
-    font-family:Poppins,sans-serif;
-
-    font-size:16px;
-
-    font-weight:800;
-
-    background:var(--gold);
-
-    color:#111;
-
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        box-shadow .2s ease;
-
-}
-
-
-.send:hover{
-
-    transform:translateY(-2px);
-
-    background:#ffe37d;
-
-    box-shadow:
-        0 10px 25px
-        rgba(255,213,74,.2);
-
-}
-
-
-/* =========================================================
-   POPUP
-========================================================= */
+input{min-height:52px;padding:13px 16px;border-radius:12px;font-size:15px}
+textarea{min-height:170px;margin-top:8px;padding:15px 16px;border-radius:14px;resize:vertical;font-size:15px;line-height:1.7}
+input::placeholder,textarea::placeholder{color:#707070}
+input:focus,textarea:focus{border-color:var(--gold);background:#121212;box-shadow:0 0 0 3px rgba(255,213,74,.08)}
+.orText{display:flex;align-items:center;gap:15px;margin:20px 0;color:#777;font-size:12px;font-weight:700;letter-spacing:2px}
+.orText::before,.orText::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.08)}
+.publicCheck{display:grid;grid-template-columns:22px 1fr;align-items:start;gap:12px;margin-top:22px;color:#aaa;font-size:13px;line-height:1.7}
+.publicCheck input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--gold);cursor:pointer}
+.publicCheck b{color:var(--gold)}
 
 .popup{
-
-    position:fixed;
-
-    left:50%;
-    top:50%;
-
-    z-index:2000;
-
-    width:
-        min(
-            420px,
-            calc(100% - 35px)
-        );
-
-    padding:
-        35px 28px;
-
-    text-align:center;
-
-    background:#101010;
-
-    border:
-        1px solid var(--gold);
-
-    border-radius:22px;
-
-    opacity:0;
-
-    pointer-events:none;
-
-    transform:
-        translate(-50%,-50%)
-        scale(.92);
-
-    transition:
-        opacity .3s ease,
-        transform .3s ease;
-
-    box-shadow:
-        0 20px 70px rgba(0,0,0,.6);
-
+  position:fixed;left:50%;top:50%;z-index:2000;width:min(420px,calc(100% - 35px));
+  padding:35px 28px;text-align:center;background:#101010;border:1px solid var(--gold);
+  border-radius:22px;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.92);
+  transition:opacity .3s ease,transform .3s ease;box-shadow:0 20px 70px rgba(0,0,0,.6)
 }
-
-
-.popup.show{
-
-    opacity:1;
-
-    pointer-events:auto;
-
-    transform:
-        translate(-50%,-50%)
-        scale(1);
-
-}
-
-
-.tick{
-
-    width:75px;
-    height:75px;
-
-    margin:
-        0 auto 18px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    border-radius:50%;
-
-    background:var(--gold);
-
-    color:#111;
-
-    font-size:38px;
-
-    font-weight:800;
-
-}
-
-
-.popup h2{
-
-    color:var(--gold);
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:22px;
-
-    margin-bottom:12px;
-
-}
-
-
-.popup p{
-
-    color:#aaa;
-
-    line-height:1.7;
-
-    font-size:14px;
-
-}
-
-
-/* =========================================================
-   LIVE REQUEST SECTION
-========================================================= */
-
-#publicRequests{
-
-    width:100%;
-
-    max-width:1250px;
-
-    margin:0 auto;
-
-    padding:
-        30px 20px
-        100px;
-
-}
-
-
-.liveTitle{
-
-    font-family:'Orbitron',sans-serif;
-
-    text-align:center;
-
-    font-size:
-        clamp(30px,5vw,52px);
-
-    line-height:1.2;
-
-    color:var(--gold);
-
-    margin-bottom:18px;
-
-}
-
-
-.liveSubtitle{
-
-    width:100%;
-
-    max-width:760px;
-
-    margin:
-        0 auto 50px;
-
-    text-align:center;
-
-    color:#929292;
-
-    font-size:
-        clamp(14px,2vw,17px);
-
-    line-height:1.8;
-
-}
-
-
-/* =========================================================
-   REQUEST GRID
-========================================================= */
-
-.portfolio{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(300px,1fr)
-        );
-
-    gap:22px;
-
-}
-
-
-/* =========================================================
-   REQUEST CARD
-========================================================= */
-
+.popup.show{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.tick{width:75px;height:75px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--gold);color:#111;font-size:38px;font-weight:800}
+.popup h2{color:var(--gold);font-family:'Orbitron',sans-serif;font-size:22px;margin-bottom:12px}
+.popup p{color:#aaa;line-height:1.7;font-size:14px}
+
+#publicRequests{width:100%;max-width:1250px;margin:0 auto;padding:30px 20px 110px}
+.liveTitle{font-family:'Orbitron',sans-serif;text-align:center;font-size:clamp(30px,5vw,52px);line-height:1.2;color:var(--gold);margin-bottom:18px}
+.liveSubtitle{width:100%;max-width:760px;margin:0 auto 50px;text-align:center;color:#929292;font-size:clamp(14px,2vw,17px);line-height:1.8}
+.portfolio{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
 .requestCard{
-
-    min-width:0;
-
-    padding:28px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.05),
-            rgba(255,255,255,.018)
-        );
-
-    border:
-        1px solid var(--border);
-
-    border-radius:20px;
-
-    transition:
-        transform .25s ease,
-        border-color .25s ease;
-
-    animation:
-        appear .45s ease;
-
+  min-width:0;padding:28px;background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  border:1px solid var(--border);border-radius:20px;transition:transform .3s var(--ease),border-color .25s ease,box-shadow .3s ease;
+  animation:appear .45s ease;position:relative;overflow:hidden;
 }
-
-
-.requestCard:hover{
-
-    transform:translateY(-6px);
-
-    border-color:var(--border-hover);
-
-}
-
-
-/* =========================================================
-   REQUEST HEADER
-========================================================= */
-
-.requestHeader{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:15px;
-
-    margin-bottom:20px;
-
-    min-width:0;
-
-}
-
-
-.avatar{
-
-    flex-shrink:0;
-
-    width:58px;
-    height:58px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    border-radius:50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #FFD54A,
-            #ff9800
-        );
-
-    color:#111;
-
-    font-size:24px;
-
-    font-weight:800;
-
-}
-
-
-.requestHeader > div:last-child{
-
-    min-width:0;
-
-}
-
-
-.requestHeader h3{
-
-    color:var(--gold);
-
-    font-size:18px;
-
-    font-weight:700;
-
-    overflow-wrap:anywhere;
-
-}
-
-
-.requestHeader span{
-
-    display:block;
-
-    margin-top:3px;
-
-    color:#777;
-
-    font-size:12px;
-
-}
-
-
-/* =========================================================
-   REQUEST MESSAGE
-========================================================= */
-
-.requestMessage{
-
-    margin-top:15px;
-
-    padding:16px;
-
-    border-left:
-        3px solid var(--gold);
-
-    background:
-        rgba(255,255,255,.035);
-
-    border-radius:10px;
-
-    color:#ddd;
-
-    font-size:14px;
-
-    line-height:1.8;
-
-    overflow-wrap:anywhere;
-
-    word-break:break-word;
-
-}
-
-
-/* =========================================================
-   REQUEST CONTACT
-========================================================= */
-
-.requestContact{
-
-    margin-top:18px;
-
-    padding-top:15px;
-
-    border-top:
-        1px solid rgba(255,255,255,.08);
-
-    color:var(--gold);
-
-    font-size:13px;
-
-    font-weight:600;
-
-    overflow-wrap:anywhere;
-
-    word-break:break-word;
-
-}
-
-
-/* =========================================================
-   ANIMATION
-========================================================= */
-
-@keyframes appear{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(20px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
-
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer{
-
-    width:100%;
-
-    padding:
-        45px 20px;
-
-    text-align:center;
-
-    color:#707070;
-
-    font-size:12px;
-
-    line-height:1.8;
-
-    border-top:
-        1px solid rgba(255,213,74,.12);
-
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar{
-
-    width:10px;
-
-}
-
-
-::-webkit-scrollbar-track{
-
-    background:#090909;
-
-}
-
-
-::-webkit-scrollbar-thumb{
-
-    background:
-        linear-gradient(
-            180deg,
-            #FFD54A,
-            #d99d00
-        );
-
-    border-radius:20px;
-
-    border:
-        2px solid #090909;
-
-}
-
-
-::-webkit-scrollbar-thumb:hover{
-
-    background:
-        linear-gradient(
-            180deg,
-            #fff0a6,
-            #FFD54A
-        );
-
-}
-
-
-html{
-
-    scrollbar-color:
-        #FFD54A
-        #090909;
-
-    scrollbar-width:thin;
-
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media(max-width:800px){
-
-    nav{
-
-        padding:
-            0 22px;
-
-    }
-
-
-    .container{
-
-        margin-top:55px;
-
-    }
-
-
-    .portfolio{
-
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0,1fr)
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
+.requestCard::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,213,74,.08),transparent 28%);opacity:0;transition:opacity .25s ease;pointer-events:none}
+.requestCard:hover{transform:translateY(-7px);border-color:var(--border-hover);box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.requestCard:hover::before{opacity:1}
+.requestHeader{display:flex;align-items:center;gap:15px;margin-bottom:20px;min-width:0}
+.avatar{flex-shrink:0;width:58px;height:58px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,#FFD54A,#ff9800);color:#111;font-size:24px;font-weight:800}
+.requestHeader>div:last-child{min-width:0}
+.requestHeader h3{color:var(--gold);font-size:18px;font-weight:700;overflow-wrap:anywhere}
+.requestHeader span{display:block;margin-top:3px;color:#777;font-size:12px}
+.requestMessage{margin-top:15px;padding:16px;border-left:3px solid var(--gold);background:rgba(255,255,255,.035);border-radius:10px;color:#ddd;font-size:14px;line-height:1.8;overflow-wrap:anywhere;word-break:break-word}
+.requestContact{margin-top:18px;padding-top:15px;border-top:1px solid rgba(255,255,255,.08);color:var(--gold);font-size:13px;font-weight:600;overflow-wrap:anywhere;word-break:break-word}
+@keyframes appear{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+footer{width:100%;padding:50px 20px;text-align:center;color:#707070;font-size:12px;line-height:1.8;border-top:1px solid rgba(255,213,74,.12)}
+footer strong{color:var(--gold);font-family:'Orbitron',sans-serif}
+
+#scroll-progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--gold);z-index:10002;box-shadow:0 0 12px rgba(255,213,74,.45);pointer-events:none}
 
 @media(max-width:650px){
-
-    nav{
-
-        min-height:68px;
-
-        padding:
-            0 18px;
-
-    }
-
-
-    .logo{
-
-        font-size:21px;
-
-        letter-spacing:2px;
-
-    }
-
-
-    nav a{
-
-        font-size:12px;
-
-    }
-
-
-    .container{
-
-        width:
-            calc(100% - 30px);
-
-        margin:
-            45px auto
-            70px;
-
-    }
-
-
-    .title{
-
-        font-size:38px;
-
-        margin-bottom:32px;
-
-    }
-
-
-    .card{
-
-        padding:23px;
-
-        border-radius:18px;
-
-    }
-
-
-    .info div{
-
-        align-items:flex-start;
-
-        font-size:15px;
-
-    }
-
-
-    .directBtn{
-
-        min-height:54px;
-
-        font-size:15px;
-
-    }
-
-
-    input{
-
-        min-height:50px;
-
-        font-size:15px;
-
-    }
-
-
-    textarea{
-
-        min-height:150px;
-
-        font-size:15px;
-
-    }
-
-
-    .publicCheck{
-
-        font-size:12px;
-
-        line-height:1.65;
-
-    }
-
-
-    .send{
-
-        min-height:54px;
-
-        font-size:15px;
-
-    }
-
-
-    #publicRequests{
-
-        padding:
-            20px 15px
-            70px;
-
-    }
-
-
-    .liveSubtitle{
-
-        margin-bottom:35px;
-
-    }
-
-
-    .portfolio{
-
-        grid-template-columns:1fr;
-
-        gap:16px;
-
-    }
-
-
-    .requestCard{
-
-        padding:23px;
-
-    }
-
-
-    .requestMessage{
-
-        font-size:13px;
-
-    }
-
-
-    footer{
-
-        padding:
-            35px 18px;
-
-    }
-
+  nav{min-height:68px;padding:0 18px}
+  .logo{font-size:21px;letter-spacing:2px}
+  nav a{font-size:12px}
+  .container{width:calc(100% - 30px);margin:45px auto 70px}
+  .title{font-size:38px;margin-bottom:32px}
+  .card{padding:23px;border-radius:18px}
+  .info div{align-items:flex-start;font-size:15px}
+  .directBtn,.send{min-height:54px;font-size:15px}
+  input{min-height:50px;font-size:15px}
+  textarea{min-height:150px;font-size:15px}
+  .publicCheck{font-size:12px;line-height:1.65}
+  #publicRequests{padding:20px 15px 70px}
+  .liveSubtitle{margin-bottom:35px}
+  .portfolio{grid-template-columns:1fr;gap:16px}
+  .requestCard{padding:23px}
+  .requestMessage{font-size:13px}
+  footer{padding:35px 18px}
+  #scene{opacity:.45}
 }
-
-
-/* =========================================================
-   VERY SMALL PHONES
-========================================================= */
-
-@media(max-width:380px){
-
-    .title{
-
-        font-size:33px;
-
-    }
-
-
-    .logo{
-
-        font-size:19px;
-
-    }
-
-
-    .back{
-
-        font-size:11px;
-
-    }
-
-
-    .card{
-
-        padding:20px;
-
-    }
-
-
-    .liveTitle{
-
-        font-size:27px;
-
-    }
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
+@media(pointer:coarse){.cursor-dot,.cursor-ring{display:none!important}}
 @media(prefers-reduced-motion:reduce){
-
-    html{
-
-        scroll-behavior:auto;
-
-    }
-
-
-    *{
-
-        animation:none !important;
-
-        transition:none !important;
-
-    }
-
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  #scene{display:none}
 }
-
 </style>
 
 </head>
 
 
 <body>
+
+<div id="scroll-progress" aria-hidden="true"></div>
+<div id="scene" aria-hidden="true"></div>
+<div class="scene-vignette" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
 
 
 <!-- =========================================================
@@ -1541,8 +266,8 @@ html{
 
                 📧
 
-                <a href="mailto:mpoxel@gmail.com">
-                    mpoxel@gmail.com
+                <a href="mailto:manbox5545@gmail.com">
+                    manbox5545@gmail.com
                 </a>
 
             </div>
@@ -1737,7 +462,7 @@ html{
 
 <footer>
 
-    These are genuine website requests submitted by
+    <strong>MPOXEL</strong><br><br>These are genuine website requests submitted by
     visitors who agreed to make their request public.
 
     <br><br>
@@ -1752,303 +477,242 @@ html{
 ========================================================= -->
 
 <script type="module">
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
 import {
-    db,
+    getDatabase,
     ref,
     push,
     set,
     onValue
-} from "./firebase.js";
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
+/* Mpoxel Firebase configuration */
+const firebaseConfig = {
+    apiKey: "AIzaSyD7czyKNXJ0ftg5FGsBYMteTXp4bPDdvN8",
+    authDomain: "mpoxelin.firebaseapp.com",
+    projectId: "mpoxelin",
+    storageBucket: "mpoxelin.firebasestorage.app",
+    messagingSenderId: "770215536031",
+    appId: "1:770215536031:web:34ec68cce38e32bf80c9aa",
+    measurementId: "G-KNTL7VMLVS"
+};
 
-const box =
-    document.getElementById("box");
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
+isSupported().then(supported => {
+    if (supported) getAnalytics(app);
+}).catch(() => {});
+
+const box = document.getElementById("box");
 
 function toggleBox(){
-
     box.classList.toggle("open");
-
 }
-
-
 window.toggleBox = toggleBox;
 
-
 async function sendMessage(){
-
-    const name =
-        document
-        .getElementById("name")
-        .value
-        .trim();
-
-
-    const email =
-        document
-        .getElementById("email")
-        .value
-        .trim();
-
-
-    const phone =
-        document
-        .getElementById("phone")
-        .value
-        .trim();
-
-
-    const msg =
-        document
-        .getElementById("msg")
-        .value
-        .trim();
-
-
-    const publicRequest =
-        document
-        .getElementById("publicRequest")
-        .checked;
-
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const msg = document.getElementById("msg").value.trim();
+    const publicRequest = document.getElementById("publicRequest").checked;
 
     if(!email && !phone){
-
-        alert(
-            "Please enter your Email or Phone Number."
-        );
-
+        alert("Please enter your Email or Phone Number.");
         return;
-
     }
-
-
-    if(msg===""){
-
-        alert(
-            "Please enter your message."
-        );
-
+    if(msg === ""){
+        alert("Please enter your message.");
         return;
-
     }
-
-
     if(!publicRequest){
-
-        alert(
-            "Please confirm the public request option."
-        );
-
+        alert("Please confirm the public request option.");
         return;
-
     }
 
-
-    const messageRef =
-        push(
-            ref(
-                db,
-                "messages"
-            )
-        );
-
+    const messageRef = push(ref(db, "messages"));
 
     try{
-
-        await set(
-            messageRef,
-            {
-
-                name:
-                    name ||
-                    "Anonymous",
-
-                email,
-
-                phone,
-
-                message:msg,
-
-                publicRequest,
-
-                timestamp:
-                    Date.now()
-
-            }
-        );
-
-
+        await set(messageRef, {
+            name: name || "Anonymous",
+            email,
+            phone,
+            message: msg,
+            publicRequest,
+            timestamp: Date.now()
+        });
     }catch(err){
-
         console.error(err);
-
         alert(err.message);
-
         return;
-
     }
 
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("msg").value = "";
+    document.getElementById("publicRequest").checked = false;
 
-    document
-        .getElementById("name")
-        .value="";
-
-
-    document
-        .getElementById("email")
-        .value="";
-
-
-    document
-        .getElementById("phone")
-        .value="";
-
-
-    document
-        .getElementById("msg")
-        .value="";
-
-
-    document
-        .getElementById("publicRequest")
-        .checked=false;
-
-
-    const popup =
-        document.getElementById("popup");
-
-
+    const popup = document.getElementById("popup");
     popup.classList.add("show");
+    setTimeout(() => popup.classList.remove("show"), 3000);
+}
+window.sendMessage = sendMessage;
 
+const requestCards = document.getElementById("requestCards");
 
-    setTimeout(()=>{
+onValue(ref(db, "messages"), snapshot => {
+    requestCards.innerHTML = "";
+    const list = [];
 
-        popup.classList.remove("show");
+    snapshot.forEach(child => list.push(child.val()));
+    list.reverse();
 
-    },3000);
+    list.forEach(data => {
+        if(!data.publicRequest) return;
 
+        const card = document.createElement("div");
+        card.className = "requestCard";
+
+        const safeName = String(data.name || "Anonymous");
+        const initial = safeName.charAt(0).toUpperCase();
+
+        card.innerHTML = `
+            <div class="requestHeader">
+                <div class="avatar">${initial}</div>
+                <div>
+                    <h3>${safeName}</h3>
+                    <span>Website Request</span>
+                </div>
+            </div>
+            <div class="requestMessage">"${String(data.message || "")}"</div>
+            <div class="requestContact">${String(data.email || data.phone || "")}</div>
+        `;
+
+        requestCards.appendChild(card);
+
+        card.addEventListener("pointermove", e => {
+            const r = card.getBoundingClientRect();
+            card.style.setProperty("--mx", ((e.clientX-r.left)/r.width*100)+"%");
+            card.style.setProperty("--my", ((e.clientY-r.top)/r.height*100)+"%");
+        }, {passive:true});
+    });
+});
+
+/* Shared Mpoxel interactions */
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer = window.matchMedia("(pointer:fine)").matches;
+
+const progress = document.getElementById("scroll-progress");
+if(progress){
+    const updateProgress = () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        progress.style.width = (max > 0 ? scrollY / max * 100 : 0) + "%";
+    };
+    addEventListener("scroll", updateProgress, {passive:true});
+    addEventListener("resize", updateProgress, {passive:true});
+    updateProgress();
 }
 
+if(finePointer && !reduceMotion){
+    const dot = document.querySelector(".cursor-dot");
+    const ring = document.querySelector(".cursor-ring");
+    document.body.classList.add("cursor-ready");
 
-window.sendMessage =
-    sendMessage;
+    let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my, raf = 0;
+    addEventListener("pointermove", e => {
+        mx=e.clientX; my=e.clientY;
+        if(!raf) raf=requestAnimationFrame(() => {
+            rx += (mx-rx)*.18; ry += (my-ry)*.18;
+            dot.style.left=mx+"px"; dot.style.top=my+"px";
+            ring.style.left=rx+"px"; ring.style.top=ry+"px";
+            raf=0;
+        });
+    }, {passive:true});
 
+    document.querySelectorAll("a,button,.card,.requestCard").forEach(el => {
+        el.addEventListener("mouseenter",()=>document.body.classList.add("cursor-hover"));
+        el.addEventListener("mouseleave",()=>document.body.classList.remove("cursor-hover"));
+    });
+}
 
-const requestCards =
-    document.getElementById(
-        "requestCards"
-    );
+/* Lightweight 3D background */
+const sceneEl = document.getElementById("scene");
+const saveData = navigator.connection && navigator.connection.saveData;
+const cores = navigator.hardwareConcurrency || 4;
 
+if(!reduceMotion && !saveData && cores > 2 && sceneEl && window.WebGLRenderingContext){
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js";
+    s.onload = () => {
+        const THREE = window.THREE;
+        if(!THREE) return;
 
-onValue(
-    ref(
-        db,
-        "messages"
-    ),
-    (snapshot)=>{
+        const mobile = matchMedia("(max-width:768px)").matches;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,100);
+        camera.position.z=9;
 
-        requestCards.innerHTML="";
+        const renderer = new THREE.WebGLRenderer({alpha:true,antialias:!mobile,powerPreference:"low-power"});
+        renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.2:1.5));
+        renderer.setSize(innerWidth,innerHeight);
+        sceneEl.appendChild(renderer.domElement);
 
+        const group = new THREE.Group();
+        scene.add(group);
 
-        const list=[];
-
-
-        snapshot.forEach(
-            (child)=>{
-
-                list.push(
-                    child.val()
-                );
-
-            }
+        const wire = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(1.7,mobile?1:2),
+            new THREE.MeshStandardMaterial({color:0xffd54a,metalness:.7,roughness:.3,transparent:true,opacity:mobile?.13:.2,wireframe:true})
         );
-
-
-        list.reverse();
-
-
-        list.forEach(
-            (data)=>{
-
-                if(!data.publicRequest)
-                    return;
-
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    "requestCard";
-
-
-                card.innerHTML=`
-
-                    <div class="requestHeader">
-
-                        <div class="avatar">
-
-                            ${
-                                (
-                                    data.name ||
-                                    "Anonymous"
-                                )[0]
-                                .toUpperCase()
-                            }
-
-                        </div>
-
-
-                        <div>
-
-                            <h3>
-                                ${
-                                    data.name ||
-                                    "Anonymous"
-                                }
-                            </h3>
-
-                            <span>
-                                Website Request
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="requestMessage">
-
-                        "${data.message}"
-
-                    </div>
-
-
-                    <div class="requestContact">
-
-                        ${
-                            data.email ||
-                            data.phone
-                        }
-
-                    </div>
-
-                `;
-
-
-                requestCards.appendChild(
-                    card
-                );
-
-            }
+        const orbit = new THREE.Mesh(
+            new THREE.TorusGeometry(2.3,.012,8,mobile?48:72),
+            new THREE.MeshBasicMaterial({color:0xffd54a,transparent:true,opacity:mobile?.12:.2})
         );
+        orbit.rotation.x=1.15;
+        group.add(wire,orbit);
+        group.position.set(3,-.3,-1.5);
 
-    }
-);
+        scene.add(new THREE.AmbientLight(0xffffff,.75));
+        const light = new THREE.PointLight(0xffd54a,3,14);
+        light.position.set(3,2,5);
+        scene.add(light);
 
+        let targetX=0,targetY=0,scroll=0,currentScroll=0,running=true;
+        addEventListener("pointermove",e=>{
+            if(!finePointer)return;
+            targetX=(e.clientX/innerWidth-.5)*.7;
+            targetY=(e.clientY/innerHeight-.5)*.5;
+        },{passive:true});
+        addEventListener("scroll",()=>scroll=Math.min(scrollY/Math.max(innerHeight,1),4),{passive:true});
+        addEventListener("resize",()=>{
+            camera.aspect=innerWidth/innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.2:1.5));
+            renderer.setSize(innerWidth,innerHeight);
+        },{passive:true});
+        document.addEventListener("visibilitychange",()=>running=document.visibilityState==="visible");
+
+        const clock = new THREE.Clock();
+        function animate(){
+            requestAnimationFrame(animate);
+            if(!running)return;
+            const t=clock.getElapsedTime();
+            currentScroll+=(scroll-currentScroll)*.05;
+            wire.rotation.x+=.0015;
+            wire.rotation.y+=.0025;
+            orbit.rotation.z=t*.12+currentScroll*.15;
+            group.position.x+=(3+targetX*.9-group.position.x)*.018;
+            group.position.y+=(-.3-targetY*.5-currentScroll*.25-group.position.y)*.012;
+            group.position.z=-1.5-currentScroll*.35;
+            renderer.render(scene,camera);
+        }
+        animate();
+    };
+    document.head.appendChild(s);
+}
 </script>
 
 
