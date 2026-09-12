@@ -27,1289 +27,401 @@
 <link rel="icon" type="image/jpg" href="/favicon.jpg">
 
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-    scroll-padding-top:90px;
-}
-
-body{
-    font-family:'Poppins',sans-serif;
-    background:#070707;
-    color:#fff;
-    overflow-x:hidden;
-    min-height:100vh;
-}
-
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
 :root{
-
-    --gold:#FFD54A;
-    --gold-light:#fff1a8;
-    --gold-dark:#d99d00;
-
-    --background:#070707;
-    --surface:#0d0d0d;
-    --surface-2:#121212;
-
-    --border:rgba(255,213,74,.14);
-    --border-hover:rgba(255,213,74,.55);
-
-    --text:#ffffff;
-    --muted:#a3a3a3;
-
-    --max-width:1250px;
+  --gold:#FFD54A;
+  --gold-soft:#fff1a8;
+  --gold-dark:#d99d00;
+  --bg:#060606;
+  --surface:rgba(18,18,18,.72);
+  --text:#fff;
+  --muted:#a7a7a7;
+  --border:rgba(255,213,74,.14);
+  --border-hover:rgba(255,213,74,.58);
+  --max:1250px;
+  --ease:cubic-bezier(.22,1,.36,1);
 }
 
-
-/* =========================================================
-   BODY BACKGROUND
-========================================================= */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    width:450px;
-    height:450px;
-
-    left:-180px;
-    top:-180px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,213,74,.10),
-            transparent 70%
-        );
-
-    pointer-events:none;
-
-    z-index:-2;
-}
-
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:400px;
-    height:400px;
-
-    right:-170px;
-    bottom:-170px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,190,40,.07),
-            transparent 70%
-        );
-
-    pointer-events:none;
-
-    z-index:-2;
-}
-
-
-/* =========================================================
-   SUBTLE GRID
-========================================================= */
-
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
 body{
-
-    background-color:#070707;
-
-    background-image:
-        linear-gradient(
-            rgba(255,255,255,.018) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(255,255,255,.018) 1px,
-            transparent 1px
-        );
-
-    background-size:55px 55px;
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  min-height:100vh;
+  background-image:
+    linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:55px 55px;
 }
+body::before,body::after{
+  content:"";position:fixed;pointer-events:none;z-index:-3;
+  border-radius:50%;filter:blur(20px);
+}
+body::before{width:420px;height:420px;left:-210px;top:-190px;background:radial-gradient(circle,rgba(255,213,74,.09),transparent 70%)}
+body::after{width:380px;height:380px;right:-190px;bottom:-180px;background:radial-gradient(circle,rgba(255,190,40,.06),transparent 70%)}
 
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
+/* ---------- Navigation ---------- */
 nav{
-    position:sticky;
-    top:0;
-    z-index:999;
-
-    width:100%;
-    min-height:76px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:
-        0
-        max(25px, calc((100% - var(--max-width)) / 2));
-
-    background:rgba(7,7,7,.42);
-
-    backdrop-filter:
-        blur(22px)
-        saturate(130%);
-
-    -webkit-backdrop-filter:
-        blur(22px)
-        saturate(130%);
-
-    border-bottom:
-        1px solid rgba(255,213,74,.18);
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.20);
+  position:sticky;top:0;z-index:999;width:100%;min-height:76px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 max(25px,calc((100% - var(--max))/2));
+  background:rgba(6,6,6,.58);
+  backdrop-filter:blur(18px) saturate(125%);
+  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  border-bottom:1px solid rgba(255,213,74,.14);
 }
-
-
-/* =========================================================
-   LOGO
-========================================================= */
-
 .logo{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:27px;
-
-    font-weight:800;
-
-    letter-spacing:3px;
-
-    color:var(--gold);
-
-    text-shadow:
-        0 0 20px rgba(255,213,74,.18);
+  font-family:'Orbitron',sans-serif;font-size:27px;font-weight:800;
+  letter-spacing:3px;color:var(--gold);
+  text-shadow:0 0 20px rgba(255,213,74,.16);
 }
-
-
-/* =========================================================
-   NAV LINKS
-========================================================= */
-
 nav a{
-
-    position:relative;
-
-    display:inline-block;
-
-    color:#d8d8d8;
-
-    text-decoration:none;
-
-    margin-left:30px;
-
-    font-size:14px;
-
-    font-weight:500;
-
-    transition:
-        color .2s ease;
+  position:relative;display:inline-block;margin-left:30px;
+  color:#d8d8d8;text-decoration:none;font-size:14px;font-weight:500;
+  transition:color .2s ease;
 }
-
-
 nav a::after{
+  content:"";position:absolute;left:0;bottom:-7px;width:0;height:2px;
+  background:var(--gold);transition:width .2s ease;
+}
+nav a:hover{color:var(--gold)}
+nav a:hover::after{width:100%}
 
-    content:"";
-
-    position:absolute;
-
-    left:0;
-    bottom:-7px;
-
-    width:0;
-    height:2px;
-
-    background:var(--gold);
-
-    transition:
-        width .2s ease;
+/* ---------- 3D stage ---------- */
+#scene{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  opacity:.95;
+}
+#scene canvas{display:block;width:100%!important;height:100%!important}
+.scene-vignette{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 50% 35%,transparent 15%,rgba(0,0,0,.2) 62%,rgba(0,0,0,.7) 100%);
 }
 
-
-nav a:hover{
-
-    color:var(--gold);
+/* ---------- Cursor ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed;left:0;top:0;pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);border-radius:50%;
+  opacity:0;transition:opacity .2s ease,transform .18s var(--ease),width .22s var(--ease),height .22s var(--ease),border-color .22s ease;
 }
+.cursor-dot{width:7px;height:7px;background:var(--gold);box-shadow:0 0 18px rgba(255,213,74,.6)}
+.cursor-ring{width:34px;height:34px;border:1px solid rgba(255,213,74,.65)}
+body.cursor-ready .cursor-dot,body.cursor-ready .cursor-ring{opacity:1}
+body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);background:rgba(255,213,74,.045)}
+body.cursor-hover .cursor-dot{transform:translate(-50%,-50%) scale(.65)}
 
-
-nav a:hover::after{
-
-    width:100%;
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
-
+/* ---------- Hero ---------- */
 .hero{
-
-    min-height:calc(100vh - 76px);
-
-    max-width:1250px;
-
-    margin:auto;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-align:center;
-
-    padding:
-        80px 25px
-        100px;
-
-    position:relative;
+  min-height:calc(100vh - 76px);max-width:var(--max);margin:auto;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:90px 25px 120px;position:relative;isolation:isolate;
 }
-
-
-/* =========================================================
-   HERO DECORATION
-========================================================= */
-
 .hero::before{
-
-    content:"MPOXEL";
-
-    position:absolute;
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(80px,18vw,230px);
-
-    font-weight:800;
-
-    color:rgba(255,213,74,.018);
-
-    white-space:nowrap;
-
-    pointer-events:none;
-
-    user-select:none;
-
-    z-index:0;
+  content:"MPOXEL";position:absolute;inset:50% auto auto 50%;
+  transform:translate(-50%,-50%);
+  font-family:'Orbitron',sans-serif;font-size:clamp(80px,18vw,230px);
+  font-weight:800;color:rgba(255,213,74,.018);white-space:nowrap;
+  pointer-events:none;user-select:none;z-index:-1;
 }
-
-
-.hero > div{
-
-    position:relative;
-
-    z-index:1;
+.hero-content{position:relative;z-index:2}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;margin-bottom:20px;
+  padding:8px 13px;border:1px solid var(--border);border-radius:999px;
+  color:#d8d8d8;background:rgba(255,255,255,.025);font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
 }
-
-
-/* =========================================================
-   HERO TITLE
-========================================================= */
-
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
 .hero h1{
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(42px,7vw,78px);
-
-    line-height:1.08;
-
-    font-weight:800;
-
-    margin-bottom:25px;
-
-    letter-spacing:-2px;
-
-    background:
-        linear-gradient(
-            110deg,
-            #FFD54A 0%,
-            #fff5b5 45%,
-            #FFD54A 100%
-        );
-
-    -webkit-background-clip:text;
-    background-clip:text;
-
-    -webkit-text-fill-color:transparent;
+  font-family:'Orbitron',sans-serif;font-size:clamp(42px,7vw,78px);
+  line-height:1.08;font-weight:800;margin-bottom:25px;letter-spacing:-2px;
+  background:linear-gradient(110deg,var(--gold) 0%,#fff5b5 45%,var(--gold) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
-
-
-/* =========================================================
-   HERO PARAGRAPH
-========================================================= */
-
-.hero p{
-
-    max-width:750px;
-
-    margin:auto;
-
-    color:#bcbcbc;
-
-    font-size:
-        clamp(16px,2vw,20px);
-
-    line-height:1.9;
-}
-
-
-/* =========================================================
-   BUTTON AREA
-========================================================= */
-
-.buttons{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    margin-top:40px;
-}
-
-
-/* =========================================================
-   BUTTON
-========================================================= */
-
+.hero p{max-width:750px;margin:auto;color:#bcbcbc;font-size:clamp(16px,2vw,20px);line-height:1.9}
+.buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:40px}
 .btn{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    min-width:150px;
-
-    padding:14px 27px;
-
-    border-radius:50px;
-
-    text-decoration:none;
-
-    font-size:14px;
-
-    font-weight:700;
-
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        color .2s ease,
-        box-shadow .2s ease;
+  display:inline-flex;align-items:center;justify-content:center;min-width:150px;
+  padding:14px 27px;border-radius:50px;text-decoration:none;font-size:14px;font-weight:700;
+  transition:transform .25s var(--ease),background .25s ease,color .25s ease,box-shadow .25s ease;
 }
+.btn:hover{transform:translateY(-4px)}
+.gold{background:var(--gold);color:#111;box-shadow:0 8px 25px rgba(255,213,74,.12)}
+.gold:hover{background:#ffe47b;box-shadow:0 15px 35px rgba(255,213,74,.2)}
+.outline{border:1px solid rgba(255,213,74,.6);color:var(--gold);background:rgba(255,213,74,.025)}
+.outline:hover{background:var(--gold);color:#111}
 
-
-.btn:hover{
-
-    transform:translateY(-3px);
-}
-
-
-/* GOLD BUTTON */
-
-.gold{
-
-    background:var(--gold);
-
-    color:#111;
-
-    box-shadow:
-        0 8px 25px
-        rgba(255,213,74,.12);
-}
-
-
-.gold:hover{
-
-    background:#ffe47b;
-
-    box-shadow:
-        0 12px 30px
-        rgba(255,213,74,.22);
-}
-
-
-/* OUTLINE */
-
-.outline{
-
-    border:
-        1px solid rgba(255,213,74,.6);
-
-    color:var(--gold);
-
-    background:
-        rgba(255,213,74,.025);
-}
-
-
-.outline:hover{
-
-    background:var(--gold);
-
-    color:#111;
-}
-
-
-/* =========================================================
-   SECTIONS
-========================================================= */
-
-section{
-
-    width:100%;
-
-    max-width:1250px;
-
-    margin:auto;
-
-    padding:
-        100px 25px;
-}
-
-
-/* =========================================================
-   SECTION TITLE
-========================================================= */
-
+/* ---------- Sections ---------- */
+section{width:100%;max-width:var(--max);margin:auto;padding:110px 25px;position:relative}
 .title{
-
-    position:relative;
-
-    text-align:center;
-
-    font-family:'Orbitron',sans-serif;
-
-    font-size:
-        clamp(30px,5vw,43px);
-
-    margin-bottom:55px;
-
-    color:var(--gold);
-
-    letter-spacing:-1px;
+  position:relative;text-align:center;font-family:'Orbitron',sans-serif;
+  font-size:clamp(30px,5vw,43px);margin-bottom:55px;color:var(--gold);letter-spacing:-1px;
 }
-
-
-.title::after{
-
-    content:"";
-
-    display:block;
-
-    width:55px;
-
-    height:3px;
-
-    margin:16px auto 0;
-
-    border-radius:5px;
-
-    background:var(--gold);
-}
-
-
-/* =========================================================
-   ABOUT
-========================================================= */
-
-.about{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(300px,1fr)
-        );
-
-    gap:25px;
-
-    align-items:stretch;
-}
-
-
-/* =========================================================
-   GENERAL CARD
-========================================================= */
+.title::after{content:"";display:block;width:55px;height:3px;margin:16px auto 0;border-radius:5px;background:var(--gold)}
+.about,.services,.portfolio{display:grid;gap:25px}
+.about{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.services{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.portfolio{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px}
 
 .card{
-
-    position:relative;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.045),
-            rgba(255,255,255,.018)
-        );
-
-    border:
-        1px solid var(--border);
-
-    border-radius:20px;
-
-    padding:35px;
-
-    transition:
-        transform .25s ease,
-        border-color .25s ease,
-        background .25s ease;
+  position:relative;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  border:1px solid var(--border);border-radius:20px;padding:35px;
+  overflow:hidden;
+  transition:transform .35s var(--ease),border-color .3s ease,background .3s ease,box-shadow .3s ease;
+  transform-style:preserve-3d;
 }
-
-
 .card::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:25px;
-    right:25px;
-
-    height:1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,213,74,.55),
-            transparent
-        );
-
-    opacity:.45;
+  content:"";position:absolute;top:0;left:20px;right:20px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,213,74,.6),transparent);opacity:.5;
 }
-
-
-.card:hover{
-
-    transform:translateY(-7px);
-
-    border-color:var(--border-hover);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,213,74,.055),
-            rgba(255,255,255,.02)
-        );
+.card::after{
+  content:"";position:absolute;width:180px;height:180px;left:var(--mx,50%);top:var(--my,50%);
+  transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,213,74,.09),transparent 70%);
+  opacity:0;transition:opacity .25s ease;pointer-events:none;
 }
-
-
-.card h3{
-
-    color:var(--gold);
-
-    font-size:21px;
-}
-
-
-.card p{
-
-    color:#b1b1b1;
-
-    line-height:1.85;
-
-    font-size:15px;
-}
-
-
-/* =========================================================
-   FOUNDER
-========================================================= */
-
-#founder .about{
-
-    max-width:850px;
-
-    margin:auto;
-}
-
-
-#founder .card{
-
-    text-align:left;
-
-    border-color:
-        rgba(255,213,74,.22);
-}
-
-
-/* =========================================================
-   SERVICES
-========================================================= */
-
-.services{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(260px,1fr)
-        );
-
-    gap:22px;
-}
-
-
-.service{
-
-    text-align:center;
-
-    padding:35px 25px;
-}
-
-
-.service h3{
-
-    margin:18px 0 12px;
-
-    color:var(--gold);
-
-    font-size:19px;
-}
-
-
-.service p{
-
-    color:#999;
-
-    line-height:1.8;
-
-    font-size:14px;
-}
-
-
-/* =========================================================
-   PORTFOLIO
-========================================================= */
-
-.portfolio{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(320px,1fr)
-        );
-
-    gap:28px;
-}
-
-
-.project{
-
-    overflow:hidden;
-
-    padding:0 0 30px;
-}
-
-
-.project h3,
-.project p,
-.project a{
-
-    margin-left:30px;
-
-    margin-right:30px;
-}
-
-
-.project h3{
-
-    margin-top:25px;
-
-    margin-bottom:10px;
-
-    color:#fff;
-
-    font-size:21px;
-}
-
-
-.project p{
-
-    color:#9d9d9d;
-
-    line-height:1.75;
-
-    font-size:14px;
-}
-
-
-/* =========================================================
-   PROJECT PREVIEW
-========================================================= */
-
+.card:hover{transform:translateY(-8px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));border-color:var(--border-hover);box-shadow:0 18px 55px rgba(0,0,0,.25)}
+.card:hover::after{opacity:1}
+.card h3{color:var(--gold);font-size:21px;position:relative;z-index:1}
+.card p{color:#b1b1b1;line-height:1.85;font-size:15px;position:relative;z-index:1}
+
+#founder .about{max-width:850px;margin:auto}
+#founder .card{border-color:rgba(255,213,74,.22)}
+.service{text-align:center;padding:35px 25px}
+.service h3{margin:18px 0 12px;color:var(--gold);font-size:19px}
+.service p{color:#999;line-height:1.8;font-size:14px}
+
+.project{padding:0 0 30px}
+.project h3,.project p,.project a{margin-left:30px;margin-right:30px}
+.project h3{margin-top:25px;margin-bottom:10px;color:#fff;font-size:21px}
+.project p{color:#9d9d9d;line-height:1.75;font-size:14px}
 .preview{
-
-    height:210px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:65px;
-
-    position:relative;
-
-    background:
-        linear-gradient(
-            135deg,
-            #151515,
-            #202020
-        );
-
-    border-bottom:
-        1px solid rgba(255,213,74,.12);
+  height:220px;display:flex;align-items:center;justify-content:center;font-size:65px;
+  position:relative;overflow:hidden;background:linear-gradient(135deg,#151515,#202020);
+  border-bottom:1px solid rgba(255,213,74,.12);transform:translateZ(25px);
 }
-
-
-.preview::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,213,74,.08),
-            transparent 50%
-        );
+.preview::before{
+  content:"";position:absolute;inset:-40%;
+  background:conic-gradient(from 0deg,transparent,rgba(255,213,74,.12),transparent 25%);
+  animation:spinGlow 10s linear infinite;
 }
-
-
-/* =========================================================
-   PROJECT BUTTON
-========================================================= */
-
+.preview::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,213,74,.08),transparent 50%)}
 .project a{
-
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin-top:25px;
-
-    padding:11px 24px;
-
-    border-radius:50px;
-
-    background:var(--gold);
-
-    color:#111;
-
-    text-decoration:none;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    transition:
-        transform .2s ease,
-        background .2s ease;
+  display:inline-flex;align-items:center;justify-content:center;margin-top:25px;padding:11px 24px;
+  border-radius:50px;background:var(--gold);color:#111;text-decoration:none;font-size:13px;font-weight:700;
+  transition:transform .2s ease,background .2s ease;
 }
+.project a:hover{transform:translateY(-2px);background:#fff0a5}
 
+@keyframes spinGlow{to{transform:rotate(360deg)}}
 
-.project a:hover{
+/* ---------- Reveal animation ---------- */
+.reveal{opacity:0;transform:translateY(35px);transition:opacity .75s ease,transform .75s var(--ease)}
+.reveal.visible{opacity:1;transform:none}
 
-    transform:translateY(-2px);
-
-    background:#fff0a5;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
+/* ---------- Footer ---------- */
 footer{
-
-    width:100%;
-
-    margin-top:50px;
-
-    padding:
-        55px 25px;
-
-    text-align:center;
-
-    border-top:
-        1px solid rgba(255,213,74,.13);
-
-    background:#050505;
+  width:100%;margin-top:50px;padding:65px 25px;text-align:center;
+  border-top:1px solid rgba(255,213,74,.13);background:rgba(5,5,5,.86)
 }
+footer h2{color:var(--gold)}
+footer p{color:#777;font-size:13px;line-height:1.8}
 
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:#090909}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--gold),var(--gold-dark));border-radius:20px;border:2px solid #090909}
+html{scrollbar-color:var(--gold) #090909;scrollbar-width:thin}
 
-footer h2{
-
-    color:var(--gold);
-}
-
-
-footer p{
-
-    color:#777;
-
-    font-size:13px;
-
-    line-height:1.8;
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar{
-
-    width:10px;
-}
-
-
-::-webkit-scrollbar-track{
-
-    background:#090909;
-}
-
-
-::-webkit-scrollbar-thumb{
-
-    background:
-        linear-gradient(
-            180deg,
-            #FFD54A,
-            #d99d00
-        );
-
-    border-radius:20px;
-
-    border:2px solid #090909;
-}
-
-
-::-webkit-scrollbar-thumb:hover{
-
-    background:
-        linear-gradient(
-            180deg,
-            #fff0a6,
-            #FFD54A
-        );
-}
-
-
-html{
-
-    scrollbar-color:
-        #FFD54A
-        #090909;
-
-    scrollbar-width:thin;
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
+/* ---------- Tablet ---------- */
 @media(max-width:900px){
-
-    nav{
-
-        padding:
-            0 25px;
-    }
-
-    section{
-
-        padding:
-            80px 25px;
-    }
-
-    .hero{
-
-        padding:
-            70px 25px
-            90px;
-    }
-
+  nav{padding:0 25px}
+  section{padding:85px 25px}
+  .hero{padding:75px 25px 100px}
 }
 
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
+/* ---------- Mobile ---------- */
 @media(max-width:768px){
-
-    nav{
-
-        min-height:auto;
-
-        padding:
-            17px 20px;
-
-        flex-direction:column;
-
-        gap:14px;
-    }
-
-
-    .logo{
-
-        font-size:23px;
-    }
-
-
-    nav div:last-child{
-
-        display:flex;
-
-        flex-wrap:wrap;
-
-        justify-content:center;
-
-        gap:15px;
-    }
-
-
-    nav a{
-
-        margin:0;
-
-        font-size:13px;
-    }
-
-
-    .hero{
-
-        min-height:80vh;
-
-        padding:
-            70px 20px;
-    }
-
-
-    .hero h1{
-
-        font-size:42px;
-
-        letter-spacing:-1px;
-    }
-
-
-    .hero p{
-
-        font-size:16px;
-
-        line-height:1.8;
-    }
-
-
-    .buttons{
-
-        flex-direction:column;
-
-        align-items:center;
-
-        gap:8px;
-    }
-
-
-    .btn{
-
-        width:100%;
-
-        max-width:320px;
-    }
-
-
-    section{
-
-        padding:
-            70px 20px;
-    }
-
-
-    .title{
-
-        font-size:31px;
-
-        margin-bottom:40px;
-    }
-
-
-    .about,
-    .services,
-    .portfolio{
-
-        grid-template-columns:1fr;
-    }
-
-
-    .card{
-
-        padding:27px;
-    }
-
-
-    .preview{
-
-        height:175px;
-
-        font-size:52px;
-    }
-
-
-    .project h3,
-    .project p,
-    .project a{
-
-        margin-left:25px;
-
-        margin-right:25px;
-    }
-
-
-    footer{
-
-        padding:
-            40px 20px;
-    }
-
+  nav{min-height:auto;padding:17px 20px;flex-direction:column;gap:14px}
+  .logo{font-size:23px}
+  nav div:last-child{display:flex;flex-wrap:wrap;justify-content:center;gap:15px}
+  nav a{margin:0;font-size:13px}
+  .hero{min-height:80vh;padding:70px 20px}
+  .hero h1{font-size:42px;letter-spacing:-1px}
+  .hero p{font-size:16px;line-height:1.8}
+  .buttons{flex-direction:column;align-items:center;gap:8px}
+  .btn{width:100%;max-width:320px}
+  section{padding:75px 20px}
+  .title{font-size:31px;margin-bottom:40px}
+  .about,.services,.portfolio{grid-template-columns:1fr}
+  .card{padding:27px}
+  .preview{height:180px;font-size:52px}
+  .project h3,.project p,.project a{margin-left:25px;margin-right:25px}
+  footer{padding:45px 20px}
+  #scene{opacity:.55}
 }
 
-
-/* =========================================================
-   SMALL PHONES
-========================================================= */
-
+/* ---------- Small phones ---------- */
 @media(max-width:400px){
-
-    .hero h1{
-
-        font-size:35px;
-    }
-
-
-    .hero p{
-
-        font-size:15px;
-    }
-
-
-    .title{
-
-        font-size:28px;
-    }
-
-
-    .card{
-
-        padding:23px;
-    }
-
-
-    .preview{
-
-        height:160px;
-    }
-
+  .hero h1{font-size:35px}
+  .hero p{font-size:15px}
+  .title{font-size:28px}
+  .card{padding:23px}
+  .preview{height:160px}
 }
 
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
+/* ---------- Accessibility / performance ---------- */
+@media(pointer:coarse){
+  .cursor-dot,.cursor-ring{display:none!important}
+}
 @media(prefers-reduced-motion:reduce){
-
-    html{
-
-        scroll-behavior:auto;
-    }
-
-
-    *{
-
-        transition:none !important;
-    }
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  #scene{display:none}
 }
 
-
-/* =========================================================
-   MPOXEL CINEMATIC ENTRY
-   Sequence:
-   1. Two gates open
-   2. MPOXEL.IN appears on black
-   3. Logo fades out
-   4. Real website is revealed
-   Lightweight: transform + opacity only
-   ========================================================= */
-
-#mpoxel-entry{
-    position:fixed;
-    inset:0;
-    z-index:10000;
-    background:#000;
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    pointer-events:auto;
-    opacity:1;
-    transition:opacity .55s ease;
+/* ---------- Premium attraction layer ---------- */
+.section-kicker{
+  text-align:center;
+  color:#8f8f8f;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:4px;
+  margin-bottom:14px;
 }
 
-#mpoxel-entry.is-finished{
-    opacity:0;
-    pointer-events:none;
+.hero-orbit{
+  position:absolute;
+  width:min(70vw,560px);
+  height:min(70vw,560px);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  z-index:-1;
+  opacity:.7;
+}
+.orbit{
+  position:absolute;
+  inset:8%;
+  border:1px solid rgba(255,213,74,.13);
+  border-radius:50%;
+}
+.orbit-a{transform:rotate(65deg) scaleY(.28);animation:orbitSpin 13s linear infinite}
+.orbit-b{transform:rotate(-25deg) scaleY(.34);animation:orbitSpinReverse 17s linear infinite}
+.orbit-core{
+  position:absolute;
+  left:50%;top:50%;
+  width:110px;height:110px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,74,.16),rgba(255,213,74,.025) 48%,transparent 70%);
+  box-shadow:0 0 80px rgba(255,213,74,.08);
+}
+@keyframes orbitSpin{to{transform:rotate(425deg) scaleY(.28)}}
+@keyframes orbitSpinReverse{to{transform:rotate(-385deg) scaleY(.34)}}
+
+.btn span{margin-left:8px;transition:transform .25s var(--ease)}
+.btn:hover span{transform:translate(3px,-3px)}
+
+.capabilities{max-width:1050px;margin:auto;border-top:1px solid var(--border)}
+.capability{
+  display:grid;grid-template-columns:80px 1fr 35px;align-items:center;gap:20px;
+  min-height:125px;padding:25px 15px;border-bottom:1px solid var(--border);
+  transition:background .3s ease,transform .3s var(--ease),padding .3s var(--ease);
+}
+.capability:hover,.capability.active{
+  background:linear-gradient(90deg,rgba(255,213,74,.055),transparent);
+  padding-left:28px;
+}
+.cap-number{color:#666;font-family:'Orbitron',sans-serif;font-size:12px}
+.capability h3{font-family:'Orbitron',sans-serif;color:#fff;font-size:clamp(18px,3vw,28px);letter-spacing:-.5px}
+.capability p{color:#888;font-size:13px;margin-top:5px;line-height:1.7}
+.cap-arrow{color:var(--gold);font-size:21px;transition:transform .3s var(--ease)}
+.capability:hover .cap-arrow{transform:translate(4px,-4px)}
+
+.performance-section{
+  text-align:center;
+  padding-top:120px;
+  padding-bottom:120px;
+}
+.performance-heading{
+  max-width:900px;margin:0 auto 18px;
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(34px,6vw,68px);
+  line-height:1.08;
+  letter-spacing:-2px;
+}
+.performance-copy{max-width:650px;margin:auto;color:#969696;line-height:1.8}
+.performance-grid{
+  max-width:1000px;margin:60px auto 0;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.performance-item{padding:28px 15px;border-right:1px solid var(--border)}
+.performance-item:last-child{border-right:0}
+.performance-item strong{
+  display:block;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:1px;
+}
+.performance-item span{display:block;color:#777;font-size:11px;line-height:1.6;margin-top:9px}
+
+.final-cta{
+  max-width:1250px;
+  min-height:560px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+.cta-glow{
+  position:absolute;
+  width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,74,.13),transparent 68%);
+  pointer-events:none;
+}
+.cta-content{position:relative;z-index:1}
+.final-cta h2{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(42px,8vw,88px);
+  line-height:1;
+  letter-spacing:-3px;
+  color:#fff;
+  margin-bottom:20px;
+}
+.final-cta p{max-width:550px;margin:0 auto 30px;color:#929292;line-height:1.8}
+
+/* Scroll progress */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:var(--gold);z-index:10002;
+  box-shadow:0 0 12px rgba(255,213,74,.45);
+  pointer-events:none;
 }
 
-.mpoxel-gate{
-    position:absolute;
-    top:0;
-    bottom:0;
-    width:50%;
-    background:#080808;
-    will-change:transform;
-    transition:transform .9s cubic-bezier(.77,0,.18,1);
+@media(max-width:800px){
+  .performance-grid{grid-template-columns:repeat(2,1fr)}
+  .performance-item:nth-child(2){border-right:0}
+  .performance-item:nth-child(-n+2){border-bottom:1px solid var(--border)}
 }
-
-.mpoxel-gate-left{
-    left:0;
-    transform:translate3d(0,0,0);
-    border-right:1px solid rgba(255,213,74,.18);
+@media(max-width:768px){
+  .hero-orbit{width:105vw;height:105vw;opacity:.38}
+  .capability{grid-template-columns:48px 1fr 25px;gap:10px;min-height:110px;padding:22px 8px}
+  .capability:hover,.capability.active{padding-left:13px}
+  .capability p{font-size:12px}
+  .performance-grid{margin-top:40px}
+  .performance-item{padding:23px 10px}
+  .final-cta{min-height:500px}
+  .final-cta h2{letter-spacing:-2px}
 }
-
-.mpoxel-gate-right{
-    right:0;
-    transform:translate3d(0,0,0);
-    border-left:1px solid rgba(255,213,74,.18);
+@media(max-width:480px){
+  .performance-grid{grid-template-columns:1fr}
+  .performance-item,.performance-item:nth-child(2){border-right:0;border-bottom:1px solid var(--border)}
+  .performance-item:last-child{border-bottom:0}
 }
-
-#mpoxel-entry.is-open .mpoxel-gate-left{
-    transform:translate3d(-100%,0,0);
-}
-
-#mpoxel-entry.is-open .mpoxel-gate-right{
-    transform:translate3d(100%,0,0);
-}
-
-.mpoxel-entry-logo{
-    position:relative;
-    z-index:2;
-    font-family:'Orbitron',sans-serif;
-    font-size:clamp(40px,8vw,105px);
-    font-weight:800;
-    letter-spacing:clamp(3px,1vw,11px);
-    color:#fff;
-    opacity:0;
-    transform:scale(.97);
-    text-align:center;
-    white-space:nowrap;
-    text-shadow:
-        0 0 10px rgba(255,255,255,.85),
-        0 0 28px rgba(255,213,74,.55),
-        0 0 60px rgba(255,213,74,.22);
-    pointer-events:none;
-}
-
-.mpoxel-entry-logo span{
-    color:#FFD54A;
-}
-
-#mpoxel-entry.logo-show .mpoxel-entry-logo{
-    animation:mpoxel-logo 1.15s ease-in-out forwards;
-}
-
-@keyframes mpoxel-logo{
-    0%{
-        opacity:0;
-        transform:scale(.97);
-    }
-    28%{
-        opacity:1;
-        transform:scale(1);
-    }
-    68%{
-        opacity:1;
-        transform:scale(1.01);
-    }
-    100%{
-        opacity:0;
-        transform:scale(1.025);
-    }
-}
-
 @media(prefers-reduced-motion:reduce){
-    #mpoxel-entry{
-        transition:none;
-    }
-
-    .mpoxel-gate{
-        transition:none;
-    }
-
-    #mpoxel-entry.is-open .mpoxel-gate-left{
-        transform:translate3d(-100%,0,0);
-    }
-
-    #mpoxel-entry.is-open .mpoxel-gate-right{
-        transform:translate3d(100%,0,0);
-    }
-
-    .mpoxel-entry-logo{
-        opacity:1;
-    }
+  .orbit-a,.orbit-b{animation:none}
 }
 
 </style>
@@ -1318,6 +430,14 @@ html{
 
 
 <body>
+
+<!-- Lightweight interactive layer -->
+<div id="scroll-progress" aria-hidden="true"></div>
+<div id="scene" aria-hidden="true"></div>
+<div class="scene-vignette" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
 
 <!-- =========================================================
      MPOXEL CINEMATIC ENTRY
@@ -1367,52 +487,28 @@ html{
 ========================================================= -->
 
 <section class="hero">
+    <div class="hero-content">
+        <div class="eyebrow">Independent digital studio</div>
 
-    <div>
-
-        <h1>
-            Building Digital Experiences
-        </h1>
-
-        <p>
-
-            Mpoxel creates modern websites,
-            interactive 3D experiences, and premium
-            digital solutions that combine creativity
-            with performance.
-
-        </p>
-
-
-        <div class="buttons">
-
-            <a
-                href="#portfolio"
-                class="btn gold"
-            >
-                View Portfolio
-            </a>
-
-
-            <a
-                href="contact.html"
-                class="btn outline"
-            >
-                Contact
-            </a>
-
-
-            <a
-                href="more.html"
-                class="btn outline"
-            >
-                More
-            </a>
-
+        <div class="hero-orbit" aria-hidden="true">
+            <span class="orbit orbit-a"></span>
+            <span class="orbit orbit-b"></span>
+            <span class="orbit-core"></span>
         </div>
 
-    </div>
+        <h1>Building Digital Experiences</h1>
 
+        <p>
+            Mpoxel creates modern websites, interactive 3D experiences,
+            and premium digital solutions that combine creativity with performance.
+        </p>
+
+        <div class="buttons">
+            <a href="#portfolio" class="btn gold magnetic">View Portfolio <span>↗</span></a>
+            <a href="contact.html" class="btn outline magnetic">Start a Project <span>↗</span></a>
+            <a href="more.html" class="btn outline magnetic">More <span>↗</span></a>
+        </div>
+    </div>
 </section>
 
 
@@ -1420,7 +516,47 @@ html{
      ABOUT
 ========================================================= -->
 
-<section id="about">
+
+<section id="capabilities" class="reveal capabilities-section">
+    <div class="section-kicker">CAPABILITIES</div>
+    <h2 class="title">What We Build</h2>
+    <div class="capabilities">
+        <article class="capability active">
+            <span class="cap-number">01</span>
+            <div>
+                <h3>2D WEBSITES</h3>
+                <p>Fast, responsive, custom interfaces built around your brand.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+        <article class="capability">
+            <span class="cap-number">02</span>
+            <div>
+                <h3>3D EXPERIENCES</h3>
+                <p>Three.js, WebGL, scroll interaction, depth and motion.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+        <article class="capability">
+            <span class="cap-number">03</span>
+            <div>
+                <h3>BRAND SYSTEMS</h3>
+                <p>Digital identity, visual direction and polished UI systems.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+        <article class="capability">
+            <span class="cap-number">04</span>
+            <div>
+                <h3>CUSTOM PRODUCTS</h3>
+                <p>Frontend, backend, APIs and tailored digital functionality.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+    </div>
+</section>
+
+<section id="about" class="reveal">
 
     <h2 class="title">
         About Mpoxel
@@ -1481,7 +617,7 @@ html{
      FOUNDER
 ========================================================= -->
 
-<section id="founder">
+<section id="founder" class="reveal">
 
     <h2 class="title">
         Who Is Behind Mpoxel?
@@ -1500,13 +636,9 @@ html{
 
             <p>
 
-                I am Manvir Sharma, a 14-year-old web
-                developer with a dream of building a
-                successful technology company. Mpoxel
-                is my own company, and I currently own
-                100% of its shares. Since it is a private
-                company, anyone interested in purchasing
-                shares can contact me directly.
+                I am Manvir Sharma, the developer behind Mpoxel.
+                I build modern websites and interactive digital experiences
+                with a focus on design, performance, and technology.
 
             </p>
 
@@ -1521,7 +653,7 @@ html{
      SERVICES
 ========================================================= -->
 
-<section id="services">
+<section id="services" class="reveal">
 
     <h2 class="title">
         Services
@@ -1539,8 +671,8 @@ html{
 
             <p>
 
-                Responsive websites with modern UI
-                and optimized performance.
+                Custom responsive websites with modern UI,
+                interaction, accessibility, and optimized performance.
 
             </p>
 
@@ -1555,8 +687,8 @@ html{
 
             <p>
 
-                Interactive Three.js experiences that
-                make your brand unforgettable.
+                Interactive Three.js experiences with
+                scroll-based depth and performance-aware 3D.
 
             </p>
 
@@ -1588,7 +720,36 @@ html{
      PORTFOLIO
 ========================================================= -->
 
-<section id="portfolio">
+
+<section id="performance" class="reveal performance-section">
+    <div class="section-kicker">ENGINEERED DIFFERENTLY</div>
+    <h2 class="performance-heading">Beautiful doesn't have to mean slow.</h2>
+    <p class="performance-copy">
+        Mpoxel experiences are designed to stay smooth across modern desktops,
+        mobile devices, and lower-powered hardware.
+    </p>
+
+    <div class="performance-grid">
+        <div class="performance-item">
+            <strong>FAST</strong>
+            <span>Lean assets & efficient animation</span>
+        </div>
+        <div class="performance-item">
+            <strong>RESPONSIVE</strong>
+            <span>Mobile-first layouts & touch-ready UI</span>
+        </div>
+        <div class="performance-item">
+            <strong>ADAPTIVE</strong>
+            <span>3D effects scale down when hardware needs it</span>
+        </div>
+        <div class="performance-item">
+            <strong>ACCESSIBLE</strong>
+            <span>Reduced-motion support & usable interactions</span>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="reveal">
 
     <h2 class="title">
         Portfolio
@@ -1631,92 +792,290 @@ html{
      FOOTER
 ========================================================= -->
 
+<section id="contact-cta" class="reveal final-cta">
+    <div class="cta-glow" aria-hidden="true"></div>
+    <div class="cta-content">
+        <div class="section-kicker">HAVE AN IDEA?</div>
+        <h2>LET'S MAKE IT REAL.</h2>
+        <p>Tell us what you're imagining. We'll turn it into a digital experience.</p>
+        <a href="contact.html" class="btn gold magnetic">Start a Project <span>↗</span></a>
+    </div>
+</section>
+
 <footer>
-
-    <h2>
-        MPOXEL
-    </h2>
-
+    <h2>MPOXEL</h2>
     <br>
-
-
-    <h2>
-        A website by Manvir Sharma
-    </h2>
-
+    <h2>A website by Manvir Sharma</h2>
     <br>
-
-
-    <p>
-        Making the Impossible Possible.
-    </p>
-
+    <p>Making the Impossible Possible.</p>
     <br>
-
-
-    <p>
-        © 2026 Mpoxel. All rights reserved.
-    </p>
-
+    <p>© 2026 Mpoxel. All rights reserved.</p>
     <br>
-
-
-    <p>
-        Last Updated: 14 August 2026
-    </p>
-
+    <p>Last Updated: 14 August 2026</p>
 </footer>
 
 
 
 <script>
 (() => {
-    const entry = document.getElementById("mpoxel-entry");
-    if (!entry) return;
+  "use strict";
 
-    /*
-      The main website is already underneath this overlay, so the browser
-      can load/render the complete page while the cinematic intro runs.
-    */
-    const root = document.documentElement;
-    const reduceMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-    ).matches;
+  /* ---------- Cinematic entry ---------- */
+  const entry = document.getElementById("mpoxel-entry");
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  if (entry) {
     root.style.overflow = "hidden";
 
     const closeIntro = () => {
-        entry.classList.add("is-finished");
-
-        window.setTimeout(() => {
-            entry.remove();
-            root.style.overflow = "";
-        }, 600);
+      entry.classList.add("is-finished");
+      window.setTimeout(() => {
+        entry.remove();
+        root.style.overflow = "";
+      }, reduceMotion ? 0 : 600);
     };
 
     if (reduceMotion) {
-        window.setTimeout(closeIntro, 300);
-        return;
+      window.setTimeout(closeIntro, 250);
+    } else {
+      window.setTimeout(() => entry.classList.add("is-open"), 80);
+      window.setTimeout(() => entry.classList.add("logo-show"), 1050);
+      window.setTimeout(closeIntro, 2250);
+    }
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((items, obs) => {
+      items.forEach(item => {
+        if (item.isIntersecting) {
+          item.target.classList.add("visible");
+          obs.unobserve(item.target);
+        }
+      });
+    }, {threshold: .12, rootMargin: "0px 0px -40px"});
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  } else {
+    document.querySelectorAll(".reveal").forEach(el => el.classList.add("visible"));
+  }
+
+  /* ---------- Desktop custom cursor ---------- */
+  const finePointer = matchMedia("(pointer:fine)").matches;
+  const dot = document.querySelector(".cursor-dot");
+  const ring = document.querySelector(".cursor-ring");
+
+  if (finePointer && !reduceMotion && dot && ring) {
+    document.body.classList.add("cursor-ready");
+    let mx = innerWidth / 2, my = innerHeight / 2;
+    let rx = mx, ry = my;
+    let raf = 0;
+
+    addEventListener("pointermove", e => {
+      mx = e.clientX; my = e.clientY;
+      if (!raf) raf = requestAnimationFrame(renderCursor);
+    }, {passive:true});
+
+    function renderCursor() {
+      rx += (mx - rx) * .18;
+      ry += (my - ry) * .18;
+      dot.style.left = mx + "px";
+      dot.style.top = my + "px";
+      ring.style.left = rx + "px";
+      ring.style.top = ry + "px";
+      raf = 0;
     }
 
-    /*
-      IMPORTANT:
-      Gates open FIRST.
-      Only after the gates are completely open does MPOXEL.IN play.
-    */
-    window.setTimeout(() => {
-        entry.classList.add("is-open");
-    }, 80);
+    document.querySelectorAll("a,button,.card").forEach(el => {
+      el.addEventListener("mouseenter", () => document.body.classList.add("cursor-hover"));
+      el.addEventListener("mouseleave", () => document.body.classList.remove("cursor-hover"));
+    });
+  }
 
-    // 80ms + 900ms gate travel = gates are fully open.
-    window.setTimeout(() => {
-        entry.classList.add("logo-show");
-    }, 1050);
+  /* ---------- Low-cost card tilt ---------- */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll(".card").forEach(card => {
+      let frame = 0;
+      card.addEventListener("pointermove", e => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        card.style.setProperty("--ry", ((x - .5) * 4).toFixed(2) + "deg");
+        card.style.setProperty("--rx", ((.5 - y) * 4).toFixed(2) + "deg");
+        card.style.setProperty("--mx", (x * 100) + "%");
+        card.style.setProperty("--my", (y * 100) + "%");
+        if (!frame) frame = requestAnimationFrame(() => frame = 0);
+      }, {passive:true});
+      card.addEventListener("pointerleave", () => {
+        card.style.setProperty("--ry","0deg");
+        card.style.setProperty("--rx","0deg");
+      });
+    });
+  }
 
-    // Logo animation ends around 2200ms.
-    window.setTimeout(() => {
-        closeIntro();
-    }, 2250);
+  /* ---------- Lightweight adaptive 3D ---------- */
+  const sceneEl = document.getElementById("scene");
+  if (!sceneEl || reduceMotion) return;
+
+  const mobile = matchMedia("(max-width:768px)").matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  const cores = navigator.hardwareConcurrency || 4;
+
+  // Avoid loading WebGL on data-saving or very low-power devices.
+  if (saveData || cores <= 2 || !window.WebGLRenderingContext) {
+    sceneEl.style.display = "none";
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js";
+  script.defer = true;
+
+  script.onload = () => {
+    if (!window.THREE) return;
+
+    const THREE = window.THREE;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .1, 100);
+    camera.position.set(0, 0, 9);
+
+    const renderer = new THREE.WebGLRenderer({
+      alpha:true,
+      antialias: !mobile,
+      powerPreference:"low-power"
+    });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.25 : 1.6));
+    renderer.setSize(innerWidth, innerHeight);
+    sceneEl.appendChild(renderer.domElement);
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const material = new THREE.MeshStandardMaterial({
+      color:0xffd54a,
+      metalness:.72,
+      roughness:.26,
+      transparent:true,
+      opacity:mobile ? .17 : .26,
+      wireframe:true
+    });
+
+    const solidMaterial = new THREE.MeshStandardMaterial({
+      color:0xffd54a,
+      metalness:.55,
+      roughness:.35,
+      transparent:true,
+      opacity:mobile ? .06 : .09
+    });
+
+    const geometry = new THREE.IcosahedronGeometry(1.55, mobile ? 1 : 2);
+    const wire = new THREE.Mesh(geometry, material);
+    const solid = new THREE.Mesh(geometry, solidMaterial);
+
+    group.add(solid, wire);
+    group.position.set(3.0, .2, -1.4);
+    group.rotation.set(.3,.5,0);
+
+    const ringGeometry = new THREE.TorusGeometry(2.15, .012, 8, mobile ? 48 : 72);
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      color:0xffd54a,transparent:true,opacity:mobile ? .18 : .27
+    });
+    const orbit = new THREE.Mesh(ringGeometry, ringMaterial);
+    orbit.rotation.x = 1.15;
+    group.add(orbit);
+
+    const ambient = new THREE.AmbientLight(0xffffff, .75);
+    const point = new THREE.PointLight(0xffd54a, 3, 12);
+    point.position.set(3,2,5);
+    scene.add(ambient, point);
+
+    let targetX = 0, targetY = 0;
+    let scrollTarget = 0, scrollCurrent = 0;
+    let lastScroll = scrollY;
+    let running = true;
+
+    addEventListener("pointermove", e => {
+      if (!finePointer) return;
+      targetX = (e.clientX / innerWidth - .5) * .7;
+      targetY = (e.clientY / innerHeight - .5) * .45;
+    }, {passive:true});
+
+    addEventListener("scroll", () => {
+      scrollTarget = Math.min(scrollY / Math.max(innerHeight,1), 5);
+      lastScroll = scrollY;
+    }, {passive:true});
+
+    addEventListener("resize", () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.25 : 1.6));
+      renderer.setSize(innerWidth, innerHeight);
+    }, {passive:true});
+
+    document.addEventListener("visibilitychange", () => {
+      running = document.visibilityState === "visible";
+    });
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (!running) return;
+
+      const t = clock.getElapsedTime();
+      scrollCurrent += (scrollTarget - scrollCurrent) * .055;
+
+      group.rotation.y += .0025;
+      group.rotation.x += .0012;
+      group.rotation.y += (targetX - group.rotation.y * .02) * .003;
+      group.position.x += (3.0 + targetX * .9 - group.position.x) * .018;
+      group.position.y += (-.15 - targetY * .7 - scrollCurrent * .25 - group.position.y) * .012;
+      group.position.z = -1.4 - scrollCurrent * .45;
+      orbit.rotation.z = t * .12 + scrollCurrent * .18;
+
+      renderer.render(scene,camera);
+    }
+
+    animate();
+  };
+
+  document.head.appendChild(script);
+
+  /* ---------- Scroll progress ---------- */
+  const progress = document.getElementById("scroll-progress");
+  if (progress) {
+    const updateProgress = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + "%";
+    };
+    addEventListener("scroll", updateProgress, {passive:true});
+    addEventListener("resize", updateProgress, {passive:true});
+    updateProgress();
+  }
+
+  /* ---------- Capability focus ---------- */
+  document.querySelectorAll(".capability").forEach(item => {
+    item.addEventListener("mouseenter", () => {
+      document.querySelectorAll(".capability").forEach(x => x.classList.remove("active"));
+      item.classList.add("active");
+    });
+  });
+
+  /* ---------- Magnetic CTA buttons ---------- */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll(".magnetic").forEach(btn => {
+      btn.addEventListener("pointermove", e => {
+        const r = btn.getBoundingClientRect();
+        const x = (e.clientX - (r.left + r.width / 2)) * .12;
+        const y = (e.clientY - (r.top + r.height / 2)) * .12;
+        btn.style.transform = `translate(${x}px,${y}px)`;
+      }, {passive:true});
+      btn.addEventListener("pointerleave", () => {
+        btn.style.transform = "";
+      });
+    });
+  }
+
 })();
 </script>
 
