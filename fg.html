@@ -1,1161 +1,1560 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <title>TV Home</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --text: #fff;
-      --muted: rgba(255, 255, 255, 0.65);
-      --glass: rgba(20, 20, 25, 0.65);
-      --glass-heavy: rgba(12, 12, 16, 0.92);
-      --border: rgba(255, 255, 255, 0.16);
-      --accent: #ffffff;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #000;
-      color: var(--text);
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-    }
-
-    body {
-      user-select: none;
-    }
-
-    /* -------------------------
-       BACKGROUND
-    ------------------------- */
-
-    #background {
-      position: fixed;
-      inset: 0;
-      z-index: -3;
-
-      background-image:
-        linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.62),
-          rgba(0, 0, 0, 0.12) 65%,
-          rgba(0, 0, 0, 0.35)
-        ),
-        url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90");
-
-      background-position: center;
-      background-size: cover;
-      transition: background-image 0.5s ease;
-    }
-
-    #background::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(0, 0, 0, 0.5),
-          transparent 35%,
-          rgba(0, 0, 0, 0.75)
-        );
-    }
-
-    /* -------------------------
-       HOME
-    ------------------------- */
-
-    #home {
-      width: 100%;
-      height: 100%;
-      padding: 5vh 6vw;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      transition: opacity 0.25s ease;
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-
-    .brand {
-      font-size: clamp(26px, 3vw, 52px);
-      font-weight: 700;
-      letter-spacing: -1px;
-      text-shadow: 0 3px 20px rgba(0, 0, 0, 0.7);
-    }
-
-    .datetime {
-      text-align: right;
-    }
-
-    #clock {
-      font-size: clamp(30px, 4vw, 65px);
-      font-weight: 600;
-      line-height: 1;
-    }
-
-    #date {
-      margin-top: 10px;
-      font-size: clamp(14px, 1.2vw, 22px);
-      color: var(--muted);
-    }
-
-    .hero {
-      max-width: 700px;
-      margin-top: auto;
-      margin-bottom: 6vh;
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 6vw, 100px);
-      line-height: 0.95;
-      letter-spacing: -3px;
-      margin-bottom: 18px;
-      text-shadow: 0 5px 30px rgba(0, 0, 0, 0.7);
-    }
-
-    .hero p {
-      color: rgba(255, 255, 255, 0.75);
-      font-size: clamp(15px, 1.4vw, 24px);
-      line-height: 1.5;
-      max-width: 560px;
-    }
-
-    .home-actions {
-      display: flex;
-      gap: 22px;
-      align-items: center;
-    }
-
-    /* -------------------------
-       BUTTONS
-    ------------------------- */
-
-    .tv-button {
-      min-width: 210px;
-      height: 82px;
-
-      padding: 0 30px;
-
-      border-radius: 20px;
-      border: 2px solid transparent;
-
-      background: rgba(255, 255, 255, 0.13);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-
-      color: white;
-      font-size: 24px;
-      font-weight: 600;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.25),
-        inset 0 1px rgba(255, 255, 255, 0.12);
-
-      transition:
-        transform 0.18s ease,
-        background 0.18s ease,
-        border 0.18s ease,
-        box-shadow 0.18s ease;
-    }
-
-    .tv-button.focused,
-    .tv-button:focus-visible {
-      outline: none;
-      background: white;
-      color: black;
-      border-color: white;
-
-      transform: scale(1.08);
-
-      box-shadow:
-        0 0 0 5px rgba(255, 255, 255, 0.25),
-        0 20px 50px rgba(0, 0, 0, 0.45);
-    }
-
-    .button-icon {
-      font-size: 30px;
-    }
-
-    /* -------------------------
-       APP SCREEN
-    ------------------------- */
-
-    .screen {
-      position: fixed;
-      inset: 0;
-
-      background:
-        radial-gradient(
-          circle at top right,
-          rgba(255, 255, 255, 0.08),
-          transparent 35%
-        ),
-        rgba(5, 5, 8, 0.93);
-
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-
-      display: none;
-      flex-direction: column;
-
-      padding: 6vh 6vw;
-    }
-
-    .screen.active {
-      display: flex;
-    }
-
-    .screen-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      margin-bottom: 5vh;
-    }
-
-    .screen-title {
-      font-size: clamp(36px, 4vw, 70px);
-      font-weight: 700;
-      letter-spacing: -2px;
-    }
-
-    .screen-hint {
-      color: var(--muted);
-      font-size: 18px;
-    }
-
-    .apps-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(auto-fit, minmax(240px, 1fr));
-
-      gap: 35px;
-
-      max-width: 1100px;
-    }
-
-    .app-card {
-      height: 250px;
-
-      border-radius: 30px;
-
-      background: rgba(255, 255, 255, 0.08);
-      border: 3px solid transparent;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-
-      gap: 25px;
-
-      transition:
-        transform 0.18s ease,
-        background 0.18s ease,
-        border 0.18s ease,
-        box-shadow 0.18s ease;
-    }
-
-    .app-card.focused {
-      background: rgba(255, 255, 255, 0.95);
-      color: #000;
-
-      transform: scale(1.08);
-
-      border-color: white;
-
-      box-shadow:
-        0 0 0 7px rgba(255, 255, 255, 0.18),
-        0 25px 70px rgba(0, 0, 0, 0.5);
-    }
-
-    .app-logo {
-      width: 100px;
-      height: 100px;
-
-      border-radius: 25px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 48px;
-      font-weight: 800;
-
-      background: white;
-      color: black;
-
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
-    }
-
-    .youtube-logo {
-      color: #ff0000;
-    }
-
-    .google-logo {
-      color: #4285f4;
-      font-family: Arial, sans-serif;
-    }
-
-    .app-name {
-      font-size: 25px;
-      font-weight: 600;
-    }
-
-    /* -------------------------
-       SETTINGS
-    ------------------------- */
-
-    #settingsScreen {
-      z-index: 20;
-    }
-
-    .settings-content {
-      max-width: 1100px;
-      display: flex;
-      flex-direction: column;
-      gap: 35px;
-    }
-
-    .setting-label {
-      color: var(--muted);
-      font-size: 20px;
-      margin-bottom: 15px;
-    }
-
-    .wallpaper-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .wallpaper-option {
-      height: 150px;
-      border-radius: 20px;
-
-      border: 3px solid transparent;
-
-      background-size: cover;
-      background-position: center;
-
-      transition:
-        transform 0.18s ease,
-        border 0.18s ease;
-    }
-
-    .wallpaper-option.focused {
-      border-color: white;
-      transform: scale(1.07);
-      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.18);
-    }
-
-    /* -------------------------
-       FOOTER
-    ------------------------- */
-
-    .remote-hint {
-      position: fixed;
-      bottom: 25px;
-      right: 40px;
-
-      color: rgba(255, 255, 255, 0.6);
-
-      font-size: 15px;
-
-      pointer-events: none;
-    }
-
-    /* -------------------------
-       MOBILE / SMALL SCREEN
-    ------------------------- */
-
-    @media (max-width: 800px) {
-      #home {
-        padding: 30px;
-      }
-
-      .top-bar {
-        align-items: center;
-      }
-
-      .brand {
-        font-size: 26px;
-      }
-
-      #clock {
-        font-size: 32px;
-      }
-
-      .hero {
-        margin-bottom: 30px;
-      }
-
-      .hero h1 {
-        font-size: 52px;
-      }
-
-      .home-actions {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .tv-button {
-        width: 100%;
-      }
-
-      .screen {
-        padding: 35px;
-      }
-
-      .apps-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-      }
-
-      .app-card {
-        height: 180px;
-      }
-
-      .app-logo {
-        width: 65px;
-        height: 65px;
-        font-size: 32px;
-      }
-
-      .wallpaper-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>My TV</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  user-select: none;
+}
+
+/* =========================================
+   WALLPAPER
+========================================= */
+
+#background {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  transition: background-image 0.5s ease;
+}
+
+#background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.68) 0%,
+      rgba(0,0,0,.18) 60%,
+      rgba(0,0,0,.40) 100%
+    );
+}
+
+#background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.45) 0%,
+      transparent 35%,
+      rgba(0,0,0,.78) 100%
+    );
+}
+
+/* =========================================
+   ALL CONTENT
+========================================= */
+
+#home,
+.screen {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================
+   HOME
+========================================= */
+
+#home {
+  width: 100%;
+  height: 100%;
+
+  padding: 5vh 6vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.brand {
+  font-size: clamp(28px, 3vw, 52px);
+  font-weight: 700;
+  letter-spacing: -2px;
+
+  text-shadow: 0 4px 25px rgba(0,0,0,.8);
+}
+
+.datetime {
+  text-align: right;
+}
+
+#clock {
+  font-size: clamp(32px, 4vw, 68px);
+  font-weight: 600;
+  line-height: 1;
+}
+
+#date {
+  margin-top: 10px;
+
+  font-size: clamp(14px, 1.2vw, 22px);
+
+  color: rgba(255,255,255,.68);
+}
+
+.hero {
+  max-width: 750px;
+
+  margin-top: auto;
+  margin-bottom: 6vh;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 7vw, 110px);
+  line-height: .9;
+  letter-spacing: -5px;
+
+  margin-bottom: 22px;
+
+  text-shadow: 0 6px 35px rgba(0,0,0,.8);
+}
+
+.hero p {
+  max-width: 600px;
+
+  color: rgba(255,255,255,.75);
+
+  font-size: clamp(16px, 1.4vw, 24px);
+  line-height: 1.5;
+}
+
+.home-actions {
+  display: flex;
+  gap: 24px;
+}
+
+/* =========================================
+   TV BUTTON
+========================================= */
+
+.tv-button {
+  width: 220px;
+  height: 82px;
+
+  border-radius: 20px;
+
+  border: 2px solid rgba(255,255,255,.12);
+
+  background: rgba(255,255,255,.12);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  font-size: 24px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    color .18s ease,
+    box-shadow .18s ease;
+}
+
+.tv-button.focused {
+  background: #fff;
+  color: #000;
+
+  transform: scale(1.08);
+
+  border-color: #fff;
+
+  box-shadow:
+    0 0 0 5px rgba(255,255,255,.25),
+    0 20px 50px rgba(0,0,0,.45);
+}
+
+.button-icon {
+  font-size: 30px;
+}
+
+/* =========================================
+   SCREEN
+========================================= */
+
+.screen {
+  position: fixed;
+  inset: 0;
+
+  z-index: 10;
+
+  display: none;
+
+  flex-direction: column;
+
+  padding: 6vh 6vw;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(8,8,12,.96),
+      rgba(12,12,18,.90)
+    );
+
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+.screen.active {
+  display: flex;
+}
+
+.screen-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 5vh;
+}
+
+.screen-title {
+  font-size: clamp(40px, 5vw, 75px);
+  font-weight: 700;
+  letter-spacing: -3px;
+}
+
+.screen-hint {
+  color: rgba(255,255,255,.55);
+  font-size: 17px;
+}
+
+/* =========================================
+   APPS
+========================================= */
+
+.apps-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 280px);
+
+  gap: 35px;
+}
+
+.app-card {
+  width: 280px;
+  height: 270px;
+
+  border-radius: 30px;
+
+  background: rgba(255,255,255,.07);
+
+  border: 3px solid transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 25px;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.app-card.focused {
+  background: #fff;
+  color: #000;
+
+  transform: scale(1.08);
+
+  border-color: #fff;
+
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.18),
+    0 25px 70px rgba(0,0,0,.5);
+}
+
+.app-logo {
+  width: 105px;
+  height: 105px;
+
+  border-radius: 26px;
+
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 52px;
+  font-weight: 800;
+
+  box-shadow: 0 12px 35px rgba(0,0,0,.25);
+}
+
+.youtube-logo {
+  color: #ff0000;
+}
+
+.google-logo {
+  color: #4285f4;
+}
+
+.app-name {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* =========================================
+   SETTINGS
+========================================= */
+
+#settingsScreen {
+  z-index: 20;
+}
+
+.settings-content {
+  max-width: 1250px;
+}
+
+.setting-label {
+  margin-bottom: 22px;
+
+  font-size: 21px;
+
+  color: rgba(255,255,255,.65);
+}
+
+/* Wallpaper preview grid */
+
+.wallpaper-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 230px);
+
+  gap: 25px;
+}
+
+.wallpaper-option {
+  position: relative;
+
+  width: 230px;
+  height: 145px;
+
+  border-radius: 20px;
+
+  border: 4px solid transparent;
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transition:
+    transform .18s ease,
+    border .18s ease,
+    box-shadow .18s ease;
+}
+
+/* Preview darkening */
+
+.wallpaper-option::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    transparent 45%,
+    rgba(0,0,0,.55)
+  );
+}
+
+/* Preview number */
+
+.wallpaper-number {
+  position: absolute;
+
+  z-index: 2;
+
+  left: 15px;
+  bottom: 12px;
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* Selected wallpaper */
+
+.wallpaper-option.selected {
+  border-color: #fff;
+
+  box-shadow:
+    0 0 0 4px rgba(255,255,255,.2);
+}
+
+.wallpaper-option.selected::before {
+  content: "✓";
+
+  position: absolute;
+
+  z-index: 3;
+
+  top: 12px;
+  right: 12px;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 50%;
+
+  background: #fff;
+  color: #000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Remote focus */
+
+.wallpaper-option.focused {
+  transform: scale(1.08);
+
+  border-color: #fff;
+
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.2),
+    0 20px 50px rgba(0,0,0,.4);
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.remote-hint {
+  position: absolute;
+
+  bottom: 25px;
+  right: 6vw;
+
+  color: rgba(255,255,255,.5);
+
+  font-size: 15px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media(max-width: 1000px) {
+
+  .apps-grid {
+    grid-template-columns: repeat(2, 220px);
+  }
+
+  .app-card {
+    width: 220px;
+    height: 220px;
+  }
+
+  .wallpaper-grid {
+    grid-template-columns: repeat(2, 200px);
+  }
+
+  .wallpaper-option {
+    width: 200px;
+  }
+}
+
+@media(max-width: 700px) {
+
+  #home {
+    padding: 30px;
+  }
+
+  .top-bar {
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: 55px;
+  }
+
+  .home-actions {
+    gap: 15px;
+  }
+
+  .tv-button {
+    width: 170px;
+    height: 65px;
+    font-size: 19px;
+  }
+
+  .screen {
+    padding: 30px;
+  }
+
+  .screen-header {
+    margin-bottom: 30px;
+  }
+
+  .screen-hint {
+    display: none;
+  }
+
+  .apps-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .app-card {
+    width: 100%;
+    height: 180px;
+  }
+
+  .app-logo {
+    width: 70px;
+    height: 70px;
+    font-size: 34px;
+  }
+
+  .wallpaper-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .wallpaper-option {
+    width: 100%;
+    height: 120px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- BACKGROUND -->
-  <div id="background"></div>
+<!-- =========================================
+     WALLPAPER LAYER
+========================================= -->
 
-  <!-- HOME -->
-  <main id="home">
+<div id="background"></div>
 
-    <div class="top-bar">
-      <div class="brand">MY TV</div>
 
-      <div class="datetime">
-        <div id="clock">12:00</div>
-        <div id="date">Sunday, September 13</div>
-      </div>
+<!-- =========================================
+     HOME
+========================================= -->
+
+<main id="home">
+
+  <div class="top-bar">
+
+    <div class="brand">
+      MY TV
     </div>
 
-    <section class="hero">
-      <h1>Welcome</h1>
+    <div class="datetime">
 
-      <p>
-        Your TV home screen. Use your remote to navigate through apps,
-        settings and entertainment.
-      </p>
-    </section>
-
-    <div class="home-actions">
-
-      <div
-        class="tv-button focused"
-        id="appsButton"
-        tabindex="0"
-        data-action="apps"
-      >
-        <span class="button-icon">▦</span>
-        <span>Apps</span>
+      <div id="clock">
+        12:00
       </div>
 
-      <div
-        class="tv-button"
-        id="settingsButton"
-        tabindex="0"
-        data-action="settings"
-      >
-        <span class="button-icon">⚙</span>
-        <span>Settings</span>
+      <div id="date">
+        Loading...
       </div>
 
     </div>
 
-  </main>
+  </div>
 
 
-  <!-- APPS SCREEN -->
-  <section
-    id="appsScreen"
-    class="screen"
-    aria-hidden="true"
-  >
+  <section class="hero">
 
-    <div class="screen-header">
-      <div class="screen-title">Apps</div>
+    <h1>
+      Welcome
+    </h1>
 
-      <div class="screen-hint">
-        ← → ↑ ↓ Navigate &nbsp; • &nbsp; OK Open &nbsp; • &nbsp; Back
-      </div>
-    </div>
-
-    <div class="apps-grid">
-
-      <div
-        class="app-card focused"
-        tabindex="0"
-        data-app="youtube"
-      >
-        <div class="app-logo youtube-logo">
-          ▶
-        </div>
-
-        <div class="app-name">
-          YouTube
-        </div>
-      </div>
-
-
-      <div
-        class="app-card"
-        tabindex="0"
-        data-app="google"
-      >
-        <div class="app-logo google-logo">
-          G
-        </div>
-
-        <div class="app-name">
-          Google
-        </div>
-      </div>
-
-    </div>
-
-    <div class="remote-hint">
-      Press Back / Esc to return
-    </div>
+    <p>
+      Your TV home screen. Use your remote to open apps
+      and customize your wallpaper.
+    </p>
 
   </section>
 
 
-  <!-- SETTINGS SCREEN -->
-  <section
-    id="settingsScreen"
-    class="screen"
-    aria-hidden="true"
-  >
+  <div class="home-actions">
 
-    <div class="screen-header">
-      <div class="screen-title">Settings</div>
-
-      <div class="screen-hint">
-        ← → ↑ ↓ Navigate &nbsp; • &nbsp; OK Select
-      </div>
+    <div
+      class="tv-button focused"
+      id="appsButton"
+      tabindex="0"
+    >
+      <span class="button-icon">▦</span>
+      <span>Apps</span>
     </div>
 
-    <div class="settings-content">
+    <div
+      class="tv-button"
+      id="settingsButton"
+      tabindex="0"
+    >
+      <span class="button-icon">⚙</span>
+      <span>Settings</span>
+    </div>
 
-      <div>
-        <div class="setting-label">
-          Wallpaper
-        </div>
+  </div>
 
-        <div class="wallpaper-grid">
+</main>
 
-          <div
-            class="wallpaper-option focused"
-            tabindex="0"
-            data-wallpaper="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90"
-            style="
-              background-image:
-              url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=80');
-            "
-          ></div>
 
-          <div
-            class="wallpaper-option"
-            tabindex="0"
-            data-wallpaper="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2400&q=90"
-            style="
-              background-image:
-              url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80');
-            "
-          ></div>
+<!-- =========================================
+     APPS SCREEN
+========================================= -->
 
-          <div
-            class="wallpaper-option"
-            tabindex="0"
-            data-wallpaper="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=90"
-            style="
-              background-image:
-              url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80');
-            "
-          ></div>
+<section
+  id="appsScreen"
+  class="screen"
+>
 
-          <div
-            class="wallpaper-option"
-            tabindex="0"
-            data-wallpaper="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=90"
-            style="
-              background-image:
-              url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80');
-            "
-          ></div>
+  <div class="screen-header">
 
-        </div>
+    <div class="screen-title">
+      Apps
+    </div>
+
+    <div class="screen-hint">
+      ← → &nbsp; Navigate &nbsp; • &nbsp;
+      OK &nbsp; Open &nbsp; • &nbsp;
+      Back
+    </div>
+
+  </div>
+
+
+  <div class="apps-grid">
+
+    <div
+      class="app-card"
+      data-app="youtube"
+      tabindex="0"
+    >
+
+      <div class="app-logo youtube-logo">
+        ▶
+      </div>
+
+      <div class="app-name">
+        YouTube
       </div>
 
     </div>
 
-    <div class="remote-hint">
-      Press Back / Esc to return
+
+    <div
+      class="app-card"
+      data-app="google"
+      tabindex="0"
+    >
+
+      <div class="app-logo google-logo">
+        G
+      </div>
+
+      <div class="app-name">
+        Google
+      </div>
+
     </div>
 
-  </section>
+  </div>
 
 
-  <script>
+  <div class="remote-hint">
+    Press Back / Esc to return
+  </div>
 
-    /* =========================================
-       CONFIG
-    ========================================= */
-
-    const YOUTUBE_URL = "https://www.youtube.com/";
-    const GOOGLE_URL = "https://www.google.com/";
-
-    const DEFAULT_WALLPAPER =
-      "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90";
+</section>
 
 
-    /* =========================================
-       ELEMENTS
-    ========================================= */
+<!-- =========================================
+     SETTINGS
+========================================= -->
 
-    const home = document.getElementById("home");
-    const appsScreen = document.getElementById("appsScreen");
-    const settingsScreen = document.getElementById("settingsScreen");
-    const background = document.getElementById("background");
+<section
+  id="settingsScreen"
+  class="screen"
+>
 
-    const appsButton = document.getElementById("appsButton");
-    const settingsButton = document.getElementById("settingsButton");
+  <div class="screen-header">
 
-    const appCards =
-      [...document.querySelectorAll(".app-card")];
+    <div class="screen-title">
+      Settings
+    </div>
 
-    const wallpaperOptions =
-      [...document.querySelectorAll(".wallpaper-option")];
+    <div class="screen-hint">
+      ← → &nbsp; Navigate &nbsp; • &nbsp;
+      OK &nbsp; Select &nbsp; • &nbsp;
+      Back
+    </div>
 
-    let currentScreen = "home";
-
-    let currentIndex = 0;
+  </div>
 
 
-    /* =========================================
-       CLOCK
-    ========================================= */
+  <div class="settings-content">
 
-    function updateClock() {
+    <div class="setting-label">
+      Choose Wallpaper
+    </div>
 
-      const now = new Date();
 
-      const time = now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
+    <div class="wallpaper-grid">
 
-      const date = now.toLocaleDateString([], {
-        weekday: "long",
-        month: "long",
-        day: "numeric"
-      });
 
-      document.getElementById("clock").textContent = time;
+      <!-- WALLPAPER 1 -->
 
-      document.getElementById("date").textContent = date;
+      <div
+        class="wallpaper-option"
+        data-index="0"
+        data-wallpaper="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90"
+        style="
+          background-image:
+          url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85');
+        "
+      >
+
+        <span class="wallpaper-number">
+          Nature
+        </span>
+
+      </div>
+
+
+      <!-- WALLPAPER 2 -->
+
+      <div
+        class="wallpaper-option"
+        data-index="1"
+        data-wallpaper="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2400&q=90"
+        style="
+          background-image:
+          url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=85');
+        "
+      >
+
+        <span class="wallpaper-number">
+          Mountains
+        </span>
+
+      </div>
+
+
+      <!-- WALLPAPER 3 -->
+
+      <div
+        class="wallpaper-option"
+        data-index="2"
+        data-wallpaper="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=90"
+        style="
+          background-image:
+          url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=85');
+        "
+      >
+
+        <span class="wallpaper-number">
+          Forest
+        </span>
+
+      </div>
+
+
+      <!-- WALLPAPER 4 -->
+
+      <div
+        class="wallpaper-option"
+        data-index="3"
+        data-wallpaper="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=90"
+        style="
+          background-image:
+          url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85');
+        "
+      >
+
+        <span class="wallpaper-number">
+          Ocean
+        </span>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <div class="remote-hint">
+    Press Back / Esc to return
+  </div>
+
+</section>
+
+
+<script>
+
+/* =========================================
+   CONFIG
+========================================= */
+
+const YOUTUBE_URL = "https://www.youtube.com/";
+const GOOGLE_URL = "https://www.google.com/";
+
+const DEFAULT_WALLPAPER =
+  "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90";
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const background =
+  document.getElementById("background");
+
+const home =
+  document.getElementById("home");
+
+const appsScreen =
+  document.getElementById("appsScreen");
+
+const settingsScreen =
+  document.getElementById("settingsScreen");
+
+const appsButton =
+  document.getElementById("appsButton");
+
+const settingsButton =
+  document.getElementById("settingsButton");
+
+const appCards =
+  [...document.querySelectorAll(".app-card")];
+
+const wallpaperOptions =
+  [...document.querySelectorAll(".wallpaper-option")];
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let currentScreen = "home";
+
+let homeIndex = 0;
+
+let appIndex = 0;
+
+let wallpaperIndex = 0;
+
+
+/* =========================================
+   CLOCK
+========================================= */
+
+function updateClock() {
+
+  const now = new Date();
+
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+  document.getElementById("date").textContent =
+    now.toLocaleDateString([], {
+      weekday: "long",
+      month: "long",
+      day: "numeric"
+    });
+}
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+
+/* =========================================
+   WALLPAPER
+========================================= */
+
+function setWallpaper(url) {
+
+  /*
+    IMPORTANT:
+    The wallpaper is applied directly to the
+    fixed background layer.
+  */
+
+  background.style.backgroundImage =
+    `url("${url}")`;
+
+}
+
+
+/* Load saved wallpaper */
+
+function loadWallpaper() {
+
+  const saved =
+    localStorage.getItem("tvWallpaper");
+
+  setWallpaper(
+    saved || DEFAULT_WALLPAPER
+  );
+
+  /*
+    Mark the correct preview as selected.
+  */
+
+  wallpaperOptions.forEach(option => {
+
+    option.classList.remove("selected");
+
+    if (
+      option.dataset.wallpaper ===
+      (saved || DEFAULT_WALLPAPER)
+    ) {
+
+      option.classList.add("selected");
+
+      wallpaperIndex =
+        Number(option.dataset.index);
     }
 
-    updateClock();
+  });
+}
 
-    setInterval(updateClock, 1000);
+loadWallpaper();
 
 
-    /* =========================================
-       WALLPAPER
-    ========================================= */
+/* =========================================
+   SAVE WALLPAPER
+========================================= */
 
-    function loadWallpaper() {
+function selectWallpaper(index) {
 
-      const saved =
-        localStorage.getItem("tvWallpaper");
+  const option =
+    wallpaperOptions[index];
 
-      const wallpaper =
-        saved || DEFAULT_WALLPAPER;
+  if (!option) return;
 
-      background.style.backgroundImage = `
-        linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.62),
-          rgba(0, 0, 0, 0.12) 65%,
-          rgba(0, 0, 0, 0.35)
-        ),
-        url("${wallpaper}")
-      `;
+  const url =
+    option.dataset.wallpaper;
+
+  localStorage.setItem(
+    "tvWallpaper",
+    url
+  );
+
+  setWallpaper(url);
+
+  wallpaperOptions.forEach(item => {
+    item.classList.remove("selected");
+  });
+
+  option.classList.add("selected");
+
+  wallpaperIndex = index;
+}
+
+
+/* =========================================
+   FOCUS
+========================================= */
+
+function clearFocus() {
+
+  document
+    .querySelectorAll(".focused")
+    .forEach(element => {
+
+      element.classList.remove("focused");
+
+    });
+}
+
+
+/* =========================================
+   SHOW HOME
+========================================= */
+
+function showHome() {
+
+  currentScreen = "home";
+
+  appsScreen.classList.remove("active");
+  settingsScreen.classList.remove("active");
+
+  home.style.display = "flex";
+
+  clearFocus();
+
+  /*
+    Home always starts with Apps focused.
+  */
+
+  homeIndex = 0;
+
+  appsButton.classList.add("focused");
+}
+
+
+/* =========================================
+   SHOW APPS
+========================================= */
+
+function showApps() {
+
+  currentScreen = "apps";
+
+  home.style.display = "none";
+
+  settingsScreen.classList.remove("active");
+
+  appsScreen.classList.add("active");
+
+  clearFocus();
+
+  /*
+    RESTORE LAST FOCUSED APP
+  */
+
+  const savedApp =
+    localStorage.getItem("lastFocusedApp");
+
+  const savedIndex =
+    appCards.findIndex(
+      card =>
+        card.dataset.app === savedApp
+    );
+
+  appIndex =
+    savedIndex >= 0
+      ? savedIndex
+      : 0;
+
+  updateAppFocus(false);
+}
+
+
+/* =========================================
+   SHOW SETTINGS
+========================================= */
+
+function showSettings() {
+
+  currentScreen = "settings";
+
+  home.style.display = "none";
+
+  appsScreen.classList.remove("active");
+
+  settingsScreen.classList.add("active");
+
+  clearFocus();
+
+  /*
+    Restore currently selected wallpaper
+    as the initial focus.
+  */
+
+  const savedWallpaper =
+    localStorage.getItem("tvWallpaper");
+
+  const savedIndex =
+    wallpaperOptions.findIndex(
+      option =>
+        option.dataset.wallpaper ===
+        savedWallpaper
+    );
+
+  wallpaperIndex =
+    savedIndex >= 0
+      ? savedIndex
+      : 0;
+
+  updateWallpaperFocus(false);
+}
+
+
+/* =========================================
+   HOME NAVIGATION
+========================================= */
+
+function navigateHome(key) {
+
+  if (key === "ArrowRight") {
+
+    homeIndex = 1;
+
+    clearFocus();
+
+    settingsButton.classList.add("focused");
+
+    return;
+  }
+
+
+  if (key === "ArrowLeft") {
+
+    homeIndex = 0;
+
+    clearFocus();
+
+    appsButton.classList.add("focused");
+
+    return;
+  }
+
+
+  if (key === "Enter" || key === " ") {
+
+    if (homeIndex === 0) {
+
+      showApps();
+
+    } else {
+
+      showSettings();
+
     }
+
+  }
+
+}
+
+
+/* =========================================
+   APP NAVIGATION
+========================================= */
+
+function navigateApps(key) {
+
+  if (key === "ArrowRight") {
+
+    appIndex =
+      Math.min(
+        appIndex + 1,
+        appCards.length - 1
+      );
+
+    saveAppFocus();
+
+    updateAppFocus();
+
+    return;
+  }
+
+
+  if (key === "ArrowLeft") {
+
+    appIndex =
+      Math.max(
+        appIndex - 1,
+        0
+      );
+
+    saveAppFocus();
+
+    updateAppFocus();
+
+    return;
+  }
+
+
+  if (key === "Enter" || key === " ") {
+
+    saveAppFocus();
+
+    openApp(
+      appCards[appIndex].dataset.app
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   APP FOCUS
+========================================= */
+
+function updateAppFocus(scroll = true) {
+
+  clearFocus();
+
+  const card =
+    appCards[appIndex];
+
+  if (!card) return;
+
+  card.classList.add("focused");
+
+  if (scroll) {
+
+    card.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+
+  }
+
+}
+
+
+/* =========================================
+   SAVE APP FOCUS
+========================================= */
+
+function saveAppFocus() {
+
+  const app =
+    appCards[appIndex];
+
+  if (!app) return;
+
+  localStorage.setItem(
+    "lastFocusedApp",
+    app.dataset.app
+  );
+}
+
+
+/* =========================================
+   OPEN APP
+========================================= */
+
+function openApp(app) {
+
+  if (app === "youtube") {
+
+    window.location.href =
+      YOUTUBE_URL;
+
+    return;
+  }
+
+
+  if (app === "google") {
+
+    window.location.href =
+      GOOGLE_URL;
+
+    return;
+  }
+
+}
+
+
+/* =========================================
+   WALLPAPER NAVIGATION
+========================================= */
+
+function navigateSettings(key) {
+
+  if (key === "ArrowRight") {
+
+    wallpaperIndex =
+      Math.min(
+        wallpaperIndex + 1,
+        wallpaperOptions.length - 1
+      );
+
+    updateWallpaperFocus();
+
+    return;
+  }
+
+
+  if (key === "ArrowLeft") {
+
+    wallpaperIndex =
+      Math.max(
+        wallpaperIndex - 1,
+        0
+      );
+
+    updateWallpaperFocus();
+
+    return;
+  }
+
+
+  if (key === "Enter" || key === " ") {
+
+    selectWallpaper(
+      wallpaperIndex
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   WALLPAPER FOCUS
+========================================= */
+
+function updateWallpaperFocus(
+  scroll = true
+) {
+
+  clearFocus();
+
+  const option =
+    wallpaperOptions[wallpaperIndex];
+
+  if (!option) return;
+
+  option.classList.add("focused");
+
+  if (scroll) {
+
+    option.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+
+  }
+
+}
+
+
+/* =========================================
+   REMOTE / KEYBOARD
+========================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    const key = event.key;
+
+
+    /*
+      Stop browser scrolling.
+    */
+
+    if (
+      [
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "Enter",
+        " "
+      ].includes(key)
+    ) {
+
+      event.preventDefault();
+
+    }
+
+
+    /*
+      BACK BUTTON
+    */
+
+    if (
+      key === "Escape" ||
+      key === "BrowserBack" ||
+      key === "GoBack"
+    ) {
+
+      if (currentScreen !== "home") {
+
+        showHome();
+
+      }
+
+      return;
+    }
+
+
+    /*
+      CURRENT SCREEN
+    */
+
+    if (currentScreen === "home") {
+
+      navigateHome(key);
+
+      return;
+    }
+
+
+    if (currentScreen === "apps") {
+
+      navigateApps(key);
+
+      return;
+    }
+
+
+    if (currentScreen === "settings") {
+
+      navigateSettings(key);
+
+      return;
+    }
+
+  }
+);
+
+
+/* =========================================
+   CLICK SUPPORT
+========================================= */
+
+appsButton.addEventListener(
+  "click",
+  showApps
+);
+
+settingsButton.addEventListener(
+  "click",
+  showSettings
+);
+
+
+appCards.forEach(
+  (card, index) => {
+
+    card.addEventListener(
+      "click",
+      () => {
+
+        appIndex = index;
+
+        saveAppFocus();
+
+        openApp(
+          card.dataset.app
+        );
+
+      }
+    );
+
+  }
+);
+
+
+wallpaperOptions.forEach(
+  (option, index) => {
+
+    option.addEventListener(
+      "click",
+      () => {
+
+        wallpaperIndex = index;
+
+        selectWallpaper(index);
+
+        updateWallpaperFocus(false);
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================================
+   MOUSE HOVER
+========================================= */
+
+document
+  .querySelectorAll(
+    ".tv-button, .app-card, .wallpaper-option"
+  )
+  .forEach(element => {
+
+    element.addEventListener(
+      "mouseenter",
+      () => {
+
+        clearFocus();
+
+        element.classList.add("focused");
+
+      }
+    );
+
+  });
+
+
+/* =========================================
+   INITIAL STATE
+========================================= */
+
+window.addEventListener(
+  "load",
+  () => {
 
     loadWallpaper();
 
+    clearFocus();
 
-    /* =========================================
-       SCREEN MANAGEMENT
-    ========================================= */
+    appsButton.classList.add("focused");
 
-    function showHome() {
+  }
+);
 
-      currentScreen = "home";
-
-      home.style.display = "flex";
-
-      appsScreen.classList.remove("active");
-      settingsScreen.classList.remove("active");
-
-      appsScreen.setAttribute("aria-hidden", "true");
-      settingsScreen.setAttribute("aria-hidden", "true");
-
-      clearFocus();
-
-      appsButton.classList.add("focused");
-
-      currentIndex = 0;
-    }
-
-
-    function showApps() {
-
-      currentScreen = "apps";
-
-      home.style.display = "none";
-
-      settingsScreen.classList.remove("active");
-
-      appsScreen.classList.add("active");
-
-      appsScreen.setAttribute("aria-hidden", "false");
-
-      clearFocus();
-
-      currentIndex = 0;
-
-      appCards[currentIndex].classList.add("focused");
-    }
-
-
-    function showSettings() {
-
-      currentScreen = "settings";
-
-      home.style.display = "none";
-
-      appsScreen.classList.remove("active");
-
-      settingsScreen.classList.add("active");
-
-      settingsScreen.setAttribute("aria-hidden", "false");
-
-      clearFocus();
-
-      currentIndex = 0;
-
-      wallpaperOptions[currentIndex].classList.add("focused");
-    }
-
-
-    function clearFocus() {
-
-      document
-        .querySelectorAll(".focused")
-        .forEach(element => {
-          element.classList.remove("focused");
-        });
-    }
-
-
-    /* =========================================
-       HOME NAVIGATION
-    ========================================= */
-
-    function homeNavigation(key) {
-
-      if (key === "ArrowRight") {
-
-        clearFocus();
-
-        settingsButton.classList.add("focused");
-
-        currentIndex = 1;
-
-        return;
-      }
-
-      if (key === "ArrowLeft") {
-
-        clearFocus();
-
-        appsButton.classList.add("focused");
-
-        currentIndex = 0;
-
-        return;
-      }
-
-      if (key === "Enter" || key === " ") {
-
-        if (currentIndex === 0) {
-          showApps();
-        } else {
-          showSettings();
-        }
-
-      }
-    }
-
-
-    /* =========================================
-       APPS NAVIGATION
-    ========================================= */
-
-    function appsNavigation(key) {
-
-      const total = appCards.length;
-
-      if (key === "ArrowRight") {
-
-        currentIndex =
-          Math.min(currentIndex + 1, total - 1);
-
-        updateAppFocus();
-
-        return;
-      }
-
-      if (key === "ArrowLeft") {
-
-        currentIndex =
-          Math.max(currentIndex - 1, 0);
-
-        updateAppFocus();
-
-        return;
-      }
-
-      if (key === "Enter" || key === " ") {
-
-        openApp(
-          appCards[currentIndex]
-            .dataset
-            .app
-        );
-
-      }
-    }
-
-
-    function updateAppFocus() {
-
-      clearFocus();
-
-      appCards[currentIndex]
-        .classList
-        .add("focused");
-
-      appCards[currentIndex]
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "nearest"
-        });
-    }
-
-
-    /* =========================================
-       SETTINGS NAVIGATION
-    ========================================= */
-
-    function settingsNavigation(key) {
-
-      const total =
-        wallpaperOptions.length;
-
-      if (key === "ArrowRight") {
-
-        currentIndex =
-          Math.min(currentIndex + 1, total - 1);
-
-        updateWallpaperFocus();
-
-        return;
-      }
-
-      if (key === "ArrowLeft") {
-
-        currentIndex =
-          Math.max(currentIndex - 1, 0);
-
-        updateWallpaperFocus();
-
-        return;
-      }
-
-      if (key === "Enter" || key === " ") {
-
-        selectWallpaper(
-          wallpaperOptions[currentIndex]
-        );
-
-      }
-    }
-
-
-    function updateWallpaperFocus() {
-
-      clearFocus();
-
-      wallpaperOptions[currentIndex]
-        .classList
-        .add("focused");
-
-      wallpaperOptions[currentIndex]
-        .scrollIntoView({
-          behavior: "smooth",
-          block: "nearest"
-        });
-    }
-
-
-    /* =========================================
-       OPEN APP
-    ========================================= */
-
-    function openApp(app) {
-
-      if (app === "youtube") {
-
-        window.location.href = YOUTUBE_URL;
-
-      }
-
-      if (app === "google") {
-
-        window.location.href = GOOGLE_URL;
-
-      }
-
-    }
-
-
-    /* =========================================
-       WALLPAPER SELECT
-    ========================================= */
-
-    function selectWallpaper(element) {
-
-      const wallpaper =
-        element.dataset.wallpaper;
-
-      localStorage.setItem(
-        "tvWallpaper",
-        wallpaper
-      );
-
-      loadWallpaper();
-
-      clearFocus();
-
-      element.classList.add("focused");
-    }
-
-
-    /* =========================================
-       KEYBOARD / REMOTE CONTROL
-    ========================================= */
-
-    document.addEventListener("keydown", event => {
-
-      const key = event.key;
-
-      /*
-       * Prevent the browser from scrolling.
-       * Important for TV browsers.
-       */
-
-      if (
-        [
-          "ArrowUp",
-          "ArrowDown",
-          "ArrowLeft",
-          "ArrowRight",
-          "Enter",
-          " "
-        ].includes(key)
-      ) {
-        event.preventDefault();
-      }
-
-
-      /* BACK BUTTON */
-
-      if (
-        key === "Escape" ||
-        key === "BrowserBack" ||
-        key === "GoBack"
-      ) {
-
-        if (currentScreen !== "home") {
-          showHome();
-        }
-
-        return;
-      }
-
-
-      /* HOME */
-
-      if (currentScreen === "home") {
-
-        homeNavigation(key);
-
-        return;
-      }
-
-
-      /* APPS */
-
-      if (currentScreen === "apps") {
-
-        appsNavigation(key);
-
-        return;
-      }
-
-
-      /* SETTINGS */
-
-      if (currentScreen === "settings") {
-
-        settingsNavigation(key);
-
-        return;
-      }
-
-    });
-
-
-    /* =========================================
-       CLICK SUPPORT
-       ========================================= */
-
-    appsButton.addEventListener(
-      "click",
-      showApps
-    );
-
-    settingsButton.addEventListener(
-      "click",
-      showSettings
-    );
-
-
-    appCards.forEach(card => {
-
-      card.addEventListener("click", () => {
-
-        openApp(card.dataset.app);
-
-      });
-
-    });
-
-
-    wallpaperOptions.forEach(option => {
-
-      option.addEventListener("click", () => {
-
-        selectWallpaper(option);
-
-      });
-
-    });
-
-
-    /* =========================================
-       MOUSE HOVER SUPPORT
-       ========================================= */
-
-    document
-      .querySelectorAll(
-        ".tv-button, .app-card, .wallpaper-option"
-      )
-      .forEach(element => {
-
-        element.addEventListener(
-          "mouseenter",
-          () => {
-
-            clearFocus();
-
-            element.classList.add("focused");
-
-          }
-        );
-
-      });
-
-
-    /* =========================================
-       INITIAL TV FOCUS
-    ========================================= */
-
-    window.addEventListener("load", () => {
-
-      setTimeout(() => {
-
-        clearFocus();
-
-        appsButton.classList.add("focused");
-
-      }, 300);
-
-    });
-
-  </script>
+</script>
 
 </body>
 </html>
+```
