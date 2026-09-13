@@ -1,325 +1,242 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expression & Behavioral Consistency Prototype</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VisionCheck — Expression & Response Analysis</title>
 <style>
-  :root { --bg:#0b1020; --panel:#121a2d; --panel2:#18233b; --text:#eef3ff; --muted:#9aa8c7; --accent:#6ea8fe; --good:#55d187; --warn:#ffbf69; --bad:#ff6b7a; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif; background:linear-gradient(135deg,#080c18,#101a31); color:var(--text); min-height:100vh; }
-  .wrap { max-width:1200px; margin:auto; padding:28px 20px 50px; }
-  h1 { margin:0 0 6px; font-size:30px; }
-  .sub { color:var(--muted); margin-bottom:24px; }
-  .grid { display:grid; grid-template-columns:1.35fr .65fr; gap:18px; }
-  .card { background:rgba(18,26,45,.92); border:1px solid #263453; border-radius:18px; padding:18px; box-shadow:0 15px 50px rgba(0,0,0,.25); }
-  .camera { position:relative; background:#05070d; border-radius:14px; overflow:hidden; aspect-ratio:16/10; }
-  video, canvas { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-  canvas { pointer-events:none; }
-  .status { position:absolute; left:12px; top:12px; background:rgba(0,0,0,.58); padding:8px 11px; border-radius:10px; font-size:13px; z-index:3; }
-  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
-  .stat { background:var(--panel2); padding:14px; border-radius:13px; }
-  .stat .label { color:var(--muted); font-size:12px; }
-  .stat .value { font-size:28px; font-weight:750; margin-top:4px; }
-  .score { font-size:44px; font-weight:800; }
-  .meter { height:10px; background:#27334e; border-radius:99px; overflow:hidden; margin:10px 0 5px; }
-  .fill { height:100%; width:50%; background:var(--accent); transition:.25s; }
-  button { border:0; border-radius:11px; padding:12px 15px; font-weight:700; cursor:pointer; color:#07101f; background:var(--accent); }
-  button.secondary { background:#2a3857; color:var(--text); }
-  button:disabled { opacity:.45; cursor:not-allowed; }
-  .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-  input, textarea { width:100%; background:#0d1527; color:var(--text); border:1px solid #30405f; border-radius:11px; padding:12px; outline:none; }
-  textarea { min-height:90px; resize:vertical; }
-  label { display:block; font-size:13px; color:var(--muted); margin:14px 0 7px; }
-  .hidden { display:none !important; }
-  .notice { padding:12px; border-radius:11px; background:#19243b; color:#bdc9e2; font-size:13px; line-height:1.45; }
-  .row { display:flex; justify-content:space-between; gap:12px; align-items:center; }
-  .pill { display:inline-block; padding:5px 9px; border-radius:99px; background:#243452; color:#cbd7ef; font-size:12px; }
-  .results { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px; }
-  .result { background:#18233b; border-radius:12px; padding:12px; }
-  .result strong { display:block; font-size:22px; margin-top:4px; }
-  .countdown { font-size:42px; font-weight:800; text-align:center; margin:12px 0; }
-  @media(max-width:850px){ .grid{grid-template-columns:1fr;} .stats{grid-template-columns:1fr 1fr;} }
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070b;color:#fff;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}
+#app{position:fixed;inset:0;background:#05070b}
+video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#05070b}
+#shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.48),transparent 25%,transparent 60%,rgba(0,0,0,.72));pointer-events:none}
+#top{position:absolute;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;z-index:4}
+.brand{font-weight:800;letter-spacing:.4px;font-size:18px;background:rgba(0,0,0,.5);padding:9px 13px;border-radius:12px;backdrop-filter:blur(10px)}
+#status{font-size:12px;color:#dbe5ff;background:rgba(0,0,0,.52);padding:9px 12px;border-radius:12px;backdrop-filter:blur(10px)}
+#bottom{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:18px;display:flex;align-items:end;gap:12px}
+.panel{background:rgba(8,12,20,.82);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(16px);border-radius:18px;padding:14px;box-shadow:0 12px 40px #0008}
+#expression{min-width:270px}
+.label{font-size:11px;color:#aebbd4;text-transform:uppercase;letter-spacing:1px}
+#exprText{font-size:25px;font-weight:800;margin:2px 0}
+#exprScore{font-size:14px;color:#c7d4ef}
+.meter{height:7px;background:#263047;border-radius:20px;overflow:hidden;margin-top:8px}.fill{height:100%;width:50%;background:#77a7ff;transition:.25s}
+.stat{min-width:130px}.big{font-size:30px;font-weight:850;margin-top:2px}
+button{border:0;border-radius:13px;padding:13px 17px;font-weight:800;font-size:14px;cursor:pointer}
+#settingsBtn{margin-left:auto;background:#fff;color:#070a10}
+#startBtn{background:#77a7ff;color:#07101d}.secondary{background:#27334a;color:#fff}
+button:disabled{opacity:.45;cursor:not-allowed}
+#modal{position:absolute;z-index:10;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:20px}
+#modal.open{display:flex}.modalBox{width:min(620px,100%);background:#101725;border:1px solid #2c3953;border-radius:22px;padding:22px;box-shadow:0 30px 100px #000}
+h2{margin:0 0 5px}.muted{color:#9eacc5;font-size:13px;line-height:1.45}
+label{display:block;color:#aebbd4;font-size:12px;margin:15px 0 7px}
+textarea,input{width:100%;border:1px solid #33415d;background:#080d17;color:#fff;border-radius:12px;padding:12px;font:inherit;outline:none}
+textarea{min-height:76px;resize:vertical}.row{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+#analysis{position:absolute;z-index:8;inset:0;display:none;align-items:center;justify-content:center;text-align:center;background:rgba(4,7,12,.72);backdrop-filter:blur(7px)}
+#analysis.show{display:flex}.analysisBox{width:min(600px,92%);background:#0e1625;border:1px solid #2e3b56;border-radius:22px;padding:25px}
+#count{font-size:64px;font-weight:900;margin:8px}.progress{height:9px;background:#27334a;border-radius:20px;overflow:hidden}.progress div{height:100%;width:0;background:#77a7ff}
+#result{display:none}.resultNum{font-size:58px;font-weight:900}.warning{margin-top:12px;background:#171f30;border-radius:12px;padding:11px;color:#b7c4dc;font-size:12px;line-height:1.45}
+#boot{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:#05070b;text-align:center;padding:25px}
+.bootbox{width:min(500px,100%)}.bootbox h1{font-size:32px}.bootbox p{color:#aebbd4;line-height:1.5;font-size:14px}
+#error{color:#ff9da8;font-size:13px;margin-top:12px}
+@media(max-width:650px){#bottom{flex-wrap:wrap}.stat{min-width:110px}#expression{min-width:0;flex:1}.brand{font-size:15px}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Expression & Behavioral Consistency</h1>
-  <div class="sub">Browser prototype using camera-based computer vision. No claim of actual lie detection.</div>
+<div id="app">
+  <video id="video" autoplay muted playsinline></video><div id="shade"></div>
+  <div id="top"><div class="brand">VisionCheck</div><div id="status">Camera not started</div></div>
 
-  <div class="grid">
-    <section class="card">
-      <div class="camera">
-        <video id="video" autoplay muted playsinline></video>
-        <canvas id="overlay"></canvas>
-        <div class="status" id="cameraStatus">Camera off</div>
-      </div>
-      <div class="actions">
-        <button id="startBtn">Start Camera</button>
-        <button class="secondary" id="stopBtn" disabled>Stop Camera</button>
-      </div>
-      <div class="stats">
-        <div class="stat"><div class="label">PEOPLE VISIBLE</div><div class="value" id="people">0</div></div>
-        <div class="stat"><div class="label">EXPRESSION SCORE</div><div class="value" id="exprScore">0</div></div>
-        <div class="stat"><div class="label">DOMINANT EXPRESSION</div><div class="value" id="exprName" style="font-size:20px">—</div></div>
-      </div>
-      <div class="card" style="margin-top:14px;background:#0e172a">
-        <div class="row"><span>Expression scale</span><span class="pill">Sad −10 · Neutral 0 · Angry +10</span></div>
-        <div class="meter"><div class="fill" id="exprFill"></div></div>
-        <div class="sub" style="font-size:12px;margin:0">This is an experimental expression classification signal, not a measure of emotion, intent, or personality.</div>
-      </div>
-    </section>
-
-    <aside class="card">
-      <h2 style="margin-top:0">Question & Response</h2>
-      <div id="setup">
-        <div class="notice">After the initial 10-second observation period, you can enter a question and run a 10-second whole-body movement analysis.</div>
-        <label>Question</label>
-        <textarea id="question" placeholder="Enter a question..."></textarea>
-        <label>Typed answer</label>
-        <textarea id="answer" placeholder="Type the person's answer..."></textarea>
-        <button id="beginBtn" disabled>Begin body analysis</button>
-      </div>
-
-      <div id="analysis" class="hidden">
-        <div class="notice" id="instruction">Move the camera back so the person's full body is visible.</div>
-        <div class="countdown" id="timer">10</div>
-        <div class="results">
-          <div class="result">Movement<strong id="movement">—</strong></div>
-          <div class="result">Eye visibility<strong id="eye">—</strong></div>
-          <div class="result">Hand activity<strong id="hands">—</strong></div>
-          <div class="result">Foot activity<strong id="feet">—</strong></div>
-          <div class="result">Visual stress proxy<strong id="stress">—</strong></div>
-          <div class="result">Consistency score<strong id="finalScore">—</strong></div>
-        </div>
-        <div class="notice" style="margin-top:12px">
-          The final score is a <b>behavioral consistency score</b>, not a probability that the answer is true or false. Body language cannot reliably establish truthfulness.
-        </div>
-      </div>
-    </aside>
+  <div id="bottom">
+    <div class="panel" id="expression">
+      <div class="label">Face expression</div>
+      <div id="exprText">Waiting…</div>
+      <div id="exprScore">Score: 0</div>
+      <div class="meter"><div class="fill" id="exprFill"></div></div>
+    </div>
+    <div class="panel stat"><div class="label">People visible</div><div class="big" id="people">0</div></div>
+    <div class="panel stat"><div class="label">Observation</div><div class="big" id="obs">0s</div></div>
+    <button class="panel" id="settingsBtn">⚙ Settings</button>
   </div>
 
-  <div class="card" style="margin-top:18px">
-    <b>How it works</b>
-    <p style="color:var(--muted);line-height:1.5;margin-bottom:0">
-      The page uses face detection/expression classification and lightweight motion measurements in the browser.
-      Camera permission is required. The prototype does not upload camera frames to a server.
-      For production use, add explicit consent, age/privacy safeguards, model validation, and a proper backend if required.
-    </p>
+  <div id="boot">
+    <div class="bootbox">
+      <h1>VisionCheck</h1>
+      <p>Full-screen camera prototype for visible-person counting and experimental facial-expression scoring. Camera frames are processed locally by the page.</p>
+      <button id="startBtn">Start camera</button>
+      <div id="error"></div>
+    </div>
+  </div>
+
+  <div id="modal">
+    <div class="modalBox">
+      <h2>Settings</h2>
+      <div class="muted">Enter the question and the answer(s) you consider acceptable. The calculator compares the typed response with these answers and combines that with observable motion. It does <b>not</b> establish whether a person is lying.</div>
+      <label>Question</label>
+      <textarea id="question" placeholder="Example: What is your favorite color?"></textarea>
+      <label>Accepted answers (one per line)</label>
+      <textarea id="accepted" placeholder="blue&#10;green"></textarea>
+      <label>Response to analyze</label>
+      <textarea id="response" placeholder="Type the person's answer here..."></textarea>
+      <div class="row"><button class="secondary" id="closeSettings">Cancel</button><button id="calculateBtn">Calculate</button></div>
+    </div>
+  </div>
+
+  <div id="analysis">
+    <div class="analysisBox">
+      <div class="label">10-second observation</div>
+      <div id="phase">Keep the whole body visible in the camera.</div>
+      <div id="count">10</div>
+      <div class="progress"><div id="prog"></div></div>
+      <div id="result">
+        <div class="label" style="margin-top:20px">Response consistency score</div>
+        <div class="resultNum" id="final">0/10</div>
+        <div class="muted" id="breakdown"></div>
+        <div class="warning">This is not a lie probability. Facial expressions, eye behavior, movement, stress proxies, and body language cannot reliably determine truthfulness.</div>
+        <div class="row"><button id="closeResult">Close</button></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
 <script>
-const video = document.getElementById('video');
-const overlay = document.getElementById('overlay');
-const ctx = overlay.getContext('2d');
-const statusEl = document.getElementById('cameraStatus');
-const peopleEl = document.getElementById('people');
-const exprScoreEl = document.getElementById('exprScore');
-const exprNameEl = document.getElementById('exprName');
-const exprFill = document.getElementById('exprFill');
-const startBtn = document.getElementById('startBtn');
-const stopBtn = document.getElementById('stopBtn');
-const beginBtn = document.getElementById('beginBtn');
-const question = document.getElementById('question');
-const answer = document.getElementById('answer');
-const setup = document.getElementById('setup');
-const analysis = document.getElementById('analysis');
-const timerEl = document.getElementById('timer');
+/*
+  The face model is loaded from jsDelivr. If your browser blocks CDN resources,
+  the camera still works, but expression/face counting will show an error.
+*/
+const video=document.getElementById('video');
+const status=document.getElementById('status');
+const error=document.getElementById('error');
+const people=document.getElementById('people');
+const exprText=document.getElementById('exprText');
+const exprScore=document.getElementById('exprScore');
+const exprFill=document.getElementById('exprFill');
+const obs=document.getElementById('obs');
+const boot=document.getElementById('boot');
+const modal=document.getElementById('modal');
+const analysis=document.getElementById('analysis');
+const count=document.getElementById('count');
+const prog=document.getElementById('prog');
+const result=document.getElementById('result');
 
-let stream = null;
-let detecting = false;
-let observationStart = null;
-let observationReady = false;
-let detectorTimer = null;
-let lastFaceCenters = [];
-let bodySamples = [];
-let analysisRunning = false;
+let stream=null, modelOK=false, timer=null, detecting=false;
+let observationStart=0, motionValues=[], lastGray=null;
 
-const MODEL_URL = 'https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights';
+const FACE_URL='https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
+const WEIGHTS='https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights';
 
-async function loadModels() {
-  statusEl.textContent = 'Loading vision models…';
-  await Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-    faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
-  ]);
+function loadScript(src){
+ return new Promise((resolve,reject)=>{
+   const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s);
+ });
 }
-
-function expressionScore(expressions) {
-  const sad = expressions.sad || 0;
-  const angry = expressions.angry || 0;
-  const neutral = expressions.neutral || 0;
-  // Map sadness toward -10 and anger toward +10; neutral toward 0.
-  const raw = (angry - sad) * 10;
-  return Math.max(-10, Math.min(10, raw));
+async function loadVision(){
+ if(window.faceapi)return;
+ await loadScript(FACE_URL);
+ await Promise.all([
+   faceapi.nets.tinyFaceDetector.loadFromUri(WEIGHTS),
+   faceapi.nets.faceExpressionNet.loadFromUri(WEIGHTS)
+ ]);
 }
-
-function dominant(expressions) {
-  return Object.entries(expressions).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
+function scoreExpression(e){
+ const sad=e.sad||0, angry=e.angry||0, neutral=e.neutral||0;
+ return Math.max(-10,Math.min(10,(angry-sad)*10 + (neutral*.0)));
 }
-
-function drawFaces(detections) {
-  overlay.width = video.videoWidth;
-  overlay.height = video.videoHeight;
-  ctx.clearRect(0,0,overlay.width,overlay.height);
-  const resized = faceapi.resizeResults(detections, {width:overlay.width,height:overlay.height});
-  resized.forEach(d => {
-    const b = d.detection.box;
-    ctx.strokeStyle = '#6ea8fe';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(b.x,b.y,b.width,b.height);
-  });
+function dominant(e){
+ return Object.entries(e).sort((a,b)=>b[1]-a[1])[0]?.[0]||'neutral';
 }
+function pretty(x){return x.charAt(0).toUpperCase()+x.slice(1)}
 
-async function detectFaces() {
-  if (!detecting || video.readyState < 2) return;
-  try {
-    const detections = await faceapi.detectAllFaces(
-      video,
-      new faceapi.TinyFaceDetectorOptions({inputSize:320, scoreThreshold:0.45})
-    ).withFaceExpressions();
-
-    peopleEl.textContent = detections.length;
-    drawFaces(detections);
-
-    if (detections.length) {
-      const scores = detections.map(d => expressionScore(d.expressions));
-      const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
-      exprScoreEl.textContent = (avg > 0 ? '+' : '') + avg.toFixed(1);
-      const avgExpressions = {};
-      for (const d of detections) for (const [k,v] of Object.entries(d.expressions))
-        avgExpressions[k] = (avgExpressions[k] || 0) + v / detections.length;
-      exprNameEl.textContent = dominant(avgExpressions);
-      // -10..10 -> 0..100
-      exprFill.style.width = ((avg + 10) / 20 * 100) + '%';
-    } else {
-      exprScoreEl.textContent = '0';
-      exprNameEl.textContent = '—';
-      exprFill.style.width = '50%';
-    }
-
-    if (observationStart && !observationReady && Date.now() - observationStart >= 10000) {
-      observationReady = true;
-      beginBtn.disabled = false;
-      statusEl.textContent = '10-second observation complete';
-    }
-  } catch(e) {
-    console.error(e);
+async function detect(){
+ if(!detecting||video.readyState<2||!modelOK)return;
+ try{
+  const ds=await faceapi.detectAllFaces(video,new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:.35})).withFaceExpressions();
+  people.textContent=ds.length;
+  if(ds.length){
+   let avg={},total=0;
+   ds.forEach(d=>{for(const [k,v] of Object.entries(d.expressions)){avg[k]=(avg[k]||0)+v} total++});
+   for(const k in avg)avg[k]/=total;
+   const s=scoreExpression(avg),name=dominant(avg);
+   exprText.textContent=pretty(name);
+   exprScore.textContent='Score: '+(s>=0?'+':'')+s.toFixed(1);
+   exprFill.style.width=((s+10)/20*100)+'%';
+  }else{
+   exprText.textContent='No face';exprScore.textContent='Score: 0';exprFill.style.width='50%';
   }
+ }catch(e){console.warn(e)}
 }
 
-function startDetectionLoop() {
-  clearInterval(detectorTimer);
-  detectorTimer = setInterval(detectFaces, 350);
+function motionSample(){
+ if(video.readyState<2)return;
+ const c=document.createElement('canvas');c.width=64;c.height=36;
+ const x=c.getContext('2d');x.drawImage(video,0,0,c.width,c.height);
+ const p=x.getImageData(0,0,c.width,c.height).data;
+ const g=new Float32Array(c.width*c.height);
+ for(let i=0,j=0;i<p.length;i+=4,j++)g[j]=.299*p[i]+.587*p[i+1]+.114*p[i+2];
+ if(lastGray){
+  let d=0;for(let i=0;i<g.length;i++)d+=Math.abs(g[i]-lastGray[i]);
+  motionValues.push(d/g.length);
+ }
+ lastGray=g;
 }
 
-startBtn.onclick = async () => {
-  try {
-    startBtn.disabled = true;
-    await loadModels();
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: {facingMode:'user', width:{ideal:1280}, height:{ideal:720}},
-      audio:false
-    });
-    video.srcObject = stream;
-    detecting = true;
-    observationStart = Date.now();
-    observationReady = false;
-    statusEl.textContent = 'Observing… 10 seconds';
-    stopBtn.disabled = false;
-    startDetectionLoop();
-  } catch(err) {
-    console.error(err);
-    statusEl.textContent = 'Camera/model error — check permission and HTTPS/localhost.';
-    startBtn.disabled = false;
+async function start(){
+ error.textContent='';
+ document.getElementById('startBtn').disabled=true;
+ try{
+  stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:'user'},audio:false});
+  video.srcObject=stream;
+  await video.play();
+  boot.style.display='none';
+  status.textContent='Camera active';
+  detecting=true;
+  observationStart=Date.now();
+  setInterval(()=>{if(detecting){detect();motionSample();obs.textContent=Math.min(10,Math.floor((Date.now()-observationStart)/1000))+'s'}},400);
+  try{await loadVision();modelOK=true;status.textContent='Camera + face analysis active'}catch(e){
+    status.textContent='Camera active · vision model unavailable';
+    console.warn(e);
   }
-};
-
-stopBtn.onclick = () => {
-  detecting = false;
-  clearInterval(detectorTimer);
-  if (stream) stream.getTracks().forEach(t=>t.stop());
-  video.srcObject = null;
-  statusEl.textContent = 'Camera off';
-  stopBtn.disabled = true;
-  startBtn.disabled = false;
-};
-
-beginBtn.onclick = () => {
-  if (!question.value.trim() || !answer.value.trim()) {
-    alert('Enter both the question and typed answer first.');
-    return;
-  }
-  setup.classList.add('hidden');
-  analysis.classList.remove('hidden');
-  runBehaviorObservation();
-};
-
-function runBehaviorObservation() {
-  if (analysisRunning) return;
-  analysisRunning = true;
-  bodySamples = [];
-  let remaining = 10;
-  timerEl.textContent = remaining;
-  document.getElementById('instruction').textContent =
-    'Keep the whole body visible. Look naturally toward the camera and answer normally.';
-
-  const start = performance.now();
-  const sample = () => {
-    if (!analysisRunning) return;
-    // Generic motion proxy from frame-to-frame pixel sampling.
-    // This deliberately does not claim to identify deception.
-    const c = document.createElement('canvas');
-    c.width = 64; c.height = 36;
-    const x = c.getContext('2d');
-    x.drawImage(video,0,0,c.width,c.height);
-    const data = x.getImageData(0,0,c.width,c.height).data;
-    let sum = 0;
-    for (let i=0;i<data.length;i+=16) sum += data[i]+data[i+1]+data[i+2];
-    bodySamples.push(sum / (data.length/16));
-  };
-  const sampler = setInterval(sample, 250);
-  const clock = setInterval(() => {
-    remaining--;
-    timerEl.textContent = Math.max(remaining,0);
-    if (remaining <= 0) {
-      clearInterval(clock);
-      clearInterval(sampler);
-      finishBehaviorObservation();
-    }
-  },1000);
+ }catch(e){
+  document.getElementById('startBtn').disabled=false;
+  error.textContent='Could not start camera. Allow camera permission and open this page on HTTPS or localhost. '+e.message;
+ }
 }
 
-function finishBehaviorObservation() {
-  analysisRunning = false;
-  const values = bodySamples;
-  let variance = 0;
-  if (values.length > 1) {
-    const mean = values.reduce((a,b)=>a+b,0)/values.length;
-    variance = Math.sqrt(values.reduce((a,b)=>a+(b-mean)**2,0)/values.length);
-  }
-
-  // These are intentionally simple observable proxies.
-  const movement = Math.min(10, variance / 2.5);
-  const eye = Math.min(10, 5 + movement * .15);
-  const hands = Math.min(10, movement * 1.1);
-  const feet = Math.min(10, movement * .9);
-  const stress = Math.min(10, movement * .7);
-  const consistency = Math.max(0, Math.min(10, 10 - Math.abs(movement-3.5)*0.8));
-
-  document.getElementById('movement').textContent = movement.toFixed(1) + '/10';
-  document.getElementById('eye').textContent = eye.toFixed(1) + '/10';
-  document.getElementById('hands').textContent = hands.toFixed(1) + '/10';
-  document.getElementById('feet').textContent = feet.toFixed(1) + '/10';
-  document.getElementById('stress').textContent = stress.toFixed(1) + '/10';
-  document.getElementById('finalScore').textContent = consistency.toFixed(1) + '/10';
-  document.getElementById('instruction').textContent =
-    'Analysis complete. This score measures only prototype behavioral consistency, not truthfulness.';
+function normalize(s){return s.toLowerCase().trim().replace(/[^\p{L}\p{N}\s]/gu,'').replace(/\s+/g,' ')}
+function similarity(a,b){
+ a=normalize(a);b=normalize(b);if(!a||!b)return 0;if(a===b)return 1;
+ const A=new Set(a.split(' ')),B=new Set(b.split(' '));
+ const inter=[...A].filter(x=>B.has(x)).length;
+ return inter/Math.max(A.size,B.size);
 }
+
+function calculate(){
+ const q=document.getElementById('question').value.trim();
+ const accepted=document.getElementById('accepted').value.split('\n').map(normalize).filter(Boolean);
+ const r=document.getElementById('response').value.trim();
+ if(!q||!accepted.length||!r){alert('Enter a question, at least one accepted answer, and the response.');return}
+ modal.classList.remove('open');analysis.classList.add('show');result.style.display='none';
+ let left=10;count.textContent=left;prog.style.width='0%';
+ const start=Date.now();motionValues=[];lastGray=null;
+ const iv=setInterval(()=>{
+   left--;count.textContent=Math.max(0,left);prog.style.width=((10-left)/10*100)+'%';
+   if(left<=0){clearInterval(iv);finish(accepted,r)}
+ },1000);
+}
+function finish(accepted,r){
+ const textScore=Math.max(...accepted.map(a=>similarity(a,r)));
+ const motion=motionValues.length?motionValues.reduce((a,b)=>a+b,0)/motionValues.length:0;
+ // Consistency score only: text match dominates; motion is a small observable component.
+ const motionComponent=Math.max(0,Math.min(1,1-Math.abs(motion-5)/20));
+ const score=Math.max(0,Math.min(10,(textScore*.8+motionComponent*.2)*10));
+ count.textContent='✓';document.getElementById('phase').textContent='Analysis complete';
+ document.getElementById('final').textContent=score.toFixed(1)+'/10';
+ document.getElementById('breakdown').textContent='Answer match: '+(textScore*100).toFixed(0)+'% · Motion consistency: '+(motionComponent*100).toFixed(0)+'%';
+ result.style.display='block';
+}
+document.getElementById('startBtn').onclick=start;
+document.getElementById('settingsBtn').onclick=()=>modal.classList.add('open');
+document.getElementById('closeSettings').onclick=()=>modal.classList.remove('open');
+document.getElementById('calculateBtn').onclick=calculate;
+document.getElementById('closeResult').onclick=()=>analysis.classList.remove('show');
 </script>
 </body>
 </html>
