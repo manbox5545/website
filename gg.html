@@ -3,729 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mpoxel.in — Marketing Application</title>
-
+<title>Patna Diagnostic Center | Kankarbagh, Patna</title>
+<meta name="description" content="Patna Diagnostic Center, H-3 Dr. Colony, Kankarbagh Road, Rajendra Nagar, Patna, Bihar 800020.">
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #080808;
-    color: #fff;
-    min-height: 100vh;
-    padding: 30px 15px;
-}
-
-.container {
-    width: 100%;
-    max-width: 760px;
-    margin: auto;
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.logo {
-    font-size: 38px;
-    font-weight: 800;
-    letter-spacing: -2px;
-}
-
-.logo span {
-    color: #7c5cff;
-}
-
-.header p {
-    color: #aaa;
-    margin-top: 8px;
-}
-
-.card {
-    background: #111;
-    border: 1px solid #252525;
-    border-radius: 20px;
-    padding: 28px;
-    box-shadow: 0 15px 50px rgba(0,0,0,.35);
-}
-
-.section {
-    margin-bottom: 30px;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 18px;
-}
-
-label {
-    display: block;
-    color: #ccc;
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 14px 15px;
-    border-radius: 11px;
-    border: 1px solid #303030;
-    background: #191919;
-    color: white;
-    outline: none;
-    font-size: 15px;
-    margin-bottom: 17px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #7c5cff;
-}
-
-textarea {
-    min-height: 110px;
-    resize: vertical;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.options {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.option {
-    border: 1px solid #303030;
-    background: #191919;
-    padding: 13px;
-    border-radius: 10px;
-    cursor: pointer;
-    color: #ccc;
-}
-
-.option input {
-    width: auto;
-    margin: 0 8px 0 0;
-}
-
-.option:has(input:checked) {
-    border-color: #7c5cff;
-    background: #1c1830;
-    color: white;
-}
-
-.declaration {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    color: #aaa;
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.declaration input {
-    width: auto;
-    margin: 3px 0 0;
-}
-
-button {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    background: #7c5cff;
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #6848ef;
-}
-
-.hidden {
-    display: none;
-}
-
-/* RESULT */
-
-.result-card {
-    background: white;
-    color: #111;
-    border-radius: 18px;
-    padding: 30px;
-}
-
-.result-header {
-    text-align: center;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-}
-
-.result-logo {
-    font-size: 30px;
-    font-weight: 800;
-}
-
-.result-logo span {
-    color: #7c5cff;
-}
-
-.application-id {
-    color: #777;
-    font-size: 13px;
-    margin-top: 5px;
-}
-
-.result-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.result-label {
-    color: #777;
-    font-size: 13px;
-}
-
-.result-value {
-    font-weight: 600;
-    text-align: right;
-    max-width: 60%;
-    word-break: break-word;
-}
-
-.result-long {
-    margin-top: 20px;
-}
-
-.result-long .result-label {
-    margin-bottom: 7px;
-}
-
-.result-long .result-value {
-    max-width: 100%;
-    text-align: left;
-    font-weight: 400;
-    line-height: 1.5;
-}
-
-.actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.actions button {
-    flex: 1;
-}
-
-.secondary {
-    background: #222;
-}
-
-.secondary:hover {
-    background: #333;
-}
-
-.note {
-    text-align: center;
-    color: #888;
-    font-size: 12px;
-    margin-top: 15px;
-}
-
-@media(max-width:600px) {
-    .grid,
-    .options {
-        grid-template-columns: 1fr;
-    }
-
-    .card {
-        padding: 20px;
-    }
-
-    .result-row {
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .result-value {
-        text-align: left;
-        max-width: 100%;
-    }
-
-    .actions {
-        flex-direction: column;
-    }
-}
-
-@media print {
-    body {
-        background: white;
-        padding: 0;
-    }
-
-    .actions,
-    .note {
-        display: none;
-    }
-
-    .result-card {
-        box-shadow: none;
-    }
-}
+:root{--blue:#087f8c;--blue2:#075f6a;--cyan:#e9f9fa;--ink:#17363b;--muted:#617174;--line:#dce9eb;--bg:#f8fbfb}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+a{text-decoration:none;color:inherit}.container{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:11px;font-weight:850;font-size:1.08rem}
+.logo-mark{width:42px;height:42px;border-radius:12px;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:1.4rem}
+nav{display:flex;align-items:center;gap:26px;color:#42585c;font-size:.95rem}nav a:hover{color:var(--blue)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 19px;border-radius:11px;font-weight:750;border:1px solid transparent;transition:.2s}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue2);transform:translateY(-1px)}
+.btn-light{background:#fff;color:var(--blue2);border-color:var(--line)}
+.hero{padding:78px 0 72px;background:radial-gradient(circle at 82% 15%,#d7f5f6 0,transparent 33%),linear-gradient(135deg,#f4ffff,#fff)}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:55px;align-items:center}
+.badge{display:inline-flex;padding:7px 12px;border-radius:99px;background:#d9f4f5;color:var(--blue2);font-size:.82rem;font-weight:800;margin-bottom:18px}
+h1{font-size:clamp(2.45rem,5vw,4.3rem);line-height:1.05;letter-spacing:-.045em;margin-bottom:20px}
+.hero p{font-size:1.08rem;color:var(--muted);max-width:590px}.actions{display:flex;gap:12px;margin:28px 0}
+.meta{display:flex;flex-wrap:wrap;gap:16px;color:#506366;font-size:.9rem}.meta span{display:flex;align-items:center;gap:7px}.dot{color:var(--blue);font-weight:900}
+.hero-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:15px;box-shadow:0 18px 55px rgba(8,127,140,.13)}
+.hero-card img{width:100%;height:310px;object-fit:cover;border-radius:16px;display:block}
+.card-info{padding:20px 10px 7px}.rating{color:#f2ad00;font-weight:800;margin-top:5px}.rating span{color:var(--muted);font-weight:500;margin-left:7px}
+.card-row{display:flex;justify-content:space-between;gap:15px;padding-top:13px;margin-top:13px;border-top:1px solid var(--line);font-size:.9rem}.card-row b{color:var(--blue2)}
+section{padding:80px 0}.section-head{text-align:center;max-width:700px;margin:0 auto 42px}.section-head h2{font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.03em;margin-bottom:9px}.section-head p{color:var(--muted)}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.service{background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 7px 25px rgba(23,54,59,.04)}
+.icon{width:47px;height:47px;border-radius:13px;background:var(--cyan);display:grid;place-items:center;color:var(--blue);font-size:1.35rem;margin-bottom:16px}.service h3{margin-bottom:6px}.service p{color:var(--muted);font-size:.93rem}
+.about{background:#eff9f9}.about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:55px;align-items:center}
+.about-photo{width:100%;height:360px;object-fit:cover;border-radius:24px;box-shadow:0 15px 45px rgba(23,54,59,.1)}
+.about-copy h2{font-size:2.5rem;line-height:1.1;margin-bottom:15px}.about-copy p{color:var(--muted);margin-bottom:22px}
+.points{display:grid;grid-template-columns:1fr 1fr;gap:13px}.points div{display:flex;gap:9px;font-weight:650}.check{color:var(--blue);font-weight:900}
+.gallery-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:18px}.gallery-grid img{width:100%;height:250px;object-fit:cover;border-radius:18px}
+.notice{margin-top:15px;text-align:center;color:var(--muted);font-size:.78rem}
+.cta{padding:68px 0}.cta-box{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border-radius:24px;padding:43px;display:flex;justify-content:space-between;align-items:center;gap:25px}.cta-box h2{font-size:2.2rem;line-height:1.15}.cta-box p{opacity:.84;margin-top:8px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.contact-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:28px}.contact-item{padding:14px 0;border-bottom:1px solid var(--line)}.contact-item:last-child{border:0}.contact-item small{display:block;color:var(--muted);margin-bottom:2px}
+footer{background:#11363a;color:#d7e8e9;padding:30px 0}.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.86rem}
+.mobile{display:none}
+@media(max-width:800px){nav{display:none}.mobile{display:inline-flex}.hero{padding-top:52px}.hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}.services{grid-template-columns:1fr}.gallery-grid{grid-template-columns:1fr}.gallery-grid img{height:220px}.points{grid-template-columns:1fr}.cta-box{flex-direction:column;align-items:flex-start;padding:32px}}
 </style>
 </head>
-
 <body>
-
-<div class="container">
-
-    <!-- FORM -->
-
-    <div id="formPage">
-
-        <div class="header">
-            <div class="logo">mpoxel<span>.in</span></div>
-            <p>Marketing Team Application</p>
-        </div>
-
-        <form class="card" id="applicationForm">
-
-            <div class="section">
-                <div class="section-title">Personal Information</div>
-
-                <div class="grid">
-                    <div>
-                        <label>Full Name *</label>
-                        <input type="text" id="name" required>
-                    </div>
-
-                    <div>
-                        <label>Age *</label>
-                        <input type="number" id="age" min="13" required>
-                    </div>
-                </div>
-
-                <div class="grid">
-                    <div>
-                        <label>City / Location *</label>
-                        <input type="text" id="city" required>
-                    </div>
-
-                    <div>
-                        <label>WhatsApp Number *</label>
-                        <input type="tel" id="phone" required>
-                    </div>
-                </div>
-
-                <label>Email Address *</label>
-                <input type="email" id="email" required>
-            </div>
-
-
-            <div class="section">
-                <div class="section-title">Marketing Interest</div>
-
-                <label>Which area are you interested in?</label>
-
-                <div class="options">
-                    <label class="option">
-                        <input type="checkbox" name="interest" value="Social Media Marketing">
-                        Social Media Marketing
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="interest" value="Digital Marketing">
-                        Digital Marketing
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="interest" value="Sales & Lead Generation">
-                        Sales & Lead Generation
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="interest" value="Content Creation">
-                        Content Creation
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="interest" value="Customer Outreach">
-                        Customer Outreach
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="interest" value="Other">
-                        Other
-                    </label>
-                </div>
-            </div>
-
-
-            <div class="section">
-                <div class="section-title">Experience</div>
-
-                <label>Do you have previous marketing or sales experience?</label>
-
-                <div class="options">
-                    <label class="option">
-                        <input type="radio" name="experience" value="Yes" required>
-                        Yes
-                    </label>
-
-                    <label class="option">
-                        <input type="radio" name="experience" value="No">
-                        No
-                    </label>
-                </div>
-
-                <br>
-
-                <label>Tell us about your experience</label>
-                <textarea id="experienceText"
-                    placeholder="Describe any previous experience..."></textarea>
-
-                <label>Which platforms do you know?</label>
-
-                <div class="options">
-                    <label class="option">
-                        <input type="checkbox" name="platform" value="Instagram">
-                        Instagram
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="platform" value="Facebook">
-                        Facebook
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="platform" value="YouTube">
-                        YouTube
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="platform" value="WhatsApp">
-                        WhatsApp
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="platform" value="Google">
-                        Google
-                    </label>
-
-                    <label class="option">
-                        <input type="checkbox" name="platform" value="LinkedIn">
-                        LinkedIn
-                    </label>
-                </div>
-            </div>
-
-
-            <div class="section">
-                <div class="section-title">Availability</div>
-
-                <label>What are you looking for?</label>
-
-                <div class="options">
-                    <label class="option">
-                        <input type="radio" name="workType" value="Part-time" required>
-                        Part-time
-                    </label>
-
-                    <label class="option">
-                        <input type="radio" name="workType" value="Full-time">
-                        Full-time
-                    </label>
-
-                    <label class="option">
-                        <input type="radio" name="workType" value="Internship">
-                        Internship
-                    </label>
-                </div>
-
-                <br>
-
-                <label>How many hours can you work per day?</label>
-
-                <select id="hours" required>
-                    <option value="">Select</option>
-                    <option>1–2 hours</option>
-                    <option>2–4 hours</option>
-                    <option>4–6 hours</option>
-                    <option>6–8 hours</option>
-                    <option>8+ hours</option>
-                </select>
-
-                <label>When can you start?</label>
-                <input type="date" id="startDate" required>
-            </div>
-
-
-            <div class="section">
-                <div class="section-title">About You</div>
-
-                <label>Why do you want to join Mpoxel.in? *</label>
-                <textarea id="why" required></textarea>
-
-                <label>What can you contribute to our marketing team? *</label>
-                <textarea id="contribution" required></textarea>
-
-                <label>Portfolio / Social Media / Previous Work</label>
-                <input type="url" id="portfolio"
-                    placeholder="https://...">
-            </div>
-
-
-            <label class="declaration">
-                <input type="checkbox" id="declaration" required>
-                <span>
-                    I confirm that the information provided above is accurate
-                    and I agree to be contacted by the Mpoxel.in team.
-                </span>
-            </label>
-
-            <button type="submit">
-                Submit Application
-            </button>
-
-        </form>
-    </div>
-
-
-    <!-- RESULT -->
-
-    <div id="resultPage" class="hidden">
-
-        <div class="result-card" id="resultCard">
-
-            <div class="result-header">
-                <div class="result-logo">
-                    mpoxel<span>.in</span>
-                </div>
-
-                <h2>Marketing Application</h2>
-
-                <div class="application-id" id="applicationId"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Full Name</div>
-                <div class="result-value" id="rName"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Age</div>
-                <div class="result-value" id="rAge"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Location</div>
-                <div class="result-value" id="rCity"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">WhatsApp</div>
-                <div class="result-value" id="rPhone"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Email</div>
-                <div class="result-value" id="rEmail"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Interested In</div>
-                <div class="result-value" id="rInterest"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Experience</div>
-                <div class="result-value" id="rExperience"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Platforms</div>
-                <div class="result-value" id="rPlatforms"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Work Type</div>
-                <div class="result-value" id="rWorkType"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Availability</div>
-                <div class="result-value" id="rHours"></div>
-            </div>
-
-            <div class="result-row">
-                <div class="result-label">Start Date</div>
-                <div class="result-value" id="rStart"></div>
-            </div>
-
-            <div class="result-long">
-                <div class="result-label">Why Mpoxel.in?</div>
-                <div class="result-value" id="rWhy"></div>
-            </div>
-
-            <div class="result-long">
-                <div class="result-label">Contribution</div>
-                <div class="result-value" id="rContribution"></div>
-            </div>
-
-            <div class="result-long" id="portfolioRow">
-                <div class="result-label">Portfolio</div>
-                <div class="result-value" id="rPortfolio"></div>
-            </div>
-
-        </div>
-
-        <div class="actions">
-            <button onclick="window.print()">
-                📸 Screenshot / Print
-            </button>
-
-            <button class="secondary" onclick="backToForm()">
-                Edit Application
-            </button>
-        </div>
-
-        <div class="note">
-            Take a screenshot of this application and send it to the Mpoxel.in team.
-        </div>
-
-    </div>
-
+<header>
+<div class="container nav">
+<a class="logo" href="#"><span class="logo-mark">⌁</span>Patna Diagnostic Center</a>
+<nav><a href="#services">Services</a><a href="#gallery">Gallery</a><a href="#about">About</a><a href="#contact">Contact</a><a class="btn btn-primary" href="tel:+919308002982">Call Now</a></nav>
+<a class="btn btn-primary mobile" href="tel:+919308002982">Call</a>
 </div>
+</header>
 
+<main>
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<span class="badge">DIAGNOSTIC CENTER • PATNA</span>
+<h1>Reliable diagnostics, close to home.</h1>
+<p>Patna Diagnostic Center provides convenient diagnostic services in Dr. Colony, Kankarbagh, with a patient-friendly approach and easy access by phone.</p>
+<div class="actions"><a class="btn btn-primary" href="tel:+919308002982">Call 093080 02982</a><a class="btn btn-light" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=H-3%20Dr%20Colony%20Kankarbagh%20Road%20Patna%20Bihar%20800020">Get Directions</a></div>
+<div class="meta"><span><i class="dot">●</i> Open now</span><span><i class="dot">★</i> 4.0 rating</span><span><i class="dot">●</i> Kankarbagh, Patna</span></div>
+</div>
+<div class="hero-card">
+<img src="https://images.pexels.com/photos/7088526/pexels-photo-7088526.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Medical professional speaking with a patient">
+<div class="card-info"><h3>Patna Diagnostic Center</h3><div class="rating">★★★★☆ <span>4.0 · Google listing</span></div>
+<div class="card-row"><span>Address</span><b>H-3, Dr. Colony</b></div><div class="card-row"><span>Phone</span><b>093080 02982</b></div></div>
+</div>
+</div>
+</section>
 
-<script>
+<section id="services">
+<div class="container">
+<div class="section-head"><h2>Diagnostic services</h2><p>A clean, straightforward section for the tests and services your center provides. Add or remove services to match your actual offerings.</p></div>
+<div class="services">
+<article class="service"><div class="icon">🧪</div><h3>Pathology Tests</h3><p>Routine laboratory testing and sample-based diagnostic investigations.</p></article>
+<article class="service"><div class="icon">🩻</div><h3>Imaging & Scans</h3><p>Diagnostic imaging services can be listed here based on your center's actual facilities.</p></article>
+<article class="service"><div class="icon">🫀</div><h3>Health Screening</h3><p>Convenient health screening and diagnostic packages for different needs.</p></article>
+<article class="service"><div class="icon">📋</div><h3>Diagnostic Reports</h3><p>Clear reports to support patients and their referring healthcare professionals.</p></article>
+<article class="service"><div class="icon">👨‍⚕️</div><h3>Professional Care</h3><p>Patient-focused assistance throughout the diagnostic process.</p></article>
+<article class="service"><div class="icon">📞</div><h3>Phone Enquiries</h3><p>Call 093080 02982 to ask about tests, timings, and availability.</p></article>
+</div>
+</div>
+</section>
 
-const form = document.getElementById("applicationForm");
+<section id="about" class="about">
+<div class="container about-grid">
+<img class="about-photo" src="https://images.pexels.com/photos/7088526/pexels-photo-7088526.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Healthcare consultation">
+<div class="about-copy"><h2>Local diagnostics in Kankarbagh.</h2><p>Patna Diagnostic Center is listed at H-3, Dr. Colony, Kankarbagh Road, Rajendra Nagar, Patna, Bihar 800020. The center's Google listing shows a 4.0 rating and phone number 093080 02982.</p>
+<div class="points"><div><span class="check">✓</span> Convenient location</div><div><span class="check">✓</span> Easy phone access</div><div><span class="check">✓</span> Diagnostic-focused care</div><div><span class="check">✓</span> Patient-friendly design</div></div></div>
+</div>
+</section>
 
-form.addEventListener("submit", function(e) {
+<section id="gallery">
+<div class="container"><div class="section-head"><h2>Inside a modern diagnostic experience</h2><p>Representative healthcare photography used to give the website a polished visual appearance.</p></div>
+<div class="gallery-grid">
+<img src="https://images.pexels.com/photos/7088526/pexels-photo-7088526.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Healthcare consultation">
+<img src="https://images.pexels.com/photos/5214958/pexels-photo-5214958.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Medical professional in a clinical setting">
+<img src="https://images.pexels.com/photos/4226119/pexels-photo-4226119.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Medical laboratory professional">
+</div><p class="notice">These are representative stock photographs, not claimed to be photographs of Patna Diagnostic Center.</p>
+</div>
+</section>
 
-    e.preventDefault();
+<div class="cta"><div class="container"><div class="cta-box"><div><h2>Need to ask about a test?</h2><p>Call the center for current test availability and timings.</p></div><a class="btn btn-light" href="tel:+919308002982">Call 093080 02982</a></div></div></div>
 
-    const interests = [...document.querySelectorAll(
-        'input[name="interest"]:checked'
-    )].map(x => x.value);
-
-    const platforms = [...document.querySelectorAll(
-        'input[name="platform"]:checked'
-    )].map(x => x.value);
-
-    const experience = document.querySelector(
-        'input[name="experience"]:checked'
-    )?.value || "";
-
-    const workType = document.querySelector(
-        'input[name="workType"]:checked'
-    )?.value || "";
-
-    // Generate application ID
-    const id =
-        "MPX-" +
-        Date.now().toString().slice(-8);
-
-    document.getElementById("applicationId").textContent =
-        "Application ID: " + id;
-
-    document.getElementById("rName").textContent =
-        document.getElementById("name").value;
-
-    document.getElementById("rAge").textContent =
-        document.getElementById("age").value;
-
-    document.getElementById("rCity").textContent =
-        document.getElementById("city").value;
-
-    document.getElementById("rPhone").textContent =
-        document.getElementById("phone").value;
-
-    document.getElementById("rEmail").textContent =
-        document.getElementById("email").value;
-
-    document.getElementById("rInterest").textContent =
-        interests.length ? interests.join(", ") : "Not specified";
-
-    document.getElementById("rExperience").textContent =
-        experience;
-
-    document.getElementById("rPlatforms").textContent =
-        platforms.length ? platforms.join(", ") : "Not specified";
-
-    document.getElementById("rWorkType").textContent =
-        workType;
-
-    document.getElementById("rHours").textContent =
-        document.getElementById("hours").value;
-
-    document.getElementById("rStart").textContent =
-        document.getElementById("startDate").value;
-
-    document.getElementById("rWhy").textContent =
-        document.getElementById("why").value;
-
-    document.getElementById("rContribution").textContent =
-        document.getElementById("contribution").value;
-
-    const portfolio =
-        document.getElementById("portfolio").value;
-
-    if (portfolio) {
-        document.getElementById("rPortfolio").textContent =
-            portfolio;
-    } else {
-        document.getElementById("portfolioRow").style.display = "none";
-    }
-
-    document.getElementById("formPage").classList.add("hidden");
-    document.getElementById("resultPage").classList.remove("hidden");
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-});
-
-
-function backToForm() {
-
-    document.getElementById("resultPage")
-        .classList.add("hidden");
-
-    document.getElementById("formPage")
-        .classList.remove("hidden");
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-}
-
-</script>
-
+<section id="contact">
+<div class="container"><div class="section-head"><h2>Find the center</h2><p>Everything you need to contact or locate Patna Diagnostic Center.</p></div>
+<div class="contact-grid">
+<div class="contact-card">
+<div class="contact-item"><small>Address</small><b>H-3, Dr. Colony, Kankarbagh Road,<br>Rajendra Nagar, Patna, Bihar 800020</b></div>
+<div class="contact-item"><small>Phone</small><b><a href="tel:+919308002982">093080 02982</a></b></div>
+<div class="contact-item"><small>Plus Code</small><b>H4VQ+J2 Patna, Bihar</b></div>
+</div>
+<div class="contact-card">
+<div class="contact-item"><small>Category</small><b>Diagnostic Center</b></div>
+<div class="contact-item"><small>Status</small><b style="color:#23854a">Open now</b></div>
+<div class="contact-item"><small>Rating</small><b>4.0 ★</b></div>
+<a class="btn btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=H-3%20Dr%20Colony%20Kankarbagh%20Road%20Patna%20Bihar%20800020" style="margin-top:16px">Open in Google Maps</a>
+</div>
+</div></div>
+</section>
+</main>
+<footer><div class="container footer-row"><span>© 2026 Patna Diagnostic Center</span><span>H-3, Dr. Colony, Kankarbagh Road, Patna</span></div></footer>
 </body>
 </html>
