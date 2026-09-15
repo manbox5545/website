@@ -1,1560 +1,197 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>My TV</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karan Medical Clinic | Trusted Family Healthcare</title>
+<meta name="description" content="Karan Medical Clinic — accessible, compassionate healthcare for you and your family.">
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root{
+  --primary:#0f766e;--primary-dark:#115e59;--soft:#ecfdf5;--ink:#12302d;
+  --muted:#5d706d;--white:#fff;--line:#dce9e6;--shadow:0 18px 50px rgba(15,118,110,.12);
 }
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #000;
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  user-select: none;
-}
-
-/* =========================================
-   WALLPAPER
-========================================= */
-
-#background {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-
-  transition: background-image 0.5s ease;
-}
-
-#background::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(0,0,0,.68) 0%,
-      rgba(0,0,0,.18) 60%,
-      rgba(0,0,0,.40) 100%
-    );
-}
-
-#background::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0,0,0,.45) 0%,
-      transparent 35%,
-      rgba(0,0,0,.78) 100%
-    );
-}
-
-/* =========================================
-   ALL CONTENT
-========================================= */
-
-#home,
-.screen {
-  position: relative;
-  z-index: 2;
-}
-
-/* =========================================
-   HOME
-========================================= */
-
-#home {
-  width: 100%;
-  height: 100%;
-
-  padding: 5vh 6vw;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.brand {
-  font-size: clamp(28px, 3vw, 52px);
-  font-weight: 700;
-  letter-spacing: -2px;
-
-  text-shadow: 0 4px 25px rgba(0,0,0,.8);
-}
-
-.datetime {
-  text-align: right;
-}
-
-#clock {
-  font-size: clamp(32px, 4vw, 68px);
-  font-weight: 600;
-  line-height: 1;
-}
-
-#date {
-  margin-top: 10px;
-
-  font-size: clamp(14px, 1.2vw, 22px);
-
-  color: rgba(255,255,255,.68);
-}
-
-.hero {
-  max-width: 750px;
-
-  margin-top: auto;
-  margin-bottom: 6vh;
-}
-
-.hero h1 {
-  font-size: clamp(48px, 7vw, 110px);
-  line-height: .9;
-  letter-spacing: -5px;
-
-  margin-bottom: 22px;
-
-  text-shadow: 0 6px 35px rgba(0,0,0,.8);
-}
-
-.hero p {
-  max-width: 600px;
-
-  color: rgba(255,255,255,.75);
-
-  font-size: clamp(16px, 1.4vw, 24px);
-  line-height: 1.5;
-}
-
-.home-actions {
-  display: flex;
-  gap: 24px;
-}
-
-/* =========================================
-   TV BUTTON
-========================================= */
-
-.tv-button {
-  width: 220px;
-  height: 82px;
-
-  border-radius: 20px;
-
-  border: 2px solid rgba(255,255,255,.12);
-
-  background: rgba(255,255,255,.12);
-
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-
-  font-size: 24px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    transform .18s ease,
-    background .18s ease,
-    color .18s ease,
-    box-shadow .18s ease;
-}
-
-.tv-button.focused {
-  background: #fff;
-  color: #000;
-
-  transform: scale(1.08);
-
-  border-color: #fff;
-
-  box-shadow:
-    0 0 0 5px rgba(255,255,255,.25),
-    0 20px 50px rgba(0,0,0,.45);
-}
-
-.button-icon {
-  font-size: 30px;
-}
-
-/* =========================================
-   SCREEN
-========================================= */
-
-.screen {
-  position: fixed;
-  inset: 0;
-
-  z-index: 10;
-
-  display: none;
-
-  flex-direction: column;
-
-  padding: 6vh 6vw;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(8,8,12,.96),
-      rgba(12,12,18,.90)
-    );
-
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-}
-
-.screen.active {
-  display: flex;
-}
-
-.screen-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: 5vh;
-}
-
-.screen-title {
-  font-size: clamp(40px, 5vw, 75px);
-  font-weight: 700;
-  letter-spacing: -3px;
-}
-
-.screen-hint {
-  color: rgba(255,255,255,.55);
-  font-size: 17px;
-}
-
-/* =========================================
-   APPS
-========================================= */
-
-.apps-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 280px);
-
-  gap: 35px;
-}
-
-.app-card {
-  width: 280px;
-  height: 270px;
-
-  border-radius: 30px;
-
-  background: rgba(255,255,255,.07);
-
-  border: 3px solid transparent;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  gap: 25px;
-
-  transition:
-    transform .18s ease,
-    background .18s ease,
-    box-shadow .18s ease;
-}
-
-.app-card.focused {
-  background: #fff;
-  color: #000;
-
-  transform: scale(1.08);
-
-  border-color: #fff;
-
-  box-shadow:
-    0 0 0 6px rgba(255,255,255,.18),
-    0 25px 70px rgba(0,0,0,.5);
-}
-
-.app-logo {
-  width: 105px;
-  height: 105px;
-
-  border-radius: 26px;
-
-  background: #fff;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 52px;
-  font-weight: 800;
-
-  box-shadow: 0 12px 35px rgba(0,0,0,.25);
-}
-
-.youtube-logo {
-  color: #ff0000;
-}
-
-.google-logo {
-  color: #4285f4;
-}
-
-.app-name {
-  font-size: 26px;
-  font-weight: 600;
-}
-
-/* =========================================
-   SETTINGS
-========================================= */
-
-#settingsScreen {
-  z-index: 20;
-}
-
-.settings-content {
-  max-width: 1250px;
-}
-
-.setting-label {
-  margin-bottom: 22px;
-
-  font-size: 21px;
-
-  color: rgba(255,255,255,.65);
-}
-
-/* Wallpaper preview grid */
-
-.wallpaper-grid {
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, 230px);
-
-  gap: 25px;
-}
-
-.wallpaper-option {
-  position: relative;
-
-  width: 230px;
-  height: 145px;
-
-  border-radius: 20px;
-
-  border: 4px solid transparent;
-
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-
-  cursor: pointer;
-
-  overflow: hidden;
-
-  transition:
-    transform .18s ease,
-    border .18s ease,
-    box-shadow .18s ease;
-}
-
-/* Preview darkening */
-
-.wallpaper-option::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    transparent 45%,
-    rgba(0,0,0,.55)
-  );
-}
-
-/* Preview number */
-
-.wallpaper-number {
-  position: absolute;
-
-  z-index: 2;
-
-  left: 15px;
-  bottom: 12px;
-
-  font-size: 17px;
-  font-weight: 600;
-}
-
-/* Selected wallpaper */
-
-.wallpaper-option.selected {
-  border-color: #fff;
-
-  box-shadow:
-    0 0 0 4px rgba(255,255,255,.2);
-}
-
-.wallpaper-option.selected::before {
-  content: "✓";
-
-  position: absolute;
-
-  z-index: 3;
-
-  top: 12px;
-  right: 12px;
-
-  width: 38px;
-  height: 38px;
-
-  border-radius: 50%;
-
-  background: #fff;
-  color: #000;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 22px;
-  font-weight: bold;
-}
-
-/* Remote focus */
-
-.wallpaper-option.focused {
-  transform: scale(1.08);
-
-  border-color: #fff;
-
-  box-shadow:
-    0 0 0 6px rgba(255,255,255,.2),
-    0 20px 50px rgba(0,0,0,.4);
-}
-
-/* =========================================
-   FOOTER
-========================================= */
-
-.remote-hint {
-  position: absolute;
-
-  bottom: 25px;
-  right: 6vw;
-
-  color: rgba(255,255,255,.5);
-
-  font-size: 15px;
-}
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media(max-width: 1000px) {
-
-  .apps-grid {
-    grid-template-columns: repeat(2, 220px);
-  }
-
-  .app-card {
-    width: 220px;
-    height: 220px;
-  }
-
-  .wallpaper-grid {
-    grid-template-columns: repeat(2, 200px);
-  }
-
-  .wallpaper-option {
-    width: 200px;
-  }
-}
-
-@media(max-width: 700px) {
-
-  #home {
-    padding: 30px;
-  }
-
-  .top-bar {
-    align-items: center;
-  }
-
-  .hero h1 {
-    font-size: 55px;
-  }
-
-  .home-actions {
-    gap: 15px;
-  }
-
-  .tv-button {
-    width: 170px;
-    height: 65px;
-    font-size: 19px;
-  }
-
-  .screen {
-    padding: 30px;
-  }
-
-  .screen-header {
-    margin-bottom: 30px;
-  }
-
-  .screen-hint {
-    display: none;
-  }
-
-  .apps-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-
-  .app-card {
-    width: 100%;
-    height: 180px;
-  }
-
-  .app-logo {
-    width: 70px;
-    height: 70px;
-    font-size: 34px;
-  }
-
-  .wallpaper-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-
-  .wallpaper-option {
-    width: 100%;
-    height: 120px;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);line-height:1.6;background:#fbfefd}
+a{text-decoration:none;color:inherit}
+.container{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.1rem}
+.logo-mark{width:40px;height:40px;border-radius:12px;background:var(--primary);color:white;display:grid;place-items:center;font-size:1.35rem}
+nav{display:flex;align-items:center;gap:27px;font-size:.95rem;color:#36514e}
+nav a:hover{color:var(--primary)}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 19px;border-radius:11px;font-weight:700;border:1px solid transparent;transition:.2s}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-outline{border-color:var(--line);background:white;color:var(--primary)}
+.hero{padding:86px 0 72px;background:radial-gradient(circle at 85% 20%,#d9f8ee 0,transparent 32%),linear-gradient(135deg,#f3fffb,#fff)}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:55px;align-items:center}
+.eyebrow{display:inline-flex;padding:7px 12px;border-radius:99px;background:#dff8ef;color:var(--primary-dark);font-size:.82rem;font-weight:800;margin-bottom:18px}
+h1{font-size:clamp(2.45rem,5vw,4.35rem);line-height:1.06;letter-spacing:-.045em;margin-bottom:21px}
+.hero p{font-size:1.1rem;color:var(--muted);max-width:590px}
+.actions{display:flex;gap:12px;margin:30px 0}
+.trust{display:flex;gap:22px;flex-wrap:wrap;color:#4c6561;font-size:.9rem}
+.trust span{display:flex;gap:7px;align-items:center}.check{color:var(--primary);font-weight:900}
+.hero-card{background:white;border:1px solid var(--line);border-radius:25px;padding:30px;box-shadow:var(--shadow)}
+.hero-photo{width:100%;height:245px;object-fit:cover;border-radius:18px;display:block}.doctor-art{height:245px;border-radius:18px;background:linear-gradient(145deg,#d8f7ef,#effcf8);display:grid;place-items:center;position:relative;overflow:hidden}
+.doctor{width:118px;height:118px;border-radius:50%;background:#f2c7a9;position:relative;margin-top:-35px}
+.doctor:before{content:"";position:absolute;left:7px;right:7px;top:-17px;height:49px;border-radius:55px 55px 25px 25px;background:#263d3b}
+.doctor:after{content:"";position:absolute;left:18px;right:18px;bottom:-92px;height:115px;border-radius:55px 55px 10px 10px;background:white;border:1px solid #dbe9e6}
+.card-title{font-weight:800;font-size:1.1rem;margin-top:22px}
+.card-row{display:flex;justify-content:space-between;gap:20px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:.9rem}
+.card-row b{color:var(--primary)}
+section{padding:82px 0}
+.section-head{text-align:center;max-width:680px;margin:0 auto 42px}
+.section-head h2{font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.03em;margin-bottom:10px}
+.section-head p{color:var(--muted)}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.service{background:white;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 8px 28px rgba(18,48,45,.04)}
+.icon{width:46px;height:46px;border-radius:13px;background:var(--soft);color:var(--primary);display:grid;place-items:center;font-size:1.35rem;margin-bottom:17px}
+.service h3{margin-bottom:6px}.service p{color:var(--muted);font-size:.93rem}
+.about{background:#f3faf8}
+.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center}
+.about-box{background:var(--primary);color:#fff;border-radius:25px;padding:35px;min-height:300px;display:flex;flex-direction:column;justify-content:end}
+.about-box .big{font-size:3.5rem;font-weight:900;line-height:1}
+.about-copy h2{font-size:2.5rem;line-height:1.1;margin-bottom:17px}
+.about-copy p{color:var(--muted);margin-bottom:20px}
+.points{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.points div{display:flex;gap:9px;font-weight:650;font-size:.94rem}
+.cta{padding:70px 0}
+.cta-box{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:white;border-radius:25px;padding:45px;display:flex;justify-content:space-between;gap:30px;align-items:center}
+.cta-box h2{font-size:2.2rem;line-height:1.15}.cta-box p{opacity:.85;margin-top:8px}
+.cta .btn{background:white;color:var(--primary-dark)}
+.gallery-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:18px}.gallery-grid img{width:100%;height:260px;object-fit:cover;border-radius:18px;box-shadow:0 10px 30px rgba(18,48,45,.08)}.photo-credit{margin-top:14px;text-align:center;color:var(--muted);font-size:.8rem}.photo-credit a{color:var(--primary);text-decoration:underline}.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.contact-card{border:1px solid var(--line);border-radius:18px;padding:28px;background:#fff}
+.contact-item{padding:14px 0;border-bottom:1px solid var(--line)}.contact-item:last-child{border:0}
+.contact-item small{display:block;color:var(--muted);margin-bottom:2px}
+footer{background:#102d2a;color:#d6e6e3;padding:32px 0}
+.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:.88rem}
+.mobile{display:none}
+@media(max-width:800px){
+  nav{display:none}.mobile{display:block}.hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}.services{grid-template-columns:1fr}.hero{padding-top:55px}.about-grid{gap:30px}.cta-box{flex-direction:column;align-items:flex-start;padding:32px}.points{grid-template-columns:1fr}.gallery-grid{grid-template-columns:1fr}.gallery-grid img{height:220px}
 }
 </style>
 </head>
-
 <body>
-
-<!-- =========================================
-     WALLPAPER LAYER
-========================================= -->
-
-<div id="background"></div>
-
-
-<!-- =========================================
-     HOME
-========================================= -->
-
-<main id="home">
-
-  <div class="top-bar">
-
-    <div class="brand">
-      MY TV
-    </div>
-
-    <div class="datetime">
-
-      <div id="clock">
-        12:00
-      </div>
-
-      <div id="date">
-        Loading...
-      </div>
-
-    </div>
-
+<header>
+  <div class="container nav">
+    <a href="#" class="logo"><span class="logo-mark">+</span>Karan Medical Clinic</a>
+    <nav>
+      <a href="#services">Services</a><a href="#gallery">Gallery</a><a href="#about">About</a><a href="#contact">Contact</a>
+      <a class="btn btn-primary" href="tel:+917870998505">Call Clinic</a>
+    </nav>
+    <a class="btn btn-primary mobile" href="tel:+917870998505">Call</a>
   </div>
+</header>
 
-
-  <section class="hero">
-
-    <h1>
-      Welcome
-    </h1>
-
-    <p>
-      Your TV home screen. Use your remote to open apps
-      and customize your wallpaper.
-    </p>
-
-  </section>
-
-
-  <div class="home-actions">
-
-    <div
-      class="tv-button focused"
-      id="appsButton"
-      tabindex="0"
-    >
-      <span class="button-icon">▦</span>
-      <span>Apps</span>
+<main>
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">COMPASSIONATE • RELIABLE • LOCAL</span>
+      <h1>Healthcare you can trust, close to home.</h1>
+      <p>Karan Medical Clinic provides accessible, patient-focused medical care for individuals and families in a comfortable clinic environment.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#contact">Book an Appointment</a>
+        <a class="btn btn-outline" href="#services">View Services</a>
+      </div>
+      <div class="trust">
+        <span><i class="check">✓</i> Patient-focused care</span>
+        <span><i class="check">✓</i> Convenient appointments</span>
+        <span><i class="check">✓</i> Family-friendly</span>
+      </div>
     </div>
-
-    <div
-      class="tv-button"
-      id="settingsButton"
-      tabindex="0"
-    >
-      <span class="button-icon">⚙</span>
-      <span>Settings</span>
+    <div class="hero-card">
+      <img class="hero-photo" src="https://images.pexels.com/photos/7579831/pexels-photo-7579831.jpeg?cs=srgb&dl=pexels-cottonbro-7579831.jpg&fm=jpg" alt="Doctor consulting with a patient in a clinic">
+      <div class="card-title">Your health comes first.</div>
+      <div class="card-row"><span>Clinic hours</span><b>Open 24 hours</b></div>
+      <div class="card-row"><span>Phone</span><b>078709 98505</b></div>
     </div>
-
   </div>
+</section>
 
+<section id="services">
+  <div class="container">
+    <div class="section-head">
+      <h2>Medical care for everyday needs</h2>
+      <p>Replace these service descriptions with the exact services offered by your clinic.</p>
+    </div>
+    <div class="services">
+      <article class="service"><div class="icon">🩺</div><h3>General Consultation</h3><p>Routine consultations, health concerns, and personalized care plans.</p></article>
+      <article class="service"><div class="icon">❤️</div><h3>Preventive Care</h3><p>Health checkups and guidance designed to support long-term wellbeing.</p></article>
+      <article class="service"><div class="icon">💊</div><h3>Medication Guidance</h3><p>Clear guidance on prescribed medicines and ongoing treatment needs.</p></article>
+      <article class="service"><div class="icon">🧪</div><h3>Health Checkups</h3><p>Convenient basic assessments to help you stay informed about your health.</p></article>
+      <article class="service"><div class="icon">👨‍👩‍👧</div><h3>Family Care</h3><p>Approachable medical support for patients and families across everyday needs.</p></article>
+      <article class="service"><div class="icon">📅</div><h3>Follow-up Visits</h3><p>Ongoing appointments to review progress and adjust care when needed.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="container about-grid">
+    <div class="about-box"><div class="big">Care<br>first.</div><p style="margin-top:18px;opacity:.82">A simple, patient-friendly approach to local healthcare.</p></div>
+    <div class="about-copy">
+      <h2>A clinic built around your needs.</h2>
+      <p>At Karan Medical Clinic, we aim to make healthcare straightforward, respectful, and easy to access. Our team focuses on listening carefully, explaining options clearly, and helping patients make informed decisions.</p>
+      <div class="points">
+        <div><span class="check">✓</span> Clear communication</div>
+        <div><span class="check">✓</span> Comfortable environment</div>
+        <div><span class="check">✓</span> Convenient scheduling</div>
+        <div><span class="check">✓</span> Individual attention</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="gallery">
+  <div class="container">
+    <div class="section-head">
+      <h2>A welcoming healthcare environment</h2>
+      <p>Representative medical photography used for the website design. These are not photos of Karan Medical Clinic.</p>
+    </div>
+    <div class="gallery-grid">
+      <img src="https://images.pexels.com/photos/7579831/pexels-photo-7579831.jpeg?cs=srgb&dl=pexels-cottonbro-7579831.jpg&fm=jpg" alt="Doctor speaking with a patient">
+      <img src="https://www.ssmedicaltourism.com/_next/image?q=75&url=%2Fimg%2Fhospital-coordination.png&w=3840" alt="Doctor and patient consultation in a clinic">
+      <img src="https://2050rehabcare.com/_next/image?q=75&url=https%3A%2F%2Fapi.2050rehabcare.com%2F%2Fuploads%2FOPD_IMAGE_e1cc4f1aec.webp&w=3840" alt="Doctor consulting an older patient">
+    </div>
+    <p class="photo-credit">Photos: <a href="https://www.pexels.com/photo/a-doctor-talking-the-patient-7579831/" target="_blank" rel="noopener">Pexels</a> and online clinic photography sources.</p>
+  </div>
+</section>
+
+<div class="cta">
+  <div class="container">
+    <div class="cta-box">
+      <div><h2>Need a medical consultation?</h2><p>Call the clinic to ask about appointments and availability.</p></div>
+      <a class="btn" href="tel:+917870998505">Call 078709 98505</a>
+    </div>
+  </div>
+</div>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-head"><h2>Visit Karan Medical Clinic</h2><p>Update the details below with your clinic's real information before publishing.</p></div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-item"><small>Address</small><b>Danapur Nizamat, Bir, Patna, Bihar 800001</b></div>
+        <div class="contact-item"><small>Phone</small><b><a href="tel:+917870998505">078709 98505</a></b></div>
+        <div class="contact-item"><small>Email</small><b><a href="mailto:karanmedicalclinic@gmail.com">karanmedicalclinic@gmail.com</a></b></div><div class="contact-item"><small>Plus Code</small><b>H4VQ+J2 Patna, Bihar</b></div><div class="contact-item"><small>Community</small><b>🌈 LGBTQ+ friendly</b></div><a class="btn btn-primary" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=H4VQ%2BJ2%20Patna%2C%20Bihar" style="margin-top:16px">Open in Google Maps</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-item"><small>Monday – Saturday</small><b>Open 24 hours</b></div>
+        <div class="contact-item"><small>Sunday</small><b>Open 24 hours</b></div>
+        <div class="contact-item"><small>Appointments</small><b>Call ahead for availability</b></div>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 
-
-<!-- =========================================
-     APPS SCREEN
-========================================= -->
-
-<section
-  id="appsScreen"
-  class="screen"
->
-
-  <div class="screen-header">
-
-    <div class="screen-title">
-      Apps
-    </div>
-
-    <div class="screen-hint">
-      ← → &nbsp; Navigate &nbsp; • &nbsp;
-      OK &nbsp; Open &nbsp; • &nbsp;
-      Back
-    </div>
-
+<footer>
+  <div class="container footer-row">
+    <span>© 2026 Karan Medical Clinic. All rights reserved.</span>
+    <span>For medical emergencies, contact your local emergency medical service.</span>
   </div>
-
-
-  <div class="apps-grid">
-
-    <div
-      class="app-card"
-      data-app="youtube"
-      tabindex="0"
-    >
-
-      <div class="app-logo youtube-logo">
-        ▶
-      </div>
-
-      <div class="app-name">
-        YouTube
-      </div>
-
-    </div>
-
-
-    <div
-      class="app-card"
-      data-app="google"
-      tabindex="0"
-    >
-
-      <div class="app-logo google-logo">
-        G
-      </div>
-
-      <div class="app-name">
-        Google
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="remote-hint">
-    Press Back / Esc to return
-  </div>
-
-</section>
-
-
-<!-- =========================================
-     SETTINGS
-========================================= -->
-
-<section
-  id="settingsScreen"
-  class="screen"
->
-
-  <div class="screen-header">
-
-    <div class="screen-title">
-      Settings
-    </div>
-
-    <div class="screen-hint">
-      ← → &nbsp; Navigate &nbsp; • &nbsp;
-      OK &nbsp; Select &nbsp; • &nbsp;
-      Back
-    </div>
-
-  </div>
-
-
-  <div class="settings-content">
-
-    <div class="setting-label">
-      Choose Wallpaper
-    </div>
-
-
-    <div class="wallpaper-grid">
-
-
-      <!-- WALLPAPER 1 -->
-
-      <div
-        class="wallpaper-option"
-        data-index="0"
-        data-wallpaper="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90"
-        style="
-          background-image:
-          url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85');
-        "
-      >
-
-        <span class="wallpaper-number">
-          Nature
-        </span>
-
-      </div>
-
-
-      <!-- WALLPAPER 2 -->
-
-      <div
-        class="wallpaper-option"
-        data-index="1"
-        data-wallpaper="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2400&q=90"
-        style="
-          background-image:
-          url('https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=85');
-        "
-      >
-
-        <span class="wallpaper-number">
-          Mountains
-        </span>
-
-      </div>
-
-
-      <!-- WALLPAPER 3 -->
-
-      <div
-        class="wallpaper-option"
-        data-index="2"
-        data-wallpaper="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=90"
-        style="
-          background-image:
-          url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=85');
-        "
-      >
-
-        <span class="wallpaper-number">
-          Forest
-        </span>
-
-      </div>
-
-
-      <!-- WALLPAPER 4 -->
-
-      <div
-        class="wallpaper-option"
-        data-index="3"
-        data-wallpaper="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2400&q=90"
-        style="
-          background-image:
-          url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85');
-        "
-      >
-
-        <span class="wallpaper-number">
-          Ocean
-        </span>
-
-      </div>
-
-
-    </div>
-
-  </div>
-
-
-  <div class="remote-hint">
-    Press Back / Esc to return
-  </div>
-
-</section>
-
-
-<script>
-
-/* =========================================
-   CONFIG
-========================================= */
-
-const YOUTUBE_URL = "https://www.youtube.com/";
-const GOOGLE_URL = "https://www.google.com/";
-
-const DEFAULT_WALLPAPER =
-  "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2400&q=90";
-
-
-/* =========================================
-   ELEMENTS
-========================================= */
-
-const background =
-  document.getElementById("background");
-
-const home =
-  document.getElementById("home");
-
-const appsScreen =
-  document.getElementById("appsScreen");
-
-const settingsScreen =
-  document.getElementById("settingsScreen");
-
-const appsButton =
-  document.getElementById("appsButton");
-
-const settingsButton =
-  document.getElementById("settingsButton");
-
-const appCards =
-  [...document.querySelectorAll(".app-card")];
-
-const wallpaperOptions =
-  [...document.querySelectorAll(".wallpaper-option")];
-
-
-/* =========================================
-   STATE
-========================================= */
-
-let currentScreen = "home";
-
-let homeIndex = 0;
-
-let appIndex = 0;
-
-let wallpaperIndex = 0;
-
-
-/* =========================================
-   CLOCK
-========================================= */
-
-function updateClock() {
-
-  const now = new Date();
-
-  document.getElementById("clock").textContent =
-    now.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-  document.getElementById("date").textContent =
-    now.toLocaleDateString([], {
-      weekday: "long",
-      month: "long",
-      day: "numeric"
-    });
-}
-
-updateClock();
-
-setInterval(updateClock, 1000);
-
-
-/* =========================================
-   WALLPAPER
-========================================= */
-
-function setWallpaper(url) {
-
-  /*
-    IMPORTANT:
-    The wallpaper is applied directly to the
-    fixed background layer.
-  */
-
-  background.style.backgroundImage =
-    `url("${url}")`;
-
-}
-
-
-/* Load saved wallpaper */
-
-function loadWallpaper() {
-
-  const saved =
-    localStorage.getItem("tvWallpaper");
-
-  setWallpaper(
-    saved || DEFAULT_WALLPAPER
-  );
-
-  /*
-    Mark the correct preview as selected.
-  */
-
-  wallpaperOptions.forEach(option => {
-
-    option.classList.remove("selected");
-
-    if (
-      option.dataset.wallpaper ===
-      (saved || DEFAULT_WALLPAPER)
-    ) {
-
-      option.classList.add("selected");
-
-      wallpaperIndex =
-        Number(option.dataset.index);
-    }
-
-  });
-}
-
-loadWallpaper();
-
-
-/* =========================================
-   SAVE WALLPAPER
-========================================= */
-
-function selectWallpaper(index) {
-
-  const option =
-    wallpaperOptions[index];
-
-  if (!option) return;
-
-  const url =
-    option.dataset.wallpaper;
-
-  localStorage.setItem(
-    "tvWallpaper",
-    url
-  );
-
-  setWallpaper(url);
-
-  wallpaperOptions.forEach(item => {
-    item.classList.remove("selected");
-  });
-
-  option.classList.add("selected");
-
-  wallpaperIndex = index;
-}
-
-
-/* =========================================
-   FOCUS
-========================================= */
-
-function clearFocus() {
-
-  document
-    .querySelectorAll(".focused")
-    .forEach(element => {
-
-      element.classList.remove("focused");
-
-    });
-}
-
-
-/* =========================================
-   SHOW HOME
-========================================= */
-
-function showHome() {
-
-  currentScreen = "home";
-
-  appsScreen.classList.remove("active");
-  settingsScreen.classList.remove("active");
-
-  home.style.display = "flex";
-
-  clearFocus();
-
-  /*
-    Home always starts with Apps focused.
-  */
-
-  homeIndex = 0;
-
-  appsButton.classList.add("focused");
-}
-
-
-/* =========================================
-   SHOW APPS
-========================================= */
-
-function showApps() {
-
-  currentScreen = "apps";
-
-  home.style.display = "none";
-
-  settingsScreen.classList.remove("active");
-
-  appsScreen.classList.add("active");
-
-  clearFocus();
-
-  /*
-    RESTORE LAST FOCUSED APP
-  */
-
-  const savedApp =
-    localStorage.getItem("lastFocusedApp");
-
-  const savedIndex =
-    appCards.findIndex(
-      card =>
-        card.dataset.app === savedApp
-    );
-
-  appIndex =
-    savedIndex >= 0
-      ? savedIndex
-      : 0;
-
-  updateAppFocus(false);
-}
-
-
-/* =========================================
-   SHOW SETTINGS
-========================================= */
-
-function showSettings() {
-
-  currentScreen = "settings";
-
-  home.style.display = "none";
-
-  appsScreen.classList.remove("active");
-
-  settingsScreen.classList.add("active");
-
-  clearFocus();
-
-  /*
-    Restore currently selected wallpaper
-    as the initial focus.
-  */
-
-  const savedWallpaper =
-    localStorage.getItem("tvWallpaper");
-
-  const savedIndex =
-    wallpaperOptions.findIndex(
-      option =>
-        option.dataset.wallpaper ===
-        savedWallpaper
-    );
-
-  wallpaperIndex =
-    savedIndex >= 0
-      ? savedIndex
-      : 0;
-
-  updateWallpaperFocus(false);
-}
-
-
-/* =========================================
-   HOME NAVIGATION
-========================================= */
-
-function navigateHome(key) {
-
-  if (key === "ArrowRight") {
-
-    homeIndex = 1;
-
-    clearFocus();
-
-    settingsButton.classList.add("focused");
-
-    return;
-  }
-
-
-  if (key === "ArrowLeft") {
-
-    homeIndex = 0;
-
-    clearFocus();
-
-    appsButton.classList.add("focused");
-
-    return;
-  }
-
-
-  if (key === "Enter" || key === " ") {
-
-    if (homeIndex === 0) {
-
-      showApps();
-
-    } else {
-
-      showSettings();
-
-    }
-
-  }
-
-}
-
-
-/* =========================================
-   APP NAVIGATION
-========================================= */
-
-function navigateApps(key) {
-
-  if (key === "ArrowRight") {
-
-    appIndex =
-      Math.min(
-        appIndex + 1,
-        appCards.length - 1
-      );
-
-    saveAppFocus();
-
-    updateAppFocus();
-
-    return;
-  }
-
-
-  if (key === "ArrowLeft") {
-
-    appIndex =
-      Math.max(
-        appIndex - 1,
-        0
-      );
-
-    saveAppFocus();
-
-    updateAppFocus();
-
-    return;
-  }
-
-
-  if (key === "Enter" || key === " ") {
-
-    saveAppFocus();
-
-    openApp(
-      appCards[appIndex].dataset.app
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   APP FOCUS
-========================================= */
-
-function updateAppFocus(scroll = true) {
-
-  clearFocus();
-
-  const card =
-    appCards[appIndex];
-
-  if (!card) return;
-
-  card.classList.add("focused");
-
-  if (scroll) {
-
-    card.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest"
-    });
-
-  }
-
-}
-
-
-/* =========================================
-   SAVE APP FOCUS
-========================================= */
-
-function saveAppFocus() {
-
-  const app =
-    appCards[appIndex];
-
-  if (!app) return;
-
-  localStorage.setItem(
-    "lastFocusedApp",
-    app.dataset.app
-  );
-}
-
-
-/* =========================================
-   OPEN APP
-========================================= */
-
-function openApp(app) {
-
-  if (app === "youtube") {
-
-    window.location.href =
-      YOUTUBE_URL;
-
-    return;
-  }
-
-
-  if (app === "google") {
-
-    window.location.href =
-      GOOGLE_URL;
-
-    return;
-  }
-
-}
-
-
-/* =========================================
-   WALLPAPER NAVIGATION
-========================================= */
-
-function navigateSettings(key) {
-
-  if (key === "ArrowRight") {
-
-    wallpaperIndex =
-      Math.min(
-        wallpaperIndex + 1,
-        wallpaperOptions.length - 1
-      );
-
-    updateWallpaperFocus();
-
-    return;
-  }
-
-
-  if (key === "ArrowLeft") {
-
-    wallpaperIndex =
-      Math.max(
-        wallpaperIndex - 1,
-        0
-      );
-
-    updateWallpaperFocus();
-
-    return;
-  }
-
-
-  if (key === "Enter" || key === " ") {
-
-    selectWallpaper(
-      wallpaperIndex
-    );
-
-  }
-
-}
-
-
-/* =========================================
-   WALLPAPER FOCUS
-========================================= */
-
-function updateWallpaperFocus(
-  scroll = true
-) {
-
-  clearFocus();
-
-  const option =
-    wallpaperOptions[wallpaperIndex];
-
-  if (!option) return;
-
-  option.classList.add("focused");
-
-  if (scroll) {
-
-    option.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest"
-    });
-
-  }
-
-}
-
-
-/* =========================================
-   REMOTE / KEYBOARD
-========================================= */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    const key = event.key;
-
-
-    /*
-      Stop browser scrolling.
-    */
-
-    if (
-      [
-        "ArrowUp",
-        "ArrowDown",
-        "ArrowLeft",
-        "ArrowRight",
-        "Enter",
-        " "
-      ].includes(key)
-    ) {
-
-      event.preventDefault();
-
-    }
-
-
-    /*
-      BACK BUTTON
-    */
-
-    if (
-      key === "Escape" ||
-      key === "BrowserBack" ||
-      key === "GoBack"
-    ) {
-
-      if (currentScreen !== "home") {
-
-        showHome();
-
-      }
-
-      return;
-    }
-
-
-    /*
-      CURRENT SCREEN
-    */
-
-    if (currentScreen === "home") {
-
-      navigateHome(key);
-
-      return;
-    }
-
-
-    if (currentScreen === "apps") {
-
-      navigateApps(key);
-
-      return;
-    }
-
-
-    if (currentScreen === "settings") {
-
-      navigateSettings(key);
-
-      return;
-    }
-
-  }
-);
-
-
-/* =========================================
-   CLICK SUPPORT
-========================================= */
-
-appsButton.addEventListener(
-  "click",
-  showApps
-);
-
-settingsButton.addEventListener(
-  "click",
-  showSettings
-);
-
-
-appCards.forEach(
-  (card, index) => {
-
-    card.addEventListener(
-      "click",
-      () => {
-
-        appIndex = index;
-
-        saveAppFocus();
-
-        openApp(
-          card.dataset.app
-        );
-
-      }
-    );
-
-  }
-);
-
-
-wallpaperOptions.forEach(
-  (option, index) => {
-
-    option.addEventListener(
-      "click",
-      () => {
-
-        wallpaperIndex = index;
-
-        selectWallpaper(index);
-
-        updateWallpaperFocus(false);
-
-      }
-    );
-
-  }
-);
-
-
-/* =========================================
-   MOUSE HOVER
-========================================= */
-
-document
-  .querySelectorAll(
-    ".tv-button, .app-card, .wallpaper-option"
-  )
-  .forEach(element => {
-
-    element.addEventListener(
-      "mouseenter",
-      () => {
-
-        clearFocus();
-
-        element.classList.add("focused");
-
-      }
-    );
-
-  });
-
-
-/* =========================================
-   INITIAL STATE
-========================================= */
-
-window.addEventListener(
-  "load",
-  () => {
-
-    loadWallpaper();
-
-    clearFocus();
-
-    appsButton.classList.add("focused");
-
-  }
-);
-
-</script>
-
+</footer>
 </body>
 </html>
-```
