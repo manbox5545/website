@@ -384,7 +384,7 @@ async function ensureUserRecord(){
   await update(ref(db,'users/'+currentUser.uid),{username:profile.username,color:profile.color,email:currentUser.email||'',guest:!!currentUser.isAnonymous,lastSeen:Date.now()});
 }
 async function enterAsGuest(){err('authErr','');try{await signInAnonymously(auth)}catch(e){err('authErr','Guest sign-in failed: '+e.message)}}
-$('colors').innerHTML=COLORS.map(c=>`<button type="button" class="color" data-c="${c}" style="background:${c}" aria-label="${c}"></button>`).join('');document.querySelectorAll('.color').forEach(b=>b.onclick=()=>{profile.color=b.dataset.c;document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');setAvatar($('profileAvatar'),currentUser?.email,profile.color)});document.querySelector('.color').classList.add('sel');
+$('colors').innerHTML=COLORS.map(c=>`<button type="button" class="color" data-c="${c}" style="background:${c}" aria-label="${c}"></button>`).join('');document.querySelectorAll('.color').forEach(b=>b.onclick=()=>{profile.color=b.dataset.c;document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');setAvatar($('profileAvatar'),displayName(),profile.color)});document.querySelector('.color').classList.add('sel');
 $('switchAuth').onclick=()=>{signup=!signup;$('authTitle').textContent=signup?'Create your player profile.':'Enter the chess room.';$('authBtn').textContent=signup?'Create account':'Sign in';$('switchText').textContent=signup?'Already have an account?':'New here?';$('switchAuth').textContent=signup?'Sign in':'Create account';err('authErr','')};
 $('authForm').onsubmit=async e=>{e.preventDefault();err('authErr','');try{const email=$('email').value.trim(),pass=$('password').value;if(signup){const c=await createUserWithEmailAndPassword(auth,email,pass);await set(ref(db,'users/'+c.user.uid),{email,username:email.split('@')[0],color:profile.color||COLORS[0],wins:0,draws:0,losses:0,createdAt:Date.now()});await updateProfile(c.user,{displayName:email.split('@')[0]})}else await signInWithEmailAndPassword(auth,email,pass)}catch(e){err('authErr',e.message)}};
 $('logout').onclick=()=>signOut(auth);
@@ -396,72 +396,91 @@ async function loadProfile(){
   $('usernameInput').value=name;document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel',x.dataset.c===profile.color));
 }
 
-/* CHAOS AUDIO — unlock once from a real gesture, then play for every client
-   that receives the shared Firebase capture event. */
+$('saveUsername').onclick=async()=>{
+  const input=$('usernameInput');
+  const username=input.value.trim().replace(/\s+/g,' ');
+  if(!/^[A-Za-z0-9 _-]{2,20}$/.test(username)){
+    return err('profileMsg','Username must be 2–20 characters and use only letters, numbers, spaces, _ or -.');
+  }
+  try{
+    profile.username=username;
+    await update(ref(db,'users/'+currentUser.uid),{username,lastSeen:Date.now()});
+    if(!currentUser.isAnonymous){
+      await updateProfile(currentUser,{displayName:username});
+    }
+    if(roomId){
+      const roomSnap=await get(ref(db,'rooms/'+roomId));
+      if(roomSnap.exists()){
+        const room=roomSnap.val(),patch={};
+        if(room.white?.uid===currentUser.uid)patch['white/username']=username;
+        if(room.black?.uid===currentUser.uid)patch['black/username']=username;
+        patch['presence/'+currentUser.uid+'/username']=username;
+        await update(ref(db,'rooms/'+roomId),patch);
+      }
+    }
+    $('profileNameLabel').textContent=username;
+    $('profileEmail').textContent=currentUser.isAnonymous?'Guest player':(currentUser.email||'');
+    setAvatar($('headAvatar'),username,profile.color);setAvatar($('profileAvatar'),username,profile.color);
+    err('profileMsg','');toast('Username updated');
+  }catch(e){err('profileMsg','Could not save username: '+e.message)}
+};
+
+/* CHAOS AUDIO — reliable capture sound for BOTH clients. */
 const trollAudios=Array.from({length:10},(_,i)=>{
   const a=new Audio(`./${i+1}.mp3`);
-  a.preload='auto';
-  a.playsInline=true;
-  a.volume=.88;
+  a.preload='auto'; a.playsInline=true; a.volume=.9;
   return a;
 });
 let audioUnlocked=false,audioCtx=null;
 
 async function unlockChaosAudio(){
   try{
-    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();}
     if(audioCtx.state==='suspended')await audioCtx.resume();
     audioUnlocked=true;
-    if(trollEnabled) return;
-    // Keep the preference opt-in, but a successful gesture unlocks the browser.
-  }catch{}
+    trollEnabled=true;
+    return true;
+  }catch(e){return false}
 }
+
 function chaosFallback(){
   try{
     if(!audioCtx)return;
     const now=audioCtx.currentTime;
-    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
-    osc.type='sawtooth';osc.frequency.setValueAtTime(210+Math.random()*90,now);
-    osc.frequency.exponentialRampToValueAtTime(55+Math.random()*25,now+.32);
-    filter.type='lowpass';filter.frequency.setValueAtTime(1300,now);filter.frequency.exponentialRampToValueAtTime(260,now+.32);
-    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.18,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.34);
-    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+.36);
-  }catch{}
+    const master=audioCtx.createGain();master.gain.value=.24;master.connect(audioCtx.destination);
+    const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.setValueAtTime(1800,now);filter.frequency.exponentialRampToValueAtTime(280,now+.42);filter.connect(master);
+    const o=audioCtx.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(260+Math.random()*120,now);o.frequency.exponentialRampToValueAtTime(48+Math.random()*25,now+.42);o.connect(filter);
+    const g=audioCtx.createGain();g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.55,now+.018);g.gain.exponentialRampToValueAtTime(.0001,now+.42);g.connect(filter);
+    o.start(now);o.stop(now+.43);
+    const o2=audioCtx.createOscillator();o2.type='square';o2.frequency.setValueAtTime(90,now);o2.frequency.exponentialRampToValueAtTime(35,now+.3);
+    const g2=audioCtx.createGain();g2.gain.setValueAtTime(.0001,now);g2.gain.exponentialRampToValueAtTime(.22,now+.01);g2.gain.exponentialRampToValueAtTime(.0001,now+.31);o2.connect(g2);g2.connect(master);o2.start(now);o2.stop(now+.32);
+  }catch(e){}
 }
-async function enableTrollSounds(){
-  try{
-    await unlockChaosAudio();
-    // Warm the first local file after the user gesture.
-    const a=trollAudios[0];
-    a.muted=true;a.currentTime=0;
-    await a.play();a.pause();a.currentTime=0;a.muted=false;a.volume=.88;
-    trollEnabled=true;
-    localStorage.setItem('mpxTrollConsent','yes');
-    $('trollConsent').classList.add('hidden');
-    toast('CHAOS audio armed 🔊');
-  }catch(e){
-    // Even if the mp3 is missing, synthesized fallback still works.
-    await unlockChaosAudio();
-    trollEnabled=true;
-    localStorage.setItem('mpxTrollConsent','yes');
-    $('trollConsent').classList.add('hidden');
-    toast('CHAOS audio armed 🔊');
-  }
-}
-function skipTrollSounds(){
-  trollEnabled=false;
-  localStorage.setItem('mpxTrollConsent','no');
-  $('trollConsent').classList.add('hidden');
-}
-function playRandomTroll(){
-  if(!trollEnabled)return;
-  if(!audioUnlocked){unlockChaosAudio().then(()=>playRandomTroll());return}
+
+async function playRandomTroll(){
+  if(!audioUnlocked)await unlockChaosAudio();
+  if(!audioUnlocked){return}
   const a=trollAudios[(Math.random()*trollAudios.length)|0];
   try{
     a.currentTime=0;
     const p=a.play();
-    if(p?.catch)p.catch(()=>chaosFallback());
-  }catch{chaosFallback()}
+    if(p&&typeof p.then==='function'){
+      await p.catch(()=>{throw new Error('mp3 blocked')});
+      return;
+    }
+    return;
+  }catch(e){chaosFallback()}
+}
+
+/* A capture event is stored in Firebase, so both players receive it. */
+function subscribeCaptureSound(id){
+  if(roomEventUnsub)roomEventUnsub();
+  roomEventUnsub=onValue(ref(db,'rooms/'+id+'/event'),snap=>{
+    const ev=snap.val();
+    if(!ev||ev.id===lastEventId)return;
+    lastEventId=ev.id;
+    if(ev.type==='capture')playRandomTroll();
+  });
 }
 
 async function enterFullscreen(){
@@ -528,7 +547,7 @@ function subscribeRoom(id){
     if(r.fen&&r.fen!==lastFen){lastFen=r.fen;try{chess.load(r.fen);syncVisuals(chess.fen())}catch(e){console.error(e)}}renderRoom(r);
   });
   msgUnsub=onValue(ref(db,'rooms/'+id+'/messages'),s=>{const m=s.val()||{};$('messages').innerHTML=Object.values(m).sort((a,b)=>(a.t||0)-(b.t||0)).slice(-120).map(x=>`<div class="msg"><b>${esc(x.username||x.email||'Player')}</b> ${esc(x.text)}</div>`).join('');$('messages').scrollTop=$('messages').scrollHeight});
-  roomEventUnsub=onValue(ref(db,'rooms/'+id+'/event'),s=>{const ev=s.val();if(!ev||ev.id===lastEventId)return;lastEventId=ev.id;if(ev.type==='capture')playRandomTroll()});
+  subscribeCaptureSound(id);
   onDisconnect(ref(db,'rooms/'+id+'/presence/'+currentUser.uid)).remove();
   set(ref(db,'rooms/'+id+'/presence/'+currentUser.uid),{username:displayName(),t:Date.now()});update(ref(db,'rooms/'+id),{emptySince:null});watchRoomForEmptyServer(id);
 }
@@ -664,7 +683,7 @@ function attemptMove(from,to,promotion){
   runTransaction(ref(db,'rooms/'+roomId),r=>{
     if(!r||r.fen!==expected||r.status==='finished')return;
     r.fen=newFen;r.turn=local.turn();r.version=(r.version||0)+1;r.status=state.status;
-    if(move.captured)r.event={id:eventId,type:'capture',at:Date.now()};
+    if(move.captured)r.event={id:eventId,type:'capture',by:currentUser.uid,at:Date.now()};
     if(state.status==='finished')r.result={id:eventId,type:state.resultType,winner:state.winner,reason:state.resultType==='checkmate'?'checkmate':'draw-rule',at:Date.now()};
     return r;
   }).then(x=>{if(!x.committed)toast('Move changed — waiting for latest board.');else{selectedSquare=null;selectedMoves=[];clearMoveHints()}}).catch(e=>toast('Move failed: '+e.message));
@@ -683,7 +702,7 @@ function showMatchResult(r){
   $('closeMatch').textContent=guest?'Play next match as guest':'Back to lobby';
   $('matchModal').classList.remove('hidden');
   recordStatsForResult(r).catch(e=>console.error('Stats update failed:',e));
-  if(guest)toast('Guest match complete — sign in to keep your profile across devices.');
+  if(guest)toast('Guest match complete — sign in now, or continue as guest. You will be asked again after the next match.');
 }
 async function upgradeGuestAccount(){
   err('upgradeErr','');const email=$('upgradeEmail').value.trim(),pass=$('upgradePassword').value;
@@ -710,15 +729,15 @@ $('guestBtn').onclick=enterAsGuest;
 $('drawBtn').onclick=offerDraw;$('resignBtn').onclick=()=>finishByAction('resign');
 $('acceptDraw').onclick=async()=>{$('drawOfferModal').classList.add('hidden');await finishByAction('draw')};
 $('declineDraw').onclick=async()=>{$('drawOfferModal').classList.add('hidden');if(roomId)await update(ref(db,'rooms/'+roomId+'/drawOffer'),null)};
-$('closeMatch').onclick=()=>{$('matchModal').classList.add('hidden');$('upgradeGuest').classList.remove('hidden');$('guestUpgrade').classList.add('hidden');$('upgradeForm').reset();leaveUI()};
+$('closeMatch').onclick=()=>{$('matchModal').classList.add('hidden');$('upgradeGuest').classList.remove('hidden');$('guestUpgrade').classList.add('hidden');$('upgradeForm').reset();leaveUI();if(currentUser?.isAnonymous)toast('Still playing as guest — you will be asked again after the next match.')};
 $('upgradeGuest').onclick=()=>{$('guestUpgrade').classList.remove('hidden');$('upgradeGuest').classList.add('hidden');$('upgradeEmail').focus()};
 $('upgradeForm').onsubmit=async e=>{e.preventDefault();await upgradeGuestAccount()};
 
 /* Any deliberate game interaction unlocks WebAudio on mobile/desktop. */
-window.addEventListener('pointerdown',()=>{unlockChaosAudio()},{once:false,passive:true});
-window.addEventListener('keydown',()=>{unlockChaosAudio()},{once:false,passive:true});
+window.addEventListener('pointerdown',()=>{unlockChaosAudio()},{passive:true});
+window.addEventListener('keydown',()=>{unlockChaosAudio()},{passive:true});
 
-showTrollConsent();
+/* Audio is unlocked by the first real user gesture. */
 
 
 
