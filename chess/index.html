@@ -39,16 +39,45 @@ body.game-fullscreen #scene{flex:1;height:auto;min-height:0}
 @media(max-width:700px) and (orientation:portrait){
   #fullscreenBar{margin-top:8px}
 }
+
+.or{display:flex;align-items:center;gap:10px;color:#6f685c;font-size:11px;margin:13px 0}.or:before,.or:after{content:"";height:1px;flex:1;background:#2a2317}
+.leaderboardCard{margin-top:18px;padding-top:16px;border-top:1px solid #2a2317}.lbTitle{font-weight:850;margin-bottom:9px}.leaderboard{display:grid;gap:7px}.lbRow{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:8px;border:1px solid #262015;border-radius:9px;background:#0b0b09;font-size:12px}.lbRank{color:var(--gold2);font-weight:900}.lbStats{color:var(--muted);font-size:11px}
+.modal{position:fixed;inset:0;z-index:250;display:grid;place-items:center;background:#000c;backdrop-filter:blur(10px);padding:16px}.modalCard{width:min(440px,100%);padding:22px;background:linear-gradient(180deg,#18140e,#0c0b09);border:1px solid #5b4624;border-radius:18px;box-shadow:0 25px 80px #000}.modalTitle{font-size:21px;font-weight:900;color:var(--gold2);margin-bottom:8px}.modalText{font-size:13px;line-height:1.55;color:var(--muted)}.modalActions{margin-top:16px}.guestUpgrade{margin-top:14px;padding-top:12px;border-top:1px solid #2a2317}
+@media(max-width:700px){
+ header{height:58px}.mini{font-size:12px}.user{gap:6px}.user .btn{padding:8px 10px}
+ .titleRow{align-items:flex-start}.titleRow h1{font-size:21px}.titleRow .btn{white-space:nowrap;padding:9px 10px}
+ .server{align-items:flex-start}.server .btn{padding:9px 11px}
+ .game{gap:10px}.boardPanel{padding:10px}.side{padding:10px}.gamebar{margin-bottom:8px}.room{font-size:16px}
+ #scene{width:100%;height:calc(100vw - 20px);min-height:280px;max-height:560px}
+ .sideActions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.sideActions button{min-width:0;padding:10px 7px;font-size:11px}
+ .chat{height:240px}.players{margin-bottom:9px}.chatform input{min-width:0}.chatform .btn{padding-left:10px;padding-right:10px}
+}
+@media(max-width:430px){
+ main{padding:9px 7px}.pad,.auth{padding:15px}.titleRow{gap:6px}.titleRow h1{font-size:19px}.colors{gap:6px}.color{height:28px}.profile{padding:10px}
+ .sideActions{grid-template-columns:1fr 1fr}.sideActions #copyCode{grid-column:1/-1}.sideActions #leave{grid-column:2}.sideActions #resignBtn{grid-column:1}
+ .gamebar{font-size:11px}.hint{font-size:10px}
+}
 </style>
 </head>
 <body>
 <div id="loader"><div class="load"><div class="brand">MPOXEL CHESS</div><div class="made">made by manvir sharma</div><div class="ring"></div></div></div>
 <header id="header" class="hidden"><div class="mini">MPOXEL CHESS</div><div class="user"><div id="headAvatar" class="avatar"></div><span id="headEmail"></span><button id="logout" class="btn secondary">Sign out</button></div></header>
 <main>
-<section id="auth" class="screen"><div class="card auth"><h1 id="authTitle">Enter the chess room.</h1><div class="sub">Real-time 3D multiplayer chess. Your moves are synchronized through Firebase.</div><form id="authForm"><label>Email</label><input id="email" type="email" autocomplete="email" required><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" required><button id="authBtn" class="btn" style="width:100%;margin-top:20px">Sign in</button></form><div id="authErr" class="error"></div><div class="switch"><span id="switchText">New here?</span> <a id="switchAuth">Create account</a></div></div></section>
-<section id="lobby" class="screen"><div class="lobby"><div class="card pad"><div class="titleRow"><h1>Game servers</h1><button id="create" class="btn">+ Create server</button></div><div class="sub">Create a room, copy the code and give it to your opponent.</div><div id="servers" class="servers"></div><div class="card" style="padding:16px;margin-top:18px"><b>Join a server</b><div class="row" style="margin-top:11px"><input id="joinCode" maxlength="6" placeholder="ABC123" style="text-transform:uppercase"><button id="join" class="btn">Join</button></div><div id="joinErr" class="error"></div></div></div><div class="card pad"><h2 style="margin:0">Player profile</h2><div class="profile"><div id="profileAvatar" class="avatar"></div><div><b id="profileEmail"></b><div class="meta">Choose your DP color</div></div></div><div id="colors" class="colors"></div><button id="saveColor" class="btn" style="width:100%;margin-top:14px">Save profile</button><div id="profileMsg" class="error"></div></div></div></section>
-<section id="game" class="screen"><div class="game"><div class="card boardPanel"><div class="gamebar"><div><div style="font-size:12px;color:#a79d8c">ROOM</div><div id="roomCode" class="room">#------</div></div><div id="turn" class="turn"></div></div><div id="scene"></div><div id="hint" class="hint">Click a piece, then a destination square. Drag to orbit. Scroll to zoom.</div><div class="sideActions"><button id="copyCode" class="btn secondary">Copy room code</button><button id="leave" class="btn danger">Leave</button></div><div id="fullscreenBar"><button id="fullscreenBtn" class="btn secondary">⛶ Fullscreen</button></div></div><div class="card side"><div id="players" class="players"></div><div class="chat"><div id="messages" class="messages"></div><form id="chatForm" class="chatform"><input id="chatInput" maxlength="240" placeholder="Message room…"><button class="btn">Send</button></form></div></div></div></section>
+<section id="auth" class="screen"><div class="card auth"><h1 id="authTitle">Enter the chess room.</h1><div class="sub">Real-time 3D multiplayer chess. Play instantly as a guest, or sign in to keep your account across devices.</div><button id="guestBtn" type="button" class="btn secondary" style="width:100%;margin-top:6px">Continue as guest</button><div class="or">or sign in</div><form id="authForm"><label>Email</label><input id="email" type="email" autocomplete="email" required><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="6" required><button id="authBtn" class="btn" style="width:100%;margin-top:20px">Sign in</button></form><div id="authErr" class="error"></div><div class="switch"><span id="switchText">New here?</span> <a id="switchAuth">Create account</a></div></div></section>
+<section id="lobby" class="screen"><div class="lobby"><div class="card pad"><div class="titleRow"><h1>Game servers</h1><button id="create" class="btn">+ Create server</button></div><div class="sub">Create a room, copy the code and give it to your opponent.</div><div id="servers" class="servers"></div><div class="card" style="padding:16px;margin-top:18px"><b>Join a server</b><div class="row" style="margin-top:11px"><input id="joinCode" maxlength="6" placeholder="ABC123" style="text-transform:uppercase"><button id="join" class="btn">Join</button></div><div id="joinErr" class="error"></div></div></div><div class="card pad"><h2 style="margin:0">Player profile</h2><div class="profile"><div id="profileAvatar" class="avatar"></div><div style="min-width:0;flex:1"><b id="profileNameLabel"></b><div class="meta" id="profileEmail"></div><div class="meta">Choose your DP color</div></div></div><label>Username</label><div class="row"><input id="usernameInput" maxlength="20" placeholder="Your chess name"><button id="saveUsername" class="btn secondary">Save</button></div><div id="colors" class="colors"></div><button id="saveColor" class="btn" style="width:100%;margin-top:14px">Save profile</button><div class="leaderboardCard"><div class="lbTitle">Leaderboard</div><div id="leaderboard" class="leaderboard"></div></div><div id="profileMsg" class="error"></div></div></div></section>
+<section id="game" class="screen"><div class="game"><div class="card boardPanel"><div class="gamebar"><div><div style="font-size:12px;color:#a79d8c">ROOM</div><div id="roomCode" class="room">#------</div></div><div id="turn" class="turn"></div></div><div id="scene"></div><div id="hint" class="hint">Click a piece, then a destination square. Drag to orbit. Scroll to zoom.</div><div class="sideActions"><button id="copyCode" class="btn secondary">Copy room code</button><button id="drawBtn" class="btn secondary">Offer draw</button><button id="resignBtn" class="btn danger">Resign</button><button id="leave" class="btn danger">Leave</button></div><div id="fullscreenBar"><button id="fullscreenBtn" class="btn secondary">⛶ Fullscreen</button></div></div><div class="card side"><div id="players" class="players"></div><div class="chat"><div id="messages" class="messages"></div><form id="chatForm" class="chatform"><input id="chatInput" maxlength="240" placeholder="Message room…"><button class="btn">Send</button></form></div></div></div></section>
 </main><div id="toast" class="toast hidden"></div>
+<div id="matchModal" class="modal hidden"><div class="modalCard">
+  <div id="matchTitle" class="modalTitle">Match finished</div><div id="matchSummary" class="modalText"></div>
+  <div id="guestUpgrade" class="guestUpgrade hidden"><div class="modalText">You are playing as a guest. Sign in now to attach this profile and keep your username, wins and draws.</div>
+    <form id="upgradeForm"><label>Email</label><input id="upgradeEmail" type="email" required autocomplete="email"><label>Password</label><input id="upgradePassword" type="password" minlength="6" required autocomplete="new-password"><div id="upgradeErr" class="error"></div><button class="btn" style="width:100%;margin-top:12px">Sign in / save profile</button></form>
+  </div>
+  <div class="row modalActions"><button id="closeMatch" class="btn secondary">Continue as guest</button><button id="upgradeGuest" class="btn">Sign in</button></div>
+</div></div>
+<div id="drawOfferModal" class="modal hidden"><div class="modalCard">
+  <div class="modalTitle">Draw offer</div><div class="modalText" id="drawOfferText">Your opponent offered a draw.</div>
+  <div class="row modalActions"><button id="declineDraw" class="btn secondary">Decline</button><button id="acceptDraw" class="btn">Accept draw</button></div>
+</div></div>
 <div id="trollConsent" class="hidden">
   <div class="consentCard">
     <h2>🔊 Enable troll sounds?</h2>
@@ -68,28 +97,35 @@ import {OBJLoader} from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/OBJLo
 import {MTLLoader} from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/MTLLoader.js';
 import {Chess} from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js';
-import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signInAnonymously,EmailAuthProvider,linkWithCredential,onAuthStateChanged,signOut,updateProfile} from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
 import {getDatabase,ref,get,set,update,remove,push,onValue,runTransaction,onDisconnect} from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js';
 
 const firebaseConfig={apiKey:'AIzaSyD6qLwhG3XCLa6CmI_5t6z5jo38sFy3wrY',authDomain:'e-commerce-cec81.firebaseapp.com',databaseURL:'https://e-commerce-cec81-default-rtdb.firebaseio.com',projectId:'e-commerce-cec81',storageBucket:'e-commerce-cec81.firebasestorage.app',messagingSenderId:'332395521196',appId:'1:332395521196:web:9ec9e6db12eedd90ee6b09',measurementId:'G-0YC0DE51S6'};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);const $=x=>document.getElementById(x);
-const COLORS=['#d9ad52','#e06c75','#61afef','#98c379','#c678dd','#56b6c2','#e5c07b','#abb2bf','#f78c6c','#c3e88d','#82aaff','#ffcb6b'];let currentUser=null,profile={},roomId=null,roomUnsub=null,msgUnsub=null,scene=null,modelRoot=null,pieceSources={},activeVisuals=new Map(),selectedSquare=null,selectedMoves=[],mySide=null,lastFen='',camera=null,renderer=null,roomPresenceUnsub=null,roomCleanupTimer=null,trollEnabled=false;
+const COLORS=['#d9ad52','#e06c75','#61afef','#98c379','#c678dd','#56b6c2','#e5c07b','#abb2bf','#f78c6c','#c3e88d','#82aaff','#ffcb6b'];let currentUser=null,profile={},roomId=null,roomUnsub=null,msgUnsub=null,scene=null,modelRoot=null,pieceSources={},activeVisuals=new Map(),selectedSquare=null,selectedMoves=[],mySide=null,lastFen='',camera=null,renderer=null,roomPresenceUnsub=null,roomCleanupTimer=null,trollEnabled=false,roomEventUnsub=null,leaderboardUnsub=null,lastEventId='',matchShownId='',drawOfferShownId='';
 let signup=false;const chess=new Chess();let roomsUnsub=null;
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
 function err(id,t){$(id).textContent=t||''}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.add('hidden'),2200)}function code(){return Math.random().toString(36).slice(2,8).toUpperCase()}
-function setAvatar(el,email,color){el.textContent=(email||'?')[0].toUpperCase();el.style.background=color||COLORS[0]}
+function displayName(p=profile,u=currentUser){return p.username||u?.displayName||u?.email?.split('@')[0]||'Guest'}
+function playerPayload(){return {uid:currentUser.uid,username:displayName(),email:currentUser.email||'',color:profile.color||COLORS[0],guest:!!currentUser.isAnonymous}}
+function setAvatar(el,name,color){el.textContent=(name||'?')[0].toUpperCase();el.style.background=color||COLORS[0]}
+async function ensureUserRecord(){
+  const s=await get(ref(db,'users/'+currentUser.uid)); profile=s.val()||{};
+  if(!profile.color)profile.color=COLORS[0];
+  if(!profile.username)profile.username=currentUser.displayName||currentUser.email?.split('@')[0]||('Guest'+currentUser.uid.slice(-4));
+  await update(ref(db,'users/'+currentUser.uid),{username:profile.username,color:profile.color,email:currentUser.email||'',guest:!!currentUser.isAnonymous,lastSeen:Date.now()});
+}
+async function enterAsGuest(){err('authErr','');try{await signInAnonymously(auth)}catch(e){err('authErr','Guest sign-in failed: '+e.message)}}
 $('colors').innerHTML=COLORS.map(c=>`<button type="button" class="color" data-c="${c}" style="background:${c}" aria-label="${c}"></button>`).join('');document.querySelectorAll('.color').forEach(b=>b.onclick=()=>{profile.color=b.dataset.c;document.querySelectorAll('.color').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');setAvatar($('profileAvatar'),currentUser?.email,profile.color)});document.querySelector('.color').classList.add('sel');
 $('switchAuth').onclick=()=>{signup=!signup;$('authTitle').textContent=signup?'Create your player profile.':'Enter the chess room.';$('authBtn').textContent=signup?'Create account':'Sign in';$('switchText').textContent=signup?'Already have an account?':'New here?';$('switchAuth').textContent=signup?'Sign in':'Create account';err('authErr','')};
-$('authForm').onsubmit=async e=>{e.preventDefault();err('authErr','');try{const email=$('email').value.trim(),pass=$('password').value;if(signup){const c=await createUserWithEmailAndPassword(auth,email,pass);await set(ref(db,'users/'+c.user.uid),{email,color:profile.color||COLORS[0],createdAt:Date.now()});await updateProfile(c.user,{displayName:email.split('@')[0]})}else await signInWithEmailAndPassword(auth,email,pass)}catch(e){err('authErr',e.message)}};
+$('authForm').onsubmit=async e=>{e.preventDefault();err('authErr','');try{const email=$('email').value.trim(),pass=$('password').value;if(signup){const c=await createUserWithEmailAndPassword(auth,email,pass);await set(ref(db,'users/'+c.user.uid),{email,username:email.split('@')[0],color:profile.color||COLORS[0],wins:0,draws:0,losses:0,createdAt:Date.now()});await updateProfile(c.user,{displayName:email.split('@')[0]})}else await signInWithEmailAndPassword(auth,email,pass)}catch(e){err('authErr',e.message)}};
 $('logout').onclick=()=>signOut(auth);
-async function loadProfile(){const s=await get(ref(db,'users/'+currentUser.uid));profile=s.val()||{email:currentUser.email,color:COLORS[0]};if(!profile.color)profile.color=COLORS[0];setAvatar($('headAvatar'),currentUser.email,profile.color);setAvatar($('profileAvatar'),currentUser.email,profile.color);$('headEmail').textContent=currentUser.email;$('profileEmail').textContent=currentUser.email;document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel',x.dataset.c===profile.color))}
-$('saveColor').onclick=async()=>{try{await update(ref(db,'users/'+currentUser.uid),{color:profile.color});toast('Profile saved')}catch(e){err('profileMsg',e.message)}};
-
-const trollAudios=Array.from({length:10},(_,i)=>{const a=new Audio(`./${i+1}.mp3`);a.preload='auto';return a});
-function showTrollConsent(){
-  if(localStorage.getItem('mpxTrollConsent')!=='yes' && localStorage.getItem('mpxTrollConsent')!=='no'){
-    $('trollConsent').classList.remove('hidden');
-  }else trollEnabled=localStorage.getItem('mpxTrollConsent')==='yes';
+async function loadProfile(){
+  await ensureUserRecord(); const name=displayName();
+  setAvatar($('headAvatar'),name,profile.color);setAvatar($('profileAvatar'),name,profile.color);
+  $('headEmail').textContent=currentUser.isAnonymous?'Guest':(currentUser.email||'');
+  $('profileNameLabel').textContent=name;$('profileEmail').textContent=currentUser.isAnonymous?'Guest player':(currentUser.email||'');
+  $('usernameInput').value=name;document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel',x.dataset.c===profile.color));
 }
 async function enableTrollSounds(){
   try{
@@ -143,38 +179,60 @@ function syncFullscreenUI(){
   $('fullscreenExit').classList.toggle('hidden',!active);
   $('fullscreenBtn').textContent=active?'⛶ Fullscreen active':'⛶ Fullscreen';
 }
-function watchRoomForEmptyServer(id){
-  if(roomPresenceUnsub)roomPresenceUnsub();
-  clearTimeout(roomCleanupTimer);
-  roomPresenceUnsub=onValue(ref(db,'rooms/'+id+'/presence'),snap=>{
-    const presence=snap.val()||{};
-    const count=Object.keys(presence).length;
-    clearTimeout(roomCleanupTimer);
-    if(count===0){
-      roomCleanupTimer=setTimeout(async()=>{
-        const latest=await get(ref(db,'rooms/'+id));
-        if(!latest.exists())return;
-        const r=latest.val();
-        const p=Object.keys(r.presence||{}).length;
-        if(p===0){
-          try{await remove(ref(db,'rooms/'+id));}catch(e){console.error('Auto-delete failed:',e)}
-        }
-      },60000);
+async function markRoomEmptyIfNeeded(id){
+  const s=await get(ref(db,'rooms/'+id));if(!s.exists())return;
+  const r=s.val();if(Object.keys(r.presence||{}).length===0&&!r.emptySince)await update(ref(db,'rooms/'+id),{emptySince:Date.now()});
+}
+async function cleanupExpiredEmptyRooms(){
+  const s=await get(ref(db,'rooms'));const all=s.val()||{};const cutoff=Date.now()-60000;
+  await Promise.all(Object.entries(all).map(async([id,r])=>{
+    if(r.status==='finished')return;const count=Object.keys(r.presence||{}).length;
+    if(count===0){const since=Number(r.emptySince||r.createdAt||0);
+      if(since&&since<=cutoff){const latest=await get(ref(db,'rooms/'+id));const rr=latest.val();if(latest.exists()&&Object.keys(rr.presence||{}).length===0&&Number(rr.emptySince||since)<=cutoff)await remove(ref(db,'rooms/'+id));}
+      else if(!r.emptySince)await update(ref(db,'rooms/'+id),{emptySince:Date.now()});
     }
+  }));
+}
+function watchRoomForEmptyServer(id){
+  if(roomPresenceUnsub)roomPresenceUnsub();clearTimeout(roomCleanupTimer);
+  roomPresenceUnsub=onValue(ref(db,'rooms/'+id+'/presence'),async snap=>{
+    const count=Object.keys(snap.val()||{}).length;clearTimeout(roomCleanupTimer);
+    if(count===0){const latest=await get(ref(db,'rooms/'+id));if(!latest.exists())return;const r=latest.val();
+      if(!r.emptySince)await update(ref(db,'rooms/'+id),{emptySince:Date.now()});
+      roomCleanupTimer=setTimeout(async()=>{const check=await get(ref(db,'rooms/'+id));if(!check.exists())return;const rr=check.val();if(Object.keys(rr.presence||{}).length===0&&Number(rr.emptySince||0)<=Date.now()-60000)await remove(ref(db,'rooms/'+id))},61000);
+    }else{const e=await get(ref(db,'rooms/'+id+'/emptySince'));if(e.exists())await remove(ref(db,'rooms/'+id+'/emptySince'))}
   });
 }
 
 function roomPlayer(side){return side==='white'?'white':'black'}
-$('create').onclick=async()=>{err('joinErr','');try{let id=code();while((await get(ref(db,'rooms/'+id))).exists())id=code();const p={uid:currentUser.uid,email:currentUser.email,color:profile.color};const initial=new Chess().fen();await set(ref(db,'rooms/'+id),{name:'MPOXEL Arena',host:currentUser.uid,white:p,black:null,status:'waiting',turn:'w',fen:initial,version:0,createdAt:Date.now()});await enterRoom(id)}catch(e){err('joinErr','Create failed: '+e.message)}};
-async function joinRoom(id){id=id.trim().toUpperCase();err('joinErr','');if(!/^[A-Z0-9]{6}$/.test(id))return err('joinErr','Room code must be 6 characters.');try{const s=await get(ref(db,'rooms/'+id));if(!s.exists())return err('joinErr','Server not found.');const r=s.val();if(r.black&&r.black.uid!==currentUser.uid)return err('joinErr','Server is full.');if(!r.white)return err('joinErr','Room is not available.');if(!r.black){await update(ref(db,'rooms/'+id),{black:{uid:currentUser.uid,email:currentUser.email,color:profile.color},status:'playing'});}await enterRoom(id)}catch(e){err('joinErr','Join failed: '+e.message)}}$('join').onclick=()=>joinRoom($('joinCode').value);
+$('create').onclick=async()=>{err('joinErr','');try{let id=code();while((await get(ref(db,'rooms/'+id))).exists())id=code();const p=playerPayload();const initial=new Chess().fen();await set(ref(db,'rooms/'+id),{name:'MPOXEL Arena',host:currentUser.uid,white:p,black:null,status:'waiting',turn:'w',fen:initial,version:0,createdAt:Date.now(),emptySince:null,result:null,drawOffer:null,event:null,statsRecorded:{}});await enterRoom(id)}catch(e){err('joinErr','Create failed: '+e.message)}};
+async function joinRoom(id){id=id.trim().toUpperCase();err('joinErr','');if(!/^[A-Z0-9]{6}$/.test(id))return err('joinErr','Room code must be 6 characters.');try{const s=await get(ref(db,'rooms/'+id));if(!s.exists())return err('joinErr','Server not found.');const r=s.val();if(r.black&&r.black.uid!==currentUser.uid)return err('joinErr','Server is full.');if(!r.white)return err('joinErr','Room is not available.');if(!r.black){await update(ref(db,'rooms/'+id),{black:playerPayload(),status:'playing',emptySince:null});}await enterRoom(id)}catch(e){err('joinErr','Join failed: '+e.message)}}$('join').onclick=()=>joinRoom($('joinCode').value);
 async function enterRoom(id){roomId=id;$('roomCode').textContent='#'+id;show('game');selectedSquare=null;selectedMoves=[];await setup3D();subscribeRoom(id)}
-function subscribeRoom(id){if(roomUnsub)roomUnsub();if(msgUnsub)msgUnsub();roomUnsub=onValue(ref(db,'rooms/'+id),s=>{if(!s.exists()){leaveUI();return}const r=s.val();mySide=r.white?.uid===currentUser.uid?'white':r.black?.uid===currentUser.uid?'black':null;if(r.fen&&r.fen!==lastFen){lastFen=r.fen;try{chess.load(r.fen);syncVisuals(chess.fen())}catch(e){console.error(e)}}renderRoom(r)});msgUnsub=onValue(ref(db,'rooms/'+id+'/messages'),s=>{const m=s.val()||{};$('messages').innerHTML=Object.values(m).sort((a,b)=>(a.t||0)-(b.t||0)).slice(-120).map(x=>`<div class="msg"><b>${esc((x.email||'Player').split('@')[0])}</b> ${esc(x.text)}</div>`).join('');$('messages').scrollTop=$('messages').scrollHeight});onDisconnect(ref(db,'rooms/'+id+'/presence/'+currentUser.uid)).remove();set(ref(db,'rooms/'+id+'/presence/'+currentUser.uid),{email:currentUser.email,t:Date.now()});watchRoomForEmptyServer(id)}
-function renderRoom(r){$('turn').textContent=r.status==='waiting'?'Waiting for opponent…':`${r.turn==='w'?'White':'Black'} to move`;$('players').innerHTML=[['White',r.white],['Black',r.black]].map(([side,p])=>p?`<div class="player"><div class="avatar" style="background:${p.color}">${esc((p.email||'?')[0].toUpperCase())}</div><div><b>${esc(p.email)}</b><div class="meta">${side}${p.uid===currentUser.uid?' · You':''}</div></div></div>`:`<div class="player"><div class="avatar" style="background:#262118">?</div><div><b>Waiting for player</b><div class="meta">${side}</div></div></div>`).join('')}
-$('chatForm').onsubmit=async e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text||!roomId)return;await push(ref(db,'rooms/'+roomId+'/messages'),{uid:currentUser.uid,email:currentUser.email,text,t:Date.now()});$('chatInput').value=''};
+function subscribeRoom(id){
+  if(roomUnsub)roomUnsub();if(msgUnsub)msgUnsub();if(roomEventUnsub)roomEventUnsub();
+  roomUnsub=onValue(ref(db,'rooms/'+id),s=>{
+    if(!s.exists()){leaveUI();return}const r=s.val();mySide=r.white?.uid===currentUser.uid?'white':r.black?.uid===currentUser.uid?'black':null;
+    if(r.fen&&r.fen!==lastFen){lastFen=r.fen;try{chess.load(r.fen);syncVisuals(chess.fen())}catch(e){console.error(e)}}renderRoom(r);
+  });
+  msgUnsub=onValue(ref(db,'rooms/'+id+'/messages'),s=>{const m=s.val()||{};$('messages').innerHTML=Object.values(m).sort((a,b)=>(a.t||0)-(b.t||0)).slice(-120).map(x=>`<div class="msg"><b>${esc(x.username||x.email||'Player')}</b> ${esc(x.text)}</div>`).join('');$('messages').scrollTop=$('messages').scrollHeight});
+  roomEventUnsub=onValue(ref(db,'rooms/'+id+'/event'),s=>{const ev=s.val();if(!ev||ev.id===lastEventId)return;lastEventId=ev.id;if(ev.type==='capture')playRandomTroll()});
+  onDisconnect(ref(db,'rooms/'+id+'/presence/'+currentUser.uid)).remove();
+  set(ref(db,'rooms/'+id+'/presence/'+currentUser.uid),{username:displayName(),t:Date.now()});update(ref(db,'rooms/'+id),{emptySince:null});watchRoomForEmptyServer(id);
+}
+function renderRoom(r){
+  if(r.status==='finished')$('turn').textContent=r.result?.type==='draw'?'Draw game':`${r.result?.winner||'Player'} wins`;
+  else $('turn').textContent=r.status==='waiting'?'Waiting for opponent…':`${r.turn==='w'?'White':'Black'} to move`;
+  $('players').innerHTML=[['White',r.white],['Black',r.black]].map(([side,p])=>p?`<div class="player"><div class="avatar" style="background:${p.color}">${esc((p.username||p.email||'?')[0].toUpperCase())}</div><div><b>${esc(p.username||p.email||'Guest')}</b><div class="meta">${side}${p.uid===currentUser.uid?' · You':''}</div></div></div>`:`<div class="player"><div class="avatar" style="background:#262118">?</div><div><b>Waiting for player</b><div class="meta">${side}</div></div></div>`).join('');
+  const finished=r.status==='finished';$('drawBtn').disabled=finished||r.status!=='playing'||!!r.drawOffer;$('resignBtn').disabled=finished||r.status!=='playing';
+  $('drawBtn').textContent=r.drawOffer?(r.drawOffer.uid===currentUser.uid?'Draw offered':'Accept draw'):'Offer draw';
+  if(r.drawOffer&&r.drawOffer.uid!==currentUser.uid&&r.drawOffer.id!==drawOfferShownId){drawOfferShownId=r.drawOffer.id;$('drawOfferText').textContent=`${r.drawOffer.username||'Your opponent'} offered a draw.`;$('drawOfferModal').classList.remove('hidden')}
+  if(finished&&r.result?.id!==matchShownId){matchShownId=r.result.id;showMatchResult(r)}
+}
+$('chatForm').onsubmit=async e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text||!roomId)return;await push(ref(db,'rooms/'+roomId+'/messages'),{uid:currentUser.uid,username:displayName(),email:currentUser.email||'',text,t:Date.now()});$('chatInput').value=''};
 $('copyCode').onclick=async()=>{try{await navigator.clipboard.writeText(roomId);toast('Room code copied')}catch{toast('Room code: '+roomId)}};
-$('leave').onclick=async()=>{if(!roomId)return;try{const s=await get(ref(db,'rooms/'+roomId));if(s.exists()){const r=s.val();if(r.host===currentUser.uid&&r.status==='waiting')await remove(ref(db,'rooms/'+roomId));else if(r.white?.uid===currentUser.uid)await update(ref(db,'rooms/'+roomId),{white:null,status:'waiting'});else if(r.black?.uid===currentUser.uid)await update(ref(db,'rooms/'+roomId),{black:null,status:'waiting'});await remove(ref(db,'rooms/'+roomId+'/presence/'+currentUser.uid))}}finally{leaveUI()}};
-function leaveUI(){if(roomUnsub)roomUnsub();if(msgUnsub)msgUnsub();if(roomPresenceUnsub)roomPresenceUnsub();clearTimeout(roomCleanupTimer);roomUnsub=msgUnsub=roomPresenceUnsub=null;roomId=null;lastFen='';selectedSquare=null;show('lobby');loadRooms()}
-function loadRooms(){if(roomsUnsub)roomsUnsub();roomsUnsub=onValue(ref(db,'rooms'),s=>{const all=s.val()||{};const list=Object.entries(all).filter(([id,r])=>r.status!=='finished');$('servers').innerHTML=list.map(([id,r])=>`<div class="server"><div><div class="serverName">${esc(r.name||'MPOXEL Arena')}</div><div class="meta"><span class="online">${r.black?'2 / 2':'1 / 2'} players</span> · ${id}</div></div><button class="btn secondary joinServer" data-id="${id}" ${r.black?'disabled':''}>${r.black?'Full':'Join'}</button></div>`).join('')||'<div class="meta">No active servers. Create one.</div>';document.querySelectorAll('.joinServer').forEach(b=>b.onclick=()=>joinRoom(b.dataset.id))},{onlyOnce:false})}
+$('leave').onclick=async()=>{if(!roomId)return;try{const s=await get(ref(db,'rooms/'+roomId));if(s.exists()){const r=s.val();if(r.host===currentUser.uid&&r.status==='waiting')await remove(ref(db,'rooms/'+roomId));else if(r.white?.uid===currentUser.uid)await update(ref(db,'rooms/'+roomId),{white:null,status:'waiting',drawOffer:null});else if(r.black?.uid===currentUser.uid)await update(ref(db,'rooms/'+roomId),{black:null,status:'waiting',drawOffer:null});await remove(ref(db,'rooms/'+roomId+'/presence/'+currentUser.uid));await markRoomEmptyIfNeeded(roomId)}}finally{leaveUI()}};
+function leaveUI(){if(roomUnsub)roomUnsub();if(msgUnsub)msgUnsub();if(roomPresenceUnsub)roomPresenceUnsub();if(roomEventUnsub)roomEventUnsub();clearTimeout(roomCleanupTimer);roomUnsub=msgUnsub=roomPresenceUnsub=roomEventUnsub=null;roomId=null;lastFen='';lastEventId='';matchShownId='';drawOfferShownId='';selectedSquare=null;show('lobby');loadRooms();cleanupExpiredEmptyRooms()}
+function loadRooms(){cleanupExpiredEmptyRooms();if(roomsUnsub)roomsUnsub();roomsUnsub=onValue(ref(db,'rooms'),s=>{const all=s.val()||{};const list=Object.entries(all).filter(([id,r])=>r.status!=='finished'&&Object.keys(r.presence||{}).length>0);$('servers').innerHTML=list.map(([id,r])=>`<div class="server"><div><div class="serverName">${esc(r.name||'MPOXEL Arena')}</div><div class="meta"><span class="online">${r.black?'2 / 2':'1 / 2'} players</span> · ${id}</div></div><button class="btn secondary joinServer" data-id="${id}" ${r.black?'disabled':''}>${r.black?'Full':'Join'}</button></div>`).join('')||'<div class="meta">No active servers. Create one.</div>';document.querySelectorAll('.joinServer').forEach(b=>b.onclick=()=>joinRoom(b.dataset.id))},{onlyOnce:false})}
 
 async function setup3D(){
 if(scene)return;
@@ -244,28 +302,81 @@ function syncVisuals(fen){
  activeVisuals.set(r+','+file,mesh);file++}});
  showMoveHints();
 }
-function attemptMove(from,to,promotion){
- if(!roomId||!mySide)return;const expected=chess.fen();const local=new Chess();local.load(expected);
- if((local.turn()==='w')!==(mySide==='white'))return toast('It is not your turn.');
- let move;try{move=promotion?local.move({from,to,promotion}):local.move({from,to});}catch(e){console.error('Move rejected:',e);return toast('Illegal move.')}
- const newFen=local.fen();
- runTransaction(ref(db,'rooms/'+roomId),r=>{if(!r||r.fen!==expected)return;r.fen=newFen;r.turn=local.turn();r.version=(r.version||0)+1;return r}).then(x=>{if(!x.committed)toast('Move changed — waiting for latest board.');else{selectedSquare=null;selectedMoves=[];clearMoveHints();if(move.captured)playRandomTroll()}}).catch(e=>{console.error(e);toast('Move failed: '+e.message)});
+function matchStateAfterMove(local){
+  if(local.isCheckmate())return {status:'finished',resultType:'checkmate',winner:local.turn()==='w'?'Black':'White'};
+  if(local.isDraw()||local.isStalemate()||local.isThreefoldRepetition()||local.isInsufficientMaterial())return {status:'finished',resultType:'draw',winner:null};
+  return {status:'playing',resultType:null,winner:null};
 }
+async function recordStatsForResult(r){
+  if(!r?.result?.id||r.statsRecorded?.[currentUser.uid])return;
+  const result=r.result;let delta={wins:0,draws:0,losses:0};
+  if(result.type==='draw')delta.draws=1;
+  else if((result.winner==='White'&&r.white?.uid===currentUser.uid)||(result.winner==='Black'&&r.black?.uid===currentUser.uid))delta.wins=1;
+  else delta.losses=1;
+  await runTransaction(ref(db,'users/'+currentUser.uid),p=>{if(!p)return p;p.wins=Number(p.wins||0)+delta.wins;p.draws=Number(p.draws||0)+delta.draws;p.losses=Number(p.losses||0)+delta.losses;return p});
+  await update(ref(db,'rooms/'+roomId+'/statsRecorded'),{[currentUser.uid]:true});
+}
+async function finishByAction(action){
+  const id=roomId;if(!id||!mySide)return;const expected=chess.fen(),resultId=crypto.randomUUID();
+  const x=await runTransaction(ref(db,'rooms/'+id),r=>{
+    if(!r||r.status==='finished'||r.fen!==expected)return;
+    if(action==='draw'){if(!r.drawOffer||r.drawOffer.uid===currentUser.uid)return;r.status='finished';r.result={id:resultId,type:'draw',winner:null,reason:'agreement',at:Date.now()};r.drawOffer=null;return r}
+    r.status='finished';r.result={id:resultId,type:'resign',winner:mySide==='white'?'Black':'White',reason:'resignation',at:Date.now()};r.drawOffer=null;return r;
+  });
+  toast(x.committed?(action==='draw'?'Draw agreed':'You resigned'):'Match changed — try again.');
+}
+function offerDraw(){if(!roomId||!mySide)return;const id=crypto.randomUUID();update(ref(db,'rooms/'+roomId),{drawOffer:{id,uid:currentUser.uid,username:displayName(),at:Date.now()}}).then(()=>toast('Draw offered')).catch(e=>toast('Draw offer failed: '+e.message))}
+function attemptMove(from,to,promotion){
+  if(!roomId||!mySide)return;const expected=chess.fen(),local=new Chess();local.load(expected);
+  if((local.turn()==='w')!==(mySide==='white'))return toast('It is not your turn.');
+  let move;try{move=promotion?local.move({from,to,promotion}):local.move({from,to})}catch(e){return toast('Illegal move.')}
+  const state=matchStateAfterMove(local),newFen=local.fen(),eventId=crypto.randomUUID();
+  runTransaction(ref(db,'rooms/'+roomId),r=>{
+    if(!r||r.fen!==expected||r.status==='finished')return;
+    r.fen=newFen;r.turn=local.turn();r.version=(r.version||0)+1;r.status=state.status;
+    if(move.captured)r.event={id:eventId,type:'capture',at:Date.now()};
+    if(state.status==='finished')r.result={id:eventId,type:state.resultType,winner:state.winner,reason:state.resultType==='checkmate'?'checkmate':'draw-rule',at:Date.now()};
+    return r;
+  }).then(x=>{if(!x.committed)toast('Move changed — waiting for latest board.');else{selectedSquare=null;selectedMoves=[];clearMoveHints()}}).catch(e=>toast('Move failed: '+e.message));
+}
+
+
+function showMatchResult(r){
+  const result=r.result||{},youWin=result.winner=== (mySide==='white'?'White':'Black');
+  $('matchTitle').textContent=result.type==='draw'?'Draw game':(youWin?'You won':'Match over');
+  $('matchSummary').textContent=result.type==='draw'?'The match ended in a draw.':(youWin?'You won the match.':'You lost the match.');
+  $('guestUpgrade').classList.toggle('hidden',!currentUser.isAnonymous);$('upgradeGuest').classList.toggle('hidden',!currentUser.isAnonymous);
+  $('closeMatch').textContent=currentUser.isAnonymous?'Continue as guest':'Back to lobby';$('matchModal').classList.remove('hidden');
+  recordStatsForResult(r).catch(e=>console.error('Stats update failed:',e));
+}
+async function upgradeGuestAccount(){
+  err('upgradeErr','');const email=$('upgradeEmail').value.trim(),pass=$('upgradePassword').value;
+  try{await linkWithCredential(currentUser,EmailAuthProvider.credential(email,pass));await update(ref(db,'users/'+currentUser.uid),{email,guest:false});await updateProfile(currentUser,{displayName:profile.username});toast('Guest profile saved to your account');$('matchModal').classList.add('hidden');loadProfile();loadRooms()}
+  catch(e){err('upgradeErr',e.code==='auth/email-already-in-use'?'That email already has an account. Sign in from the main screen instead.':e.message)}
+}
+
 let ray,mouse,hitPlanes=[],moveHintsGroup=null;
 function initPicking(){ray=new THREE.Raycaster();mouse=new THREE.Vector2();const s=.27;const group=new THREE.Group();group.name='picking';for(let r=0;r<8;r++)for(let c=0;c<8;c++){const q=new THREE.Mesh(new THREE.PlaneGeometry(s+.025,s+.025),new THREE.MeshBasicMaterial({transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));q.rotation.x=-Math.PI/2;q.position.set((c-3.5)*s,.06,(r-3.5)*s);q.userData.square=String.fromCharCode(97+c)+(8-r);group.add(q)}scene.add(group);rendererClick(group)}
-function rendererClick(group){const canvas=renderer.domElement;let downX=0,downY=0;canvas.addEventListener('pointerdown',e=>{downX=e.clientX;downY=e.clientY;});canvas.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-downX,e.clientY-downY)>10)return;const rect=canvas.getBoundingClientRect();mouse.x=(e.clientX-rect.left)/rect.width*2-1;mouse.y=-(e.clientY-rect.top)/rect.height*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects(group.children,false);if(!hits.length)return;const sq=hits[0].object.userData.square;
+function rendererClick(group){const canvas=renderer.domElement;let downX=0,downY=0;canvas.addEventListener('pointerdown',e=>{downX=e.clientX;downY=e.clientY;});canvas.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-downX,e.clientY-downY)>10)return;const rect=canvas.getBoundingClientRect();mouse.x=(e.clientX-rect.left)/rect.width*2-1;mouse.y=-(e.clientY-rect.top)/rect.height*2+1;ray.setFromCamera(mouse,camera);const hits=ray.intersectObjects(group.children,false);if(!hits.length)return;if($('resignBtn').disabled)return;const sq=hits[0].object.userData.square;
  if(!selectedSquare){const piece=chess.get(sq);if(!piece)return;if((piece.color==='w')!==(mySide==='white')||chess.turn()!==piece.color)return toast('That piece is not yours.');selectedSquare=sq;selectedMoves=chess.moves({square:sq,verbose:true});showMoveHints();toast(selectedMoves.length?'Choose a highlighted square':'No legal moves');}
  else if(selectedMoves.some(m=>m.to===sq)){const moving=chess.get(selectedSquare);const promotion=moving?.type==='p'&&(sq[1]==='1'||sq[1]==='8')?'q':undefined;attemptMove(selectedSquare,sq,promotion);}
  else{const piece=chess.get(sq);if(piece&&((piece.color==='w')===(mySide==='white'))&&chess.turn()===piece.color){selectedSquare=sq;selectedMoves=chess.moves({square:sq,verbose:true});showMoveHints();return}selectedSquare=null;selectedMoves=[];clearMoveHints();}
  });}
 window.__mpxPicking=true;
-onAuthStateChanged(auth,async u=>{currentUser=u;setTimeout(()=>$('loader').classList.add('hidden'),650);if(!u){$('header').classList.add('hidden');show('auth');return}$('header').classList.remove('hidden');await loadProfile();show('lobby');loadRooms()});
+onAuthStateChanged(auth,async u=>{currentUser=u;setTimeout(()=>$('loader').classList.add('hidden'),650);if(!u){$('header').classList.add('hidden');show('auth');return}$('header').classList.remove('hidden');await loadProfile();show('lobby');loadRooms();watchLeaderboard()});
 $('enableTroll').onclick=enableTrollSounds;
 $('skipTroll').onclick=skipTrollSounds;
 $('fullscreenBtn').onclick=enterFullscreen;
 $('fullscreenExit').onclick=exitFullscreen;
 document.addEventListener('fullscreenchange',syncFullscreenUI);
 window.addEventListener('resize',()=>{if(renderer&&camera){const el=$('scene');const w=Math.max(1,el.clientWidth),h=Math.max(1,el.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}});
+$('guestBtn').onclick=enterAsGuest;
+$('drawBtn').onclick=offerDraw;$('resignBtn').onclick=()=>finishByAction('resign');
+$('acceptDraw').onclick=async()=>{$('drawOfferModal').classList.add('hidden');await finishByAction('draw')};
+$('declineDraw').onclick=async()=>{$('drawOfferModal').classList.add('hidden');if(roomId)await update(ref(db,'rooms/'+roomId+'/drawOffer'),null)};
+$('closeMatch').onclick=()=>{$('matchModal').classList.add('hidden');leaveUI()};
+$('upgradeGuest').onclick=()=>{$('guestUpgrade').classList.remove('hidden');$('upgradeGuest').classList.add('hidden')};
+$('upgradeForm').onsubmit=async e=>{e.preventDefault();await upgradeGuestAccount()};
 showTrollConsent();
 
 </script>
