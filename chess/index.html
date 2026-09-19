@@ -511,26 +511,30 @@ function subscribeCaptureSound(id){
 }
 
 async function enterFullscreen(){
-  const target=document.documentElement;
   try{
-    if(document.fullscreenElement)return;
-    await target.requestFullscreen?.({navigationUI:'hide'});
-    document.body.classList.add('game-fullscreen');
-    if('orientation' in screen && screen.orientation?.lock){
-      try{await screen.orientation.lock('landscape');}catch{}
+    if(document.fullscreenElement){
+      syncFullscreenUI();
+      return;
     }
-    $('fullscreenExit').classList.remove('hidden');
-    $('fullscreenBtn').textContent='⛶ Fullscreen active';
+    if(!document.fullscreenEnabled)return toast('Fullscreen is not available in this browser/context.');
+    const target=document.documentElement;
+    if(typeof target.requestFullscreen!=='function')return toast('Fullscreen is not supported here.');
+    await target.requestFullscreen({navigationUI:'hide'});
+    syncFullscreenUI();
+    if(screen.orientation?.lock){
+      try{await screen.orientation.lock('landscape')}catch{}
+    }
   }catch(e){
-    toast('Fullscreen was blocked. Try the fullscreen button again.');
+    console.error('Fullscreen error:',e);
+    toast('Fullscreen was blocked. Use the button again or allow fullscreen for this site.');
+    syncFullscreenUI();
   }
 }
 async function exitFullscreen(){
-  try{if(document.fullscreenElement)await document.exitFullscreen();}catch{}
+  try{if(document.fullscreenElement)await document.exitFullscreen()}catch(e){console.error(e)}
   document.body.classList.remove('game-fullscreen');
-  try{screen.orientation?.unlock?.();}catch{}
-  $('fullscreenExit').classList.add('hidden');
-  $('fullscreenBtn').textContent='⛶ Fullscreen';
+  try{screen.orientation?.unlock?.()}catch{}
+  syncFullscreenUI();
 }
 function syncFullscreenUI(){
   const active=!!document.fullscreenElement;
@@ -565,18 +569,72 @@ function watchRoomForEmptyServer(id){
 
 function roomPlayer(side){return side==='white'?'white':'black'}
 $('create').onclick=async()=>{err('joinErr','');try{let id=code();while((await get(ref(db,'rooms/'+id))).exists())id=code();const p=playerPayload();const initial=new Chess().fen();await set(ref(db,'rooms/'+id),{name:'MPOXEL Arena',host:currentUser.uid,white:p,black:null,status:'waiting',turn:'w',fen:initial,version:0,createdAt:Date.now(),emptySince:null,result:null,drawOffer:null,event:null,statsRecorded:{}});await enterRoom(id)}catch(e){err('joinErr','Create failed: '+e.message)}};
-async function joinRoom(id){id=id.trim().toUpperCase();err('joinErr','');if(!/^[A-Z0-9]{6}$/.test(id))return err('joinErr','Room code must be 6 characters.');try{const s=await get(ref(db,'rooms/'+id));if(!s.exists())return err('joinErr','Server not found.');const r=s.val();if(r.black&&r.black.uid!==currentUser.uid)return err('joinErr','Server is full.');if(!r.white)return err('joinErr','Room is not available.');if(!r.black){await update(ref(db,'rooms/'+id),{black:playerPayload(),status:'playing',emptySince:null});}await enterRoom(id)}catch(e){err('joinErr','Join failed: '+e.message)}}$('join').onclick=()=>joinRoom($('joinCode').value);
+async function joinRoom(id){
+  id=id.trim().toUpperCase();err('joinErr','');
+  if(!/^[A-Z0-9]{6}$/.test(id))return err('joinErr','Room code must be 6 characters.');
+  try{
+    const roomRef=ref(db,'rooms/'+id),s=await get(roomRef);
+    if(!s.exists())return err('joinErr','Server not found.');
+    const r=s.val()||{},presence=r.presence||{};
+    if(!r.white)return err('joinErr','Room is not available.');
+
+    const blackUid=r.black?.uid;
+    const blackActuallyOnline=!!(blackUid&&presence[blackUid]);
+    if(blackUid&&blackUid!==currentUser.uid&&blackActuallyOnline)return err('joinErr','Server is full.');
+
+    const tx=await runTransaction(roomRef,current=>{
+      if(!current||!current.white)return;
+      const p=current.presence||{}, bUid=current.black?.uid;
+      const bOnline=!!(bUid&&p[bUid]);
+      if(bUid&&bUid!==currentUser.uid&&bOnline)return;
+      current.black=playerPayload();
+      current.status='playing';
+      current.emptySince=null;
+      return current;
+    });
+    if(!tx.committed)return err('joinErr','Server is full or changed. Please refresh.');
+    await enterRoom(id);
+  }catch(e){err('joinErr','Join failed: '+e.message)}
+}
+$('join').onclick=()=>joinRoom($('joinCode').value);
 async function enterRoom(id){roomId=id;$('roomCode').textContent='#'+id;show('game');selectedSquare=null;selectedMoves=[];await setup3D();subscribeRoom(id)}
 function subscribeRoom(id){
   if(roomUnsub)roomUnsub();if(msgUnsub)msgUnsub();if(roomEventUnsub)roomEventUnsub();
-  roomUnsub=onValue(ref(db,'rooms/'+id),s=>{
-    if(!s.exists()){leaveUI();return}const r=s.val();mySide=r.white?.uid===currentUser.uid?'white':r.black?.uid===currentUser.uid?'black':null;
-    if(r.fen&&r.fen!==lastFen){lastFen=r.fen;try{chess.load(r.fen);syncVisuals(chess.fen())}catch(e){console.error(e)}}renderRoom(r);
+  const roomRef=ref(db,'rooms/'+id);
+  roomUnsub=onValue(roomRef,s=>{
+    if(!s.exists()){leaveUI();return}
+    const r=s.val();
+    mySide=r.white?.uid===currentUser.uid?'white':r.black?.uid===currentUser.uid?'black':null;
+    if(r.fen&&r.fen!==lastFen){
+      lastFen=r.fen;
+      try{chess.load(r.fen);syncVisuals(chess.fen())}catch(e){console.error(e)}
+    }
+    renderRoom(r);
   });
-  msgUnsub=onValue(ref(db,'rooms/'+id+'/messages'),s=>{const m=s.val()||{};$('messages').innerHTML=Object.values(m).sort((a,b)=>(a.t||0)-(b.t||0)).slice(-120).map(x=>`<div class="msg"><b>${esc(x.username||x.email||'Player')}</b> ${esc(x.text)}</div>`).join('');$('messages').scrollTop=$('messages').scrollHeight});
+  msgUnsub=onValue(ref(db,'rooms/'+id+'/messages'),s=>{
+    const m=s.val()||{};
+    $('messages').innerHTML=Object.values(m).sort((a,b)=>(a.t||0)-(b.t||0)).slice(-120)
+      .map(x=>`<div class="msg"><b>${esc(x.username||x.email||'Player')}</b> ${esc(x.text)}</div>`).join('');
+    $('messages').scrollTop=$('messages').scrollHeight;
+  });
   subscribeCaptureSound(id);
-  onDisconnect(ref(db,'rooms/'+id+'/presence/'+currentUser.uid)).remove();
-  set(ref(db,'rooms/'+id+'/presence/'+currentUser.uid),{username:displayName(),t:Date.now()});update(ref(db,'rooms/'+id),{emptySince:null});watchRoomForEmptyServer(id);
+
+  // Presence is the source of truth for who is actually online.
+  const presenceRef=ref(db,'rooms/'+id+'/presence/'+currentUser.uid);
+  get(roomRef).then(async s=>{
+    if(!s.exists())return;
+    const r=s.val()||{};
+    const side=r.white?.uid===currentUser.uid?'white':r.black?.uid===currentUser.uid?'black':null;
+    if(!side)return;
+
+    // If this browser disappears, remove BOTH its presence and player slot.
+    await onDisconnect(presenceRef).remove();
+    await onDisconnect(ref(db,'rooms/'+id+'/'+side)).remove();
+    await set(presenceRef,{username:displayName(),t:Date.now()});
+    await update(roomRef,{emptySince:null});
+  }).catch(e=>console.error('Presence setup failed:',e));
+
+  watchRoomForEmptyServer(id);
 }
 function renderRoom(r){
   if(r.status==='finished')$('turn').textContent=r.result?.type==='draw'?'Draw game':`${r.result?.winner||'Player'} wins`;
@@ -591,9 +649,51 @@ function renderRoom(r){
 }
 $('chatForm').onsubmit=async e=>{e.preventDefault();const text=$('chatInput').value.trim();if(!text||!roomId)return;await push(ref(db,'rooms/'+roomId+'/messages'),{uid:currentUser.uid,username:displayName(),email:currentUser.email||'',text,t:Date.now()});$('chatInput').value=''};
 $('copyCode').onclick=async()=>{try{await navigator.clipboard.writeText(roomId);toast('Room code copied')}catch{toast('Room code: '+roomId)}};
-$('leave').onclick=async()=>{if(!roomId)return;try{const s=await get(ref(db,'rooms/'+roomId));if(s.exists()){const r=s.val();if(r.host===currentUser.uid&&r.status==='waiting')await remove(ref(db,'rooms/'+roomId));else if(r.white?.uid===currentUser.uid)await update(ref(db,'rooms/'+roomId),{white:null,status:'waiting',drawOffer:null});else if(r.black?.uid===currentUser.uid)await update(ref(db,'rooms/'+roomId),{black:null,status:'waiting',drawOffer:null});await remove(ref(db,'rooms/'+roomId+'/presence/'+currentUser.uid));await markRoomEmptyIfNeeded(roomId)}}finally{leaveUI()}};
+$('leave').onclick=async()=>{
+  if(!roomId)return;
+  const id=roomId;
+  try{
+    const roomRef=ref(db,'rooms/'+id),s=await get(roomRef);
+    if(s.exists()){
+      const r=s.val()||{};
+      const side=r.white?.uid===currentUser.uid?'white':r.black?.uid===currentUser.uid?'black':null;
+      if(r.host===currentUser.uid&&r.status==='waiting'){
+        await remove(roomRef);
+      }else{
+        const patch={};
+        if(side)patch[side]=null;
+        patch.status='waiting';
+        patch.drawOffer=null;
+        await update(roomRef,patch);
+        await remove(ref(db,'rooms/'+id+'/presence/'+currentUser.uid));
+        if(side)await onDisconnect(ref(db,'rooms/'+id+'/'+side)).cancel();
+        await onDisconnect(ref(db,'rooms/'+id+'/presence/'+currentUser.uid)).cancel();
+        await markRoomEmptyIfNeeded(id);
+      }
+    }
+  }catch(e){
+    toast('Leave failed: '+e.message);
+    console.error(e);
+  }finally{leaveUI()}
+};
 function leaveUI(){if(roomUnsub)roomUnsub();if(msgUnsub)msgUnsub();if(roomPresenceUnsub)roomPresenceUnsub();if(roomEventUnsub)roomEventUnsub();clearTimeout(roomCleanupTimer);roomUnsub=msgUnsub=roomPresenceUnsub=roomEventUnsub=null;roomId=null;lastFen='';lastEventId='';matchShownId='';drawOfferShownId='';selectedSquare=null;show('lobby');loadRooms();cleanupExpiredEmptyRooms()}
-function loadRooms(){cleanupExpiredEmptyRooms();if(roomsUnsub)roomsUnsub();roomsUnsub=onValue(ref(db,'rooms'),s=>{const all=s.val()||{};const list=Object.entries(all).filter(([id,r])=>r.status!=='finished'&&Object.keys(r.presence||{}).length>0);$('servers').innerHTML=list.map(([id,r])=>`<div class="server"><div><div class="serverName">${esc(r.name||'MPOXEL Arena')}</div><div class="meta"><span class="online">${r.black?'2 / 2':'1 / 2'} players</span> · ${id}</div></div><button class="btn secondary joinServer" data-id="${id}" ${r.black?'disabled':''}>${r.black?'Full':'Join'}</button></div>`).join('')||'<div class="meta">No active servers. Create one.</div>';document.querySelectorAll('.joinServer').forEach(b=>b.onclick=()=>joinRoom(b.dataset.id))},{onlyOnce:false})}
+function loadRooms(){
+  cleanupExpiredEmptyRooms();
+  if(roomsUnsub)roomsUnsub();
+  roomsUnsub=onValue(ref(db,'rooms'),s=>{
+    const all=s.val()||{};
+    const list=Object.entries(all).filter(([id,r])=>{
+      const online=Object.keys(r.presence||{}).length;
+      return r.status!=='finished'&&online>0;
+    });
+    $('servers').innerHTML=list.map(([id,r])=>{
+      const online=Math.min(2,Object.keys(r.presence||{}).length);
+      const full=online>=2;
+      return `<div class="server"><div><div class="serverName">${esc(r.name||'MPOXEL Arena')}</div><div class="meta"><span class="online">${online} / 2 players</span> · ${id}</div></div><button class="btn secondary joinServer" data-id="${id}" ${full?'disabled':''}>${full?'Full':'Join'}</button></div>`;
+    }).join('')||'<div class="meta">No active servers. Create one.</div>';
+    document.querySelectorAll('.joinServer').forEach(b=>b.onclick=()=>joinRoom(b.dataset.id));
+  },{onlyOnce:false});
+}
 
 function treatRendererBackdrop(r){r.domElement.style.filter='saturate(1.08) contrast(1.03)';}
 async function setup3D(){
@@ -695,22 +795,32 @@ async function recordStatsForResult(r){
   await update(ref(db,'rooms/'+roomId+'/statsRecorded'),{[currentUser.uid]:true});
 }
 async function finishByAction(action){
-  const id=roomId;if(!id||!mySide)return;
+  const id=roomId;
+  if(!id||!mySide)return toast('You are not an active player in this room.');
   const resultId=crypto.randomUUID();
   try{
     const x=await runTransaction(ref(db,'rooms/'+id),r=>{
       if(!r||r.status!=='playing')return;
+      const presence=r.presence||{};
+      if(!presence[currentUser.uid])return;
       if(action==='draw'){
         if(!r.drawOffer||r.drawOffer.uid===currentUser.uid)return;
-        r.status='finished';r.result={id:resultId,type:'draw',winner:null,reason:'agreement',at:Date.now()};r.drawOffer=null;return r;
+        r.status='finished';
+        r.result={id:resultId,type:'draw',winner:null,reason:'agreement',at:Date.now()};
+        r.drawOffer=null;
+        return r;
       }
       r.status='finished';
       r.result={id:resultId,type:'resign',winner:mySide==='white'?'Black':'White',reason:'resignation',at:Date.now()};
-      r.drawOffer=null;return r;
+      r.drawOffer=null;
+      return r;
     });
-    if(!x.committed)return toast(action==='draw'?'No active draw offer.':'Match already changed.');
+    if(!x.committed)return toast(action==='draw'?'No active draw offer or match already changed.':'Match already changed or you are offline.');
     toast(action==='draw'?'Draw agreed':'You resigned');
-  }catch(e){toast((action==='draw'?'Draw':'Resign')+' failed: '+e.message);console.error(e)}
+  }catch(e){
+    toast((action==='draw'?'Draw':'Resign')+' failed: '+e.message);
+    console.error(e);
+  }
 }
 
 async function offerDraw(){
