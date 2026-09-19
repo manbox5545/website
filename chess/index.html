@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MPOXEL CHESS 3D — HEAVEN MODE</title>
+<title>MPOXEL CHESS 3D — HEAVEN / FAST MODE</title>
 <style>
 :root{--gold:#d9ad52;--gold2:#ffe29a;--bg:#070706;--panel:#11100d;--line:#302718;--muted:#9d9587;--danger:#7f3c32}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%,#251b0b 0,#0b0906 38%,#050505 100%);color:#f5f0e7;font-family:Inter,system-ui,Segoe UI,sans-serif}button,input{font:inherit}.hidden{display:none!important}
@@ -286,37 +286,47 @@ body.game-fullscreen #scene{flex:1;height:auto;min-height:0}
 }
 
 
-#heavenFX{
-  position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.86;
+
+/* MPOXEL FAST MODE: cinematic without full-screen render loops */
+:root{--mx:50%;--my:30%;}
+html,body{
+  background:
+    radial-gradient(700px 420px at var(--mx) var(--my),rgba(225,185,92,.075),transparent 62%),
+    radial-gradient(900px 500px at 50% -15%,#24180a 0,#0a0805 42%,#020202 100%);
 }
-#cursorOrb{
-  position:fixed;width:20px;height:20px;left:0;top:0;z-index:1000;pointer-events:none;
-  border-radius:50%;border:1px solid rgba(255,230,174,.55);
-  box-shadow:0 0 14px rgba(232,191,99,.25),0 0 45px rgba(232,191,99,.08);
-  transform:translate3d(-100px,-100px,-0);
-  mix-blend-mode:screen;opacity:.75;
-  transition:width .2s ease,height .2s ease,margin .2s ease,border-color .2s ease,box-shadow .2s ease;
+body:after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(circle at center,transparent 42%,rgba(0,0,0,.34) 100%);
 }
-#cursorOrb:after{
-  content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(255,227,163,.18);
-  filter:blur(2px);
+main{will-change:auto}
+.card{backdrop-filter:blur(10px)}
+.card:before{display:none}
+.screen.active{animation:screenIn .24s ease-out}
+.btn{will-change:transform;transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.btn:active{transform:translateY(1px) scale(.99)}
+.server,.player,.lbRow{transition:transform .12s ease,border-color .12s ease,box-shadow .12s ease}
+#scene:before{background:linear-gradient(180deg,transparent 74%,rgba(0,0,0,.2))}
+#scene{contain:layout paint;isolation:isolate}
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 }
-body.cursor-hot #cursorOrb{width:36px;height:36px;margin:-8px;border-color:#fff1c2;box-shadow:0 0 20px rgba(255,218,137,.45),0 0 70px rgba(255,218,137,.16)}
-.clickSpark{position:fixed;width:7px;height:7px;border-radius:50%;background:#ffe7ae;pointer-events:none;z-index:999;box-shadow:0 0 15px #ffd66f,0 0 40px rgba(255,206,107,.35);animation:spark .7s cubic-bezier(.1,.8,.2,1) forwards}
-@keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0)}}
-#ambientWords{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;opacity:.11}
-#ambientWords span{position:absolute;font-size:8vw;font-weight:950;letter-spacing:.12em;transform:translateY(20vh) rotate(-8deg);color:#fff1c2;filter:blur(.3px);white-space:nowrap;animation:wordDrift 18s linear infinite}
-#ambientWords span:nth-child(1){top:5%;left:-5%;animation-delay:-1s}.ambientWords span:nth-child(2){top:40%;right:-7%;animation-delay:-7s}.ambientWords span:nth-child(3){bottom:-2%;left:8%;animation-delay:-12s}.ambientWords span:nth-child(4){top:70%;left:-4%;animation-delay:-16s}
-@keyframes wordDrift{0%{transform:translate3d(-8vw,8vh,0) rotate(-8deg)}50%{transform:translate3d(8vw,-5vh,0) rotate(-4deg)}100%{transform:translate3d(-8vw,8vh,0) rotate(-8deg)}}
-body.game-fullscreen #heavenFX,body.game-fullscreen #ambientWords{display:none}
+@media(max-width:700px){
+  .card{backdrop-filter:none}
+  .screen.active{animation:none}
+}
+
+</style>
+<style>
+/* Never allow decorative typography to cover functional UI. */
+#ambientWords,#heavenFX,#cursorOrb,#clickBurstLayer{display:none!important}
+@media(max-width:700px){
+  .auth{margin:5vh auto}
+  .auth h1{font-size:25px}
+}
 </style>
 </head>
 <body>
-
-<canvas id="heavenFX" aria-hidden="true"></canvas>
-<div id="cursorOrb" aria-hidden="true"></div>
-<div id="clickBurstLayer" aria-hidden="true"></div>
-<div id="ambientWords" aria-hidden="true"><span>CREATE</span><span>DUEL</span><span>CAPTURE</span><span>ASCEND</span></div>
 
 <div id="loader"><div class="load"><div class="brand">MPOXEL CHESS</div><div class="made">made by manvir sharma</div><div class="ring"></div></div></div>
 <header id="header" class="hidden"><div class="mini">MPOXEL CHESS</div><div class="user"><div id="headAvatar" class="avatar"></div><span id="headEmail"></span><button id="logout" class="btn secondary">Sign out</button></div></header>
@@ -385,18 +395,57 @@ async function loadProfile(){
   $('profileNameLabel').textContent=name;$('profileEmail').textContent=currentUser.isAnonymous?'Guest player':(currentUser.email||'');
   $('usernameInput').value=name;document.querySelectorAll('.color').forEach(x=>x.classList.toggle('sel',x.dataset.c===profile.color));
 }
+
+/* CHAOS AUDIO — unlock once from a real gesture, then play for every client
+   that receives the shared Firebase capture event. */
+const trollAudios=Array.from({length:10},(_,i)=>{
+  const a=new Audio(`./${i+1}.mp3`);
+  a.preload='auto';
+  a.playsInline=true;
+  a.volume=.88;
+  return a;
+});
+let audioUnlocked=false,audioCtx=null;
+
+async function unlockChaosAudio(){
+  try{
+    if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')await audioCtx.resume();
+    audioUnlocked=true;
+    if(trollEnabled) return;
+    // Keep the preference opt-in, but a successful gesture unlocks the browser.
+  }catch{}
+}
+function chaosFallback(){
+  try{
+    if(!audioCtx)return;
+    const now=audioCtx.currentTime;
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();
+    osc.type='sawtooth';osc.frequency.setValueAtTime(210+Math.random()*90,now);
+    osc.frequency.exponentialRampToValueAtTime(55+Math.random()*25,now+.32);
+    filter.type='lowpass';filter.frequency.setValueAtTime(1300,now);filter.frequency.exponentialRampToValueAtTime(260,now+.32);
+    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.18,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+.34);
+    osc.connect(filter);filter.connect(gain);gain.connect(audioCtx.destination);osc.start(now);osc.stop(now+.36);
+  }catch{}
+}
 async function enableTrollSounds(){
   try{
+    await unlockChaosAudio();
+    // Warm the first local file after the user gesture.
     const a=trollAudios[0];
-    a.volume=0;
-    await a.play();
-    a.pause(); a.currentTime=0; a.volume=.9;
+    a.muted=true;a.currentTime=0;
+    await a.play();a.pause();a.currentTime=0;a.muted=false;a.volume=.88;
     trollEnabled=true;
     localStorage.setItem('mpxTrollConsent','yes');
     $('trollConsent').classList.add('hidden');
-    toast('Troll sounds enabled 🔊');
+    toast('CHAOS audio armed 🔊');
   }catch(e){
-    toast('Browser blocked audio. Tap Enable sounds again.');
+    // Even if the mp3 is missing, synthesized fallback still works.
+    await unlockChaosAudio();
+    trollEnabled=true;
+    localStorage.setItem('mpxTrollConsent','yes');
+    $('trollConsent').classList.add('hidden');
+    toast('CHAOS audio armed 🔊');
   }
 }
 function skipTrollSounds(){
@@ -406,9 +455,15 @@ function skipTrollSounds(){
 }
 function playRandomTroll(){
   if(!trollEnabled)return;
-  const a=trollAudios[Math.floor(Math.random()*trollAudios.length)];
-  try{a.currentTime=0;a.volume=.9;const p=a.play();if(p?.catch)p.catch(()=>{});}catch{}
+  if(!audioUnlocked){unlockChaosAudio().then(()=>playRandomTroll());return}
+  const a=trollAudios[(Math.random()*trollAudios.length)|0];
+  try{
+    a.currentTime=0;
+    const p=a.play();
+    if(p?.catch)p.catch(()=>chaosFallback());
+  }catch{chaosFallback()}
 }
+
 async function enterFullscreen(){
   const target=document.documentElement;
   try{
@@ -496,16 +551,26 @@ function treatRendererBackdrop(r){r.domElement.style.filter='saturate(1.08) cont
 async function setup3D(){
 if(scene)return;
 const el=$('scene');
-scene=new THREE.Scene();scene.background=new THREE.Color(0x030302);scene.fog=new THREE.FogExp2(0x050403,.055);
+scene=new THREE.Scene();scene.background=new THREE.Color(0x030302);
 camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.set(2.8,2.8,3.4);
-renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;treatRendererBackdrop(renderer);renderer.domElement.style.touchAction='none';el.appendChild(renderer.domElement);
-const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.minDistance=2;controls.maxDistance=7;controls.target.set(0,0,0);
+const LOW_END=(
+  (navigator.hardwareConcurrency||4)<=4 ||
+  (navigator.deviceMemory&&navigator.deviceMemory<=4) ||
+  innerWidth<700
+);
+renderer=new THREE.WebGLRenderer({antialias:!LOW_END,powerPreference:'high-performance',alpha:false});
+renderer.setPixelRatio(LOW_END?1:Math.min(devicePixelRatio,1.5));
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.shadowMap.enabled=!LOW_END;
+if(!LOW_END)renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+treatRendererBackdrop(renderer);renderer.domElement.style.touchAction='none';el.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=!LOW_END;controls.enablePan=false;controls.rotateSpeed=LOW_END?.7:.95;controls.minDistance=2;controls.maxDistance=7;controls.target.set(0,0,0);
 const hemi=new THREE.HemisphereLight(0xffedc2,0x1a140d,2.2);scene.add(hemi);
-const keyLight=new THREE.DirectionalLight(0xffe0a0,3.5);keyLight.position.set(3,5,4);keyLight.castShadow=true;scene.add(keyLight);
+const keyLight=new THREE.DirectionalLight(0xffe0a0,3.0);keyLight.position.set(3,5,4);if(!LOW_END)keyLight.castShadow=true;scene.add(keyLight);
 const fill=new THREE.DirectionalLight(0x9ab8ff,1.15);fill.position.set(-3,2,-2);scene.add(fill);
 const rim=new THREE.PointLight(0xffc55c,1.25,6,2);rim.position.set(-1.5,1.9,1.4);scene.add(rim);
 const moon=new THREE.PointLight(0x9fc2ff,.8,7,2);moon.position.set(2.5,2.6,-2.5);scene.add(moon);
-const floor=new THREE.Mesh(new THREE.CircleGeometry(4,64),new THREE.MeshStandardMaterial({color:0x090806,roughness:.8,metalness:.1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.09;scene.add(floor);
+const floor=new THREE.Mesh(new THREE.CircleGeometry(4,LOW_END?24:48),new THREE.MeshStandardMaterial({color:0x090806,roughness:.8,metalness:.1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.09;scene.add(floor);
 try{
  const mtl=await new MTLLoader().setPath('./models/').loadAsync('ChessBoard.mtl');mtl.preload();
  const obj=await new OBJLoader().setMaterials(mtl).setPath('./models/').loadAsync('ChessBoard.obj');modelRoot=obj;
@@ -517,7 +582,8 @@ try{
 }catch(e){console.error('MPOXEL 3D model error:',e);$('hint').textContent='3D model load failed. Open DevTools for the exact model error.';throw e}
 const resize=()=>{const w=Math.max(1,el.clientWidth),h=Math.max(1,el.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)};
 new ResizeObserver(resize).observe(el);resize();
-const loop=(t)=>{controls.update();rim.intensity=1.05+Math.sin(t*.0014)*.22;moon.intensity=.72+Math.cos(t*.0009)*.12;renderer.render(scene,camera);requestAnimationFrame(loop)};loop();
+let lastFrame=0;const frameGap=LOW_END?33:16;
+const loop=(t)=>{if(t-lastFrame>=frameGap){lastFrame=t;controls.update();if(!LOW_END){rim.intensity=1.05+Math.sin(t*.0014)*.18;moon.intensity=.72+Math.cos(t*.0009)*.10}renderer.render(scene,camera)}requestAnimationFrame(loop)};requestAnimationFrame(loop);
 }
 function sourceFor(type,color,index){
  const candidates=Object.keys(pieceSources).filter(n=>n.toLowerCase().includes(type));
@@ -607,11 +673,17 @@ function attemptMove(from,to,promotion){
 
 function showMatchResult(r){
   const result=r.result||{},youWin=result.winner=== (mySide==='white'?'White':'Black');
-  $('matchTitle').textContent=result.type==='draw'?'Draw game':(youWin?'You won':'Match over');
-  $('matchSummary').textContent=result.type==='draw'?'The match ended in a draw.':(youWin?'You won the match.':'You lost the match.');
-  $('guestUpgrade').classList.toggle('hidden',!currentUser.isAnonymous);$('upgradeGuest').classList.toggle('hidden',!currentUser.isAnonymous);
-  $('closeMatch').textContent=currentUser.isAnonymous?'Continue as guest':'Back to lobby';$('matchModal').classList.remove('hidden');
+  $('matchTitle').textContent=result.type==='draw'?'MATCH DRAWN':(youWin?'VICTORY':'MATCH COMPLETE');
+  $('matchSummary').textContent=result.type==='draw'
+    ? 'The board is settled. Your result has been recorded.'
+    : (youWin?'You won this match. Your result has been recorded.':'This match is over. Your result has been recorded.');
+  const guest=!!currentUser.isAnonymous;
+  $('guestUpgrade').classList.toggle('hidden',!guest);
+  $('upgradeGuest').classList.toggle('hidden',!guest);
+  $('closeMatch').textContent=guest?'Play next match as guest':'Back to lobby';
+  $('matchModal').classList.remove('hidden');
   recordStatsForResult(r).catch(e=>console.error('Stats update failed:',e));
+  if(guest)toast('Guest match complete — sign in to keep your profile across devices.');
 }
 async function upgradeGuestAccount(){
   err('upgradeErr','');const email=$('upgradeEmail').value.trim(),pass=$('upgradePassword').value;
@@ -627,7 +699,7 @@ function rendererClick(group){const canvas=renderer.domElement;let downX=0,downY
  else{const piece=chess.get(sq);if(piece&&((piece.color==='w')===(mySide==='white'))&&chess.turn()===piece.color){selectedSquare=sq;selectedMoves=chess.moves({square:sq,verbose:true});showMoveHints();return}selectedSquare=null;selectedMoves=[];clearMoveHints();}
  });}
 window.__mpxPicking=true;
-onAuthStateChanged(auth,async u=>{currentUser=u;setTimeout(()=>$('loader').classList.add('hidden'),650);if(!u){$('header').classList.add('hidden');show('auth');return}$('header').classList.remove('hidden');await loadProfile();show('lobby');loadRooms();watchLeaderboard()});
+onAuthStateChanged(auth,async u=>{currentUser=u;$('loader').classList.add('hidden');if(!u){$('header').classList.add('hidden');show('auth');return}$('header').classList.remove('hidden');await loadProfile();show('lobby');loadRooms();watchLeaderboard()});
 $('enableTroll').onclick=enableTrollSounds;
 $('skipTroll').onclick=skipTrollSounds;
 $('fullscreenBtn').onclick=enterFullscreen;
@@ -638,85 +710,29 @@ $('guestBtn').onclick=enterAsGuest;
 $('drawBtn').onclick=offerDraw;$('resignBtn').onclick=()=>finishByAction('resign');
 $('acceptDraw').onclick=async()=>{$('drawOfferModal').classList.add('hidden');await finishByAction('draw')};
 $('declineDraw').onclick=async()=>{$('drawOfferModal').classList.add('hidden');if(roomId)await update(ref(db,'rooms/'+roomId+'/drawOffer'),null)};
-$('closeMatch').onclick=()=>{$('matchModal').classList.add('hidden');leaveUI()};
-$('upgradeGuest').onclick=()=>{$('guestUpgrade').classList.remove('hidden');$('upgradeGuest').classList.add('hidden')};
+$('closeMatch').onclick=()=>{$('matchModal').classList.add('hidden');$('upgradeGuest').classList.remove('hidden');$('guestUpgrade').classList.add('hidden');$('upgradeForm').reset();leaveUI()};
+$('upgradeGuest').onclick=()=>{$('guestUpgrade').classList.remove('hidden');$('upgradeGuest').classList.add('hidden');$('upgradeEmail').focus()};
 $('upgradeForm').onsubmit=async e=>{e.preventDefault();await upgradeGuestAccount()};
+
+/* Any deliberate game interaction unlocks WebAudio on mobile/desktop. */
+window.addEventListener('pointerdown',()=>{unlockChaosAudio()},{once:false,passive:true});
+window.addEventListener('keydown',()=>{unlockChaosAudio()},{once:false,passive:true});
+
 showTrollConsent();
 
 
-/* ================================================================
-   HEAVEN FX — lightweight procedural ambience
-   ================================================================ */
-const heavenCanvas=$('heavenFX'), heavenCtx=heavenCanvas?.getContext('2d');
-let heavenW=0,heavenH=0,heavenStars=[],heavenDust=[],heavenRunning=true;
 
-function resizeHeaven(){
-  if(!heavenCanvas||!heavenCtx)return;
-  heavenW=heavenCanvas.width=Math.max(1,innerWidth*devicePixelRatio);
-  heavenH=heavenCanvas.height=Math.max(1,innerHeight*devicePixelRatio);
-  heavenCanvas.style.width=innerWidth+'px';heavenCanvas.style.height=innerHeight+'px';
-  heavenCtx.setTransform(1,0,0,1,0,0);
-  heavenStars=Array.from({length:Math.min(170,Math.floor(innerWidth/7))},()=>({
-    x:Math.random()*heavenW,y:Math.random()*heavenH,r:Math.random()*1.5+.2,
-    a:Math.random()*.55+.08,s:Math.random()*.25+.04,phase:Math.random()*Math.PI*2
-  }));
-  heavenDust=Array.from({length:45},()=>({x:Math.random()*heavenW,y:Math.random()*heavenH,r:Math.random()*2+.4,dx:(Math.random()-.5)*.16,dy:(Math.random()-.5)*.16,a:Math.random()*.12+.03}));
-}
-function drawHeaven(t){
-  if(!heavenRunning||!heavenCtx)return;
-  const w=heavenW,h=heavenH;heavenCtx.clearRect(0,0,w,h);
-  const gx=w*(0.5+Math.sin(t*.00013)*.10),gy=h*.25;
-  const g=heavenCtx.createRadialGradient(gx,gy,0,gx,gy,w*.55);
-  g.addColorStop(0,'rgba(255,214,132,.055)');g.addColorStop(.35,'rgba(160,115,47,.025)');g.addColorStop(1,'rgba(0,0,0,0)');
-  heavenCtx.fillStyle=g;heavenCtx.fillRect(0,0,w,h);
-  for(const s of heavenStars){const a=s.a*(.65+.35*Math.sin(s.phase+t*s.s));heavenCtx.fillStyle=`rgba(255,236,190,${a})`;heavenCtx.beginPath();heavenCtx.arc(s.x,s.y,s.r*devicePixelRatio,0,Math.PI*2);heavenCtx.fill()}
-  for(const d of heavenDust){d.x+=d.dx;d.y+=d.dy;if(d.x<0)d.x=w;if(d.x>w)d.x=0;if(d.y<0)d.y=h;if(d.y>h)d.y=0;heavenCtx.fillStyle=`rgba(226,192,121,${d.a})`;heavenCtx.beginPath();heavenCtx.arc(d.x,d.y,d.r*devicePixelRatio,0,Math.PI*2);heavenCtx.fill()}
-  requestAnimationFrame(drawHeaven);
-}
-resizeHeaven();requestAnimationFrame(drawHeaven);
-addEventListener('resize',resizeHeaven,{passive:true});
-
-/* Cursor "light" follows pointer with smoothing. */
-let orbX=-100,orbY=-100,targetX=-100,targetY=-100;
+/* FAST POINTER FX — one CSS update, no second render loop. */
 addEventListener('pointermove',e=>{
-  targetX=e.clientX;targetY=e.clientY;
-  document.documentElement.style.setProperty('--cursor-x',e.clientX+'px');
-  document.documentElement.style.setProperty('--cursor-y',e.clientY+'px');
-  const el=e.target?.closest?.('button,input,a,.server,.player,.lbRow,.card');
-  document.body.classList.toggle('cursor-hot',!!el);
+  document.documentElement.style.setProperty('--mx',e.clientX+'px');
+  document.documentElement.style.setProperty('--my',e.clientY+'px');
 },{passive:true});
-function animateCursor(){
-  orbX+=(targetX-orbX)*.18;orbY+=(targetY-orbY)*.18;
-  const orb=$('cursorOrb');if(orb)orb.style.transform=`translate3d(${orbX-10}px,${orbY-10}px,0)`;
-  requestAnimationFrame(animateCursor);
-}
-requestAnimationFrame(animateCursor);
-
-function burst(x,y,count=10){
-  const layer=$('clickBurstLayer');if(!layer)return;
-  for(let i=0;i<count;i++){
-    const s=document.createElement('i');s.className='clickSpark';
-    s.style.left=x+'px';s.style.top=y+'px';
-    const a=Math.random()*Math.PI*2,d=25+Math.random()*55;
-    s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');
-    layer.appendChild(s);setTimeout(()=>s.remove(),760);
-  }
-}
-addEventListener('pointerdown',e=>{burst(e.clientX,e.clientY,matchMedia('(pointer:fine)').matches?9:5)},{passive:true});
-
-/* Buttons get a subtle magnetic lift. */
-document.addEventListener('pointermove',e=>{
-  const b=e.target?.closest?.('.btn');if(!b)return;
-  const r=b.getBoundingClientRect(),dx=(e.clientX-(r.left+r.width/2))/r.width,dy=(e.clientY-(r.top+r.height/2))/r.height;
-  b.style.transform=`translate(${dx*3}px,${dy*3}px)`;
-},{passive:true});
-document.addEventListener('pointerleave',()=>document.querySelectorAll('.btn').forEach(b=>b.style.transform=''),true);
-document.addEventListener('pointerup',()=>document.querySelectorAll('.btn').forEach(b=>b.style.transform=''),{passive:true});
-
-/* Add ripple rings to buttons without changing behavior. */
-document.addEventListener('click',e=>{
-  const b=e.target?.closest?.('.btn');if(!b)return;
-  b.animate([{boxShadow:'0 0 0 0 rgba(255,224,151,.28)'},{boxShadow:'0 0 0 13px rgba(255,224,151,0)'}],{duration:450,easing:'ease-out'});
+document.addEventListener('pointerdown',e=>{
+  const b=e.target?.closest?.('.btn');
+  if(b)b.animate(
+    [{boxShadow:'0 0 0 0 rgba(255,224,151,.25)'},{boxShadow:'0 0 0 9px rgba(255,224,151,0)'}],
+    {duration:280,easing:'ease-out'}
+  );
 },{passive:true});
 
 
