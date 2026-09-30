@@ -7,143 +7,227 @@
 <title>Dhanvin Online — Sacred Essentials</title>
 <meta name="description" content="Havan Samagri and traditional Puja essentials online at Dhanvin Online.">
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
 
 :root{
-  --night:#17110d; --brown:#352218; --paper:#f3e6d1; --sand:#d8bf9b;
-  --saffron:#d66a20; --orange:#ef8c38; --ink:#2b1b11; --muted:#735d49;
-  --line:rgba(53,34,24,.14); --radius:28px;
+  --ink:#21150e; --ink2:#392318; --paper:#f5e8d3; --paper2:#ead5b5;
+  --cream:#fff4df; --saffron:#d85f18; --ember:#f18b35; --muted:#79624e;
+  --line:rgba(57,35,24,.14); --white10:rgba(255,255,255,.10);
+  --ease:cubic-bezier(.2,.8,.2,1); --max:1240px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans","Nirmala UI",sans-serif;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-img{display:block;max-width:100%}
-button{font:inherit}
-::selection{background:var(--saffron);color:#fff}
-
-.nav{
-  position:fixed;z-index:100;top:18px;left:50%;translate:-50% 0;
-  width:min(1180px,calc(100% - 32px));height:62px;padding:0 10px 0 22px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  color:#fff;background:rgba(24,16,11,.42);border:1px solid rgba(255,255,255,.2);
-  border-radius:999px;backdrop-filter:blur(18px) saturate(140%);
-  box-shadow:0 16px 50px rgba(0,0,0,.18);
+html{scroll-behavior:smooth;background:var(--ink)}
+body{
+  margin:0; color:var(--ink); background:var(--paper);
+  font-family:"DM Sans","Nirmala UI",sans-serif;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
 }
-.logo{font-weight:700;letter-spacing:.16em;font-size:.9rem}
-.navlinks{display:flex;gap:4px;align-items:center}
-.navlinks a{padding:11px 15px;border-radius:999px;font-size:.82rem;color:#f7ead8}
-.navlinks a:hover{background:rgba(255,255,255,.12)}
-.navcta{background:var(--paper)!important;color:var(--ink)!important;font-weight:700!important}
-.menu{display:none;border:0;background:transparent;color:#fff;width:44px;height:44px}
+body::-webkit-scrollbar{width:8px}
+body::-webkit-scrollbar-track{background:var(--ink)}
+body::-webkit-scrollbar-thumb{background:#775039;border-radius:99px}
+a{color:inherit;text-decoration:none} img{display:block;max-width:100%}
+button{font:inherit} ::selection{background:var(--saffron);color:#fff}
 
+/* NAV */
+.nav{
+  position:fixed; z-index:100; top:18px; left:50%; translate:-50% 0;
+  width:min(var(--max),calc(100% - 34px)); height:64px; padding:0 8px 0 22px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  color:#fff; border:1px solid rgba(255,255,255,.18); border-radius:999px;
+  background:rgba(27,17,11,.40); backdrop-filter:blur(20px) saturate(150%);
+  box-shadow:0 18px 55px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.08);
+  transition:.45s var(--ease);
+}
+.nav.scrolled{background:rgba(31,19,12,.82);box-shadow:0 20px 65px rgba(0,0,0,.28);top:10px}
+.logo{font-size:.82rem;font-weight:700;letter-spacing:.19em;white-space:nowrap}
+.navlinks{display:flex;align-items:center;gap:3px}
+.navlinks a{font-size:.78rem;color:#f8ead6;padding:11px 14px;border-radius:999px;transition:.25s}
+.navlinks a:hover{background:rgba(255,255,255,.10)}
+.navcta{background:var(--cream)!important;color:var(--ink)!important;font-weight:700!important}
+.menu{
+  display:none;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);
+  color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;
+}
+
+/* HERO */
 .hero{
-  min-height:100svh;position:relative;isolation:isolate;overflow:hidden;color:#fff;
-  display:flex;align-items:flex-end;padding:120px 6vw 7vh;
-  background:#21170f;
+  min-height:100svh; position:relative; isolation:isolate; overflow:hidden;
+  display:flex; align-items:flex-end; padding:135px 6vw 7vh; color:#fff;
 }
 .hero::before{
-  content:"";position:absolute;inset:0;z-index:-3;
+  content:"";position:absolute;inset:-2%;z-index:-4;
   background:
-    linear-gradient(90deg,rgba(17,10,6,.88) 0%,rgba(17,10,6,.52) 35%,rgba(17,10,6,.05) 70%),
-    linear-gradient(0deg,rgba(17,10,6,.82),transparent 55%),
+    linear-gradient(90deg,rgba(13,8,5,.92) 0%,rgba(13,8,5,.58) 33%,rgba(13,8,5,.05) 72%),
+    linear-gradient(0deg,rgba(13,8,5,.92) 0%,rgba(13,8,5,.10) 57%),
     url("https://images.pexels.com/photos/34063835/pexels-photo-34063835.jpeg?cs=srgb&dl=pexels-indu-bikash-sarker-116278202-34063835.jpg&fm=jpg") center/cover;
-  transform:scale(1.04);
-  animation:heroZoom 14s ease-out both;
+  transform:scale(1.08); animation:heroIn 2.2s var(--ease) both;
 }
 .hero::after{
-  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
-  background:radial-gradient(circle at 74% 28%,rgba(239,140,56,.30),transparent 28%);
-  mix-blend-mode:screen;
+  content:"";position:absolute;inset:0;z-index:-3;
+  background:
+    radial-gradient(circle at 72% 24%,rgba(241,139,53,.32),transparent 23%),
+    radial-gradient(circle at 50% 90%,rgba(216,95,24,.18),transparent 38%);
+  pointer-events:none;
 }
-@keyframes heroZoom{from{transform:scale(1.12)}to{transform:scale(1.04)}}
-
-.hero-grid{width:min(1250px,100%);margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:7vw;align-items:end}
-.kicker{display:flex;align-items:center;gap:12px;text-transform:uppercase;letter-spacing:.22em;font-size:.68rem;color:#f0c89c;margin:0 0 20px}
-.kicker::before{content:"";width:42px;height:1px;background:var(--orange)}
-h1{font-family:"Playfair Display",serif;font-size:clamp(3.6rem,8.5vw,8.5rem);line-height:.88;letter-spacing:-.055em;margin:0;max-width:850px}
-.hero-copy p{max-width:610px;color:#ead9c2;font-size:1rem;line-height:1.7;margin:28px 0 0}
-.hero-actions{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
-.btn{height:52px;padding:0 22px;border-radius:999px;border:1px solid rgba(255,255,255,.25);display:inline-flex;align-items:center;gap:12px;font-size:.82rem;font-weight:700}
-.btn.primary{background:var(--paper);color:var(--ink);border-color:var(--paper)}
-.btn.ghost{color:#fff;background:rgba(255,255,255,.07);backdrop-filter:blur(10px)}
+@keyframes heroIn{from{transform:scale(1.17)}to{transform:scale(1.08)}}
+.hero-grid{width:min(var(--max),100%);margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:7vw;align-items:end}
+.hero-copy{max-width:850px}
+.kicker{display:flex;align-items:center;gap:12px;text-transform:uppercase;letter-spacing:.24em;font-size:.62rem;color:#f4c998;margin:0 0 19px}
+.kicker::before{content:"";width:46px;height:1px;background:var(--ember);box-shadow:0 0 12px var(--ember)}
+h1{
+  font-family:"Playfair Display",serif;font-size:clamp(3.7rem,9vw,9rem);
+  line-height:.84;letter-spacing:-.06em;margin:0;max-width:900px;
+  text-wrap:balance;
+}
+.hero-copy>p:not(.kicker){max-width:580px;color:#ead9c3;font-size:1rem;line-height:1.75;margin:30px 0 0}
+.hero-actions{display:flex;gap:11px;margin-top:28px;flex-wrap:wrap}
+.btn{
+  min-height:52px;padding:0 21px;border-radius:999px;border:1px solid rgba(255,255,255,.24);
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:.76rem;font-weight:700;
+  letter-spacing:.02em;transition:transform .3s var(--ease),background .3s,border-color .3s;
+}
+.btn:hover{transform:translateY(-3px)}
+.btn.primary{background:var(--cream);color:var(--ink);border-color:var(--cream);box-shadow:0 10px 35px rgba(0,0,0,.15)}
+.btn.ghost{color:#fff;background:rgba(255,255,255,.06);backdrop-filter:blur(10px)}
 .hero-note{
-  padding:24px;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius);
-  background:rgba(20,12,8,.38);backdrop-filter:blur(14px);
+  padding:24px;border:1px solid rgba(255,255,255,.18);border-radius:30px;
+  background:linear-gradient(145deg,rgba(20,12,8,.52),rgba(20,12,8,.20));
+  backdrop-filter:blur(18px);box-shadow:0 25px 70px rgba(0,0,0,.20);
+  transform:translateY(0);transition:.5s var(--ease);
 }
-.hero-note .om{font-size:3rem;color:#f2bd83;line-height:1}
-.hero-note strong{display:block;margin-top:15px;font-size:1rem}
-.hero-note span{display:block;margin-top:7px;color:#d7c2aa;font-size:.78rem;line-height:1.55}
+.hero-note:hover{transform:translateY(-8px) rotate(.5deg)}
+.hero-note .om{font:500 3.2rem/1 "Playfair Display",serif;color:#f5bd80;text-shadow:0 0 35px rgba(241,139,53,.35)}
+.hero-note strong{display:block;margin-top:15px;font-size:.9rem}
+.hero-note span{display:block;margin-top:8px;color:#d8c4aa;font-size:.74rem;line-height:1.65}
 
-.mantra{
-  background:var(--brown);color:var(--paper);padding:clamp(70px,10vw,130px) 6vw;
-  position:relative;overflow:hidden;
+/* floating particles */
+.hero-particles{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.hero-particles i{position:absolute;width:3px;height:3px;border-radius:50%;background:#f4c28e;opacity:.0;box-shadow:0 0 12px #ef8c38;animation:floatDust 8s linear infinite}
+.hero-particles i:nth-child(1){left:13%;top:72%;animation-delay:.3s}.hero-particles i:nth-child(2){left:24%;top:62%;animation-delay:2s}
+.hero-particles i:nth-child(3){left:39%;top:78%;animation-delay:4s}.hero-particles i:nth-child(4){left:57%;top:67%;animation-delay:1s}
+.hero-particles i:nth-child(5){left:74%;top:53%;animation-delay:3s}.hero-particles i:nth-child(6){left:86%;top:74%;animation-delay:5s}
+@keyframes floatDust{0%{opacity:0;transform:translate3d(0,30px,0) scale(.6)}20%{opacity:.8}100%{opacity:0;transform:translate3d(20px,-150px,0) scale(1.4)}}
+
+/* MARQUEE */
+.ticker{overflow:hidden;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);background:#1b110c;color:#d8b28a}
+.ticker-track{display:flex;width:max-content;animation:ticker 28s linear infinite}
+.ticker span{padding:14px 24px;text-transform:uppercase;letter-spacing:.20em;font-size:.57rem;white-space:nowrap}
+.ticker b{color:var(--ember);font-weight:500}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+/* MANTRA */
+.mantra{position:relative;overflow:hidden;background:var(--ink);color:var(--paper);padding:clamp(80px,11vw,145px) 6vw}
+.mantra::before{
+  content:"ॐ";position:absolute;right:-6vw;top:-.12em;
+  font:500 clamp(18rem,43vw,44rem)/1 "Playfair Display",serif;color:rgba(255,255,255,.025);
+  transform:rotate(-8deg);pointer-events:none;
 }
-.mantra::before{content:"ॐ";position:absolute;font-size:clamp(18rem,42vw,42rem);line-height:1;right:-5vw;top:-.1em;color:rgba(255,255,255,.025);font-family:serif}
-.mantra-inner{width:min(1050px,100%);margin:auto;position:relative}
-.label{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:#cda77f}
-.mantra h2{font-family:"Playfair Display",serif;font-size:clamp(2.4rem,5vw,5rem);line-height:.98;margin:15px 0 30px;max-width:850px}
-.mantra-line{font-size:clamp(1.1rem,2.2vw,1.65rem);line-height:1.8;color:#ead8bf;max-width:920px}
-.mantra-orbit{display:flex;gap:10px;flex-wrap:wrap;margin-top:35px}
-.mantra-orbit button{cursor:pointer;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#e8d4bc;border-radius:999px;padding:10px 14px}
-.mantra-orbit button.active{background:var(--paper);color:var(--ink)}
+.mantra::after{content:"";position:absolute;width:450px;height:450px;left:-220px;top:20%;border-radius:50%;background:rgba(216,95,24,.12);filter:blur(80px)}
+.mantra-inner{width:min(1040px,100%);margin:auto;position:relative}
+.label{font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:#d3a77b}
+.mantra h2{font-family:"Playfair Display",serif;font-size:clamp(2.5rem,5.4vw,5.5rem);line-height:.95;letter-spacing:-.045em;margin:14px 0 30px;max-width:850px}
+.mantra-line{font-size:clamp(1.05rem,2.1vw,1.58rem);line-height:1.9;color:#ead7be;max-width:920px}
+.mantra-orbit{display:flex;gap:8px;flex-wrap:wrap;margin-top:36px}
+.mantra-orbit button{cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.045);color:#d9c5aa;border-radius:999px;padding:10px 14px;font-size:.7rem;transition:.3s var(--ease)}
+.mantra-orbit button:hover{transform:translateY(-2px)}
+.mantra-orbit button.active{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 
-.products{padding:100px 0 110px;background:var(--paper);overflow:hidden}
-.section-head{width:min(1180px,calc(100% - 40px));margin:0 auto 45px;display:flex;justify-content:space-between;align-items:end;gap:30px}
-.section-head h2{font-family:"Playfair Display",serif;font-size:clamp(2.5rem,5vw,5rem);line-height:.95;margin:10px 0 0}
-.section-head p{max-width:430px;color:var(--muted);line-height:1.6;margin:0}
-.product-rail{display:flex;gap:18px;width:max-content;padding:10px max(20px,calc((100vw - 1180px)/2));animation:rail 35s linear infinite}
+/* PRODUCTS */
+.products{padding:clamp(80px,10vw,125px) 0 110px;background:var(--paper);overflow:hidden}
+.section-head{width:min(var(--max),calc(100% - 40px));margin:0 auto 48px;display:flex;justify-content:space-between;align-items:end;gap:35px}
+.section-head h2{font-family:"Playfair Display",serif;font-size:clamp(2.7rem,5.6vw,5.8rem);line-height:.9;letter-spacing:-.045em;margin:10px 0 0}
+.section-head p{max-width:450px;color:var(--muted);line-height:1.7;font-size:.9rem;margin:0}
+.product-rail{display:flex;gap:17px;width:max-content;padding:10px max(20px,calc((100vw - var(--max))/2));animation:rail 38s linear infinite}
 .product-rail:hover{animation-play-state:paused}
 @keyframes rail{to{transform:translateX(-50%)}}
 .product{
-  width:285px;height:390px;flex:0 0 auto;position:relative;overflow:hidden;
-  border:1px solid var(--line);border-radius:34px;background:#e5d2b7;
-  box-shadow:0 18px 50px rgba(53,34,24,.10);transition:.45s transform,.45s box-shadow;
+  width:290px;height:405px;flex:0 0 auto;position:relative;overflow:hidden;
+  border:1px solid var(--line);border-radius:35px;background:#dfc7a5;
+  box-shadow:0 18px 55px rgba(53,34,24,.10);transition:.55s var(--ease);
 }
-.product:nth-child(2n){margin-top:42px}
-.product:hover{transform:translateY(-12px) rotate(-1deg);box-shadow:0 30px 70px rgba(53,34,24,.18)}
-.product img{width:100%;height:100%;object-fit:contain;padding:20px;background:linear-gradient(145deg,#f4e7d3,#d7bd98)}
-.product::after{content:"";position:absolute;inset:auto 0 0;height:42%;background:linear-gradient(transparent,rgba(35,20,11,.62));pointer-events:none}
-.product-info{position:absolute;z-index:2;left:22px;right:22px;bottom:20px;color:#fff}
-.product-info small{text-transform:uppercase;letter-spacing:.15em;font-size:.6rem;opacity:.8}
+.product:nth-child(2n){margin-top:46px}.product:nth-child(3n){transform:rotate(1deg)}
+.product:hover{transform:translateY(-15px) rotate(-1deg)!important;box-shadow:0 32px 80px rgba(53,34,24,.19)}
+.product img{width:100%;height:100%;object-fit:contain;padding:18px;background:linear-gradient(145deg,#f7ead6,#d4b78d);transition:transform .7s var(--ease)}
+.product:hover img{transform:scale(1.055)}
+.product::before{
+  content:"";position:absolute;z-index:1;inset:10px;border:1px solid rgba(255,255,255,.32);
+  border-radius:27px;pointer-events:none;opacity:.5;
+}
+.product::after{content:"";position:absolute;z-index:1;inset:auto 0 0;height:48%;background:linear-gradient(transparent,rgba(35,20,11,.72));pointer-events:none}
+.product-info{position:absolute;z-index:3;left:22px;right:22px;bottom:21px;color:#fff}
+.product-info small{text-transform:uppercase;letter-spacing:.17em;font-size:.56rem;color:#f4c89c}
 .product-info h3{font-family:"Playfair Display",serif;font-size:1.55rem;margin:5px 0 0}
+.product-number{position:absolute;z-index:3;top:20px;right:20px;width:35px;height:35px;border:1px solid rgba(255,255,255,.35);border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.62rem;background:rgba(20,12,8,.16);backdrop-filter:blur(5px)}
 
-.collection{padding:110px 6vw;background:#ead8be}
-.collection-grid{width:min(1180px,100%);margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
-.collection-card{border-radius:36px;min-height:500px;position:relative;overflow:hidden;padding:38px;display:flex;flex-direction:column;justify-content:end}
-.collection-card.dark{background:var(--night);color:var(--paper)}
-.collection-card.light{background:#f5ead9;color:var(--ink);border:1px solid var(--line)}
-.collection-card h3{font-family:"Playfair Display",serif;font-size:clamp(2.3rem,4vw,4.5rem);line-height:.95;margin:10px 0}
-.collection-card p{max-width:520px;line-height:1.65;color:#bda88e}
-.collection-card.light p{color:var(--muted)}
-.stamp{position:absolute;right:28px;top:28px;width:82px;height:82px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;text-align:center;font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;rotate:12deg}
+/* STORY */
+.story{padding:clamp(75px,10vw,125px) 6vw;background:#ead7b9}
+.story-grid{width:min(var(--max),100%);margin:auto;display:grid;grid-template-columns:1.08fr .92fr;gap:22px}
+.story-card{min-height:540px;border-radius:38px;position:relative;overflow:hidden;padding:40px;display:flex;flex-direction:column;justify-content:end}
+.story-card.dark{background:radial-gradient(circle at 75% 18%,rgba(241,139,53,.16),transparent 24%),#1b110c;color:var(--paper)}
+.story-card.light{background:#f6ead7;color:var(--ink);border:1px solid var(--line)}
+.story-card h3{font-family:"Playfair Display",serif;font-size:clamp(2.4rem,4.5vw,5rem);line-height:.91;letter-spacing:-.045em;margin:10px 0}
+.story-card p{max-width:530px;line-height:1.7;color:#c4ae94;font-size:.88rem}
+.story-card.light p{color:var(--muted)}
+.story-card .stamp{position:absolute;right:28px;top:28px;width:82px;height:82px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;text-align:center;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;rotate:12deg}
+.story-card.dark::before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-70px;bottom:-70px;background:rgba(216,95,24,.16);filter:blur(20px)}
 
-.buybar{padding:70px 20px;text-align:center;background:var(--brown);color:var(--paper)}
-.buybar h2{font-family:"Playfair Display",serif;font-size:clamp(2.5rem,6vw,6rem);margin:0 0 22px}
-.buybar p{color:#cdbba5;margin:0 0 28px}
-footer{padding:28px 20px;text-align:center;background:#f4e7d2;color:#806b55;font-size:.8rem}
+/* BUY */
+.buybar{padding:clamp(75px,10vw,125px) 20px;text-align:center;background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.buybar::before{content:"ॐ";position:absolute;font:500 25rem/1 "Playfair Display",serif;left:50%;top:50%;translate:-50% -50%;color:rgba(255,255,255,.018);pointer-events:none}
+.buybar>*{position:relative}
+.buybar h2{font-family:"Playfair Display",serif;font-size:clamp(2.7rem,6vw,6.4rem);line-height:.9;letter-spacing:-.05em;margin:0 0 23px}
+.buybar p{color:#cdbba5;margin:0 0 30px;font-size:.9rem}
+footer{padding:29px 20px;text-align:center;background:#f4e6d1;color:#806a54;font-size:.75rem}
 footer a{font-weight:700;color:var(--ink)}
 
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+/* REVEALS */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
 .reveal.visible{opacity:1;transform:none}
 
+/* mobile */
 @media(max-width:760px){
-  .nav{top:10px;width:calc(100% - 20px);height:56px;padding-left:16px}
-  .navlinks{display:none;position:absolute;top:64px;left:0;right:0;padding:8px;background:rgba(24,16,11,.94);border:1px solid rgba(255,255,255,.15);border-radius:22px;flex-direction:column}
-  .nav.open .navlinks{display:flex}.navlinks a{width:100%;text-align:center}
-  .menu{display:block}.hero{padding:105px 20px 32px;min-height:100svh}
-  .hero::before{background:linear-gradient(0deg,rgba(17,10,6,.94),rgba(17,10,6,.18) 75%),url("https://images.pexels.com/photos/34063835/pexels-photo-34063835.jpeg?cs=srgb&dl=pexels-indu-bikash-sarker-116278202-34063835.jpg&fm=jpg") center/cover}
-  .hero-grid{display:block}.hero-copy{padding-top:34vh}.hero-copy p{font-size:.9rem}
-  h1{font-size:clamp(3.3rem,17vw,5.8rem)}.hero-note{display:none}
-  .section-head{display:block}.section-head p{margin-top:18px}
-  .product{width:245px;height:330px;border-radius:27px}.product:nth-child(2n){margin-top:25px}
-  .collection{padding:70px 20px}.collection-grid{grid-template-columns:1fr}
-  .collection-card{min-height:420px;padding:28px;border-radius:28px}
-  .buybar{padding:65px 20px}
+  .nav{top:10px;width:calc(100% - 20px);height:56px;padding:0 7px 0 16px}
+  .nav.scrolled{top:7px}
+  .navlinks{
+    display:none;position:absolute;top:64px;left:0;right:0;padding:8px;
+    background:rgba(27,17,11,.96);border:1px solid rgba(255,255,255,.14);
+    border-radius:22px;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.28)
+  }
+  .nav.open .navlinks{display:flex}.navlinks a{width:100%;text-align:center;padding:13px}
+  .menu{display:block}
+  .hero{padding:100px 20px 28px;min-height:100svh;align-items:flex-end}
+  .hero::before{
+    background:
+      linear-gradient(0deg,rgba(13,8,5,.96) 0%,rgba(13,8,5,.20) 70%),
+      url("https://images.pexels.com/photos/34063835/pexels-photo-34063835.jpeg?cs=srgb&dl=pexels-indu-bikash-sarker-116278202-34063835.jpg&fm=jpg") 57% center/cover
+  }
+  .hero-grid{display:block}.hero-copy{padding-top:34vh}
+  h1{font-size:clamp(3.3rem,17vw,5.8rem);line-height:.86}
+  .hero-copy>p:not(.kicker){font-size:.88rem;line-height:1.65;margin-top:21px}
+  .hero-actions{margin-top:22px}.btn{min-height:49px;padding:0 17px;font-size:.69rem}
+  .hero-note{display:none}
+  .ticker span{padding:12px 18px;font-size:.51rem}
+  .mantra{padding:75px 20px}.mantra h2{font-size:clamp(2.55rem,13vw,4rem)}
+  .mantra-line{font-size:1rem;line-height:1.85}
+  .mantra-orbit{gap:7px}.mantra-orbit button{font-size:.64rem;padding:9px 11px}
+  .products{padding:75px 0 85px}.section-head{display:block;width:calc(100% - 40px);margin-bottom:34px}
+  .section-head h2{font-size:clamp(2.8rem,14vw,4.4rem)}.section-head p{margin-top:18px;font-size:.82rem}
+  .product-rail{gap:13px;padding:8px 20px;animation-duration:32s}
+  .product{width:235px;height:335px;border-radius:28px}.product:nth-child(2n){margin-top:24px}
+  .product-info{left:18px;right:18px;bottom:18px}.product-info h3{font-size:1.3rem}
+  .story{padding:75px 20px}.story-grid{grid-template-columns:1fr}.story-card{min-height:410px;border-radius:29px;padding:27px}
+  .story-card h3{font-size:clamp(2.6rem,13vw,4.3rem)}.story-card .stamp{right:20px;top:20px}
+  .buybar{padding:78px 20px}.buybar h2{font-size:clamp(3rem,15vw,5rem)}
+}
+@media(max-width:380px){
+  .logo{font-size:.72rem}.hero-copy{padding-top:30vh} h1{font-size:3.2rem}
+  .product{width:218px;height:315px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}
 }
+
 </style>
 </head>
 <body>
@@ -159,6 +243,7 @@ footer a{font-weight:700;color:var(--ink)}
 
 <main id="home">
 <section class="hero">
+  <div class="hero-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="hero-grid">
     <div class="hero-copy reveal">
       <p class="kicker">Havan • Puja • Parampara</p>
@@ -176,6 +261,15 @@ footer a{font-weight:700;color:var(--ink)}
     </aside>
   </div>
 </section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>हवन • पूजा • परम्परा <b>✦</b></span><span>Havan Samagri <b>✦</b></span>
+    <span>शान्ति • ध्यान • अग्नि <b>✦</b></span><span>Pure ritual essentials <b>✦</b></span>
+    <span>हवन • पूजा • परम्परा <b>✦</b></span><span>Havan Samagri <b>✦</b></span>
+    <span>शान्ति • ध्यान • अग्नि <b>✦</b></span><span>Pure ritual essentials <b>✦</b></span>
+  </div>
+</div>
 
 <section class="mantra" id="mantras">
   <div class="mantra-inner reveal">
@@ -198,26 +292,26 @@ footer a{font-weight:700;color:var(--ink)}
   </div>
 
   <div class="product-rail" aria-label="Product collection">
-    <article class="product"><img src="assets/dung.png" alt="गोबर के उपले"><div class="product-info"><small>01 / Havan</small><h3>गोबर के उपले</h3></div></article>
-    <article class="product"><img src="assets/kala-till.png" alt="काले तिल"><div class="product-info"><small>02 / Offering</small><h3>काले तिल</h3></div></article>
-    <article class="product"><img src="assets/ganga-jal.png" alt="गंगा जल"><div class="product-info"><small>03 / Purity</small><h3>गंगा जल</h3></div></article>
-    <article class="product"><img src="assets/mango-woods.png" alt="आम की लकड़ी"><div class="product-info"><small>04 / Fire</small><h3>आम की लकड़ी</h3></div></article>
-    <article class="product"><img src="assets/dung.png" alt="गोबर के उपले"><div class="product-info"><small>01 / Havan</small><h3>गोबर के उपले</h3></div></article>
-    <article class="product"><img src="assets/kala-till.png" alt="काले तिल"><div class="product-info"><small>02 / Offering</small><h3>काले तिल</h3></div></article>
-    <article class="product"><img src="assets/ganga-jal.png" alt="गंगा जल"><div class="product-info"><small>03 / Purity</small><h3>गंगा जल</h3></div></article>
-    <article class="product"><img src="assets/mango-woods.png" alt="आम की लकड़ी"><div class="product-info"><small>04 / Fire</small><h3>आम की लकड़ी</h3></div></article>
+    <article class="product"><div class="product-number">01</div><img src="assets/dung.png" alt="गोबर के उपले"><div class="product-info"><small>01 / Havan</small><h3>गोबर के उपले</h3></div></article>
+    <article class="product"><div class="product-number">02</div><img src="assets/kala-till.png" alt="काले तिल"><div class="product-info"><small>02 / Offering</small><h3>काले तिल</h3></div></article>
+    <article class="product"><div class="product-number">03</div><img src="assets/ganga-jal.png" alt="गंगा जल"><div class="product-info"><small>03 / Purity</small><h3>गंगा जल</h3></div></article>
+    <article class="product"><div class="product-number">04</div><img src="assets/mango-woods.png" alt="आम की लकड़ी"><div class="product-info"><small>04 / Fire</small><h3>आम की लकड़ी</h3></div></article>
+    <article class="product"><div class="product-number">05</div><img src="assets/dung.png" alt="गोबर के उपले"><div class="product-info"><small>01 / Havan</small><h3>गोबर के उपले</h3></div></article>
+    <article class="product"><div class="product-number">06</div><img src="assets/kala-till.png" alt="काले तिल"><div class="product-info"><small>02 / Offering</small><h3>काले तिल</h3></div></article>
+    <article class="product"><div class="product-number">07</div><img src="assets/ganga-jal.png" alt="गंगा जल"><div class="product-info"><small>03 / Purity</small><h3>गंगा जल</h3></div></article>
+    <article class="product"><div class="product-number">08</div><img src="assets/mango-woods.png" alt="आम की लकड़ी"><div class="product-info"><small>04 / Fire</small><h3>आम की लकड़ी</h3></div></article>
   </div>
 </section>
 
-<section class="collection" id="about">
-  <div class="collection-grid">
-    <article class="collection-card dark reveal">
+<section class="story" id="about">
+  <div class="story-grid">
+    <article class="story-card dark reveal">
       <div class="stamp">Sacred<br>edit</div>
       <div class="label">Dhanvin Online</div>
       <h3>Tradition,<br>without the clutter.</h3>
       <p>A new direction for the storefront: fewer boxes, stronger imagery, calmer motion and a product rail that feels more like a collection than a catalogue.</p>
     </article>
-    <article class="collection-card light reveal">
+    <article class="story-card light reveal">
       <div class="stamp">ॐ<br>शान्ति</div>
       <div class="label">Designed around ritual</div>
       <h3>From shelf<br>to sacred fire.</h3>
@@ -234,15 +328,20 @@ footer a{font-weight:700;color:var(--ink)}
 </main>
 
 <footer>Website by <a href="https://mpoxel.in">Mpoxel.in</a></footer>
-<audio id="omAudio" src="om.mp3" loop preload="auto"></audio>
+<audio id="omAudio" src="om.mp3" loop preload="none" aria-label="ॐ ambient sound"></audio>
 
 <script>
 const nav=document.getElementById('nav');
+const setNav=()=>nav.classList.toggle('scrolled',window.scrollY>45);
+setNav();
+window.addEventListener('scroll',setNav,{passive:true});
 document.getElementById('menu').addEventListener('click',()=>nav.classList.toggle('open'));
 document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
 
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const rail=document.querySelector('.product-rail');
+if(rail){ [...rail.children].forEach(card=>rail.appendChild(card.cloneNode(true))); }
 
 document.querySelectorAll('.mantra-orbit button').forEach(btn=>{
   btn.addEventListener('click',()=>{
