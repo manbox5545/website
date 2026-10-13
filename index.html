@@ -88,6 +88,23 @@ nav a::after{
 }
 nav a:hover{color:var(--gold)}
 nav a:hover::after{width:100%}
+nav a.nav-ad-link{
+  margin-left:22px;
+  padding:10px 14px;
+  border:1px solid rgba(255,213,74,.48);
+  border-radius:4px;
+  color:var(--gold);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1px;
+  transition:background .22s ease,color .22s ease,border-color .22s ease;
+}
+nav a.nav-ad-link::after{display:none}
+nav a.nav-ad-link:hover{
+  color:#111;
+  background:var(--gold);
+  border-color:var(--gold);
+}
 
 /* ---------- 3D stage ---------- */
 #scene{
@@ -190,6 +207,15 @@ section{width:100%;max-width:var(--max);margin:auto;padding:110px 25px;position:
 .service{text-align:center;padding:35px 25px}
 .service h3{margin:18px 0 12px;color:var(--gold);font-size:19px}
 .service p{color:#999;line-height:1.8;font-size:14px}
+.platform-link{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--gold);text-decoration:none;
+  transition:color .2s ease;
+}
+.platform-link span{font-size:.8em;transition:transform .2s ease}
+.platform-link:hover{color:#fff}
+.platform-link:hover span{transform:translate(3px,-3px)}
+.platform-link:focus-visible{outline:2px solid var(--gold);outline-offset:5px;border-radius:3px}
 
 .project{padding:0 0 30px}
 .project h3,.project p,.project a{margin-left:30px;margin-right:30px}
@@ -546,6 +572,13 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
     letter-spacing:.1px;
   }
   nav a::after{display:none}
+  nav a.nav-ad-link{
+    margin:0;
+    padding:8px 9px;
+    font-size:9px;
+    letter-spacing:.35px;
+    flex:0 0 auto;
+  }
   nav a:active{color:var(--gold);transform:scale(.96)}
 
   /* Cinematic intro */
@@ -1001,6 +1034,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
         <a href="#portfolio">
             Portfolio
         </a>
+        <a class="nav-ad-link" href="https://mpoxel.in/ads">ADVERTISE WITH US</a>
 
     </div>
 
@@ -1238,6 +1272,38 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
     </div>
 
+</section>
+
+
+<!-- =========================================================
+     EXPLORE MPOXEL
+     Crawlable internal links to Mpoxel's other services
+========================================================= -->
+<section id="explore-mpoxel" class="reveal">
+    <div class="section-kicker">MORE FROM MPOXEL</div>
+    <h2 class="title">Explore Our Platforms</h2>
+
+    <div class="services">
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/chess">Chess <span aria-hidden="true">↗</span></a></h3>
+            <p>Play chess and explore the Mpoxel chess platform.</p>
+        </article>
+
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/builds">PC Builds <span aria-hidden="true">↗</span></a></h3>
+            <p>Explore PC builds and get help choosing a computer setup.</p>
+        </article>
+
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/earn">Earn with Daily Tasks <span aria-hidden="true">↗</span></a></h3>
+            <p>Complete simple daily tasks on Mpoxel and work toward earning money by the end of the month. Earnings depend on the tasks and platform terms.</p>
+        </article>
+
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/foods">Mpoxel Foods <span aria-hidden="true">↗</span></a></h3>
+            <p>Discover food for sale through the Mpoxel Foods platform.</p>
+        </article>
+    </div>
 </section>
 
 
@@ -1556,37 +1622,42 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
       const group=new THREE.Group();
       scene.add(group);
-      group.position.set(2.9,.15,-1.5);
+      group.position.set(2.75,.12,-1.5);
 
-      const wireMat=new THREE.MeshStandardMaterial({
-        color:0xffd54a,metalness:.85,roughness:.2,
-        transparent:true,opacity:mobile?.19:.30,wireframe:true
+      const sphereGeometry=new THREE.SphereGeometry(1.48,mobile?28:48,mobile?20:36);
+      const solidMat=new THREE.MeshPhysicalMaterial({
+        color:0x9a741b,
+        metalness:.72,
+        roughness:.27,
+        clearcoat:.65,
+        clearcoatRoughness:.3,
+        transparent:true,
+        opacity:mobile?.34:.48
       });
-      const solidMat=new THREE.MeshStandardMaterial({
-        color:0xffd54a,metalness:.65,roughness:.3,
-        transparent:true,opacity:mobile?.055:.10
-      });
-      const geometry=new THREE.IcosahedronGeometry(1.55,mobile?1:2);
-      const wire=new THREE.Mesh(geometry,wireMat);
-      const solid=new THREE.Mesh(geometry,solidMat);
-      group.add(solid,wire);
+      const solid=new THREE.Mesh(sphereGeometry,solidMat);
+      group.add(solid);
 
-      /* Secondary inner form adds depth without expensive geometry. */
-      const inner=new THREE.Mesh(
-        new THREE.IcosahedronGeometry(.72,1),
-        new THREE.MeshBasicMaterial({color:0xffe27a,transparent:true,opacity:mobile?.035:.065,wireframe:true})
-      );
-      group.add(inner);
+      // Fine, clean wire cage follows the sphere surface instead of the jagged polygon shell.
+      const cageGeometry=new THREE.SphereGeometry(1.505,mobile?12:20,mobile?8:14);
+      const cage=new THREE.WireframeGeometry(cageGeometry);
+      const wire=new THREE.LineSegments(cage,new THREE.LineBasicMaterial({
+        color:0xffd54a,
+        transparent:true,
+        opacity:mobile?.16:.25
+      }));
+      group.add(wire);
 
+      // One thin orbital path gives the object depth without clutter.
       const orbit1=new THREE.Mesh(
-        new THREE.TorusGeometry(2.12,.012,8,mobile?48:72),
-        new THREE.MeshBasicMaterial({color:0xffd54a,transparent:true,opacity:mobile?.16:.28})
+        new THREE.TorusGeometry(1.92,.009,6,mobile?64:100),
+        new THREE.MeshBasicMaterial({
+          color:0xffd54a,
+          transparent:true,
+          opacity:mobile?.12:.22
+        })
       );
-      const orbit2=orbit1.clone();
-      orbit2.scale.set(1.0,.58,1.0);
-      orbit2.rotation.x=1.35;
-      orbit2.rotation.z=.55;
-      group.add(orbit1,orbit2);
+      orbit1.rotation.set(1.05,.18,-.35);
+      group.add(orbit1);
 
       scene.add(
         new THREE.AmbientLight(0xffffff,.65)
@@ -1633,9 +1704,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
         group.position.y += (.05-py*.65-scrollCurrent*.19-group.position.y)*.012*dt;
         group.position.z += (-1.5-scrollCurrent*.38-group.position.z)*.018*dt;
 
-        orbit1.rotation.z += .006*dt;
-        orbit2.rotation.z -= .004*dt;
-        inner.rotation.y -= .0035*dt;
+        orbit1.rotation.z += .0025*dt;
 
         renderer.render(scene,camera);
       };
