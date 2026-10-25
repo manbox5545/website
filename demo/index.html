@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="Explore four interactive website demos." />
+  <title>See the Demos — Studio</title>
+  <style>
+    :root{color-scheme:dark;--bg:#080d1a;--panel:#10182b;--text:#f4f7ff;--muted:#a5b0c8;--line:rgba(255,255,255,.11);--accent:#8b7cff;--cyan:#55d6ff}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 80% 0%,rgba(91,76,220,.2),transparent 34%),radial-gradient(ellipse at 0% 70%,rgba(39,173,205,.12),transparent 32%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1100px,calc(100% - 40px));margin:auto}
+    header{display:flex;align-items:center;justify-content:space-between;padding:24px 0;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.03em}.brand-mark{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--cyan));display:grid;place-items:center;color:#07101d;font-weight:900;box-shadow:0 6px 24px #7568ff40}
+    .status{display:inline-flex;align-items:center;gap:8px;color:#c8d3e8;font-size:.85rem}.dot{width:7px;height:7px;background:#55e6a5;border-radius:50%;box-shadow:0 0 12px #55e6a5}
+    main{padding:76px 0 68px}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#ffffff08;padding:8px 12px;border-radius:99px;color:#c7c5ff;font-size:.82rem;font-weight:700}
+    h1{font-size:clamp(2.7rem,7vw,5.6rem);line-height:.99;letter-spacing:-.075em;max-width:800px;margin:24px 0 18px}h1 span{background:linear-gradient(100deg,#fff 15%,#b7aaff 57%,#66dcff);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .intro{color:var(--muted);font-size:clamp(1rem,2vw,1.15rem);line-height:1.7;max-width:600px;margin:0}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin:48px 0 18px}.section-head h2{font-size:1.2rem;letter-spacing:-.03em;margin:0}.section-head p{margin:0;color:var(--muted);font-size:.9rem}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.demo{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:225px;padding:24px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#ffffff0b,#ffffff03);transition:transform .2s ease,border-color .2s ease,background .2s ease}
+    .demo:hover,.demo:focus-visible{transform:translateY(-4px);border-color:#9c90ff80;background:linear-gradient(145deg,#8b7cff18,#ffffff05);outline:none}.demo-top{display:flex;justify-content:space-between;align-items:center}.number{font-size:.78rem;color:#c0c8dd;letter-spacing:.1em;font-weight:800}.arrow{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;border:1px solid var(--line);font-size:1.15rem;transition:transform .2s}.demo:hover .arrow{transform:translate(2px,-2px)}
+    .mini-art{height:62px;display:flex;align-items:center;gap:7px;margin:14px 0 10px}.mini-art i{display:block;border-radius:8px;height:40px;width:12px;background:linear-gradient(180deg,var(--accent),#4f55b8)}.mini-art i:nth-child(2){height:55px;background:linear-gradient(180deg,var(--cyan),#4775b9)}.mini-art i:nth-child(3){height:30px}.mini-art i:nth-child(4){height:47px;background:linear-gradient(180deg,#ffb86c,#d56a9c)}.mini-art i:nth-child(5){height:22px}.mini-art .line{width:92px;height:8px;margin-left:8px;background:#ffffff20;border-radius:99px}.mini-art .line:after{content:"";display:block;width:60%;height:100%;border-radius:99px;background:#ffffff70}
+    .demo h3{font-size:1.35rem;letter-spacing:-.04em;margin:0 0 7px}.demo p{font-size:.93rem;color:var(--muted);line-height:1.55;margin:0;max-width:420px}.open-label{margin-top:auto;padding-top:20px;color:#c8c2ff;font-size:.86rem;font-weight:750}
+    footer{border-top:1px solid var(--line);padding:22px 0 30px;color:#7f8ba6;font-size:.82rem;display:flex;justify-content:space-between;gap:12px}
+    @media(max-width:620px){.wrap{width:min(100% - 28px,520px)}header{padding:18px 0}.status{font-size:.75rem}main{padding:52px 0 44px}.section-head{margin-top:36px;align-items:start;flex-direction:column;gap:7px}.grid{grid-template-columns:1fr;gap:12px}.demo{min-height:205px;padding:20px;border-radius:18px}footer{flex-direction:column;gap:6px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="./" aria-label="Studio home"><span class="brand-mark">S</span><span>STUDIO<span style="color:#9b91ff">/</span>SHOWCASE</span></a>
+      <div class="status"><span class="dot"></span> Four demos available</div>
+    </header>
+    <main>
+      <div class="eyebrow"><span>✦</span> Interactive preview hub</div>
+      <h1>Good ideas.<br><span>See them in action.</span></h1>
+      <p class="intro">See the demos: choose a preview below to explore each experience. Built to feel quick, clean, and effortless on desktop or mobile.</p>
+      <div class="section-head">
+        <h2>Choose a demo</h2>
+        <p>4 previews · Opens in this tab</p>
+      </div>
+      <section class="grid" aria-label="Website demos">
+        <a class="demo" href="demo1.html">
+          <div class="demo-top"><span class="number">DEMO / 01</span><span class="arrow" aria-hidden="true">↗</span></div>
+          <div class="mini-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><span class="line"></span></div>
+          <h3>Demo One</h3><p>A first look at a polished, modern web experience.</p><span class="open-label">Explore demo <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="demo" href="demo2.html">
+          <div class="demo-top"><span class="number">DEMO / 02</span><span class="arrow" aria-hidden="true">↗</span></div>
+          <div class="mini-art" aria-hidden="true"><i style="background:linear-gradient(#ffb86c,#d56a9c)"></i><i></i><i style="background:linear-gradient(#70e6b1,#398d9e)"></i><i></i><i></i><span class="line"></span></div>
+          <h3>Demo Two</h3><p>A second concept with room to explore different ideas.</p><span class="open-label">Explore demo <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="demo" href="demo3.html">
+          <div class="demo-top"><span class="number">DEMO / 03</span><span class="arrow" aria-hidden="true">↗</span></div>
+          <div class="mini-art" aria-hidden="true"><i></i><i style="background:linear-gradient(#ffcf75,#e17b73)"></i><i></i><i style="background:linear-gradient(#70e6b1,#398d9e)"></i><i></i><span class="line"></span></div>
+          <h3>Demo Three</h3><p>A third preview, ready for your own content and features.</p><span class="open-label">Explore demo <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="demo" href="demo4.html">
+          <div class="demo-top"><span class="number">DEMO / 04</span><span class="arrow" aria-hidden="true">↗</span></div>
+          <div class="mini-art" aria-hidden="true"><i style="background:linear-gradient(#70e6b1,#398d9e)"></i><i></i><i style="background:linear-gradient(#ffb86c,#d56a9c)"></i><i></i><i></i><span class="line"></span></div>
+          <h3>Demo Four</h3><p>One more concept, presented in the same fast showcase.</p><span class="open-label">Explore demo <span aria-hidden="true">→</span></span>
+        </a>
+      </section>
+    </main>
+    <footer><span>© <span id="year"></span> Studio Showcase</span><span>Designed for speed · Responsive by default</span></footer>
+  </div>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

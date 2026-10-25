@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343169593398339"
+     crossorigin="anonymous"></script>
+<title>More | Mpoxel</title>
+<link rel="icon" type="image/jpg" href="/favicon.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+html{
+
+    scroll-behavior:smooth;
+
+    scroll-padding-top:90px;
+}
+
+
+body{
+
+    min-height:100vh;
+
+    font-family:'Poppins',sans-serif;
+
+    color:#fff;
+
+    background:#070707;
+
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root{
+
+    --blue:#FFD54A;
+
+    --blue-light:#fff1a8;
+
+    --blue-dark:#d99d00;
+
+    --background:#070707;
+
+    --surface:#0d0d0d;
+
+    --surface-light:#121212;
+
+    --border:rgba(255,213,74,.14);
+
+    --border-hover:rgba(255,213,74,.55);
+
+    --muted:#8c9bad;
+
+    --max-width:1250px;
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    width:500px;
+
+    height:500px;
+
+    left:-200px;
+
+    top:-200px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,213,74,.10),
+            transparent 70%
+        );
+
+    pointer-events:none;
+
+    z-index:-2;
+}
+
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:450px;
+
+    height:450px;
+
+    right:-200px;
+
+    bottom:-200px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,190,40,.07),
+            transparent 70%
+        );
+
+    pointer-events:none;
+
+    z-index:-2;
+}
+
+
+/* =========================================================
+   SUBTLE GRID
+========================================================= */
+
+body{
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.018) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.018) 1px,
+            transparent 1px
+        );
+        
+    background-size:55px 55px;
+
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+nav{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    width:100%;
+
+    min-height:76px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:
+        0
+        max(
+            20px,
+            calc((100% - var(--max-width)) / 2)
+        );
+
+    background:
+        rgba(5,10,18,.55);
+
+    backdrop-filter:
+        blur(20px)
+        saturate(130%);
+
+    -webkit-backdrop-filter:
+        blur(20px)
+        saturate(130%);
+
+    border-bottom:
+        1px solid rgba(255,213,74,.14);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.18);
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:27px;
+
+    font-weight:800;
+
+    letter-spacing:3px;
+
+    color:var(--gold);
+
+    text-shadow:
+        0 0 22px rgba(255,213,74,.18);
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.back{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:10px 21px;
+
+    border-radius:50px;
+
+    background:
+        rgba(22,153,255,.9);
+
+    color:#fff;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.back:hover{
+
+    transform:translateY(-3px);
+
+    background:#ffe47b;
+
+    box-shadow:
+        0 8px 25px
+        rgba(22,153,255,.25);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+
+    position:relative;
+
+    width:100%;
+
+    max-width:1050px;
+
+    margin:auto;
+
+    min-height:480px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:
+        80px 25px
+        60px;
+}
+
+
+.hero::before{
+
+    content:"MORE";
+
+    position:absolute;
+
+    z-index:-1;
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(100px,20vw,240px);
+
+    font-weight:800;
+
+    color:rgba(255,213,74,.018);
+
+    pointer-events:none;
+
+    user-select:none;
+}
+
+
+.hero h1{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(42px,7vw,78px);
+
+    line-height:1.1;
+
+    letter-spacing:-2px;
+
+    margin-bottom:25px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #FFD54A,
+            #d6f8ff,
+            #FFD54A
+        );
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+}
+
+
+.hero p{
+
+    width:100%;
+
+    max-width:720px;
+
+    margin:auto;
+
+    color:#bcbcbc;
+
+    font-size:
+        clamp(15px,2vw,19px);
+
+    line-height:1.9;
+
+    letter-spacing:.1px;
+}
+
+
+/* =========================================================
+   MAIN SECTION
+========================================================= */
+
+section{
+
+    width:100%;
+
+    max-width:var(--max-width);
+
+    margin:auto;
+
+    padding:
+        60px 25px
+        100px;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.title{
+
+    font-family:'Orbitron',sans-serif;
+
+    font-size:
+        clamp(28px,5vw,40px);
+
+    color:var(--gold);
+
+    margin-bottom:40px;
+
+    letter-spacing:-.5px;
+}
+
+
+.title::after{
+
+    content:"";
+
+    display:block;
+
+    width:48px;
+
+    height:3px;
+
+    margin-top:14px;
+
+    border-radius:10px;
+
+    background:var(--gold);
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px,1fr)
+        );
+
+    gap:25px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+
+    position:relative;
+
+    padding:35px;
+
+    min-height:390px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+
+    border:
+        1px solid var(--border);
+
+    border-radius:22px;
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease;
+}
+
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:25px;
+
+    right:25px;
+
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(79,214,255,.6),
+            transparent
+        );
+
+    opacity:.5;
+}
+
+
+.card:hover{
+
+    transform:translateY(-7px);
+
+    border-color:var(--border-hover);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,213,74,.055),
+            rgba(255,255,255,.018)
+        );
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.icon{
+
+    width:72px;
+
+    height:72px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:25px;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #122538,
+            #0c1825
+        );
+
+    border:
+        1px solid
+        rgba(255,213,74,.16);
+
+    font-size:38px;
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.04);
+}
+
+
+/* =========================================================
+   CARD TITLE
+========================================================= */
+
+.card h2{
+
+    font-family:'Orbitron',sans-serif;
+
+    color:var(--gold);
+
+    font-size:24px;
+
+    margin-bottom:15px;
+}
+
+
+/* =========================================================
+   CARD TEXT
+========================================================= */
+
+.card p{
+
+    max-width:580px;
+
+    color:#b1b1b1;
+
+    font-size:15px;
+
+    line-height:1.85;
+
+    letter-spacing:.05px;
+}
+
+
+/* =========================================================
+   FOLDER BUTTON
+========================================================= */
+
+.folder{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:max-content;
+
+    max-width:100%;
+
+    margin-top:auto;
+
+    padding:12px 22px;
+
+    border-radius:50px;
+
+    background:var(--gold);
+
+    color:#111;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.folder:hover{
+
+    transform:translateY(-2px);
+
+    background:#fff;
+
+    box-shadow:
+        0 8px 22px
+        rgba(255,213,74,.18);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:
+        50px 20px;
+
+    text-align:center;
+
+    background:#040910;
+
+    border-top:
+        1px solid rgba(255,213,74,.12);
+}
+
+
+footer h2{
+
+    font-family:'Orbitron',sans-serif;
+
+    color:var(--gold);
+
+    font-size:23px;
+}
+
+
+footer p{
+
+    color:#777;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+
+::-webkit-scrollbar-track{
+
+    background:#070707;
+}
+
+
+::-webkit-scrollbar-thumb{
+
+    background:
+        linear-gradient(
+            180deg,
+            #FFD54A,
+            #d99d00
+        );
+
+    border-radius:20px;
+
+    border:
+        2px solid #070707;
+}
+
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff0a6,
+            #FFD54A
+        );
+}
+
+
+html{
+
+    scrollbar-width:thin;
+
+    scrollbar-color:
+        #FFD54A
+        #070707;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:850px){
+
+    nav{
+
+        padding:
+            0 22px;
+    }
+
+
+    section{
+
+        padding:
+            55px 22px
+            80px;
+    }
+
+
+    .hero{
+
+        min-height:430px;
+
+        padding:
+            70px 22px
+            50px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:700px){
+
+    nav{
+
+        min-height:68px;
+
+        padding:
+            0 18px;
+    }
+
+
+    .logo{
+
+        font-size:21px;
+
+        letter-spacing:2px;
+    }
+
+
+    .back{
+
+        padding:
+            9px 16px;
+
+        font-size:12px;
+    }
+
+
+    .hero{
+
+        min-height:420px;
+
+        padding:
+            60px 20px
+            40px;
+    }
+
+
+    .hero h1{
+
+        font-size:40px;
+
+        line-height:1.15;
+    }
+
+
+    .hero p{
+
+        font-size:15px;
+
+        line-height:1.8;
+    }
+
+
+    section{
+
+        padding:
+            45px 18px
+            70px;
+    }
+
+
+    .title{
+
+        font-size:29px;
+
+        margin-bottom:30px;
+    }
+
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+        gap:18px;
+    }
+
+
+    .card{
+
+        min-height:360px;
+
+        padding:27px;
+
+        border-radius:18px;
+    }
+
+
+    .card h2{
+
+        font-size:21px;
+    }
+
+
+    .card p{
+
+        font-size:14px;
+
+        line-height:1.8;
+    }
+
+
+    .folder{
+
+        width:100%;
+
+        padding:12px 15px;
+    }
+
+
+    footer{
+
+        padding:
+            40px 18px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media(max-width:380px){
+
+    .hero h1{
+
+        font-size:34px;
+    }
+
+
+    .hero p{
+
+        font-size:14px;
+    }
+
+
+    .card{
+
+        padding:23px;
+    }
+
+
+    .icon{
+
+        width:62px;
+
+        height:62px;
+
+        font-size:32px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    html{
+
+        scroll-behavior:auto;
+    }
+
+
+    *{
+
+        transition:none !important;
+    }
+}
+
+
+/* =========================================================
+   MPOXEL CINEMATIC ENTRY
+   Gold only for the entrance; page theme remains blue.
+   ========================================================= */
+
+#mpoxel-entry{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    background:#000;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:auto;
+    opacity:1;
+    transition:opacity .55s ease;
+}
+
+#mpoxel-entry.is-finished{
+    opacity:0;
+    pointer-events:none;
+}
+
+.mpoxel-gate{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:50%;
+    background:linear-gradient(145deg,#111 0%,#070707 60%,#000 100%);
+    will-change:transform;
+    transition:transform .85s cubic-bezier(.77,0,.18,1);
+}
+
+.mpoxel-gate::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:1px;
+    background:linear-gradient(to bottom,transparent,rgba(255,213,74,.8),transparent);
+}
+
+.mpoxel-gate-left{
+    left:0;
+    transform:translate3d(0,0,0);
+}
+.mpoxel-gate-left::after{right:0}
+
+.mpoxel-gate-right{
+    right:0;
+    transform:translate3d(0,0,0);
+}
+.mpoxel-gate-right::after{left:0}
+
+#mpoxel-entry.is-open .mpoxel-gate-left{
+    transform:translate3d(-100%,0,0);
+}
+#mpoxel-entry.is-open .mpoxel-gate-right{
+    transform:translate3d(100%,0,0);
+}
+
+.mpoxel-entry-logo{
+    font-family:'Orbitron',sans-serif !important;
+    position:relative;
+    z-index:2;
+    width:min(92vw,1100px);
+    padding:0 20px;
+    text-align:center;
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(28px,6vw,78px);
+    line-height:1.15;
+    font-weight:800;
+    letter-spacing:clamp(2px,.7vw,8px);
+    color:#fff;
+    opacity:0;
+    transform:scale(.97);
+    text-shadow:0 0 10px rgba(255,255,255,.85),
+                0 0 28px rgba(255,213,74,.55),
+                0 0 65px rgba(255,213,74,.22);
+    pointer-events:none;
+}
+
+.mpoxel-entry-logo span{color:#FFD54A}
+
+#mpoxel-entry.logo-show .mpoxel-entry-logo{
+    animation:mpoxel-creations-logo 1.15s ease-in-out forwards;
+}
+
+@keyframes mpoxel-creations-logo{
+    0%{opacity:0;transform:scale(.97)}
+    28%{opacity:1;transform:scale(1)}
+    68%{opacity:1;transform:scale(1.01)}
+    100%{opacity:0;transform:scale(1.025)}
+}
+
+@media(max-width:600px){
+    .mpoxel-gate{transition-duration:.72s}
+    .mpoxel-entry-logo{
+        width:100%;
+        padding:0 12px;
+        font-size:clamp(22px,7.5vw,42px);
+        line-height:1.25;
+        letter-spacing:clamp(1px,1vw,4px);
+        white-space:normal;
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    #mpoxel-entry{transition:none}
+    .mpoxel-gate{transition:none}
+    .mpoxel-entry-logo{opacity:1}
+}
+
+
+/* Keep folder buttons visibly styled */
+.folder{
+    color:#111;
+    background:var(--gold);
+}
+
+</style>
+
+
+<style id="mpoxel-final-gold-theme">
+:root{
+    --gold:#FFD54A;
+    --gold-light:#fff1a8;
+    --gold-dark:#d99d00;
+    --background:#070707;
+    --surface:#0d0d0d;
+    --surface-light:#121212;
+    --border:rgba(255,213,74,.14);
+    --border-hover:rgba(255,213,74,.55);
+    --muted:#a3a3a3;
+}
+
+/* Entire page */
+body{
+    background-color:#070707 !important;
+    color:#fff !important;
+    background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px) !important;
+    background-size:55px 55px !important;
+}
+
+/* Homepage typography */
+.logo,
+.hero h1,
+.title,
+.card h2,
+footer h2{
+    font-family:'Orbitron',sans-serif !important;
+}
+
+.logo,
+.title,
+.card h2,
+footer h2{
+    color:#FFD54A !important;
+}
+
+.hero h1{
+    color:#FFD54A !important;
+    background:linear-gradient(
+        110deg,
+        #FFD54A 0%,
+        #fff5b5 45%,
+        #FFD54A 100%
+    ) !important;
+    -webkit-background-clip:text !important;
+    background-clip:text !important;
+    -webkit-text-fill-color:transparent !important;
+}
+
+/* Navigation */
+nav{
+    background:rgba(7,7,7,.55) !important;
+    border-bottom-color:rgba(255,213,74,.14) !important;
+}
+
+.back{
+    background:#FFD54A !important;
+    color:#111 !important;
+    border:0 !important;
+    box-shadow:0 8px 25px rgba(255,213,74,.12) !important;
+}
+
+.back:hover{
+    background:#ffe47b !important;
+    color:#111 !important;
+    box-shadow:0 12px 30px rgba(255,213,74,.22) !important;
+}
+
+/* Cards */
+.card{
+    background:linear-gradient(
+        145deg,
+        rgba(255,255,255,.045),
+        rgba(255,255,255,.018)
+    ) !important;
+    border-color:rgba(255,213,74,.14) !important;
+}
+
+.card::before{
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,213,74,.55),
+        transparent
+    ) !important;
+}
+
+.card:hover{
+    border-color:rgba(255,213,74,.55) !important;
+    background:linear-gradient(
+        145deg,
+        rgba(255,213,74,.055),
+        rgba(255,255,255,.02)
+    ) !important;
+}
+
+/* Icons */
+.icon{
+    background:linear-gradient(145deg,#19170e,#0f0e08) !important;
+    border-color:rgba(255,213,74,.16) !important;
+}
+
+/* THE BUTTONS — force gold, including folder buttons */
+.folder,
+a.folder,
+button.folder{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#FFD54A !important;
+    color:#111 !important;
+    border:0 !important;
+    text-decoration:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    box-shadow:0 8px 25px rgba(255,213,74,.12) !important;
+}
+
+.folder:hover,
+a.folder:hover,
+button.folder:hover{
+    background:#fff0a5 !important;
+    color:#111 !important;
+    transform:translateY(-2px) !important;
+    box-shadow:0 12px 30px rgba(255,213,74,.22) !important;
+}
+
+/* Any other action/link buttons on this page */
+.btn,
+a.btn{
+    border-color:rgba(255,213,74,.6) !important;
+}
+
+.gold,
+a.gold{
+    background:#FFD54A !important;
+    color:#111 !important;
+}
+
+.gold:hover,
+a.gold:hover{
+    background:#ffe47b !important;
+    color:#111 !important;
+}
+
+/* Footer + scrollbar */
+footer{
+    background:#050505 !important;
+    border-top-color:rgba(255,213,74,.13) !important;
+}
+
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,#FFD54A,#d99d00) !important;
+}
+
+html{
+    scrollbar-color:#FFD54A #090909 !important;
+}
+</style>
+
+
+<style id="homepage-font-match">
+/* Exact homepage typography */
+html, body{
+    font-family:'Poppins',sans-serif !important;
+}
+
+.logo,
+.hero h1,
+.hero::before,
+.title,
+.card h2,
+.card h3,
+footer h2,
+.back,
+.folder{
+    font-family:'Orbitron',sans-serif !important;
+}
+
+/* Same display weight used by the homepage hero */
+.hero h1{
+    font-weight:800 !important;
+    letter-spacing:-2px !important;
+}
+
+.logo{
+    font-weight:800 !important;
+    letter-spacing:3px !important;
+}
+
+.title{
+    font-weight:800 !important;
+}
+
+/* Keep normal descriptive text in Poppins */
+.hero p,
+.card p,
+footer p,
+nav a{
+    font-family:'Poppins',sans-serif !important;
+}
+</style>
+
+</head>
+
+
+<body>
+
+<!-- =========================================================
+     CINEMATIC ENTRY
+     ========================================================= -->
+<div id="mpoxel-entry" aria-hidden="true">
+    <div class="mpoxel-gate mpoxel-gate-left"></div>
+    <div class="mpoxel-gate mpoxel-gate-right"></div>
+
+    <div class="mpoxel-entry-logo" aria-label="CREATIONS BY MPOXEL.IN">
+        CREATIONS BY <span>MPOXEL.IN</span>
+    </div>
+</div>
+
+
+
+<!-- =====================================================
+     NAVIGATION
+====================================================== -->
+
+<nav>
+
+    <div class="logo">
+        MPOXEL
+    </div>
+
+
+    <a
+        class="back"
+        href="index.html"
+    >
+        ← Home
+    </a>
+
+</nav>
+
+
+<!-- =====================================================
+     HERO
+====================================================== -->
+
+<div class="hero">
+
+    <div>
+
+        <h1>
+            More Creations by US
+        </h1>
+
+
+        <p>
+
+            Explore more projects developed by Mpoxel.
+            Explore the applications built by Mpoxel.
+            Find useful tools and creative experiences in one place.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     EXPLORE
+====================================================== -->
+
+<section>
+
+    <h2 class="title">
+        Explore
+    </h2>
+
+
+    <div class="grid">
+
+        <!-- =================================================
+             APPS
+        ================================================== -->
+
+        <div class="card">
+
+            <div class="icon">
+                📱
+            </div>
+
+
+            <h2>
+                Apps
+            </h2>
+
+
+            <p>
+
+                Discover web apps, utilities, tools,
+                and creative software built for
+                productivity and entertainment.
+
+            </p>
+
+
+            <a
+                class="folder"
+                href="apps/"
+            >
+                📁 Open Apps Folder
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    <h2>
+        MPOXEL
+    </h2>
+
+    <br>
+
+
+    <p>
+        Creating useful apps and digital experiences.
+    </p>
+
+    <br>
+
+
+    <p>
+        © 2026 Mpoxel
+    </p>
+
+</footer>
+
+
+
+<script>
+(() => {
+    const entry = document.getElementById("mpoxel-entry");
+    if (!entry) return;
+
+    const root = document.documentElement;
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // The complete website is underneath this overlay and loads normally.
+    root.style.overflow = "hidden";
+
+    const closeIntro = () => {
+        entry.classList.add("is-finished");
+
+        window.setTimeout(() => {
+            entry.remove();
+            root.style.overflow = "";
+        }, 600);
+    };
+
+    if (reduceMotion) {
+        window.setTimeout(closeIntro, 300);
+        return;
+    }
+
+    // 1. Open both gates first.
+    window.setTimeout(() => {
+        entry.classList.add("is-open");
+    }, 80);
+
+    // 2. Play CREATIONS BY MPOXEL.IN after the gates finish.
+    window.setTimeout(() => {
+        entry.classList.add("logo-show");
+    }, 1000);
+
+    // 3. Reveal the already-loaded website.
+    window.setTimeout(closeIntro, 2200);
+})();
+</script>
+
+</body>
+</html>
+<style>
+/* Final homepage-matching gold theme */
+body{
+    background-color:#070707;
+    color:#fff;
+}
+
+.folder{
+    background:#FFD54A !important;
+    color:#111 !important;
+    border-color:transparent;
+}
+
+.folder:hover{
+    background:#fff0a5 !important;
+    color:#111 !important;
+}
+
+.logo,
+.hero h1,
+.title,
+.card h2,
+footer h2{
+    font-family:'Orbitron',sans-serif;
+}
+
+.hero h1,
+.title,
+.card h2,
+footer h2,
+.logo{
+    color:#FFD54A;
+}
+
+.hero h1{
+    background:linear-gradient(110deg,#FFD54A 0%,#fff5b5 45%,#FFD54A 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+</style>

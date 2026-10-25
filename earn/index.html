@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0b13" />
+  <meta name="description" content="Complete small online tasks, collect coins, and explore game rewards and cash redemption options with mpoxel earn!" />
+  <title>mpoxel earn! — Small tasks. More possibilities.</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b0b13;--panel:#12121e;--panel2:#171729;--text:#f7f5ff;--muted:#a4a1bd;--line:#ffffff16;--violet:#a855f7;--pink:#ec4899;--blue:#647bff;--gold:#ffd166;}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 75% 15%,#5426a52b,transparent 35%),radial-gradient(ellipse at 10% 55%,#1b4f9b20,transparent 35%),#0b0b13}
+    a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(1160px,calc(100% - 40px));margin:auto}
+    .nav{height:84px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #ffffff0b}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.6px;font-size:21px}.brand-mark{display:grid;place-items:center;width:37px;height:37px;border-radius:12px;background:linear-gradient(135deg,#c084fc,#6d28d9 70%);box-shadow:0 5px 28px #8b5cf644;color:#fff;font-size:20px}
+    .nav-note{color:#c8c4dd;border:1px solid var(--line);background:#ffffff06;border-radius:99px;padding:10px 15px;font-size:12px}.nav-note span{color:var(--gold);margin-right:7px}
+    .hero{min-height:590px;display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:35px;padding:52px 0 62px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid #a855f744;background:#a855f70d;border-radius:99px;padding:9px 13px;color:#d8b4fe;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+    .eyebrow i{width:7px;height:7px;border-radius:50%;background:#c084fc;box-shadow:0 0 12px #c084fc;display:inline-block}
+    h1{font-size:clamp(48px,6.5vw,82px);line-height:.98;letter-spacing:-5px;margin:24px 0 20px;font-weight:850;max-width:680px}h1 em{font-style:normal;background:linear-gradient(100deg,#c084fc 5%,#8b5cf6 45%,#f472b6 95%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{max-width:520px;color:#c1bed4;font-size:clamp(16px,1.8vw,19px);line-height:1.7;margin:0 0 25px}.bonus{display:flex;align-items:center;gap:14px;max-width:390px;padding:15px 17px;border:1px solid #ffd16636;background:linear-gradient(110deg,#ffd16612,#ffffff04);border-radius:17px;margin:24px 0 27px}.gift{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:#ffd16619;font-size:25px;flex-shrink:0}.bonus small{display:block;color:#e6c984;font-size:12px;margin-bottom:3px}.bonus strong{font-size:20px;letter-spacing:-.4px}.bonus strong b{color:var(--gold)}
+    .cta-row{display:flex;align-items:center;gap:15px;flex-wrap:wrap}.cta{display:inline-flex;align-items:center;justify-content:center;gap:14px;padding:16px 25px;border:0;border-radius:14px;background:linear-gradient(100deg,#a855f7,#6d4aff 65%,#8257ff);color:white;font-size:15px;font-weight:800;box-shadow:0 10px 35px #7c3aed40;transition:transform .2s,box-shadow .2s;cursor:pointer}.cta:hover{transform:translateY(-2px);box-shadow:0 14px 40px #7c3aed66}.cta .arrow{font-size:20px;transition:transform .2s}.cta:hover .arrow{transform:translateX(4px)}.microcopy{color:#85829f;font-size:12px;line-height:1.5;max-width:210px}
+    .visual{position:relative;min-height:455px;display:grid;place-items:center;isolation:isolate}.visual:before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:#7c3aed30;filter:blur(70px);z-index:-1}
+    .showcase{position:relative;width:min(100%,460px);height:410px;border:1px solid #ffffff1c;border-radius:28px;overflow:hidden;background:linear-gradient(145deg,#201c37d9,#10101bdc);box-shadow:0 28px 80px #0007, inset 0 1px #ffffff14;transform:rotate(1deg)}
+    .showcase-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.37;filter:saturate(.82);mix-blend-mode:screen}.showcase:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#10101a08 0%,#0b0b13a8 65%,#0b0b13 100%)}
+    .float-card{position:absolute;z-index:2;border:1px solid #ffffff24;background:#11111edb;backdrop-filter:blur(15px);border-radius:17px;box-shadow:0 20px 45px #0006;padding:15px 17px}.balance{top:29px;left:22px;width:224px}.float-label{font-size:11px;color:#b6b1d0}.coin-count{font-size:29px;font-weight:850;letter-spacing:-1px;margin:8px 0 3px}.coin-count span{color:var(--gold);font-size:18px}.tiny{font-size:11px;color:#8f8ba9}.task-card{left:30px;right:30px;bottom:25px;display:flex;align-items:center;gap:13px;padding:15px}.task-icon{width:41px;height:41px;border-radius:12px;display:grid;place-items:center;background:#8b5cf62e;color:#c4b5fd;font-size:20px}.task-text{flex:1}.task-text strong{font-size:13px;display:block;margin-bottom:5px}.task-text small{font-size:11px;color:#9995b2}.task-reward{font-size:13px;font-weight:800;color:var(--gold)}
+    .reward-float{right:15px;top:135px;display:flex;align-items:center;gap:12px;min-width:175px;transform:rotate(5deg)}.reward-emoji{font-size:27px}.reward-float strong{font-size:13px;display:block}.reward-float small{display:block;color:#9e9ab8;font-size:11px;margin-top:4px}.coin-orb{position:absolute;z-index:3;display:grid;place-items:center;border-radius:50%;color:#6d3900;background:linear-gradient(135deg,#fff0a6,#ffbd31 65%,#e78a12);box-shadow:0 0 32px #fbbf2440,inset 0 2px 4px #fff8;font-weight:900}.orb1{width:53px;height:53px;right:16px;top:43px;font-size:24px;transform:rotate(17deg)}.orb2{width:36px;height:36px;left:8px;bottom:100px;font-size:17px;transform:rotate(-17deg)}.spark{position:absolute;color:#c084fc;font-size:26px}.spark.s1{top:62px;right:80px}.spark.s2{left:4px;top:190px;color:#f472b6}
+    .features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:0 0 75px}.feature{border:1px solid var(--line);border-radius:18px;padding:22px 20px;background:linear-gradient(145deg,#ffffff08,#ffffff02);min-height:154px;transition:transform .2s,border-color .2s}.feature:hover{transform:translateY(-3px);border-color:#a855f74a}.feature-icon{font-size:22px;margin-bottom:15px}.feature h3{font-size:14px;margin:0 0 8px;letter-spacing:-.2px}.feature p{font-size:12px;line-height:1.65;color:#9692ad;margin:0}
+    .section-heading{text-align:center;margin:0 auto 25px}.section-heading h2{font-size:clamp(25px,3vw,34px);letter-spacing:-1.3px;margin:0 0 10px}.section-heading p{color:var(--muted);font-size:13px;margin:0}
+    .ways{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding-bottom:70px}.way{position:relative;min-height:170px;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}.way img{width:100%;height:170px;display:block;object-fit:cover;opacity:.56;transition:transform .5s,opacity .5s}.way:hover img{transform:scale(1.05);opacity:.75}.way:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0b0b13 0%,#0b0b1320 100%)}.way-caption{position:absolute;z-index:1;left:18px;bottom:17px}.way-caption strong{display:block;font-size:15px}.way-caption span{display:block;color:#c2bdd8;font-size:11px;margin-top:5px}
+    .bottom-cta{margin-bottom:60px;padding:35px;border:1px solid #a855f733;border-radius:24px;background:radial-gradient(ellipse at 80% 20%,#8b5cf622,transparent 45%),linear-gradient(110deg,#151323,#10101a);display:flex;align-items:center;justify-content:space-between;gap:25px}.bottom-cta h2{font-size:clamp(22px,3vw,32px);letter-spacing:-1px;margin:0 0 8px}.bottom-cta p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}.foot{border-top:1px solid #ffffff10;padding:22px 0 28px;color:#77738d;font-size:11px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.foot a{text-decoration:underline;text-underline-offset:3px}
+    @media(max-width:850px){.hero{grid-template-columns:1fr;gap:15px;padding-top:45px}.hero-copy{max-width:700px}.visual{min-height:430px}.showcase{max-width:500px}.features{grid-template-columns:repeat(2,1fr)}.ways{grid-template-columns:1fr 1fr}.way:last-child{grid-column:1/-1}.bottom-cta{align-items:flex-start;flex-direction:column}}
+    @media(max-width:520px){.wrap{width:min(100% - 28px,1160px)}.nav{height:70px}.brand{font-size:18px}.nav-note{font-size:10px;padding:9px 10px}.hero{padding:43px 0 42px}h1{letter-spacing:-3px;font-size:clamp(47px,14vw,68px)}.lead{font-size:16px}.bonus{padding:13px}.bonus strong{font-size:17px}.cta{width:100%}.microcopy{text-align:center;max-width:none;width:100%}.visual{min-height:390px;margin:0 -4px}.showcase{height:365px;border-radius:22px}.balance{left:13px;top:18px;width:200px}.reward-float{right:7px;top:125px;min-width:148px;padding:12px}.task-card{left:13px;right:13px;bottom:14px}.orb1{right:5px;top:35px}.features{gap:10px;padding-bottom:55px}.feature{padding:17px 15px;min-height:150px}.ways{grid-template-columns:1fr;padding-bottom:50px}.way:last-child{grid-column:auto}.bottom-cta{padding:25px 21px;margin-bottom:40px}.foot{font-size:10px}}
+  </style>
+</head>
+<body>
+  <header class="wrap nav">
+    <a class="brand" href="./index.html" aria-label="mpoxel earn home"><span class="brand-mark">✳</span><span>mpoxel <span style="color:#c084fc">earn!</span></span></a>
+    <div class="nav-note"><span>✦</span> Small tasks · Real rewards</div>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><i></i> Earn · Play · Redeem</div>
+        <h1>Little tasks.<br><em>More possibilities.</em></h1>
+        <p class="lead">Turn spare moments into progress. Complete simple micro-tasks, collect coins, and explore rewards throughout the month.</p>
+        <div class="bonus"><div class="gift">🎁</div><div><small>Your welcome bonus</small><strong><b>100 COINS</b> on signup*</strong></div></div>
+        <div class="cta-row">
+          <a class="cta" href="./auth.html">Get Started <span class="arrow">→</span></a>
+          <div class="microcopy">Create your account and start exploring available tasks.</div>
+        </div>
+      </div>
+
+      <div class="visual" aria-label="Illustration of rewards and earning tasks">
+        <div class="showcase">
+          <img class="showcase-image" src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1000&q=85" alt="Gaming setup with colorful lights" />
+          <div class="float-card balance"><div class="float-label">YOUR COIN BALANCE</div><div class="coin-count">2,350 <span>✦</span></div><div class="tiny">Keep going. Every task counts.</div></div>
+          <div class="float-card reward-float"><div class="reward-emoji">🎮</div><div><strong>Game rewards</strong><small>Explore available options</small></div></div>
+          <div class="float-card task-card"><div class="task-icon">✓</div><div class="task-text"><strong>Complete a quick task</strong><small>Simple tasks, one step at a time</small></div><div class="task-reward">+ coins</div></div>
+        </div>
+        <div class="coin-orb orb1">✦</div><div class="coin-orb orb2">✦</div><div class="spark s1">✳</div><div class="spark s2">✦</div>
+      </div>
+    </section>
+
+    <section class="wrap features" aria-label="Platform highlights">
+      <article class="feature"><div class="feature-icon">⚡</div><h3>Quick micro-tasks</h3><p>Explore short tasks that fit into your free time.</p></article>
+      <article class="feature"><div class="feature-icon">🪙</div><h3>Build your balance</h3><p>Collect coins from eligible tasks and offers.</p></article>
+      <article class="feature"><div class="feature-icon">🎁</div><h3>100-coin bonus</h3><p>Get a welcome bonus when you sign up, subject to the offer terms.</p></article>
+      <article class="feature"><div class="feature-icon">🔄</div><h3>Choose rewards</h3><p>Explore supported game credits, Robux options, or cash redemption where available.</p></article>
+    </section>
+
+    <section class="wrap">
+      <div class="section-heading"><h2>Choose your kind of reward.</h2><p>Make your progress count in the ways that matter to you.</p></div>
+      <div class="ways">
+        <article class="way"><img loading="lazy" src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=900&q=80" alt="Gaming controller and entertainment setup" /><div class="way-caption"><strong>Game rewards</strong><span>Game credits and eligible Robux offers</span></div></article>
+        <article class="way"><img loading="lazy" src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=80" alt="Colorful retro gaming equipment" /><div class="way-caption"><strong>Playful possibilities</strong><span>Discover tasks and offers</span></div></article>
+        <article class="way"><img loading="lazy" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80" alt="Calculator and financial planning on a desk" /><div class="way-caption"><strong>Cash options</strong><span>Where supported and eligible</span></div></article>
+      </div>
+    </section>
+
+    <section class="wrap bottom-cta">
+      <div><h2>Your next small win starts here.</h2><p>Sign up, check available tasks, and see what you can earn.</p></div>
+      <a class="cta" href="./auth.html">Get Started <span class="arrow">→</span></a>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <span>© <span id="year"></span> mpoxel earn!</span>
+    <span>*Bonus, task availability, payout thresholds, and redemption options are subject to platform rules. Earnings are not guaranteed. Rewards depend on eligibility and availability.</span>
+    <span>Images: <a href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">Unsplash License</a></span>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

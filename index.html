@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="google-site-verification"
+    content="dPTTYWQaXzrELbV7bySa09u456hbkneA8jtPIs8u6Eg"
+>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1343169593398339"
+    crossorigin="anonymous"></script>
+<title>Mpoxel | Building Digital Experiences</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<link rel="icon" type="image/jpg" href="/favicon.jpg">
+<meta name="theme-color" content="#060606">
+
+<style>
+:root{
+  --gold:#FFD54A;
+  --gold-soft:#fff1a8;
+  --gold-dark:#d99d00;
+  --bg:#060606;
+  --surface:rgba(18,18,18,.72);
+  --text:#fff;
+  --muted:#a7a7a7;
+  --border:rgba(255,213,74,.14);
+  --border-hover:rgba(255,213,74,.58);
+  --max:1250px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  min-height:100vh;
+  background-image:
+    linear-gradient(rgba(255,255,255,.014) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.014) 1px,transparent 1px);
+  background-size:55px 55px;
+}
+body::before,body::after{
+  content:"";position:fixed;pointer-events:none;z-index:-3;
+  border-radius:50%;filter:blur(20px);
+}
+body::before{width:420px;height:420px;left:-210px;top:-190px;background:radial-gradient(circle,rgba(255,213,74,.09),transparent 70%)}
+body::after{width:380px;height:380px;right:-190px;bottom:-180px;background:radial-gradient(circle,rgba(255,190,40,.06),transparent 70%)}
+
+/* ---------- Navigation ---------- */
+nav{
+  position:sticky;top:0;z-index:999;width:100%;min-height:76px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 max(25px,calc((100% - var(--max))/2));
+  background:rgba(6,6,6,.58);
+  backdrop-filter:blur(18px) saturate(125%);
+  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  border-bottom:1px solid rgba(255,213,74,.14);
+}
+.logo{
+  font-family:'Orbitron',sans-serif;font-size:27px;font-weight:800;
+  letter-spacing:3px;color:var(--gold);
+  text-shadow:0 0 20px rgba(255,213,74,.16);
+}
+nav a{
+  position:relative;display:inline-block;margin-left:30px;
+  color:#d8d8d8;text-decoration:none;font-size:14px;font-weight:500;
+  transition:color .2s ease;
+}
+nav a::after{
+  content:"";position:absolute;left:0;bottom:-7px;width:0;height:2px;
+  background:var(--gold);transition:width .2s ease;
+}
+nav a:hover{color:var(--gold)}
+nav a:hover::after{width:100%}
+nav a.nav-ad-link{
+  margin-left:22px;
+  padding:10px 14px;
+  border:1px solid rgba(255,213,74,.48);
+  border-radius:4px;
+  color:var(--gold);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1px;
+  transition:background .22s ease,color .22s ease,border-color .22s ease;
+}
+nav a.nav-ad-link::after{display:none}
+nav a.nav-ad-link:hover{
+  color:#111;
+  background:var(--gold);
+  border-color:var(--gold);
+}
+
+/* ---------- 3D stage ---------- */
+#scene{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  opacity:.95;
+}
+#scene canvas{display:block;width:100%!important;height:100%!important}
+.scene-vignette{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 50% 35%,transparent 15%,rgba(0,0,0,.2) 62%,rgba(0,0,0,.7) 100%);
+}
+
+/* ---------- Cursor ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed;left:0;top:0;pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);border-radius:50%;
+  opacity:0;transition:opacity .25s ease,width .3s var(--ease),height .3s var(--ease),border-color .3s ease;
+}
+.cursor-dot{will-change:transform;backface-visibility:hidden;width:7px;height:7px;background:var(--gold);box-shadow:0 0 18px rgba(255,213,74,.6)}
+.cursor-ring{will-change:transform,width,height;backface-visibility:hidden;width:34px;height:34px;border:1px solid rgba(255,213,74,.65)}
+body.cursor-ready .cursor-dot,body.cursor-ready .cursor-ring{opacity:1}
+body.cursor-hover .cursor-ring{width:56px;height:56px;border-color:var(--gold);background:rgba(255,213,74,.045)}
+body.cursor-hover .cursor-dot{transform:translate(-50%,-50%) scale(.65)}
+
+/* ---------- Hero ---------- */
+.hero{
+  min-height:calc(100svh - 76px);max-width:var(--max);margin:auto;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:90px 25px 120px;position:relative;isolation:isolate;
+}
+.hero::before{
+  content:"MPOXEL";position:absolute;inset:50% auto auto 50%;
+  transform:translate(-50%,-50%);
+  font-family:'Orbitron',sans-serif;font-size:clamp(80px,18vw,230px);
+  font-weight:800;color:rgba(255,213,74,.018);white-space:nowrap;
+  pointer-events:none;user-select:none;z-index:-1;
+}
+.hero-content{position:relative;z-index:2}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;margin-bottom:20px;
+  padding:8px 13px;border:1px solid var(--border);border-radius:999px;
+  color:#d8d8d8;background:rgba(255,255,255,.025);font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
+}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.hero h1{
+  font-family:'Orbitron',sans-serif;font-size:clamp(42px,7vw,78px);
+  line-height:1.08;font-weight:800;margin-bottom:25px;letter-spacing:-2px;
+  background:linear-gradient(110deg,var(--gold) 0%,#fff5b5 45%,var(--gold) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{max-width:750px;margin:auto;color:#bcbcbc;font-size:clamp(16px,2vw,20px);line-height:1.9}
+.buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:40px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;min-width:150px;
+  padding:14px 27px;border-radius:50px;text-decoration:none;font-size:14px;font-weight:700;
+  transition:transform .25s var(--ease),background .25s ease,color .25s ease,box-shadow .25s ease;
+}
+.btn:hover{transform:translateY(-4px)}
+.gold{background:var(--gold);color:#111;box-shadow:0 8px 25px rgba(255,213,74,.12)}
+.gold:hover{background:#ffe47b;box-shadow:0 15px 35px rgba(255,213,74,.2)}
+.outline{border:1px solid rgba(255,213,74,.6);color:var(--gold);background:rgba(255,213,74,.025)}
+.outline:hover{background:var(--gold);color:#111}
+
+/* ---------- Sections ---------- */
+section{width:100%;max-width:var(--max);margin:auto;padding:110px 25px;position:relative}
+.title{
+  position:relative;text-align:center;font-family:'Orbitron',sans-serif;
+  font-size:clamp(30px,5vw,43px);margin-bottom:55px;color:var(--gold);letter-spacing:-1px;
+}
+.title::after{content:"";display:block;width:55px;height:3px;margin:16px auto 0;border-radius:5px;background:var(--gold)}
+.about,.services,.portfolio{display:grid;gap:25px}
+.about{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.services{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.portfolio{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px}
+
+.card{
+  position:relative;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  border:1px solid var(--border);border-radius:20px;padding:35px;
+  overflow:hidden;
+  transition:transform .35s var(--ease),border-color .3s ease,background .3s ease,box-shadow .3s ease;
+  transform-style:preserve-3d;
+}
+.card::before{
+  content:"";position:absolute;top:0;left:20px;right:20px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,213,74,.6),transparent);opacity:.5;
+}
+.card::after{
+  content:"";position:absolute;width:180px;height:180px;left:var(--mx,50%);top:var(--my,50%);
+  transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,213,74,.09),transparent 70%);
+  opacity:0;transition:opacity .25s ease;pointer-events:none;
+}
+.card:hover{transform:translateY(-8px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));border-color:var(--border-hover);box-shadow:0 18px 55px rgba(0,0,0,.25)}
+.card:hover::after{opacity:1}
+.card h3{color:var(--gold);font-size:21px;position:relative;z-index:1}
+.card p{color:#b1b1b1;line-height:1.85;font-size:15px;position:relative;z-index:1}
+
+#founder .about{max-width:850px;margin:auto}
+#founder .card{border-color:rgba(255,213,74,.22)}
+.service{text-align:center;padding:35px 25px}
+.service h3{margin:18px 0 12px;color:var(--gold);font-size:19px}
+.service p{color:#999;line-height:1.8;font-size:14px}
+.platform-link{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--gold);text-decoration:none;
+  transition:color .2s ease;
+}
+.platform-link span{font-size:.8em;transition:transform .2s ease}
+.platform-link:hover{color:#fff}
+.platform-link:hover span{transform:translate(3px,-3px)}
+.platform-link:focus-visible{outline:2px solid var(--gold);outline-offset:5px;border-radius:3px}
+
+.project{padding:0 0 30px}
+.project h3,.project p,.project a{margin-left:30px;margin-right:30px}
+.project h3{margin-top:25px;margin-bottom:10px;color:#fff;font-size:21px}
+.project p{color:#9d9d9d;line-height:1.75;font-size:14px}
+.preview{
+  height:220px;display:flex;align-items:center;justify-content:center;font-size:65px;
+  position:relative;overflow:hidden;background:linear-gradient(135deg,#151515,#202020);
+  border-bottom:1px solid rgba(255,213,74,.12);transform:translateZ(25px);
+}
+.preview::before{
+  content:"";position:absolute;inset:-40%;
+  background:conic-gradient(from 0deg,transparent,rgba(255,213,74,.12),transparent 25%);
+  animation:spinGlow 10s linear infinite;
+}
+.preview::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,213,74,.08),transparent 50%)}
+.project a{
+  display:inline-flex;align-items:center;justify-content:center;margin-top:25px;padding:11px 24px;
+  border-radius:50px;background:var(--gold);color:#111;text-decoration:none;font-size:13px;font-weight:700;
+  transition:transform .2s ease,background .2s ease;
+}
+.project a:hover{transform:translateY(-2px);background:#fff0a5}
+
+@keyframes spinGlow{to{transform:rotate(360deg)}}
+
+/* ---------- Reveal animation ---------- */
+.reveal{opacity:0;transform:translateY(35px);transition:opacity .75s ease,transform .75s var(--ease)}
+.reveal.visible{opacity:1;transform:none}
+
+/* ---------- Footer ---------- */
+footer{
+  width:100%;margin-top:50px;padding:65px 25px;text-align:center;
+  border-top:1px solid rgba(255,213,74,.13);background:rgba(5,5,5,.86)
+}
+footer h2{color:var(--gold)}
+footer p{color:#777;font-size:13px;line-height:1.8}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:#090909}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--gold),var(--gold-dark));border-radius:20px;border:2px solid #090909}
+html{scrollbar-color:var(--gold) #090909;scrollbar-width:thin}
+
+/* ---------- Tablet ---------- */
+@media(max-width:900px){
+  nav{padding:0 25px}
+  section{padding:85px 25px}
+  .hero{padding:75px 25px 100px}
+}
+
+/* ---------- Mobile ---------- */
+@media(max-width:768px){
+  nav{min-height:auto;padding:17px 20px;flex-direction:column;gap:14px}
+  .logo{font-size:23px}
+  nav div:last-child{display:flex;flex-wrap:wrap;justify-content:center;gap:15px}
+  nav a{margin:0;font-size:13px}
+  .hero{min-height:80vh;padding:70px 20px}
+  .hero h1{font-size:42px;letter-spacing:-1px}
+  .hero p{font-size:16px;line-height:1.8}
+  .buttons{flex-direction:column;align-items:center;gap:8px}
+  .btn{width:100%;max-width:320px}
+  section{padding:75px 20px}
+  .title{font-size:31px;margin-bottom:40px}
+  .about,.services,.portfolio{grid-template-columns:1fr}
+  .card{padding:27px}
+  .preview{height:180px;font-size:52px}
+  .project h3,.project p,.project a{margin-left:25px;margin-right:25px}
+  footer{padding:45px 20px}
+  #scene{opacity:.55}
+}
+
+/* ---------- Small phones ---------- */
+@media(max-width:400px){
+  .hero h1{font-size:35px}
+  .hero p{font-size:15px}
+  .title{font-size:28px}
+  .card{padding:23px}
+  .preview{height:160px}
+}
+
+/* ---------- Accessibility / performance ---------- */
+@media(pointer:coarse){
+  .cursor-dot,.cursor-ring{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  #scene{display:none}
+}
+
+/* ---------- Premium attraction layer ---------- */
+.section-kicker{
+  text-align:center;
+  color:#8f8f8f;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:4px;
+  margin-bottom:14px;
+}
+
+.hero-orbit{
+  position:absolute;
+  width:min(70vw,560px);
+  height:min(70vw,560px);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  z-index:-1;
+  opacity:.7;
+}
+.orbit{
+  position:absolute;
+  inset:8%;
+  border:1px solid rgba(255,213,74,.13);
+  border-radius:50%;
+}
+.orbit-a{transform:rotate(65deg) scaleY(.28);animation:orbitSpin 13s linear infinite}
+.orbit-b{transform:rotate(-25deg) scaleY(.34);animation:orbitSpinReverse 17s linear infinite}
+.orbit-core{
+  position:absolute;
+  left:50%;top:50%;
+  width:110px;height:110px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,74,.16),rgba(255,213,74,.025) 48%,transparent 70%);
+  box-shadow:0 0 80px rgba(255,213,74,.08);
+}
+@keyframes orbitSpin{to{transform:rotate(425deg) scaleY(.28)}}
+@keyframes orbitSpinReverse{to{transform:rotate(-385deg) scaleY(.34)}}
+
+.btn span{margin-left:8px;transition:transform .25s var(--ease)}
+.btn:hover span{transform:translate(3px,-3px)}
+
+.capabilities{max-width:1050px;margin:auto;border-top:1px solid var(--border)}
+.capability{
+  display:grid;grid-template-columns:80px 1fr 35px;align-items:center;gap:20px;
+  min-height:125px;padding:25px 15px;border-bottom:1px solid var(--border);
+  transition:background .3s ease,transform .3s var(--ease),padding .3s var(--ease);
+}
+.capability:hover,.capability.active{
+  background:linear-gradient(90deg,rgba(255,213,74,.055),transparent);
+  padding-left:28px;
+}
+.cap-number{color:#666;font-family:'Orbitron',sans-serif;font-size:12px}
+.capability h3{font-family:'Orbitron',sans-serif;color:#fff;font-size:clamp(18px,3vw,28px);letter-spacing:-.5px}
+.capability p{color:#888;font-size:13px;margin-top:5px;line-height:1.7}
+.cap-arrow{color:var(--gold);font-size:21px;transition:transform .3s var(--ease)}
+.capability:hover .cap-arrow{transform:translate(4px,-4px)}
+
+.performance-section{
+  text-align:center;
+  padding-top:120px;
+  padding-bottom:120px;
+}
+.performance-heading{
+  max-width:900px;margin:0 auto 18px;
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(34px,6vw,68px);
+  line-height:1.08;
+  letter-spacing:-2px;
+}
+.performance-copy{max-width:650px;margin:auto;color:#969696;line-height:1.8}
+.performance-grid{
+  max-width:1000px;margin:60px auto 0;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.performance-item{padding:28px 15px;border-right:1px solid var(--border)}
+.performance-item:last-child{border-right:0}
+.performance-item strong{
+  display:block;color:var(--gold);font-family:'Orbitron',sans-serif;font-size:14px;letter-spacing:1px;
+}
+.performance-item span{display:block;color:#777;font-size:11px;line-height:1.6;margin-top:9px}
+
+.final-cta{
+  max-width:1250px;
+  min-height:560px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+}
+.cta-glow{
+  position:absolute;
+  width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,213,74,.13),transparent 68%);
+  pointer-events:none;
+}
+.cta-content{position:relative;z-index:1}
+.final-cta h2{
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(42px,8vw,88px);
+  line-height:1;
+  letter-spacing:-3px;
+  color:#fff;
+  margin-bottom:20px;
+}
+.final-cta p{max-width:550px;margin:0 auto 30px;color:#929292;line-height:1.8}
+
+/* Scroll progress */
+#scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:var(--gold);z-index:10002;
+  box-shadow:0 0 12px rgba(255,213,74,.45);
+  pointer-events:none;
+}
+
+@media(max-width:800px){
+  .performance-grid{grid-template-columns:repeat(2,1fr)}
+  .performance-item:nth-child(2){border-right:0}
+  .performance-item:nth-child(-n+2){border-bottom:1px solid var(--border)}
+}
+@media(max-width:768px){
+  .hero-orbit{width:105vw;height:105vw;opacity:.38}
+  .capability{grid-template-columns:48px 1fr 25px;gap:10px;min-height:110px;padding:22px 8px}
+  .capability:hover,.capability.active{padding-left:13px}
+  .capability p{font-size:12px}
+  .performance-grid{margin-top:40px}
+  .performance-item{padding:23px 10px}
+  .final-cta{min-height:500px}
+  .final-cta h2{letter-spacing:-2px}
+}
+@media(max-width:480px){
+  .performance-grid{grid-template-columns:1fr}
+  .performance-item,.performance-item:nth-child(2){border-right:0;border-bottom:1px solid var(--border)}
+  .performance-item:last-child{border-bottom:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .orbit-a,.orbit-b{animation:none}
+}
+
+
+/* ---------- Cinematic MPOXEL entry ---------- */
+#mpoxel-entry{
+  position:fixed;inset:0;z-index:10000;background:#000;
+  display:grid;place-items:center;overflow:hidden;
+  transition:opacity 1.05s cubic-bezier(.22,1,.36,1),visibility 1.05s;
+}
+#mpoxel-entry.is-open .mpoxel-gate-left{transform:translateX(-100%)}
+#mpoxel-entry.is-open .mpoxel-gate-right{transform:translateX(100%)}
+#mpoxel-entry.is-finished{opacity:0;visibility:hidden;pointer-events:none}
+.mpoxel-gate{
+  position:absolute;top:0;width:50%;height:100%;
+  background:#000;z-index:2;transition:transform 1.05s cubic-bezier(.77,0,.18,1);
+}
+.mpoxel-gate-left{left:0;border-right:1px solid rgba(255,213,74,.08)}
+.mpoxel-gate-right{right:0;border-left:1px solid rgba(255,213,74,.08)}
+.mpoxel-entry-logo{
+  position:relative;z-index:3;font-family:'Orbitron',sans-serif;
+  font-size:clamp(32px,7vw,82px);font-weight:800;letter-spacing:.18em;
+  color:#fff;opacity:0;transform:scale(.94);filter:blur(10px);
+  text-shadow:0 0 0 rgba(255,213,74,0);
+  transition:opacity .9s cubic-bezier(.22,1,.36,1),
+             transform 1.1s cubic-bezier(.22,1,.36,1),
+             filter 1.1s cubic-bezier(.22,1,.36,1),
+             text-shadow 1.1s ease;
+}
+.mpoxel-entry-logo span{color:var(--gold)}
+#mpoxel-entry.logo-show .mpoxel-entry-logo{
+  opacity:1;transform:scale(1);filter:blur(0);
+  text-shadow:0 0 36px rgba(255,213,74,.28),0 0 90px rgba(255,213,74,.1);
+}
+#mpoxel-entry::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,rgba(255,213,74,.055),transparent 34%,rgba(0,0,0,.8) 85%);
+}
+@media(prefers-reduced-motion:reduce){
+  #mpoxel-entry{transition:none}
+  .mpoxel-gate,.mpoxel-entry-logo{transition:none}
+}
+
+
+/* ---------- Interaction/performance polish ---------- */
+html{scroll-behavior:smooth;overscroll-behavior-y:none}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.card,.btn,.capability,.project{will-change:transform}
+.card{--rx:0deg;--ry:0deg;--mx:50%;--my:50%;backface-visibility:hidden}
+.card::after{will-change:opacity,left,top}
+.btn{position:relative;overflow:hidden;transform:translate3d(0,0,0);will-change:transform}
+.btn::before{
+  content:"";position:absolute;inset:-2px;z-index:-1;
+  background:radial-gradient(circle at var(--bx,50%) var(--by,50%),rgba(255,255,255,.34),transparent 28%);
+  opacity:0;transition:opacity .25s ease;
+}
+.btn:hover::before{opacity:1}
+.capability{transform:translate3d(0,0,0);will-change:transform,background,padding}
+.capability:hover{transform:translate3d(5px,-2px,0)}
+.preview{will-change:transform}
+
+
+/* =========================================================
+   HYPER MOBILE MODE
+   ========================================================= */
+@media (max-width: 768px){
+  html{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+    scroll-padding-top:18px;
+    -webkit-text-size-adjust:100%;
+  }
+
+  body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+    overscroll-behavior-x:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* Navigation */
+  nav{
+    position:sticky;
+    top:0;
+    min-height:64px;
+    padding:12px 16px;
+    flex-direction:row;
+    gap:12px;
+    background:rgba(6,6,6,.78);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+  }
+
+  .logo{
+    font-size:19px;
+    letter-spacing:2px;
+    flex:0 0 auto;
+  }
+
+  nav div:last-child{
+    min-width:0;
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+  nav div:last-child::-webkit-scrollbar{display:none}
+
+  nav a{
+    margin:0;
+    padding:10px 9px;
+    min-height:40px;
+    display:flex;
+    align-items:center;
+    white-space:nowrap;
+    font-size:11px;
+    letter-spacing:.1px;
+  }
+  nav a::after{display:none}
+  nav a.nav-ad-link{
+    margin:0;
+    padding:8px 9px;
+    font-size:9px;
+    letter-spacing:.35px;
+    flex:0 0 auto;
+  }
+  nav a:active{color:var(--gold);transform:scale(.96)}
+
+  /* Cinematic intro */
+  .mpoxel-entry-logo{
+    font-size:clamp(28px,9vw,48px);
+    letter-spacing:.13em;
+    text-align:center;
+    padding:0 20px;
+  }
+
+  /* Hero */
+  .hero{
+    width:100%;
+    min-height:calc(100svh - 64px);
+    padding:62px 18px 76px;
+    align-items:center;
+  }
+
+  .hero::before{
+    font-size:31vw;
+    opacity:.8;
+    max-width:100vw;
+    overflow:hidden;
+  }
+
+  .hero-content{
+    width:100%;
+    max-width:560px;
+  }
+
+  .eyebrow{
+    margin-bottom:17px;
+    padding:7px 11px;
+    font-size:9px;
+    letter-spacing:1.5px;
+  }
+
+  .hero h1{
+    font-size:clamp(35px,10.5vw,49px);
+    line-height:1.02;
+    letter-spacing:-1.8px;
+    margin-bottom:20px;
+  }
+
+  .hero p{
+    width:min(100%,480px);
+    font-size:15px;
+    line-height:1.72;
+  }
+
+  .buttons{
+    width:100%;
+    margin-top:30px;
+    gap:10px;
+  }
+
+  .btn{
+    min-height:50px;
+    width:100%;
+    max-width:390px;
+    padding:13px 20px;
+    font-size:13px;
+    touch-action:manipulation;
+  }
+
+  /* Keep the 3D orbit subtle behind content */
+  .hero-orbit{
+    width:118vw;
+    height:118vw;
+    opacity:.27;
+    filter:blur(.15px);
+  }
+
+  .orbit-core{
+    width:90px;
+    height:90px;
+  }
+
+  /* Sections */
+  section{
+    width:100%;
+    padding:78px 17px;
+  }
+
+  .section-kicker{
+    font-size:8px;
+    letter-spacing:3px;
+    margin-bottom:11px;
+  }
+
+  .title{
+    font-size:clamp(27px,8.5vw,35px);
+    line-height:1.08;
+    margin-bottom:34px;
+    letter-spacing:-.8px;
+  }
+
+  .title::after{
+    width:42px;
+    height:2px;
+    margin-top:13px;
+  }
+
+  /* Cards */
+  .about,.services,.portfolio{
+    width:100%;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .card{
+    width:100%;
+    padding:24px 20px;
+    border-radius:18px;
+    transform:none;
+    transition:
+      border-color .22s ease,
+      background .22s ease,
+      box-shadow .22s ease;
+  }
+
+  .card:hover{
+    transform:none;
+  }
+
+  .card:active{
+    transform:scale(.988);
+    border-color:var(--border-hover);
+  }
+
+  .card h3{
+    font-size:18px;
+  }
+
+  .card p{
+    font-size:13.5px;
+    line-height:1.72;
+  }
+
+  /* Capability list */
+  .capabilities{
+    width:100%;
+  }
+
+  .capability{
+    grid-template-columns:34px minmax(0,1fr) 22px;
+    gap:10px;
+    min-height:104px;
+    padding:20px 4px;
+  }
+
+  .capability:hover,
+  .capability.active{
+    padding-left:7px;
+    transform:none;
+  }
+
+  .capability:active{
+    background:linear-gradient(90deg,rgba(255,213,74,.08),transparent);
+  }
+
+  .cap-number{
+    font-size:10px;
+  }
+
+  .capability h3{
+    font-size:17px;
+    line-height:1.2;
+  }
+
+  .capability p{
+    font-size:11.5px;
+    line-height:1.55;
+    margin-top:5px;
+  }
+
+  .cap-arrow{
+    font-size:17px;
+  }
+
+  /* Performance stats */
+  .performance-section{
+    padding-top:82px;
+    padding-bottom:82px;
+  }
+
+  .performance-heading{
+    font-size:clamp(32px,9.5vw,45px);
+    line-height:1.03;
+    letter-spacing:-1.7px;
+  }
+
+  .performance-copy{
+    font-size:13.5px;
+    line-height:1.7;
+  }
+
+  .performance-grid{
+    width:100%;
+    margin-top:32px;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .performance-item{
+    min-width:0;
+    padding:21px 12px;
+  }
+
+  .performance-item strong{
+    font-size:11px;
+  }
+
+  .performance-item span{
+    font-size:9.5px;
+    line-height:1.5;
+  }
+
+  /* Portfolio */
+  .project{
+    padding-bottom:24px;
+  }
+
+  .preview{
+    height:175px;
+    font-size:48px;
+  }
+
+  .project h3{
+    margin:21px 20px 9px;
+    font-size:18px;
+  }
+
+  .project p{
+    margin:0 20px;
+    font-size:13px;
+    line-height:1.65;
+  }
+
+  .project a{
+    min-height:45px;
+    margin:20px 20px 0;
+    width:calc(100% - 40px);
+    padding:10px 18px;
+    touch-action:manipulation;
+  }
+
+  /* Final CTA */
+  .final-cta{
+    width:100%;
+    min-height:480px;
+    padding:70px 18px;
+  }
+
+  .cta-glow{
+    width:390px;
+    height:390px;
+  }
+
+  .final-cta h2{
+    font-size:clamp(39px,12vw,58px);
+    line-height:.96;
+    letter-spacing:-2.4px;
+  }
+
+  .final-cta p{
+    font-size:13.5px;
+    line-height:1.7;
+    margin-bottom:25px;
+  }
+
+  /* Footer */
+  footer{
+    padding:42px 18px;
+  }
+
+  footer h2{
+    font-size:18px;
+  }
+
+  footer p{
+    font-size:11px;
+    line-height:1.7;
+  }
+
+  /* Background 3D */
+  #scene{
+    opacity:.28;
+  }
+
+  .scene-vignette{
+    background:
+      radial-gradient(circle at 50% 30%,transparent 5%,rgba(0,0,0,.22) 50%,rgba(0,0,0,.8) 100%);
+  }
+
+  /* Disable desktop-only cursor visuals on touch */
+  .cursor-dot,
+  .cursor-ring{
+    display:none!important;
+  }
+
+  #scroll-progress{
+    height:2px;
+  }
+}
+
+/* Very small phones */
+@media (max-width:390px){
+  nav{
+    padding-left:13px;
+    padding-right:13px;
+  }
+
+  .logo{
+    font-size:17px;
+  }
+
+  nav a{
+    padding:9px 7px;
+    font-size:10px;
+  }
+
+  .hero{
+    padding-left:15px;
+    padding-right:15px;
+  }
+
+  .hero h1{
+    font-size:34px;
+  }
+
+  .hero p{
+    font-size:14px;
+  }
+
+  section{
+    padding-left:15px;
+    padding-right:15px;
+  }
+
+  .performance-grid{
+    grid-template-columns:1fr;
+  }
+
+  .performance-item{
+    border-right:0!important;
+    border-bottom:1px solid var(--border);
+  }
+
+  .performance-item:last-child{
+    border-bottom:0;
+  }
+}
+
+/* Landscape phones */
+@media (max-width:768px) and (orientation:landscape){
+  .hero{
+    min-height:auto;
+    padding-top:55px;
+    padding-bottom:65px;
+  }
+
+  .hero-orbit{
+    width:75vw;
+    height:75vw;
+  }
+
+  .hero h1{
+    max-width:680px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .buttons{
+    flex-direction:row;
+    justify-content:center;
+  }
+
+  .btn{
+    width:auto;
+    min-width:150px;
+  }
+}
+
+/* Devices with a notch / home indicator */
+@supports (padding:max(0px)){
+  @media (max-width:768px){
+    nav{
+      padding-left:max(16px,env(safe-area-inset-left));
+      padding-right:max(16px,env(safe-area-inset-right));
+    }
+
+    .hero,
+    section{
+      padding-left:max(17px,env(safe-area-inset-left));
+      padding-right:max(17px,env(safe-area-inset-right));
+    }
+
+    footer{
+      padding-bottom:max(42px,calc(42px + env(safe-area-inset-bottom)));
+    }
+  }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<!-- Lightweight interactive layer -->
+<div id="scroll-progress" aria-hidden="true"></div>
+<div id="scene" aria-hidden="true"></div>
+<div class="scene-vignette" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+
+<!-- =========================================================
+     MPOXEL CINEMATIC ENTRY
+     ========================================================= -->
+<div id="mpoxel-entry" aria-hidden="true">
+    <div class="mpoxel-gate mpoxel-gate-left"></div>
+    <div class="mpoxel-gate mpoxel-gate-right"></div>
+
+    <div class="mpoxel-entry-logo" aria-label="MPOXEL.IN">
+        MPOXEL<span>.IN</span>
+    </div>
+</div>
+
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav>
+
+    <div class="logo">
+        MPOXEL
+    </div>
+
+    <div>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#services">
+            Services
+        </a>
+
+        <a href="#portfolio">
+            Portfolio
+        </a>
+        <a class="nav-ad-link" href="https://mpoxel.in/ads">ADVERTISE WITH US</a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="eyebrow">Independent digital studio</div>
+
+        <div class="hero-orbit" aria-hidden="true">
+            <span class="orbit orbit-a"></span>
+            <span class="orbit orbit-b"></span>
+            <span class="orbit-core"></span>
+        </div>
+
+        <h1>Building Digital Experiences</h1>
+
+        <p>
+            Mpoxel creates modern websites, interactive 3D experiences,
+            and premium digital solutions that combine creativity with performance.
+        </p>
+
+        <div class="buttons">
+            <a href="#portfolio" class="btn gold magnetic">View Portfolio <span>↗</span></a>
+            <a href="contact.html" class="btn outline magnetic">Start a Project <span>↗</span></a>
+            <a href="more.html" class="btn outline magnetic">More <span>↗</span></a>
+        </div>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     ABOUT
+========================================================= -->
+
+
+<section id="capabilities" class="reveal capabilities-section">
+    <div class="section-kicker">CAPABILITIES</div>
+    <h2 class="title">What We Build</h2>
+    <div class="capabilities">
+        <article class="capability active">
+            <span class="cap-number">01</span>
+            <div>
+                <h3>2D WEBSITES</h3>
+                <p>Fast, responsive, custom interfaces built around your brand.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+        <article class="capability">
+            <span class="cap-number">02</span>
+            <div>
+                <h3>3D EXPERIENCES</h3>
+                <p>Three.js, WebGL, scroll interaction, depth and motion.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+        <article class="capability">
+            <span class="cap-number">03</span>
+            <div>
+                <h3>BRAND SYSTEMS</h3>
+                <p>Digital identity, visual direction and polished UI systems.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+        <article class="capability">
+            <span class="cap-number">04</span>
+            <div>
+                <h3>CUSTOM PRODUCTS</h3>
+                <p>Frontend, backend, APIs and tailored digital functionality.</p>
+            </div>
+            <span class="cap-arrow">↗</span>
+        </article>
+    </div>
+</section>
+
+<section id="about" class="reveal">
+
+    <h2 class="title">
+        About Mpoxel
+    </h2>
+
+
+    <div class="about">
+
+
+        <div class="card">
+
+            <h3>
+                Who We Are
+            </h3>
+
+            <br>
+
+            <p>
+
+                Mpoxel is a creative web studio focused
+                on building beautiful, responsive, and
+                high-performance websites. Whether it's
+                a clean business website or an immersive
+                3D experience, our goal is to deliver
+                modern digital products that stand out.
+
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>
+                Our Mission
+            </h3>
+
+            <br>
+
+            <p>
+
+                To help businesses and creators establish
+                a strong online presence through elegant
+                design, smooth user experiences, and
+                reliable web technologies.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOUNDER
+========================================================= -->
+
+<section id="founder" class="reveal">
+
+    <h2 class="title">
+        Who Is Behind Mpoxel?
+    </h2>
+
+
+    <div class="about">
+
+        <div class="card">
+
+            <h3>
+                Who Am I?
+            </h3>
+
+            <br>
+
+            <p>
+
+                I am Manvir Sharma, the developer behind Mpoxel.
+                I build modern websites and interactive digital experiences
+                with a focus on design, performance, and technology.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     SERVICES
+========================================================= -->
+
+<section id="services" class="reveal">
+
+    <h2 class="title">
+        Services
+    </h2>
+
+
+    <div class="services">
+
+
+        <div class="card service">
+
+            <h3>
+                🌐 2D Websites
+            </h3>
+
+            <p>
+
+                Custom responsive websites with modern UI,
+                interaction, accessibility, and optimized performance.
+
+            </p>
+
+        </div>
+
+
+        <div class="card service">
+
+            <h3>
+                🚀 3D Websites
+            </h3>
+
+            <p>
+
+                Interactive Three.js experiences with
+                scroll-based depth and performance-aware 3D.
+
+            </p>
+
+        </div>
+
+
+        <div class="card service">
+
+            <h3>
+                🎨 Branding
+            </h3>
+
+            <p>
+
+                Professional logos and digital identity
+                for businesses and creators.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     EXPLORE MPOXEL
+     Crawlable internal links to Mpoxel's other services
+========================================================= -->
+<section id="explore-mpoxel" class="reveal">
+    <div class="section-kicker">MORE FROM MPOXEL</div>
+    <h2 class="title">Explore Our Platforms</h2>
+
+    <div class="services">
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/chess">Chess <span aria-hidden="true">↗</span></a></h3>
+            <p>Play chess and explore the Mpoxel chess platform.</p>
+        </article>
+
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/builds">PC Builds <span aria-hidden="true">↗</span></a></h3>
+            <p>Explore PC builds and get help choosing a computer setup.</p>
+        </article>
+
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/earn">Earn with Daily Tasks <span aria-hidden="true">↗</span></a></h3>
+            <p>Complete simple daily tasks on Mpoxel and work toward earning money by the end of the month. Earnings depend on the tasks and platform terms.</p>
+        </article>
+
+        <article class="card service">
+            <h3><a class="platform-link" href="https://mpoxel.in/foods">Mpoxel Foods <span aria-hidden="true">↗</span></a></h3>
+            <p>Discover food for sale through the Mpoxel Foods platform.</p>
+        </article>
+    </div>
+</section>
+
+
+<!-- =========================================================
+     PORTFOLIO
+========================================================= -->
+
+
+<section id="performance" class="reveal performance-section">
+    <div class="section-kicker">ENGINEERED DIFFERENTLY</div>
+    <h2 class="performance-heading">Beautiful doesn't have to mean slow.</h2>
+    <p class="performance-copy">
+        Mpoxel experiences are designed to stay smooth across modern desktops,
+        mobile devices, and lower-powered hardware.
+    </p>
+
+    <div class="performance-grid">
+        <div class="performance-item">
+            <strong>FAST</strong>
+            <span>Lean assets & efficient animation</span>
+        </div>
+        <div class="performance-item">
+            <strong>RESPONSIVE</strong>
+            <span>Mobile-first layouts & touch-ready UI</span>
+        </div>
+        <div class="performance-item">
+            <strong>ADAPTIVE</strong>
+            <span>3D effects scale down when hardware needs it</span>
+        </div>
+        <div class="performance-item">
+            <strong>ACCESSIBLE</strong>
+            <span>Reduced-motion support & usable interactions</span>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="reveal">
+
+    <h2 class="title">
+        Portfolio
+    </h2>
+
+
+    <div class="portfolio">
+
+
+        <!-- MORE PROJECTS -->
+
+        <div class="card project">
+
+            <div class="preview">
+                ✨
+            </div>
+
+            <h3>
+                Explore More
+            </h3>
+
+            <p>
+                Explore more of Mpoxel's projects,
+                experiments, and digital experiences.
+            </p>
+
+            <a href="more.html">
+                View More
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<section id="contact-cta" class="reveal final-cta">
+    <div class="cta-glow" aria-hidden="true"></div>
+    <div class="cta-content">
+        <div class="section-kicker">HAVE AN IDEA?</div>
+        <h2>LET'S MAKE IT REAL.</h2>
+        <p>Tell us what you're imagining. We'll turn it into a digital experience.</p>
+        <a href="contact.html" class="btn gold magnetic">Start a Project <span>↗</span></a>
+    </div>
+</section>
+
+<footer>
+    <h2>MPOXEL</h2>
+    <br>
+    <h2>A website by Manvir Sharma</h2>
+    <br>
+    <p>Making the Impossible Possible.</p>
+    <br>
+    <p>© 2026 Mpoxel. All rights reserved.</p>
+    <br>
+    <p>Last Updated: 26 September 2026</p>
+</footer>
+
+
+
+<script>
+(() => {
+  "use strict";
+
+  const root = document.documentElement;
+  const body = document.body;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(pointer:fine)").matches;
+
+  /* ---------- Cinematic entry ---------- */
+  const entry = document.getElementById("mpoxel-entry");
+  if (entry) {
+    root.style.overflow = "hidden";
+    const finish = () => {
+      entry.classList.add("is-finished");
+      window.setTimeout(() => {
+        entry.remove();
+        root.style.overflow = "";
+      }, reduceMotion ? 0 : 1050);
+    };
+    if (reduceMotion) {
+      window.setTimeout(finish, 180);
+    } else {
+      window.setTimeout(() => entry.classList.add("is-open"), 180);
+      window.setTimeout(() => entry.classList.add("logo-show"), 900);
+      window.setTimeout(finish, 3600);
+    }
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  const revealItems = document.querySelectorAll(".reveal");
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((items, obs) => {
+      for (const item of items) {
+        if (item.isIntersecting) {
+          item.target.classList.add("visible");
+          obs.unobserve(item.target);
+        }
+      }
+    }, {threshold:.08, rootMargin:"0px 0px -55px"});
+    revealItems.forEach(el => observer.observe(el));
+  } else {
+    revealItems.forEach(el => el.classList.add("visible"));
+  }
+
+  /* ---------- Shared pointer state ---------- */
+  const pointer = {
+    x:innerWidth*.5, y:innerHeight*.5,
+    nx:0, ny:0, active:false
+  };
+
+  addEventListener("pointermove", e => {
+    pointer.x = e.clientX;
+    pointer.y = e.clientY;
+    pointer.nx = e.clientX / innerWidth - .5;
+    pointer.ny = e.clientY / innerHeight - .5;
+    pointer.active = true;
+  }, {passive:true});
+
+  /* ---------- Desktop cursor ---------- */
+  const dot = document.querySelector(".cursor-dot");
+  const ring = document.querySelector(".cursor-ring");
+
+  let dotX=innerWidth*.5, dotY=innerHeight*.5;
+  let ringX=dotX, ringY=dotY;
+  let ringVX=0, ringVY=0;
+  let lastCursorTime=performance.now();
+
+  function renderPointerEffects(now){
+    if (!finePointer || reduceMotion || !dot || !ring) return;
+
+    const dt=Math.min((now-lastCursorTime)/16.67,2);
+    lastCursorTime=now;
+
+    /* Dot: nearly locked to the physical pointer, but still GPU-smooth. */
+    dotX += (pointer.x-dotX)*Math.min(.72*dt,1);
+    dotY += (pointer.y-dotY)*Math.min(.72*dt,1);
+
+    /*
+      Ring: spring + velocity damping.
+      This produces a soft follow rather than the "rubber band" feel
+      of a simple linear interpolation.
+    */
+    const dx=pointer.x-ringX;
+    const dy=pointer.y-ringY;
+    const stiffness=.085;
+    const damping=.72;
+
+    ringVX += dx*stiffness*dt;
+    ringVY += dy*stiffness*dt;
+    ringVX *= Math.pow(damping,dt);
+    ringVY *= Math.pow(damping,dt);
+    ringX += ringVX*dt;
+    ringY += ringVY*dt;
+
+    dot.style.transform =
+      `translate3d(${dotX.toFixed(2)}px,${dotY.toFixed(2)}px,0) translate(-50%,-50%)`;
+
+    ring.style.transform =
+      `translate3d(${ringX.toFixed(2)}px,${ringY.toFixed(2)}px,0) translate(-50%,-50%)`;
+
+    requestAnimationFrame(renderPointerEffects);
+  }
+
+  if (finePointer && !reduceMotion && dot && ring) {
+    body.classList.add("cursor-ready");
+    requestAnimationFrame(renderPointerEffects);
+
+    document.querySelectorAll("a,button,.card,.capability").forEach(el => {
+      el.addEventListener("mouseenter", () => body.classList.add("cursor-hover"));
+      el.addEventListener("mouseleave", () => body.classList.remove("cursor-hover"));
+    });
+  }
+
+  /* ---------- High-frequency card tilt, one RAF per card ---------- */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll(".card").forEach(card => {
+      let frame = 0, tx=0, ty=0;
+      card.addEventListener("pointermove", e => {
+        const r = card.getBoundingClientRect();
+        tx = (e.clientX-r.left)/r.width;
+        ty = (e.clientY-r.top)/r.height;
+        if (!frame) frame=requestAnimationFrame(() => {
+          frame=0;
+          card.style.setProperty("--ry", ((tx-.5)*6).toFixed(2)+"deg");
+          card.style.setProperty("--rx", ((.5-ty)*6).toFixed(2)+"deg");
+          card.style.setProperty("--mx", (tx*100).toFixed(1)+"%");
+          card.style.setProperty("--my", (ty*100).toFixed(1)+"%");
+        });
+      }, {passive:true});
+      card.addEventListener("pointerleave", () => {
+        card.style.setProperty("--ry","0deg");
+        card.style.setProperty("--rx","0deg");
+      });
+    });
+  }
+
+  /* ---------- Magnetic buttons ---------- */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll(".magnetic").forEach(btn => {
+      let frame=0, bx=0, by=0;
+      btn.addEventListener("pointermove", e => {
+        const r=btn.getBoundingClientRect();
+        bx=e.clientX-r.left; by=e.clientY-r.top;
+        const x=(e.clientX-(r.left+r.width/2))*.11;
+        const y=(e.clientY-(r.top+r.height/2))*.11;
+        btn.style.setProperty("--bx",`${(bx/r.width)*100}%`);
+        btn.style.setProperty("--by",`${(by/r.height)*100}%`);
+        if (!frame) frame=requestAnimationFrame(() => {
+          frame=0;
+          btn.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+        });
+      }, {passive:true});
+      btn.addEventListener("pointerleave", () => {
+        btn.style.transform="";
+      });
+    });
+  }
+
+  /* ---------- Scroll progress ---------- */
+  const progress=document.getElementById("scroll-progress");
+  let scrollFrame=0;
+  const updateProgress=()=>{
+    if (!progress) return;
+    const max=Math.max(document.documentElement.scrollHeight-innerHeight,1);
+    progress.style.width=Math.min(scrollY/max*100,100)+"%";
+    scrollFrame=0;
+  };
+  addEventListener("scroll",()=>{
+    if (!scrollFrame) scrollFrame=requestAnimationFrame(updateProgress);
+  },{passive:true});
+  addEventListener("resize",updateProgress,{passive:true});
+  updateProgress();
+
+  /* ---------- Capability focus ---------- */
+  const capabilities=[...document.querySelectorAll(".capability")];
+  capabilities.forEach(item=>{
+    item.addEventListener("mouseenter",()=>{
+      capabilities.forEach(x=>x.classList.remove("active"));
+      item.classList.add("active");
+    });
+  });
+
+  /* ---------- Adaptive 3D ---------- */
+  const sceneEl=document.getElementById("scene");
+  const saveData=navigator.connection?.saveData === true;
+  const cores=navigator.hardwareConcurrency || 4;
+  const mobile=matchMedia("(max-width:768px)").matches;
+  const tinyMobile=matchMedia("(max-width:420px)").matches;
+
+  if (!sceneEl || reduceMotion || saveData || cores<=2 || tinyMobile || !window.WebGLRenderingContext) {
+    if (sceneEl) sceneEl.style.display="none";
+  } else {
+    const script=document.createElement("script");
+    script.src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js";
+    script.async=true;
+    script.onload=()=>{
+      if (!window.THREE) return;
+      const THREE=window.THREE;
+      const scene=new THREE.Scene();
+      const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,100);
+      camera.position.set(0,0,9);
+
+      const renderer=new THREE.WebGLRenderer({
+        alpha:true,
+        antialias:!mobile,
+        powerPreference:"high-performance"
+      });
+      renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.25:1.75));
+      renderer.setSize(innerWidth,innerHeight);
+      renderer.outputColorSpace=THREE.SRGBColorSpace;
+      sceneEl.appendChild(renderer.domElement);
+
+      const group=new THREE.Group();
+      scene.add(group);
+      group.position.set(2.75,.12,-1.5);
+
+      const sphereGeometry=new THREE.SphereGeometry(1.48,mobile?28:48,mobile?20:36);
+      const solidMat=new THREE.MeshPhysicalMaterial({
+        color:0x9a741b,
+        metalness:.72,
+        roughness:.27,
+        clearcoat:.65,
+        clearcoatRoughness:.3,
+        transparent:true,
+        opacity:mobile?.34:.48
+      });
+      const solid=new THREE.Mesh(sphereGeometry,solidMat);
+      group.add(solid);
+
+      // Fine, clean wire cage follows the sphere surface instead of the jagged polygon shell.
+      const cageGeometry=new THREE.SphereGeometry(1.505,mobile?12:20,mobile?8:14);
+      const cage=new THREE.WireframeGeometry(cageGeometry);
+      const wire=new THREE.LineSegments(cage,new THREE.LineBasicMaterial({
+        color:0xffd54a,
+        transparent:true,
+        opacity:mobile?.16:.25
+      }));
+      group.add(wire);
+
+      // One thin orbital path gives the object depth without clutter.
+      const orbit1=new THREE.Mesh(
+        new THREE.TorusGeometry(1.92,.009,6,mobile?64:100),
+        new THREE.MeshBasicMaterial({
+          color:0xffd54a,
+          transparent:true,
+          opacity:mobile?.12:.22
+        })
+      );
+      orbit1.rotation.set(1.05,.18,-.35);
+      group.add(orbit1);
+
+      scene.add(
+        new THREE.AmbientLight(0xffffff,.65)
+      );
+      const key=new THREE.PointLight(0xffd54a,mobile?2.1:3.4,14);
+      key.position.set(3,2,5);
+      scene.add(key);
+
+      let scrollTarget=scrollY/Math.max(innerHeight,1);
+      let scrollCurrent=scrollTarget;
+      let visible=document.visibilityState==="visible";
+      let last=performance.now();
+
+      addEventListener("scroll",()=>{
+        scrollTarget=Math.min(scrollY/Math.max(innerHeight,1),6);
+      },{passive:true});
+
+      addEventListener("resize",()=>{
+        camera.aspect=innerWidth/innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.25:1.75));
+        renderer.setSize(innerWidth,innerHeight);
+      },{passive:true});
+
+      document.addEventListener("visibilitychange",()=>{
+        visible=document.visibilityState==="visible";
+      });
+
+      const animate=now=>{
+        requestAnimationFrame(animate);
+        if (!visible) return;
+        const dt=Math.min((now-last)/16.67,2);
+        last=now;
+        scrollCurrent+=(scrollTarget-scrollCurrent)*.055*dt;
+
+        const px=finePointer?pointer.nx:0;
+        const py=finePointer?pointer.ny:0;
+        group.rotation.y += .0024*dt;
+        group.rotation.x += .0010*dt;
+        group.rotation.y += (px*.42-group.rotation.y*.018)*.012*dt;
+        group.rotation.x += (-py*.22-group.rotation.x*.018)*.012*dt;
+
+        group.position.x += (2.9+px*.95-group.position.x)*.018*dt;
+        group.position.y += (.05-py*.65-scrollCurrent*.19-group.position.y)*.012*dt;
+        group.position.z += (-1.5-scrollCurrent*.38-group.position.z)*.018*dt;
+
+        orbit1.rotation.z += .0025*dt;
+
+        renderer.render(scene,camera);
+      };
+      requestAnimationFrame(animate);
+    };
+    document.head.appendChild(script);
+  }
+})();
+</script>
+
+</body>
+</html>

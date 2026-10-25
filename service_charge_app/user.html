@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Credits</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+:root{--bg:#080808;--card:#111;--card2:#171717;--text:#f5f5f5;--muted:#999;--line:#2b2b2b;--green:#35d07f;--red:#ff5555;--gold:#ffd166;--silver:#cfd3d8;--bronze:#cd8b5a}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text)}
+.container{width:min(760px,94%);margin:22px auto}
+.card{background:var(--card);padding:24px;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 40px #0008}
+h1,h2,h3{margin:0 0 9px}.muted{color:var(--muted)}
+input,button{width:100%;padding:14px;margin-top:10px;border-radius:12px;font-size:16px}
+input{border:1px solid var(--line);background:#0d0d0d;color:var(--text);outline:none}
+button{border:0;background:#f5f5f5;color:#080808;font-weight:700;cursor:pointer}
+button:hover{opacity:.88}
+.hidden{display:none}.error{color:var(--red);margin-top:12px}.success{color:var(--green);margin-top:12px}
+.balance{font-size:46px;font-weight:800;margin:16px 0 4px}.rate{color:var(--muted);margin-bottom:22px}
+.timer-title{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.timer{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.time-box{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:13px 4px;text-align:center}
+.time-number{font-size:27px;font-weight:800}.time-label{font-size:11px;color:var(--muted);margin-top:3px}
+.expiry{margin-top:14px;color:var(--muted);font-size:13px}
+.logout{background:#c93636;color:#fff;margin-top:22px}
+
+.section{margin-top:20px}.section-title{display:flex;justify-content:space-between;gap:10px;align-items:end;margin-bottom:12px}
+.section-title h2{font-size:20px}.section-title span{font-size:12px;color:var(--muted)}
+.table{display:grid;gap:9px}
+.plan{display:grid;grid-template-columns:1.05fr .75fr .8fr 2.3fr;gap:8px;align-items:center;background:#0d0d0d;border:1px solid var(--line);border-radius:17px;padding:13px;cursor:pointer;transition:.18s}
+.plan:hover{border-color:#555;transform:translateY(-1px)}
+.plan.selected{border-color:#fff;box-shadow:0 0 0 1px #fff inset}
+.plan-head{font-weight:800}.plan-days{font-weight:800}.charge{font-weight:800;white-space:nowrap}
+.plan small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.services{font-size:12px;line-height:1.55;color:#c9c9c9}
+.ok{color:var(--green)}.no{color:var(--red)}
+.plan.gold .plan-head{color:var(--gold)}.plan.silver .plan-head{color:var(--silver)}.plan.bronze .plan-head{color:var(--bronze)}
+.selected-box{margin-top:10px;background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:13px;font-size:13px}
+.selected-box b{color:#fff}
+.note{margin-top:10px;padding:12px 13px;border-radius:14px;background:#0d0d0d;border:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.55}
+
+.calendar-wrap{background:#0d0d0d;border:1px solid var(--line);border-radius:18px;padding:12px}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cal-head strong{font-size:15px}.legend{font-size:10px;color:var(--muted)}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.weekday{text-align:center;color:#777;font-size:10px;font-weight:700;padding:4px 0}
+.day{min-height:48px;border:1px solid #242424;border-radius:10px;padding:5px;background:#121212;position:relative}
+.day.empty{background:transparent;border:0}.day .num{font-size:11px;font-weight:700}
+.day .mark{display:block;margin-top:5px;font-size:10px;line-height:1.1}
+.day.work{border-color:#246b47}.day.work .mark{color:var(--green)}
+.day.off{border-color:#3a2525}.day.off .mark{color:var(--red)}
+.day.holiday{border-color:#7a2525;background:#1a0e0e}.day.holiday .mark{color:var(--red)}
+.day.today{box-shadow:0 0 0 2px #fff inset}
+
+@media(max-width:650px){
+ .container{width:96%;margin:12px auto}.card{padding:17px;border-radius:19px}
+ .balance{font-size:39px}.timer{gap:5px}.time-box{padding:11px 2px}.time-number{font-size:21px}
+ .plan{grid-template-columns:1fr 1fr;gap:6px;padding:12px}.services{grid-column:1/-1;border-top:1px solid var(--line);padding-top:8px}
+ .charge{text-align:right}.day{min-height:43px;padding:4px}.day .mark{font-size:9px}.calendar-wrap{padding:8px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div id="signupSection" class="card">
+  <h1>My Credits</h1>
+  <p class="muted">Enter your name to create your account.</p>
+  <input id="nameInput" type="text" maxlength="50" placeholder="Enter your name">
+  <button id="continueBtn">Continue</button>
+  <div id="signupMessage"></div>
+</div>
+
+<div id="dashboardSection" class="card hidden">
+  <h1>Hello, <span id="userName">User</span></h1>
+  <p class="muted">Current credits</p>
+  <div class="balance">🪙 <span id="creditBalance">0.0000</span></div>
+  <div class="rate">1 credit = 1 day • Working rate = ₹45.45 per hour</div>
+
+  <div class="timer-title">Time remaining</div>
+  <div class="timer">
+    <div class="time-box"><div class="time-number" id="days">0</div><div class="time-label">DAYS</div></div>
+    <div class="time-box"><div class="time-number" id="hours">00</div><div class="time-label">HOURS</div></div>
+    <div class="time-box"><div class="time-number" id="minutes">00</div><div class="time-label">MINUTES</div></div>
+    <div class="time-box"><div class="time-number" id="seconds">00</div><div class="time-label">SECONDS</div></div>
+  </div>
+  <div id="expiryText" class="expiry"></div>
+
+  <div class="section">
+    <div class="section-title">
+      <h2>Maintenance Plans</h2>
+      <span>Tap a plan to preview its schedule</span>
+    </div>
+    <div class="table">
+
+      <div class="plan gold" data-plan="gold">
+        <div class="plan-head">🥇 GOLD PLAN</div>
+        <div class="plan-days">22 DAYS<small>1H / WORKING DAY</small></div>
+        <div class="charge">₹999.90</div>
+        <div class="services">
+          <span class="ok">✅ Updates</span> ·
+          <span class="ok">✅ Bug Fixes</span> ·
+          <span class="ok">✅ Additional Features</span> ·
+          <span class="ok">✅ New Technology</span> ·
+          <span class="ok">✅ Orders / Activities</span>
+        </div>
+      </div>
+
+      <div class="plan silver" data-plan="silver">
+        <div class="plan-head">🥈 SILVER PLAN</div>
+        <div class="plan-days">15 DAYS<small>1H / WORKING DAY</small></div>
+        <div class="charge">₹681.75</div>
+        <div class="services">
+          <span class="ok">✅ Updates</span> ·
+          <span class="ok">✅ Bug Fixes</span> ·
+          <span class="ok">✅ Additional Features</span> ·
+          <span class="no">❌ New Technology</span> ·
+          <span class="ok">✅ Orders / Activities</span>
+        </div>
+      </div>
+
+      <div class="plan bronze" data-plan="bronze">
+        <div class="plan-head">🥉 BRONZE PLAN</div>
+        <div class="plan-days">7 DAYS<small>1H / WORKING DAY</small></div>
+        <div class="charge">₹318.15</div>
+        <div class="services">
+          <span class="ok">✅ Updates</span> ·
+          <span class="ok">✅ Bug Fixes</span> ·
+          <span class="ok">✅ Additional Features</span> ·
+          <span class="no">❌ New Technology</span> ·
+          <span class="no">❌ Orders / Activities</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="selectedPlanBox" class="selected-box">
+      Active plan: <b id="selectedPlanText">Not selected</b>
+    </div>
+
+    <div class="note">
+      Working rate is ₹45.45/hour. Prices above are calculated for 1 hour per scheduled working day.
+      Gold works every day except Sundays and configured holidays. Silver works Tuesday, Thursday and Friday.
+      Bronze works every Monday and Saturday.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <h2 id="calendarTitle">September 2026 Calendar</h2>
+      <span id="calendarLegend">Select a plan</span>
+    </div>
+    <div class="calendar-wrap">
+      <div class="cal-head">
+        <strong id="calendarPlanName">No plan selected</strong>
+        <span class="legend">GREEN = WORKING · RED = OFF / HOLIDAY</span>
+      </div>
+      <div id="calendar" class="calendar"></div>
+    </div>
+  </div>
+
+  <button id="logoutBtn" class="logout">Sign Out</button>
+</div>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import {getAuth,onAuthStateChanged,signInAnonymously,signOut} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import {getDatabase,ref,set,onValue} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+
+
+const firebaseConfig = {
+  apiKey:"AIzaSyD6qLwhG3XCLa6CmI_5t6z5jo38sFy3wrY",
+  authDomain:"e-commerce-cec81.firebaseapp.com",
+  databaseURL:"https://e-commerce-cec81-default-rtdb.firebaseio.com",
+  projectId:"e-commerce-cec81",
+  storageBucket:"e-commerce-cec81.firebasestorage.app",
+  messagingSenderId:"332395521196",
+  appId:"1:332395521196:web:9ec9e6db12eedd90ee6b09",
+  measurementId:"G-0YC0DE51S6"
+};
+
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const DAY_MS=86400000;
+let expiryAt=0,timer=null,currentPlan=null;
+
+const plans={
+ gold:{name:"🥇 GOLD PLAN",days:22,price:"₹999.90"},
+ silver:{name:"🥈 SILVER PLAN",days:15,price:"₹681.75"},
+ bronze:{name:"🥉 BRONZE PLAN",days:7,price:"₹318.15"}
+};
+
+/* Demo holiday dates. Add/remove dates here when you have actual holidays. */
+const HOLIDAYS={
+ "2026-09-14":"Demo Holiday"
+};
+
+const signupSection=document.getElementById("signupSection");
+const dashboardSection=document.getElementById("dashboardSection");
+const nameInput=document.getElementById("nameInput");
+const signupMessage=document.getElementById("signupMessage");
+
+function showSignup(){signupSection.classList.remove("hidden");dashboardSection.classList.add("hidden")}
+function showDashboard(){signupSection.classList.add("hidden");dashboardSection.classList.remove("hidden")}
+
+function updateTimer(){
+ const remaining=Math.max(0,expiryAt-Date.now()),s=Math.floor(remaining/1000);
+ document.getElementById("days").textContent=Math.floor(s/86400);
+ document.getElementById("hours").textContent=String(Math.floor((s%86400)/3600)).padStart(2,"0");
+ document.getElementById("minutes").textContent=String(Math.floor((s%3600)/60)).padStart(2,"0");
+ document.getElementById("seconds").textContent=String(s%60).padStart(2,"0");
+ document.getElementById("creditBalance").textContent=(remaining/DAY_MS).toFixed(4);
+ document.getElementById("expiryText").textContent=remaining>0?"Expires: "+new Date(expiryAt).toLocaleString():"Credits expired.";
+}
+function startTimer(){clearInterval(timer);updateTimer();timer=setInterval(updateTimer,1000)}
+
+document.getElementById("continueBtn").addEventListener("click",async()=>{
+ const name=nameInput.value.trim();
+ if(!name){signupMessage.className="error";signupMessage.textContent="Please enter your name.";return}
+ try{
+  signupMessage.className="";signupMessage.textContent="Creating account...";
+  const credential=await signInAnonymously(auth),uid=credential.user.uid;
+  await set(ref(db,"users/"+uid),{name,createdAt:Date.now(),expiryAt:0,plan:null});
+  signupMessage.textContent="";
+ }catch(error){console.error(error);signupMessage.className="error";signupMessage.textContent="Could not create account: "+error.message}
+});
+
+function selectPlan(planKey){
+ currentPlan=planKey;
+ document.querySelectorAll(".plan").forEach(x=>x.classList.toggle("selected",x.dataset.plan===planKey));
+ const p=plans[planKey];
+ document.getElementById("selectedPlanText").textContent=p.name+" • "+p.days+" days • "+p.price;
+ document.getElementById("calendarPlanName").textContent=p.name;
+ document.getElementById("calendarLegend").textContent=planKey==="gold"?"Sundays + holidays off":planKey==="silver"?"Sat/Sun/Mon/Wed off":"Mondays + Saturdays working";
+ renderCalendar(planKey);
+}
+document.querySelectorAll(".plan").forEach(row=>row.addEventListener("click",()=>selectPlan(row.dataset.plan)));
+
+function isoDate(y,m,d){return y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0")}
+function renderCalendar(planKey){
+ const cal=document.getElementById("calendar"),y=2026,m=9;
+ cal.innerHTML="";
+ ["SUN","MON","TUE","WED","THU","FRI","SAT"].forEach(x=>{const e=document.createElement("div");e.className="weekday";e.textContent=x;cal.appendChild(e)});
+ const first=new Date(y,m-1,1).getDay(),last=new Date(y,m,0).getDate();
+ for(let i=0;i<first;i++){const e=document.createElement("div");e.className="day empty";cal.appendChild(e)}
+ for(let d=1;d<=last;d++){
+  const date=new Date(y,m-1,d),key=isoDate(y,m,d),dow=date.getDay(),e=document.createElement("div");
+  e.className="day";
+  let working=false,label="OFF";
+  if(planKey==="gold"){working=dow!==0 && !HOLIDAYS[key];label=working?"WORK":"SUNDAY";}
+  if(planKey==="silver"){working=!([0,1,3,6].includes(dow));label=working?"WORK":"OFF";}
+  if(planKey==="bronze"){working=(dow===1||dow===6);label=working?"WORK":"OFF";}
+  if(HOLIDAYS[key] && planKey==="gold"){e.classList.add("holiday");label="HOLIDAY"}
+  else if(working)e.classList.add("work"); else e.classList.add("off");
+  const today=new Date();if(today.getFullYear()===y&&today.getMonth()===m-1&&today.getDate()===d)e.classList.add("today");
+  e.innerHTML='<span class="num">'+d+'</span><span class="mark">'+(working?"🟢 ":"🔴 ")+label+'</span>';
+  cal.appendChild(e);
+ }
+}
+
+function loadUser(uid){
+ showDashboard();
+ onValue(ref(db,"users/"+uid),snapshot=>{
+  if(!snapshot.exists())return;
+  const user=snapshot.val();
+  document.getElementById("userName").textContent=user.name||"User";
+  expiryAt=Number(user.expiryAt||0);
+  startTimer();
+  if(user.plan && plans[user.plan])selectPlan(user.plan);
+  else if(!currentPlan)selectPlan("gold");
+ },error=>{console.error(error);document.getElementById("expiryText").textContent="Could not load your account."});
+}
+
+onAuthStateChanged(auth,user=>{
+ if(!user){clearInterval(timer);showSignup();return}
+ if(user.isAnonymous)loadUser(user.uid);
+});
+
+document.getElementById("logoutBtn").addEventListener("click",async()=>{
+ await signOut(auth);nameInput.value="";signupMessage.textContent="";
+});
+</script>
+</body>
+</html>
