@@ -1,9 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0b1020">
-<title>Demo 3 — Studio Showcase</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mpoxel Foods | Seller Registration</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 75% 0%,rgba(100,84,230,.22),transparent 35%),#080d1a;color:#f4f7ff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;place-items:center;padding:22px}main{width:min(720px,100%);padding:clamp(24px,6vw,56px);border:1px solid #ffffff1c;border-radius:28px;background:linear-gradient(145deg,#ffffff0b,#ffffff04);box-shadow:0 30px 100px #0003}a{color:inherit;text-decoration:none}.back{display:inline-flex;gap:8px;align-items:center;color:#c8c2ff;font-size:.92rem;font-weight:700}.tag{margin-top:54px;color:#9c93ff;font-size:.78rem;font-weight:800;letter-spacing:.14em}h1{font-size:clamp(2.5rem,8vw,4.8rem);line-height:1;letter-spacing:-.07em;margin:15px 0}p{color:#a5b0c8;line-height:1.75;font-size:1.05rem;max-width:520px}.pill{display:inline-block;margin-top:20px;padding:12px 16px;border:1px solid #ffffff24;border-radius:13px;background:#ffffff09;font-weight:700}@media(max-width:480px){main{border-radius:20px}.tag{margin-top:38px}}
-</style></head>
-<body><main><a class="back" href="index.html">← Back to all demos</a><div class="tag">STUDIO / SHOWCASE · DEMO 03</div><h1>Demo Three</h1><p>This is a placeholder page for demo3.html. Replace this content with your actual demo while keeping the link back to the showcase.</p><a class="pill" href="index.html">Return to showcase ↗</a></main></body></html>
+  :root{--ink:#172033;--muted:#647084;--line:#dce2eb;--brand:#176b50;--brand2:#0d4f3b;--bg:#f4f7f6;--card:#fff;--bad:#a52828;--good:#176b50}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:24px 16px 48px}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .logo{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--brand);color:white;font-weight:900;font-size:19px}
+  .brand strong{display:block;font-size:21px;letter-spacing:-.4px}
+  .brand span{color:var(--muted);font-size:13px}
+  .hero{background:linear-gradient(135deg,#124d3b,#20825f);color:#fff;padding:26px;border-radius:20px;margin-bottom:20px}
+  .hero h1{margin:0 0 7px;font-size:clamp(25px,4vw,36px);line-height:1.15}
+  .hero p{margin:0;color:#e2f3ec;max-width:650px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:16px 0;box-shadow:0 5px 20px #1a2a3810}
+  h2{font-size:18px;margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+  label{display:block;font-weight:650;font-size:14px;margin-bottom:6px}
+  input,select,textarea{width:100%;border:1px solid #cbd4df;border-radius:10px;padding:12px 13px;background:#fff;color:var(--ink);font:inherit;min-height:46px}
+  textarea{min-height:92px;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:3px solid #176b5020;border-color:var(--brand)}
+  .hint{color:var(--muted);font-size:12px;margin-top:5px}
+  .checkrow{display:flex;gap:10px;align-items:flex-start;margin:12px 0}
+  .checkrow input{width:18px;height:18px;min-height:18px;margin-top:3px;flex:0 0 auto}
+  .checkrow label{font-weight:500;margin:0}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  button{border:0;border-radius:11px;padding:12px 18px;font:700 15px inherit;cursor:pointer;min-height:46px}
+  .primary{background:var(--brand);color:white}.primary:hover{background:var(--brand2)}
+  .secondary{background:#e9eef1;color:var(--ink)}
+  .status{display:none;padding:14px 16px;border-radius:12px;margin-top:16px;font-weight:650}
+  .status.good{display:block;background:#e8f6ee;color:#155c3d;border:1px solid #b5e0c7}
+  .status.bad{display:block;background:#fff0f0;color:#8c2020;border:1px solid #efc3c3}
+  #copy{display:none}
+  .copy-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid var(--brand);padding-bottom:14px;margin-bottom:16px}
+  .copy-head h2{margin:0;color:var(--brand);font-size:24px}
+  .copy-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+  .pill{display:inline-block;border-radius:999px;padding:5px 10px;background:#e8f6ee;color:#155c3d;font-size:12px;font-weight:800}
+  .copy-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .datum{border-bottom:1px solid var(--line);padding:8px 0;overflow-wrap:anywhere}
+  .datum small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+  .datum strong{font-size:14px;white-space:pre-wrap}
+  .notice{font-size:12px;color:var(--muted);margin-top:14px}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:16px}
+  @media(max-width:640px){.grid,.copy-grid{grid-template-columns:1fr}.panel{padding:17px}.hero{padding:22px}.copy-head{display:block}.copy-head .pill{margin-top:12px}}
+  @media print{
+    body{background:#fff}.wrap{max-width:none;padding:0}.brand,.hero,#formPanel,#eligibilityPanel,.screen-actions,footer{display:none!important}
+    #copy{display:block!important;border:0;box-shadow:none;margin:0;padding:0}
+    .panel{border:0;box-shadow:none;padding:0}
+    .copy-head{margin-top:0}
+    @page{size:A4;margin:16mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo">MF</div>
+    <div><strong>Mpoxel Foods</strong><span>Seller onboarding · Registration form</span></div>
+  </div>
+  <section class="hero">
+    <h1>Register as a seller</h1>
+    <p>Share your details and the items you want to list on Mpoxel Foods. This form checks the information you enter and creates a printable application copy.</p>
+  </section>
+
+  <form id="sellerForm">
+    <section class="panel" id="formPanel">
+      <h2>1. Seller details</h2>
+      <div class="grid">
+        <div><label for="fullName">Full name *</label><input id="fullName" name="fullName" autocomplete="name" required maxlength="100" placeholder="Name as known to Mpoxel Foods"></div>
+        <div><label for="shopName">Shop / seller name *</label><input id="shopName" name="shopName" required maxlength="100" placeholder="Name customers will see"></div>
+        <div><label for="phone">Mobile number *</label><input id="phone" name="phone" type="tel" inputmode="tel" required placeholder="10-digit mobile number" maxlength="15"></div>
+        <div><label for="email">Email (optional)</label><input id="email" name="email" type="email" maxlength="120" placeholder="you@example.com"></div>
+        <div><label for="sellerType">Seller type *</label><select id="sellerType" name="sellerType" required><option value="">Choose one</option><option>Individual seller</option><option>Home-based business</option><option>Registered business</option><option>Local shop</option></select></div>
+        <div><label for="ageConfirm">Age eligibility *</label><select id="ageConfirm" name="ageConfirm" required><option value="">Choose one</option><option value="yes">I am 18 years or older</option><option value="no">I am under 18</option></select></div>
+      </div>
+      <div style="margin-top:15px"><label for="address">Pickup / business address *</label><textarea id="address" name="address" required maxlength="400" placeholder="Enter the address used for seller coordination"></textarea></div>
+    </section>
+
+    <section class="panel" id="itemsPanel">
+      <h2>2. Items you want to sell</h2>
+      <div class="grid">
+        <div><label for="category">Main item category *</label><select id="category" name="category" required><option value="">Choose a category</option><option>Packaged food</option><option>Fresh / homemade food</option><option>Clothing and accessories</option><option>Home and lifestyle</option><option>Electronics and accessories</option><option>Digital products / services</option><option>Other permitted items</option></select></div>
+        <div><label for="itemCount">Approximate number of listings *</label><select id="itemCount" name="itemCount" required><option value="">Choose a range</option><option>1–5</option><option>6–20</option><option>21–50</option><option>More than 50</option></select></div>
+      </div>
+      <div style="margin-top:15px"><label for="itemDetails">Describe your items *</label><textarea id="itemDetails" name="itemDetails" required maxlength="800" placeholder="What will you sell? Mention any important details."></textarea></div>
+      <div class="grid" style="margin-top:15px">
+        <div><label for="fulfilment">How will orders be prepared / packed? *</label><select id="fulfilment" name="fulfilment" required><option value="">Choose one</option><option>Ready stock</option><option>Made / prepared after order</option><option>Digital delivery</option><option>Mixed</option></select></div>
+        <div><label for="delivery">Order handover method *</label><select id="delivery" name="delivery" required><option value="">Choose one</option><option>Customer pickup / society reception</option><option>Seller can arrange delivery</option><option>Coordinate with Mpoxel Foods</option><option>Digital delivery</option></select></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>3. Seller declarations</h2>
+      <p class="hint">No document upload is requested here. These declarations are used for an initial eligibility check only.</p>
+      <div class="checkrow"><input id="ownItems" type="checkbox" required><label for="ownItems">I own these items or have permission to sell them, and the information I provided is accurate. *</label></div>
+      <div class="checkrow"><input id="legalItems" type="checkbox" required><label for="legalItems">I will not list illegal, counterfeit, unsafe, or otherwise prohibited items. I understand that food listings must comply with applicable food-safety requirements. *</label></div>
+      <div class="checkrow"><input id="policies" type="checkbox" required><label for="policies">I agree to follow Mpoxel Foods’ seller, pricing, order-fulfilment, returns, and customer-service rules as communicated to me. *</label></div>
+      <div class="checkrow"><input id="review" type="checkbox" required><label for="review">I understand that passing this form’s check is not final approval; Mpoxel Foods may review the application and confirm seller eligibility separately. *</label></div>
+      <div class="actions"><button class="primary" type="submit">Check eligibility & create copy</button><button class="secondary" type="reset">Clear form</button></div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+  </form>
+
+  <section class="panel" id="copy" aria-live="polite">
+    <div class="copy-head">
+      <div><h2>Mpoxel Foods</h2><p>Seller Registration Application Copy</p><p id="applicationMeta"></p></div>
+      <span id="eligibilityPill" class="pill">INITIAL CHECK</span>
+    </div>
+    <div id="copySummary" style="margin-bottom:12px"></div>
+    <div class="copy-grid" id="copyGrid"></div>
+    <p class="notice">This copy is generated in this browser and is not proof of final seller approval. Form data is not sent to a server or saved by this page. Keep this copy private because it contains contact and address details.</p>
+    <div class="actions screen-actions"><button type="button" class="primary" onclick="window.print()">Print / Save as PDF</button><button type="button" class="secondary" onclick="downloadCopy()">Download text copy</button><button type="button" class="secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to form</button></div>
+  </section>
+  <footer>Mpoxel Foods · Seller Registration</footer>
+</div>
+<script>
+const form = document.getElementById('sellerForm');
+const statusBox = document.getElementById('status');
+let latestCopyText = '';
+
+function val(id){ return document.getElementById(id).value.trim(); }
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function setStatus(message, good){statusBox.className='status '+(good?'good':'bad');statusBox.textContent=message;}
+function makeRef(){
+  const d=new Date();
+  const date=d.getFullYear().toString()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  const rand=Math.random().toString(36).slice(2,7).toUpperCase();
+  return 'MF-'+date+'-'+rand;
+}
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  if(!form.reportValidity()) return;
+  const phone=val('phone').replace(/[^\d+]/g,'');
+  const digits=phone.replace(/\D/g,'');
+  if(digits.length<10 || digits.length>13){setStatus('Please enter a valid mobile number (10–13 digits, including country code if needed).',false);document.getElementById('phone').focus();return;}
+  const reasons=[];
+  if(val('ageConfirm')!=='yes') reasons.push('Seller must be 18 or older to register independently.');
+  if(!document.getElementById('ownItems').checked) reasons.push('Confirm ownership or permission to sell the items.');
+  if(!document.getElementById('legalItems').checked) reasons.push('Accept the permitted-items and applicable compliance declaration.');
+  if(!document.getElementById('policies').checked) reasons.push('Accept the seller rules.');
+  if(!document.getElementById('review').checked) reasons.push('Acknowledge that final approval requires a separate review.');
+  const eligible=reasons.length===0;
+  const ref=makeRef();
+  const now=new Date().toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});
+  const fields=[
+    ['Application reference',ref],['Full name',val('fullName')],['Seller / shop name',val('shopName')],
+    ['Mobile number',val('phone')],['Email',val('email')||'Not provided'],['Seller type',val('sellerType')],
+    ['Age declaration',val('ageConfirm')==='yes'?'18 or older':'Under 18'],['Pickup / business address',val('address')],
+    ['Main category',val('category')],['Approximate listing count',val('itemCount')],['Item description',val('itemDetails')],
+    ['Preparation / fulfilment',val('fulfilment')],['Order handover',val('delivery')],
+    ['Ownership declaration',document.getElementById('ownItems').checked?'Accepted':'Not accepted'],
+    ['Permitted items declaration',document.getElementById('legalItems').checked?'Accepted':'Not accepted'],
+    ['Seller rules',document.getElementById('policies').checked?'Accepted':'Not accepted'],
+    ['Separate review acknowledgement',document.getElementById('review').checked?'Accepted':'Not accepted'],
+    ['Generated at',now]
+  ];
+  document.getElementById('applicationMeta').textContent='Reference: '+ref+' · Generated: '+now;
+  const pill=document.getElementById('eligibilityPill');
+  pill.textContent=eligible?'INITIAL CHECK PASSED':'NOT ELIGIBLE YET';
+  pill.style.background=eligible?'#e8f6ee':'#fff0f0';
+  pill.style.color=eligible?'#155c3d':'#8c2020';
+  document.getElementById('copySummary').innerHTML=eligible
+    ?'<strong>Initial eligibility check passed.</strong> This means the required form fields and declarations are complete. Final seller approval is still pending review.'
+    :'<strong>Initial eligibility check not passed.</strong><ul>'+reasons.map(r=>'<li>'+escapeHTML(r)+'</li>').join('')+'</ul>';
+  document.getElementById('copyGrid').innerHTML=fields.map(([k,v])=>'<div class="datum"><small>'+escapeHTML(k)+'</small><strong>'+escapeHTML(v)+'</strong></div>').join('');
+  latestCopyText='MPOXEL FOODS\\nSELLER REGISTRATION APPLICATION COPY\\n'+fields.map(([k,v])=>k+': '+v).join('\\n')+'\\n\\nInitial check: '+(eligible?'PASSED — final approval pending':'NOT ELIGIBLE YET')+(reasons.length?'\\nReasons: '+reasons.join('; '):'');
+  document.getElementById('copy').style.display='block';
+  setStatus(eligible?'Initial check passed. Your printable application copy has been created below.':'Application copy created, but the initial eligibility check did not pass. See the reasons in the copy below.',eligible);
+  document.getElementById('copy').scrollIntoView({behavior:'smooth',block:'start'});
+});
+form.addEventListener('reset',()=>{statusBox.className='status';statusBox.textContent='';document.getElementById('copy').style.display='none';});
+function downloadCopy(){
+  if(!latestCopyText)return;
+  const blob=new Blob([latestCopyText],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='mpoxel-foods-seller-application.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
