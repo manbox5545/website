@@ -3,34 +3,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>INFINITE RIDE 3D</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#101923;color:white;font-family:Arial,sans-serif}
-canvas{position:fixed;inset:0;z-index:0}
+html,body{width:100%;height:100%;height:100dvh;margin:0;overflow:hidden;overscroll-behavior:none;background:#101923;color:white;font-family:Arial,sans-serif;touch-action:none;-webkit-tap-highlight-color:transparent}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;touch-action:none}
 #hud{position:fixed;inset:0;z-index:5;pointer-events:none}
-.panel{position:absolute;background:#071522dd;border:1px solid #ffffff30;border-radius:15px;padding:12px;backdrop-filter:blur(10px)}
+.panel{position:absolute;background:#071522ed;border:1px solid #ffffff30;border-radius:15px;padding:12px}
 #stats{top:15px;left:15px;font-size:13px;line-height:1.8}
 #stats strong{font-size:25px;display:block}
-#help{top:15px;right:15px;font-size:12px;text-align:right}
 #menu{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90%,470px);padding:35px 25px;text-align:center;border:1px solid #6be7c466;border-radius:25px;background:linear-gradient(145deg,#102e40f5,#07121df5);box-shadow:0 20px 80px #0009;pointer-events:auto;z-index:20}
 #menu h1{font-size:clamp(34px,8vw,54px);margin:12px 0;color:#78edc4;letter-spacing:-2px}
 #menu p{color:#c1d1dc;line-height:1.6;font-size:14px}
 #menu button{width:100%;padding:17px;border:0;border-radius:14px;background:#35dda6;color:#052019;font-weight:900;font-size:17px;cursor:pointer;touch-action:manipulation}
 #menu button:active{transform:scale(.97)}
-#controls{position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:auto}
+#controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:auto}
 .group{display:flex;gap:10px;align-items:end}
-.ctrl{width:60px;height:60px;border-radius:17px;background:#091827dd;color:white;border:1px solid #ffffff55;font-size:24px;touch-action:none}
+.ctrl{width:66px;height:66px;border-radius:18px;background:#091827f2;color:white;border:1px solid #ffffff55;font-size:26px;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 5px 16px #0005}
 #gas{background:#16a878;height:72px;width:72px}
 #brake{background:#b94c4c;height:66px;width:66px}
 #brake:active{background:#e05b5b}
 #gas:active{background:#24d99a}
 #crashFX{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 35%,#ff343455 100%);transition:opacity .06s}\n#speedFX{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 48%,#d7efff18 100%),repeating-linear-gradient(105deg,transparent 0 48px,#ffffff0b 49px 50px,transparent 51px 105px);mix-blend-mode:screen}
 #hint{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);font-size:10px;color:#ffffff99;white-space:nowrap}
-#pauseBtn{position:absolute;top:15px;right:50%;transform:translateX(50%);pointer-events:auto;border:1px solid #ffffff55;border-radius:12px;background:#071522dd;color:#fff;padding:10px 16px;font-weight:800;cursor:pointer;z-index:8}
-#pauseMenu{display:none;position:fixed;inset:0;z-index:30;background:#020912c9;backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:14px;pointer-events:auto}
+#pauseBtn{position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));transform:none;pointer-events:auto;border:1px solid #ffffff55;border-radius:12px;background:#071522f2;color:#fff;padding:11px 16px;font-weight:800;cursor:pointer;z-index:8;touch-action:manipulation}
+#pauseMenu{display:none;position:fixed;inset:0;z-index:30;background:#020912ed;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));pointer-events:auto}
 #pauseCard{width:min(94vw,490px);max-height:92vh;overflow:auto;border:1px solid #6be7c466;border-radius:22px;background:linear-gradient(145deg,#102e40,#07121d);box-shadow:0 20px 80px #000b;padding:22px}
 #pauseCard h2{margin:0 0 6px;color:#78edc4;font-size:28px}
 #pauseCard .sub{margin:0 0 18px;color:#bdcbd5;font-size:12px}
@@ -44,16 +43,32 @@ canvas{position:fixed;inset:0;z-index:0}
 #restartBtn{background:#263e50;color:white;border:1px solid #ffffff25}
 #controls.hidden{display:none}
 #controls .ctrl{user-select:none;-webkit-user-select:none}
-@media(max-width:600px){
- #help{font-size:10px;max-width:145px;top:68px}
- #stats{font-size:11px}#stats strong{font-size:21px}
- #pauseBtn{top:15px;right:14px;transform:none;padding:9px 12px}
- #controls{padding:0 10px;bottom:16px}
+@media(max-width:700px){
+ #stats{top:calc(10px + env(safe-area-inset-top));left:10px;padding:8px 10px;font-size:10px;line-height:1.55;border-radius:12px}
+ #stats strong{font-size:19px}
+ #pauseBtn{top:calc(10px + env(safe-area-inset-top));right:10px;transform:none;padding:10px 12px;font-size:12px}
+ #controls{padding:0 12px;bottom:calc(12px + env(safe-area-inset-bottom));}
+ .group{gap:8px}
+ .ctrl{width:clamp(56px,16vw,72px);height:clamp(56px,16vw,72px);border-radius:17px;font-size:25px}
+ #gas{width:clamp(62px,17vw,76px);height:clamp(62px,17vw,76px)}
+ #brake{width:clamp(58px,16vw,70px);height:clamp(58px,16vw,70px)}
+ #hint{display:none}
+ #menu{width:min(92vw,430px);max-height:84dvh;overflow:auto;padding:24px 18px;border-radius:20px}
+ #menu p{font-size:12px}
+ #pauseCard{width:min(94vw,460px);max-height:88dvh;padding:16px}
+ .setting{align-items:flex-start;flex-direction:column;gap:7px}
+ .setting select{max-width:none;width:100%;min-height:42px}
+ .pauseActions button{min-height:48px}
+}
+@media(max-height:500px) and (orientation:landscape){
+ #menu{max-height:90dvh;padding:14px 20px}
+ #menu p{margin:8px 0;font-size:11px}
+ #menu h1{font-size:32px;margin:5px 0}
+ #stats{top:8px}
+ #controls{bottom:calc(6px + env(safe-area-inset-bottom))}
  .ctrl{width:54px;height:54px}
- #gas{width:64px;height:64px}#brake{width:60px;height:60px}
- #pauseCard{padding:18px}
- .setting{align-items:flex-start;flex-direction:column;gap:8px}
- .setting select{max-width:none;width:100%}
+ #gas{width:58px;height:58px}#brake{height:54px;width:54px}
+ #pauseCard{max-height:94dvh}
 }
 </style>
 </head>
@@ -66,13 +81,6 @@ canvas{position:fixed;inset:0;z-index:0}
 <strong>30 km/h</strong>
 Distance: 0.00 km<br>
 Gear: D
-</div>
-
-<div id="help" class="panel">
-A / D : Change lane<br>
-W / ↑ : Accelerate<br>
-S / ↓ : Brake (min 30 km/h)<br>
-R : Restart
 </div>
 <button id="pauseBtn" type="button" aria-label="Pause game">Ⅱ PAUSE</button>
 
@@ -113,6 +121,14 @@ R : Restart
    <select id="accelMode">
     <option value="auto">Automatic accelerate</option>
     <option value="manual">Manual accelerate</option>
+   </select>
+  </div>
+  <div class="setting">
+   <div><label for="graphicsQuality">Graphics quality</label><small>Performance reduces rendering load on phones.</small></div>
+   <select id="graphicsQuality">
+    <option value="performance">Performance</option>
+    <option value="balanced">Balanced</option>
+    <option value="quality">Quality</option>
    </select>
   </div>
   <div class="setting">
@@ -171,11 +187,19 @@ const camera=new THREE.PerspectiveCamera(
 );
 camera.position.set(0,2.5,3.6);
 
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
-renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const IS_MOBILE = matchMedia("(max-width: 900px), (pointer: coarse)").matches;
+const DEFAULT_QUALITY = IS_MOBILE ? "performance" : "balanced";
+const renderer=new THREE.WebGLRenderer({
+ antialias:!IS_MOBILE,
+ alpha:false,
+ powerPreference:"high-performance",
+ stencil:false,
+ depth:true
+});
+renderer.setPixelRatio(Math.min(devicePixelRatio,IS_MOBILE?1.15:1.5));
+renderer.setSize(innerWidth,innerHeight,false);
+renderer.shadowMap.enabled=false; // expensive on mobile GPUs
+renderer.info.autoReset=true;
 renderer.outputColorSpace=THREE.SRGBColorSpace;
 document.body.insertBefore(renderer.domElement,document.body.firstChild);
 
@@ -183,8 +207,8 @@ scene.add(new THREE.HemisphereLight(0xffffff,0x526044,2));
 
 const sun=new THREE.DirectionalLight(0xffedcf,2);
 sun.position.set(-15,30,20);
-sun.castShadow=true;
-sun.shadow.mapSize.set(1024,1024);
+sun.castShadow=false;
+sun.shadow.mapSize.set(256,256);
 scene.add(sun);
 
 /* MATERIALS */
@@ -224,8 +248,8 @@ function box(parent,w,h,d,mat,x,y,z){
   new THREE.BoxGeometry(w,h,d),mat
  );
  mesh.position.set(x,y,z);
- mesh.castShadow=true;
- mesh.receiveShadow=true;
+ mesh.castShadow=false;
+ mesh.receiveShadow=false;
  parent.add(mesh);
  return mesh;
 }
@@ -234,7 +258,7 @@ function box(parent,w,h,d,mat,x,y,z){
 
 const ROAD_WIDTH=12;
 const CHUNK_LENGTH=60;
-const CHUNK_COUNT=7;
+const CHUNK_COUNT=IS_MOBILE?5:7;
 const chunks=[];
 const lanes=[-4,0,4];
 
@@ -446,7 +470,7 @@ function createCar(z,lane){
 
  for(const x of [-.55,.55]){
   box(car,.28,.16,.08,yellow,x,.78,1.7);
-  box(car,.3,.16,.08,material(0xe34837),x,.78,-1.7);
+  box(car,.3,.16,.08,red,x,.78,-1.7);
  }
 
  car.position.set(lanes[lane],0,z);
@@ -475,7 +499,7 @@ let lane=1;
 let targetX=0;
 let started=false;
 let paused=false;
-const settings={controlMode:"buttons",accelMode:"auto",sensitivity:"medium"};
+const settings={controlMode:"buttons",accelMode:"auto",sensitivity:"medium",graphicsQuality:DEFAULT_QUALITY};
 let tiltGamma=0;
 
 const stats=document.getElementById("stats");
@@ -553,6 +577,12 @@ function applySettings(){
  settings.controlMode=document.getElementById("controlMode").value;
  settings.accelMode=document.getElementById("accelMode").value;
  settings.sensitivity=document.getElementById("sensitivity").value;
+ const quality=document.getElementById("graphicsQuality");
+ if(quality)settings.graphicsQuality=quality.value;
+ const pixelCap=settings.graphicsQuality==="performance"?(IS_MOBILE?1:1.15):
+  settings.graphicsQuality==="balanced"?(IS_MOBILE?1.2:1.5):(IS_MOBILE?1.35:1.8);
+ renderer.setPixelRatio(Math.min(devicePixelRatio,pixelCap));
+ renderer.setSize(innerWidth,innerHeight,false);
  // Button mode uses the on-screen steering pad. Tilt mode uses device orientation.
  // Keyboard mode uses WASD/arrow keys. Gas/brake buttons remain available in manual mode.
  document.getElementById("controls").classList.toggle(
@@ -560,12 +590,6 @@ function applySettings(){
  );
  const gasButton=document.getElementById("gas");
  gasButton.style.display=settings.accelMode==="auto"?"none":"block";
- document.getElementById("help").innerHTML=
-  settings.controlMode==="tilt"
-   ? "Tilt phone: steer<br>Brake: on-screen button<br>"+(settings.accelMode==="manual"?"Gas: on-screen button":"Auto accelerate")+"<br>R : Restart"
-   : settings.controlMode==="wasd"
-    ? "A / D or ← / → : Steer<br>"+(settings.accelMode==="manual"?"W / ↑ : Accelerate<br>":"Automatic accelerate<br>")+"S / ↓ : Brake<br>R : Restart"
-    : "← / → : Change lane<br>"+(settings.accelMode==="manual"?"Gas button: Accelerate<br>":"Automatic accelerate<br>")+"Brake button: Brake<br>R : Restart";
 }
 
 function restart(){
@@ -647,7 +671,8 @@ document.getElementById("restartBtn").addEventListener("click",()=>{
  applySettings();
  restart();
 });
-["controlMode","accelMode","sensitivity"].forEach(id=>{
+document.getElementById("graphicsQuality").value=DEFAULT_QUALITY;
+["controlMode","accelMode","sensitivity","graphicsQuality"].forEach(id=>{
  document.getElementById(id).addEventListener("change",()=>{
   if(id==="controlMode"&&document.getElementById(id).value==="tilt"&&
      typeof DeviceOrientationEvent!=="undefined"&&
@@ -662,6 +687,8 @@ applySettings();
 /* GAME LOOP */
 
 let previous=performance.now();
+let lastRender=0;
+const RENDER_INTERVAL=IS_MOBILE?1000/45:0;
 
 function animate(now){
  requestAnimationFrame(animate);
@@ -866,7 +893,10 @@ function animate(now){
   `;
  }
 
- renderer.render(scene,camera);
+ if(!RENDER_INTERVAL || now-lastRender>=RENDER_INTERVAL){
+  renderer.render(scene,camera);
+  lastRender=now;
+ }
 }
 
 requestAnimationFrame(animate);
@@ -876,11 +906,25 @@ requestAnimationFrame(animate);
 addEventListener("blur",()=>{
  Object.keys(keys).forEach(k=>keys[k]=false);
 });
-addEventListener("resize",()=>{
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){
+  Object.keys(keys).forEach(k=>keys[k]=false);
+  if(started&&!paused)pauseGame();
+ }else{
+  previous=performance.now();
+ }
+});
+let resizeTimer=0;
+function resizeGame(){
  camera.aspect=innerWidth/innerHeight;
  camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
-});
+ renderer.setSize(innerWidth,innerHeight,false);
+ renderer.setPixelRatio(Math.min(devicePixelRatio,
+  settings.graphicsQuality==="performance"?(IS_MOBILE?1:1.15):
+  settings.graphicsQuality==="balanced"?(IS_MOBILE?1.2:1.5):(IS_MOBILE?1.35:1.8)));
+}
+addEventListener("resize",resizeGame,{passive:true});
+addEventListener("orientationchange",()=>setTimeout(resizeGame,180),{passive:true});
 
 </script>
 </body>
