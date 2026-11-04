@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>INFINITE RIDE — Main Menu</title>
+<style>
+:root{color-scheme:dark;--bg:#07131e;--panel:#102535;--mint:#69efc4;--muted:#a9bdc9;--line:#ffffff20}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 50% -20%,#24506a 0,#0b1d2a 42%,#050c13 100%);color:#f3f8fb}
+body{min-height:100vh;padding:24px;display:flex;align-items:center;justify-content:center}
+.wrap{width:min(100%,980px);margin:auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:24px}
+.brand{font-weight:950;letter-spacing:2px;font-size:13px;color:var(--mint)}
+.brand span{display:block;font-size:clamp(28px,6vw,46px);letter-spacing:-2px;color:white;margin-top:5px}
+#accountPill{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:9px 12px;border-radius:99px}
+.layout{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+.card{background:linear-gradient(145deg,#132e40f2,#091723f5);border:1px solid #8bdcc22b;border-radius:24px;padding:clamp(18px,4vw,30px);box-shadow:0 24px 70px #0005}
+h1,h2,p{margin-top:0}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.03;letter-spacing:-1.5px;margin-bottom:10px}
+h2{font-size:20px;margin-bottom:7px}
+.sub{color:var(--muted);line-height:1.55;font-size:13px}
+.form{display:grid;gap:10px;margin-top:18px}
+input{width:100%;padding:14px 15px;border-radius:12px;border:1px solid #ffffff25;background:#06121c;color:white;font:inherit;outline:none}
+input:focus{border-color:var(--mint);box-shadow:0 0 0 3px #69efc41c}
+button{border:0;border-radius:12px;padding:14px 16px;font-weight:850;font-size:14px;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.45;cursor:not-allowed}
+.primary{background:var(--mint);color:#062219}
+.secondary{background:#233d50;color:white;border:1px solid #ffffff1c}
+.ghost{background:transparent;color:#c9d9e2;border:1px solid #ffffff25}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.row>*{flex:1}
+.divider{height:1px;background:var(--line);margin:20px 0}
+.hidden{display:none!important}
+#notice{margin-top:14px;font-size:12px;color:#ffd98c;min-height:18px;line-height:1.45}
+.roomCode{font-size:34px;letter-spacing:7px;font-weight:950;color:var(--mint);margin:10px 0}
+.memberList{display:grid;gap:8px;margin:14px 0}
+.member{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;background:#06131e;border:1px solid var(--line);border-radius:10px;font-size:13px}
+.tag{color:var(--mint);font-size:10px;font-weight:900;letter-spacing:1px}
+.modes{display:grid;gap:10px;margin-top:16px}
+.mode{padding:16px;text-align:left;background:#0a1c29;border:1px solid #ffffff20;color:white;border-radius:16px}
+.mode strong{display:block;font-size:15px;margin-bottom:4px}
+.mode small{color:var(--muted);font-weight:500;line-height:1.4}
+footer{margin-top:18px;color:#7f96a5;font-size:11px;text-align:center}
+@media(max-width:760px){body{padding:16px;align-items:flex-start}.layout{grid-template-columns:1fr}header{margin-bottom:16px}.card{border-radius:19px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="brand">ENDLESS HIGHWAY<span>INFINITE RIDE</span></div>
+ <div id="accountPill">Not signed in</div>
+</header>
+<div class="layout">
+<section class="card">
+ <div class="tag">RACE NETWORK</div>
+ <h1>Choose your ride.</h1>
+ <p class="sub">Sign in to save your rider name, create a private room, or join another rider. Rooms are shared live through Firebase.</p>
+
+ <div id="authPanel">
+  <h2>Rider account</h2>
+  <div class="form">
+   <input id="email" type="email" autocomplete="email" placeholder="Email address">
+   <input id="password" type="password" autocomplete="current-password" placeholder="Password (6+ characters)">
+   <input id="newName" maxlength="18" placeholder="Rider name (for new accounts)">
+   <div class="row">
+    <button class="primary" id="signInBtn">Sign in</button>
+    <button class="secondary" id="signUpBtn">Create account</button>
+   </div>
+  </div>
+ </div>
+
+ <div id="signedPanel" class="hidden">
+  <h2 id="welcome">Welcome, rider</h2>
+  <p class="sub">Your rider profile is stored in your Firebase account.</p>
+  <div class="form">
+   <input id="editName" maxlength="18" placeholder="Change rider name">
+   <button class="secondary" id="saveNameBtn">Save rider name</button>
+   <button class="ghost" id="signOutBtn">Sign out</button>
+  </div>
+ </div>
+ <div id="notice" role="status"></div>
+</section>
+
+<section class="card">
+ <div class="tag">RACE LOBBY</div>
+ <h2>Start racing</h2>
+ <p class="sub">Play a solo ride against traffic, or race other people in a room. Each account can occupy only one room at a time.</p>
+ <div id="raceActions" class="modes hidden">
+  <button class="mode" id="soloBtn"><strong>🏍 Solo ride + traffic bots</strong><small>Start immediately on the endless highway.</small></button>
+  <button class="mode" id="createBtn"><strong>＋ Create a room</strong><small>Generate a room code and invite friends.</small></button>
+  <div class="row">
+   <input id="roomInput" maxlength="6" placeholder="ROOM CODE" style="text-transform:uppercase;letter-spacing:3px">
+   <button class="secondary" id="joinBtn">Join room</button>
+  </div>
+ </div>
+
+ <div id="lobby" class="hidden">
+  <div class="tag">ROOM READY</div>
+  <div class="roomCode" id="roomCode">------</div>
+  <p class="sub">Share this code with other riders.</p>
+  <div class="memberList" id="members"></div>
+  <div class="row">
+   <button class="primary" id="startRaceBtn">Start race</button>
+   <button class="ghost" id="leaveRoomBtn">Leave room</button>
+  </div>
+ </div>
+ <div id="signedOutHint" class="sub">Sign in to unlock rooms and saved rider profiles.</div>
+</section>
+</div>
+<footer>INFINITE RIDE 3D · Multiplayer requires Firebase Authentication and Realtime Database to be enabled.</footer>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getDatabase,ref,set,get,update,onValue,onDisconnect,remove} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyBc8TNJTV37DovLUmCg8nAPj9zxm3csixY",
+ authDomain:"pongalpay-af74b.firebaseapp.com",
+ databaseURL:"https://pongalpay-af74b-default-rtdb.firebaseio.com",
+ projectId:"pongalpay-af74b",
+ storageBucket:"pongalpay-af74b.firebasestorage.app",
+ messagingSenderId:"862427180634",
+ appId:"1:862427180634:web:76ece7829eac438e71b263",
+ measurementId:"G-58EBBBJ3P9"
+};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+const $=id=>document.getElementById(id);
+let currentUser=null,profileName="Rider",currentRoom=null,roomListener=null,membersListener=null;
+const cleanName=s=>(String(s||"Rider").trim().replace(/[<>]/g,"").slice(0,18)||"Rider");
+function notice(msg,isError=false){$("notice").textContent=msg;$("notice").style.color=isError?"#ff9b9b":"#ffd98c";}
+function showAuth(user){
+ $("authPanel").classList.toggle("hidden",!!user);
+ $("signedPanel").classList.toggle("hidden",!user);
+ $("raceActions").classList.toggle("hidden",!user);
+ $("signedOutHint").classList.toggle("hidden",!!user);
+ $("accountPill").textContent=user?profileName+" · signed in":"Not signed in";
+ if(user){$("welcome").textContent="Welcome, "+profileName;$("editName").value=profileName;}
+}
+async function loadProfile(user){
+ const snap=await get(ref(db,`users/${user.uid}/profile`));
+ const data=snap.val()||{};
+ profileName=cleanName(data.displayName||user.displayName||$("newName").value||"Rider");
+ await set(ref(db,`users/${user.uid}/profile`),{displayName:profileName,email:user.email||"",updatedAt:Date.now(),createdAt:data.createdAt||Date.now()});
+ showAuth(user);
+}
+async function signIn(){
+ const email=$("email").value.trim(),password=$("password").value;
+ if(!email||!password)throw new Error("Enter your email and password.");
+ await signInWithEmailAndPassword(auth,email,password);
+}
+async function signUp(){
+ const email=$("email").value.trim(),password=$("password").value,name=cleanName($("newName").value);
+ if(!email||password.length<6)throw new Error("Enter an email and a password of at least 6 characters.");
+ const cred=await createUserWithEmailAndPassword(auth,email,password);
+ await updateProfile(cred.user,{displayName:name});
+ await set(ref(db,`users/${cred.user.uid}/profile`),{displayName:name,email,createdAt:Date.now(),updatedAt:Date.now()});
+}
+$("signInBtn").onclick=()=>signIn().catch(e=>notice(e.message,true));
+$("signUpBtn").onclick=()=>signUp().catch(e=>notice(e.message,true));
+$("signOutBtn").onclick=()=>signOut(auth).catch(e=>notice(e.message,true));
+$("saveNameBtn").onclick=async()=>{
+ try{
+  const name=cleanName($("editName").value);
+  await updateProfile(currentUser,{displayName:name});
+  profileName=name;
+  await update(ref(db,`users/${currentUser.uid}/profile`),{displayName:name,updatedAt:Date.now()});
+  showAuth(currentUser);notice("Rider name updated.");
+ }catch(e){notice(e.message,true);}
+};
+function makeCode(){return Math.random().toString(36).slice(2,8).toUpperCase();}
+async function ensureNoOtherRoom(){
+ const mapping=await get(ref(db,`userRooms/${currentUser.uid}`));
+ if(mapping.exists()){
+  const code=mapping.val().roomCode;
+  const existing=await get(ref(db,`rooms/${code}/members/${currentUser.uid}`));
+  if(existing.exists())throw new Error("You are already in room "+code+". Leave it before joining another.");
+  await remove(ref(db,`userRooms/${currentUser.uid}`));
+ }
+}
+async function enterRoom(code,create=false){
+ code=code.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+ if(code.length!==6)throw new Error("Room codes contain 6 characters.");
+ await ensureNoOtherRoom();
+ const roomRef=ref(db,`rooms/${code}`);
+ if(create){
+  const snap=await get(roomRef);
+  if(snap.exists())throw new Error("Code collision. Create the room again.");
+  await set(roomRef,{code,hostUid:currentUser.uid,createdAt:Date.now(),members:{}});
+ }else{
+  const snap=await get(roomRef);
+  if(!snap.exists())throw new Error("Room not found. Check the code.");
+ }
+ const memberRef=ref(db,`rooms/${code}/members/${currentUser.uid}`);
+ await set(memberRef,{uid:currentUser.uid,name:profileName,joinedAt:Date.now(),distance:0,lane:1,speed:0});
+ await onDisconnect(memberRef).remove();
+ await set(ref(db,`userRooms/${currentUser.uid}`),{roomCode:code,joinedAt:Date.now()});
+ currentRoom=code;
+ $("roomCode").textContent=code;
+ $("lobby").classList.remove("hidden");
+ $("raceActions").classList.add("hidden");
+ $("roomInput").value="";
+ listenRoom(code);
+ notice(create?"Room created.":"Joined room.");
+}
+function listenRoom(code){
+ if(membersListener)membersListener();
+ const membersRef=ref(db,`rooms/${code}/members`);
+ membersListener=onValue(membersRef,snap=>{
+  const data=snap.val()||{};
+  const entries=Object.values(data);
+  $("members").innerHTML=entries.map(m=>`<div class="member"><span>${escapeText(m.name||"Rider")}</span><span>${m.uid===currentUser.uid?"YOU": "RIDER"}</span></div>`).join("")||'<div class="sub">Waiting for riders…</div>';
+ });
+}
+function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+$("createBtn").onclick=()=>enterRoom(makeCode(),true).catch(e=>notice(e.message,true));
+$("joinBtn").onclick=()=>enterRoom($("roomInput").value,false).catch(e=>notice(e.message,true));
+$("soloBtn").onclick=()=>location.href="./game.html";
+$("startRaceBtn").onclick=()=>{
+ if(!currentRoom)return;
+ const url=new URL("./game.html",location.href);
+ url.searchParams.set("room",currentRoom);
+ url.searchParams.set("name",profileName);
+ location.href=url.href;
+};
+$("leaveRoomBtn").onclick=async()=>{
+ try{
+  if(!currentRoom)return;
+  await remove(ref(db,`rooms/${currentRoom}/members/${currentUser.uid}`));
+  await remove(ref(db,`userRooms/${currentUser.uid}`));
+  if(membersListener)membersListener();
+  membersListener=null;currentRoom=null;
+  $("lobby").classList.add("hidden");$("raceActions").classList.remove("hidden");
+  notice("You left the room.");
+ }catch(e){notice(e.message,true);}
+};
+onAuthStateChanged(auth,async user=>{
+ currentUser=user;
+ if(user){
+  try{await loadProfile(user);}catch(e){notice(e.message,true);showAuth(user);}
+ }else{
+  profileName="Rider";showAuth(null);
+  $("lobby").classList.add("hidden");$("raceActions").classList.add("hidden");
+ }
+});
+</script>
+</body>
+</html>

@@ -14,18 +14,16 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;tou
 .panel{position:absolute;background:#071522ed;border:1px solid #ffffff30;border-radius:15px;padding:12px}
 #stats{top:15px;left:15px;font-size:13px;line-height:1.8}
 #stats strong{font-size:25px;display:block}
-#menu{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90%,470px);padding:35px 25px;text-align:center;border:1px solid #6be7c466;border-radius:25px;background:linear-gradient(145deg,#102e40f5,#07121df5);box-shadow:0 20px 80px #0009;pointer-events:auto;z-index:20}
-#menu h1{font-size:clamp(34px,8vw,54px);margin:12px 0;color:#78edc4;letter-spacing:-2px}
-#menu p{color:#c1d1dc;line-height:1.6;font-size:14px}
-#menu button{width:100%;padding:17px;border:0;border-radius:14px;background:#35dda6;color:#052019;font-weight:900;font-size:17px;cursor:pointer;touch-action:manipulation}
-#menu button:active{transform:scale(.97)}
+#countdown{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;pointer-events:none;background:#06121a30}
+#countdownCard{text-align:center;padding:20px 34px;border:1px solid #7cf5d080;border-radius:22px;background:#071522d9;box-shadow:0 12px 55px #0008;backdrop-filter:blur(8px)}
+#countdownLabel{font-size:11px;letter-spacing:4px;color:#9bdccc;font-weight:800}
+#countdownNumber{font-size:clamp(64px,15vw,110px);line-height:1.05;font-weight:900;color:#78edc4;text-shadow:0 0 28px #35dda677}
+#countdownCard.go #countdownNumber{font-size:clamp(36px,9vw,64px)}
 #controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:auto}
 .group{display:flex;gap:10px;align-items:end}
 .ctrl{width:66px;height:66px;border-radius:18px;background:#091827f2;color:white;border:1px solid #ffffff55;font-size:26px;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 5px 16px #0005}
-#gas{background:#16a878;height:72px;width:72px}
 #brake{background:#b94c4c;height:66px;width:66px}
 #brake:active{background:#e05b5b}
-#gas:active{background:#24d99a}
 #crashFX{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 35%,#ff343455 100%);transition:opacity .06s}\n#speedFX{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 48%,#d7efff18 100%),repeating-linear-gradient(105deg,transparent 0 48px,#ffffff0b 49px 50px,transparent 51px 105px);mix-blend-mode:screen}
 #hint{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);font-size:10px;color:#ffffff99;white-space:nowrap}
 #pauseBtn{position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));transform:none;pointer-events:auto;border:1px solid #ffffff55;border-radius:12px;background:#071522f2;color:#fff;padding:11px 16px;font-weight:800;cursor:pointer;z-index:8;touch-action:manipulation}
@@ -50,7 +48,6 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;tou
  #controls{padding:0 12px;bottom:calc(12px + env(safe-area-inset-bottom));}
  .group{gap:8px}
  .ctrl{width:clamp(56px,16vw,72px);height:clamp(56px,16vw,72px);border-radius:17px;font-size:25px}
- #gas{width:clamp(62px,17vw,76px);height:clamp(62px,17vw,76px)}
  #brake{width:clamp(58px,16vw,70px);height:clamp(58px,16vw,70px)}
  #hint{display:none}
  #menu{width:min(92vw,430px);max-height:84dvh;overflow:auto;padding:24px 18px;border-radius:20px}
@@ -67,7 +64,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;tou
  #stats{top:8px}
  #controls{bottom:calc(6px + env(safe-area-inset-bottom))}
  .ctrl{width:54px;height:54px}
- #gas{width:58px;height:58px}#brake{height:54px;width:54px}
+ #brake{height:54px;width:54px}
  #pauseCard{max-height:94dvh}
 }
 </style>
@@ -83,14 +80,13 @@ Distance: 0.00 km<br>
 Gear: D
 </div>
 <button id="pauseBtn" type="button" aria-label="Pause game">Ⅱ PAUSE</button>
+ <div id="raceStatus" style="position:absolute;top:64px;right:14px;padding:7px 10px;border-radius:10px;background:#071522d9;border:1px solid #ffffff30;font-size:11px;display:none;max-width:48vw;text-align:right"></div>
 
-<div id="menu">
-<div style="letter-spacing:4px;color:#77eac2;font-size:11px;font-weight:bold">ENDLESS HIGHWAY SIMULATOR</div>
-<h1>INFINITE RIDE</h1>
-<div style="letter-spacing:2px;font-size:12px;color:#c3d4df">FIND YOUR LANE. OWN THE ROAD.</div>
-<p>Ride an endless 3D highway with engine and wind audio, speed-sensitive camera, suspension movement, rotating wheels, realistic coasting, braking dive and crash feedback. Minimum forward speed: 30 km/h.</p>
-<button id="start" type="button">▶ START RIDE</button>
-<p style="font-size:10px">KEYBOARD + MOBILE CONTROLS</p>
+<div id="countdown" aria-live="polite">
+ <div id="countdownCard">
+  <div id="countdownLabel">INFINITE RIDE · GET READY</div>
+  <div id="countdownNumber">3</div>
+ </div>
 </div>
 
 <div id="controls">
@@ -100,27 +96,18 @@ Gear: D
 </div>
 <div class="group">
 <button class="ctrl" id="brake" aria-label="Brake">−</button>
-<button class="ctrl" id="gas" aria-label="Accelerate">+</button>
 </div>
 </div>
 
 <div id="pauseMenu" role="dialog" aria-modal="true" aria-label="Pause menu">
  <div id="pauseCard">
   <h2>PAUSED</h2>
-  <p class="sub">Adjust the riding setup. Changes apply immediately when you resume.</p>
+  <p class="sub">Choose steering and graphics settings. Acceleration stays automatic.</p>
   <div class="setting">
    <div><label for="controlMode">Control method</label><small>Choose how you steer the bike.</small></div>
    <select id="controlMode">
-    <option value="buttons">Button controls</option>
-    <option value="tilt">Tilt controls (mobile)</option>
+    <option value="buttons">On-screen buttons</option>
     <option value="wasd">WASD / keyboard</option>
-   </select>
-  </div>
-  <div class="setting">
-   <div><label for="accelMode">Acceleration</label><small>Automatic keeps accelerating; manual uses the gas control.</small></div>
-   <select id="accelMode">
-    <option value="auto">Automatic accelerate</option>
-    <option value="manual">Manual accelerate</option>
    </select>
   </div>
   <div class="setting">
@@ -129,14 +116,6 @@ Gear: D
     <option value="performance">Performance</option>
     <option value="balanced">Balanced</option>
     <option value="quality">Quality</option>
-   </select>
-  </div>
-  <div class="setting">
-   <div><label for="sensitivity">Tilt sensitivity</label><small>Only applies to tilt controls.</small></div>
-   <select id="sensitivity">
-    <option value="low">Low</option>
-    <option value="medium" selected>Medium</option>
-    <option value="high">High</option>
    </select>
   </div>
   <div class="pauseActions">
@@ -149,20 +128,26 @@ Gear: D
 <div id="hint">3D ENDLESS ROAD · TRAFFIC SIMULATION</div>
 </div>
 
-<!-- This script handles the start button independently of Three.js -->
+<!-- Automatic three-second start countdown -->
 <script>
 window.rideStarted=false;
-
-document.getElementById("start").addEventListener("click",function(){
-    window.rideStarted=true;
-    document.getElementById("menu").style.display="none";
-});
-
-document.getElementById("start").addEventListener("touchend",function(e){
-    e.preventDefault();
-    window.rideStarted=true;
-    document.getElementById("menu").style.display="none";
-},{passive:false});
+(function(){
+ const overlay=document.getElementById("countdown");
+ const card=document.getElementById("countdownCard");
+ const number=document.getElementById("countdownNumber");
+ let count=3;
+ const timer=setInterval(()=>{
+  count--;
+  if(count>0)number.textContent=String(count);
+  else{
+   clearInterval(timer);
+   card.classList.add("go");
+   number.textContent="GO!";
+   window.rideStarted=true;
+   setTimeout(()=>{overlay.style.display="none";},550);
+  }
+ },1000);
+})();
 </script>
 
 <script type="importmap">
@@ -175,17 +160,63 @@ document.getElementById("start").addEventListener("touchend",function(e){
 
 <script type="module">
 import * as THREE from "three";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const firebaseConfig = {
+ apiKey: "AIzaSyBc8TNJTV37DovLUmCg8nAPj9zxm3csixY",
+ authDomain: "pongalpay-af74b.firebaseapp.com",
+ databaseURL: "https://pongalpay-af74b-default-rtdb.firebaseio.com",
+ projectId: "pongalpay-af74b",
+ storageBucket: "pongalpay-af74b.firebasestorage.app",
+ messagingSenderId: "862427180634",
+ appId: "1:862427180634:web:76ece7829eac438e71b263",
+ measurementId: "G-58EBBBJ3P9"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const realtimeDB = getDatabase(firebaseApp);
+const firebaseAuth = getAuth(firebaseApp);
+const gameParams = new URLSearchParams(location.search);
+const activeRoomCode = gameParams.get("room");
+const playerName = gameParams.get("name") || "Rider";
+
 
 /* SCENE */
 
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x9bc7d9);
-scene.fog=new THREE.Fog(0x9bc7d9,65,240);
+scene.fog=new THREE.Fog(0xb7c9ca,48,205);
+
+// Lightweight painted sky dome with soft cloud bands.
+function makeSkyTexture(){
+ const c=document.createElement("canvas");
+ c.width=1024;c.height=512;
+ const ctx=c.getContext("2d");
+ const g=ctx.createLinearGradient(0,0,0,512);
+ g.addColorStop(0,"#4e83a4");g.addColorStop(.48,"#a8cbd6");
+ g.addColorStop(.78,"#d6d6c9");g.addColorStop(1,"#e5c7a8");
+ ctx.fillStyle=g;ctx.fillRect(0,0,1024,512);
+ for(let i=0;i<115;i++){
+  const x=Math.random()*1024,y=70+Math.random()*270;
+  const w=35+Math.random()*125,h=8+Math.random()*24;
+  const cloud=ctx.createRadialGradient(x,y,2,x,y,w);
+  cloud.addColorStop(0,"rgba(255,255,255,.34)");
+  cloud.addColorStop(1,"rgba(255,255,255,0)");
+  ctx.fillStyle=cloud;ctx.beginPath();ctx.ellipse(x,y,w,h,0,0,Math.PI*2);ctx.fill();
+ }
+ const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+}
+const skyDome=new THREE.Mesh(
+ new THREE.SphereGeometry(420,18,12),
+ new THREE.MeshBasicMaterial({map:makeSkyTexture(),side:THREE.BackSide,depthWrite:false})
+);
+skyDome.position.y=15;scene.add(skyDome);
 
 const camera=new THREE.PerspectiveCamera(
  65,innerWidth/innerHeight,0.1,500
 );
-camera.position.set(0,2.5,3.6);
+camera.position.set(0,1.98,4.5);
 
 const IS_MOBILE = matchMedia("(max-width: 900px), (pointer: coarse)").matches;
 const DEFAULT_QUALITY = IS_MOBILE ? "performance" : "balanced";
@@ -261,6 +292,34 @@ const CHUNK_LENGTH=60;
 const CHUNK_COUNT=IS_MOBILE?5:7;
 const chunks=[];
 const lanes=[-4,0,4];
+const boostPads=[];
+
+function createBoostPad(chunk){
+ const pad=new THREE.Group();
+ const laneIndex=Math.floor(Math.random()*3);
+ pad.position.set(lanes[laneIndex],.025,-30);
+ const base=new THREE.Mesh(new THREE.BoxGeometry(2.65,.075,3.8),
+  new THREE.MeshStandardMaterial({color:0x087f79,emissive:0x00d9bd,emissiveIntensity:.75,roughness:.42,metalness:.25}));
+ base.position.y=.035;
+ pad.add(base);
+ const arrowMat=new THREE.MeshStandardMaterial({color:0xeaffff,emissive:0x71fff0,emissiveIntensity:1.4,side:THREE.DoubleSide,roughness:.3});
+ const shape=new THREE.Shape();
+ shape.moveTo(0,.78);shape.lineTo(-.43,.12);shape.lineTo(-.16,.12);
+ shape.lineTo(-.16,-.62);shape.lineTo(.16,-.62);shape.lineTo(.16,.12);
+ shape.lineTo(.43,.12);shape.closePath();
+ const geometry=new THREE.ShapeGeometry(shape);
+ for(let i=0;i<3;i++){
+  const arrow=new THREE.Mesh(geometry,arrowMat);
+  arrow.rotation.x=-Math.PI/2;
+  arrow.position.set(0,.095,-.95+i*.95);
+  arrow.scale.setScalar(.72);
+  pad.add(arrow);
+ }
+ chunk.add(pad);
+ const record={mesh:pad,chunk,available:true,phase:Math.random()*Math.PI*2};
+ boostPads.push(record);
+ chunk.userData.boostPad=record;
+}
 
 function createChunk(z){
  const group=new THREE.Group();
@@ -283,9 +342,14 @@ function createChunk(z){
   box(group,.10,.025,3,white,2,.01,-i*6.7-2);
  }
 
- // Grass
- box(group,25,.08,60,grass,-19,-.2,-30);
- box(group,25,.08,60,grass,19,-.2,-30);
+ // Wide grassy verges and raised shoulders, following the sketch.
+ box(group,34,.12,60,grass,-23,-.23,-30);
+ box(group,34,.12,60,grass,23,-.23,-30);
+ const raisedShoulder=material(0x667b50,.95);
+ for(const side of [-1,1]){
+  box(group,1.15,.42,60,raisedShoulder,side*7.45,-.02,-30);
+  box(group,.16,.22,60,material(0x9ca7a0,.9),side*6.75,.10,-30);
+ }
 
  // Reflector posts along both shoulders.
  for(let i=0;i<10;i++){
@@ -295,24 +359,35 @@ function createChunk(z){
   }
  }
 
- // Trees
- for(let i=0;i<7;i++){
+ // Layered fog banks beyond the verges, never across the driving lanes.
+ const fogMat=new THREE.MeshBasicMaterial({
+  color:0xdce6e5,transparent:true,opacity:.15,depthWrite:false,side:THREE.DoubleSide
+ });
+ for(let i=0;i<4;i++){
   for(const side of [-1,1]){
-   const x=side*(10+Math.random()*5);
-   const zz=-5-i*8;
+   const mist=new THREE.Mesh(new THREE.PlaneGeometry(18,5),fogMat);
+   mist.position.set(side*(17+i*5),2.4,-8-i*13);
+   mist.rotation.y=side===1?-Math.PI/2:Math.PI/2;
+   group.add(mist);
+  }
+ }
 
-   const tree=new THREE.Mesh(
-    new THREE.CylinderGeometry(.15,.24,2,7),trunk
-   );
-   tree.position.set(x,1,zz);
-   group.add(tree);
-
+ // Staggered tree rows on both sides, as in the hand-drawn layout.
+ for(let i=0;i<12;i++){
+  for(const side of [-1,1]){
+   const x=side*(13+Math.random()*7);
+   const zz=-2-i*5;
+   const height=3.0+Math.random()*2.0;
+   const tree=new THREE.Mesh(new THREE.CylinderGeometry(.14,.26,height,6),trunk);
+   tree.position.set(x,height/2,zz);group.add(tree);
    const crown=new THREE.Mesh(
-    new THREE.ConeGeometry(1.3,3.2,7),leaves
+    new THREE.ConeGeometry(1.35+Math.random()*.65,height*1.25,7),leaves
    );
-   crown.position.set(x,3,zz);
-   crown.castShadow=true;
-   group.add(crown);
+   crown.position.set(x,height*.98,zz);group.add(crown);
+   const upper=new THREE.Mesh(
+    new THREE.ConeGeometry(.9+Math.random()*.35,height*.82,7),leaves
+   );
+   upper.position.set(x,height*1.38,zz);group.add(upper);
   }
  }
 
@@ -369,7 +444,21 @@ function createBike(){
   bike.add(fork);
  }
 
- box(bike,1.05,.07,.09,black,0,1.65,.72);
+ // Wider, lower handlebar positioned to remain visible at the bottom of the rider view.
+  box(bike,1.12,.075,.11,chrome,0,1.48,.72);
+  for(const x of [-.54,.54]){
+   const grip=new THREE.Mesh(
+    new THREE.CylinderGeometry(.075,.075,.28,10),black
+   );
+   grip.rotation.z=Math.PI/2;
+   grip.position.set(x,1.48,.72);
+   bike.add(grip);
+   const barEnd=new THREE.Mesh(
+    new THREE.SphereGeometry(.085,10,8),chrome
+   );
+   barEnd.position.set(x*1.13,1.48,.72);
+   bike.add(barEnd);
+  }
 
  const lamp=new THREE.Mesh(
   new THREE.SphereGeometry(.19,12,10),
@@ -410,8 +499,86 @@ function createBike(){
  return bike;
 }
 
+
 const bike=createBike();
 bike.rotation.y=Math.PI;
+
+// Remote riders are lightweight Three.js models updated from Firebase RTDB.
+const remoteRacers = new Map();
+const remoteColors = [0x35d9a3,0xffc857,0x8b9dff,0xff7188,0x65d9ee];
+function makeRemoteRider(uid, data={}) {
+ const group=new THREE.Group();
+ const paint=material(remoteColors[remoteRacers.size%remoteColors.length],.38,.25);
+ const riderMat=material(0x26384b,.8,0);
+ const helmetMat=material(0x17212a,.25,.25);
+ box(group,.38,.24,1.25,paint,0,1.02,0);
+ const tank=new THREE.Mesh(new THREE.SphereGeometry(.34,12,10),paint);
+ tank.scale.set(.8,.55,1);tank.position.set(0,1.3,0);group.add(tank);
+ const body=new THREE.Mesh(new THREE.CapsuleGeometry(.23,.62,4,8),riderMat);
+ body.position.set(0,1.95,-.2);body.rotation.x=-.22;group.add(body);
+ const helmet=new THREE.Mesh(new THREE.SphereGeometry(.24,12,10),helmetMat);
+ helmet.position.set(0,2.48,-.02);group.add(helmet);
+ const wheelMat=black;
+ for(const z of [-.82,.82]){
+  const wheel=new THREE.Mesh(new THREE.TorusGeometry(.36,.09,8,18),wheelMat);
+  wheel.rotation.y=Math.PI/2;wheel.position.set(0,.48,z);group.add(wheel);
+ }
+ group.rotation.y=Math.PI;
+ scene.add(group);
+ return {mesh:group,data};
+}
+let multiplayerUid=null;
+let multiplayerPlayerRef=null;
+let lastNetworkWrite=0;
+let multiplayerReady=false;
+const raceStatus=document.getElementById("raceStatus");
+function connectMultiplayer(user){
+ if(!activeRoomCode || !user)return;
+ multiplayerUid=user.uid;
+ multiplayerPlayerRef=ref(realtimeDB,`rooms/${activeRoomCode}/members/${user.uid}`);
+ onDisconnect(multiplayerPlayerRef).remove().catch(err=>console.warn("Presence setup:",err));
+ const membersRef=ref(realtimeDB,`rooms/${activeRoomCode}/members`);
+ onValue(membersRef,snapshot=>{
+  const members=snapshot.val()||{};
+  const ids=new Set(Object.keys(members).filter(id=>id!==multiplayerUid));
+  for(const [id,rider] of remoteRacers){
+   if(!ids.has(id)){scene.remove(rider.mesh);remoteRacers.delete(id);}
+  }
+  for(const id of ids){
+   const data=members[id]||{};
+   let rider=remoteRacers.get(id);
+   if(!rider){rider=makeRemoteRider(id,data);remoteRacers.set(id,rider);}
+   rider.data=data;
+  }
+  if(raceStatus){
+   raceStatus.style.display="block";
+   raceStatus.textContent=`ROOM ${activeRoomCode} · ${Object.keys(members).length} RIDER(S)`;
+  }
+ },err=>console.warn("Room listener:",err));
+ multiplayerReady=true;
+}
+onAuthStateChanged(firebaseAuth,user=>{
+ if(user && activeRoomCode)connectMultiplayer(user);
+});
+function publishMultiplayerState(now){
+ if(!activeRoomCode || !multiplayerUid || !multiplayerPlayerRef || !started || paused)return;
+ if(now-lastNetworkWrite<180)return;
+ lastNetworkWrite=now;
+ set(multiplayerPlayerRef,{
+  uid:multiplayerUid,name:playerName,
+  distance:Math.round(distance*10)/10,
+  lane,speed:Math.round(speed*10)/10,
+  updatedAt:Date.now()
+ }).catch(err=>console.warn("Race sync:",err));
+}
+
+// Three AI opponents race alongside human players.
+const botRacers=[];
+for(let i=0;i<3;i++){
+ const rider=makeRemoteRider("bot-"+i,{lane:i,distance:35+i*24,speed:39+i*2});
+ botRacers.push({mesh:rider.mesh,lane:i,distance:35+i*24,speed:39+i*2,laneClock:4+i*2});
+}
+
 
 /* TRAFFIC AND NON-GRAPHIC ARCADE EXPLOSIONS */
 
@@ -443,6 +610,7 @@ function spawnExplosion(position){
 
 function createCar(z,lane){
  const car=new THREE.Group();
+ car.userData.usingGLB=false;
 
  const colors=[
   0x2767a8,0xc64b36,0xd4d8dc,
@@ -491,21 +659,164 @@ for(let i=0;i<14;i++){
  cars.push(createCar(-35-i*27,Math.floor(Math.random()*3)));
 }
 
+/* USER-SUPPLIED GLB ASSETS */
+const ASSET_PATHS={
+ sportsCar:"./assets/quaternius_cc0-sports-car-1371.glb",
+ ambulance:"./assets/waqas-hader-110-ambulance-5477.glb",
+ wingsCar:"./assets/wings_of_freedom-car-2721.glb",
+ trafficLight:"./assets/quaternius_cc0-traffic-light-1428.glb",
+ fence:"./assets/quaternius_cc0-fence-995.glb",
+ standardCar:"./assets/car.glb",
+ policeCar:"./assets/police.glb",
+ bulldozer:"./assets/buildozer.glb"
+};
+const gltfLoader=new GLTFLoader();
+const loadedAssets={};
+const pendingAssetLoads={};
+
+function loadAsset(key){
+ if(loadedAssets[key])return Promise.resolve(loadedAssets[key]);
+ if(pendingAssetLoads[key])return pendingAssetLoads[key];
+ pendingAssetLoads[key]=new Promise((resolve)=>{
+  gltfLoader.load(ASSET_PATHS[key],gltf=>{
+   loadedAssets[key]=gltf.scene;
+   resolve(gltf.scene);
+  },undefined,error=>{
+   console.warn("Could not load model:",key,error);
+   resolve(null);
+  });
+ });
+ return pendingAssetLoads[key];
+}
+
+function fittedModel(source,targetWidth,targetHeight,targetLength){
+ const model=source.clone(true);
+ model.updateMatrixWorld(true);
+ const bounds=new THREE.Box3().setFromObject(model);
+ const size=bounds.getSize(new THREE.Vector3());
+ // Normalize each axis so very differently authored GLBs share the same road scale.
+ model.scale.set(
+  targetWidth/Math.max(size.x,.001),
+  targetHeight/Math.max(size.y,.001),
+  targetLength/Math.max(size.z,.001)
+ );
+ model.updateMatrixWorld(true);
+ const fittedBounds=new THREE.Box3().setFromObject(model);
+ const center=fittedBounds.getCenter(new THREE.Vector3());
+ model.position.x-=center.x;
+ model.position.z-=center.z;
+ model.position.y-=fittedBounds.min.y;
+ model.updateMatrixWorld(true);
+ model.traverse(obj=>{
+  if(obj.isMesh){
+   obj.castShadow=false;
+   obj.receiveShadow=false;
+   if(obj.material){
+    const mats=Array.isArray(obj.material)?obj.material:[obj.material];
+    mats.forEach(m=>{m.side=THREE.FrontSide;});
+   }
+  }
+ });
+ return model;
+}
+
+function replaceTrafficCarModel(car,assetKey){
+ const source=loadedAssets[assetKey];
+ if(!car || !car.isObject3D || !source)return;
+ car.userData=car.userData||{};
+ if(car.userData.usingGLB)return;
+ const dimensions={
+  sportsCar:[1.9,1.45,3.7],
+  ambulance:[2.0,1.85,4.5],
+  wingsCar:[1.9,1.45,3.7],
+  standardCar:[1.9,1.45,3.7],
+  policeCar:[2.0,1.55,4.0],
+  bulldozer:[2.35,1.9,4.3]
+ };
+ const [width,height,length]=dimensions[assetKey]||[1.9,1.45,3.7];
+ const model=fittedModel(source,width,height,length);
+ // Supplied vehicles are aligned with the road's forward Z axis.
+ car.clear();
+ car.add(model);
+ car.userData.usingGLB=true;
+ car.userData.assetKey=assetKey;
+}
+
+function addRoadsideAsset(chunk,source,x,z,scale=1,rotationY=0){
+ if(!source)return;
+ const prop=source.clone(true);
+ prop.scale.setScalar(scale);
+ prop.rotation.y=rotationY;
+ prop.position.set(x,0,z);
+ prop.traverse(o=>{
+  if(o.isMesh){o.castShadow=false;o.receiveShadow=false;}
+ });
+ chunk.add(prop);
+}
+
+function addFittedRoadProp(chunk,source,x,z,width,height,length,rotationY=0){
+ if(!source)return;
+ const prop=fittedModel(source,width,height,length);
+ prop.rotation.y=rotationY;
+ prop.position.x+=x;
+ prop.position.z+=z;
+ prop.traverse(o=>{if(o.isMesh){o.castShadow=false;o.receiveShadow=false;}});
+ chunk.add(prop);
+ return prop;
+}
+
+async function loadWorldAssets(){
+ const [sports,ambulance,wings,light,fence,standard,police,bulldozer]=await Promise.all([
+  loadAsset("sportsCar"),loadAsset("ambulance"),loadAsset("wingsCar"),
+  loadAsset("trafficLight"),loadAsset("fence"),
+  loadAsset("standardCar"),loadAsset("policeCar"),loadAsset("bulldozer")
+ ]);
+ // Six vehicle types are distributed through traffic and remain attached
+ // to their traffic objects when those objects are recycled.
+ const vehicleKeys=["sportsCar","ambulance","wingsCar","standardCar","policeCar","bulldozer"];
+ cars.forEach((car,i)=>{
+  const key=vehicleKeys[i%vehicleKeys.length];
+  if(car && car.mesh)replaceTrafficCarModel(car.mesh,key);
+ });
+
+ // Repeating roadside furniture stays attached to each recycled road chunk.
+ chunks.forEach((chunk,index)=>{
+  const side=index%2===0?1:-1;
+  const z=-8;
+  if(fence){
+   // Aligned end-to-end sections make a continuous fence along both sides.
+   for(let n=0;n<3;n++){
+    const zz=-10-n*20;
+    addFittedRoadProp(chunk,fence,-8.65,zz,19.8,1.45,.30,Math.PI/2);
+    addFittedRoadProp(chunk,fence,8.65,zz,19.8,1.45,.30,Math.PI/2);
+   }
+  }
+ });
+}
+loadWorldAssets().then(()=>{
+ const status=document.getElementById("assetStatus");
+ if(status)status.textContent="6 traffic models and roadside assets ready";
+});
+
 /* GAME STATE */
 
-let speed=30/3.6; // 20 km/h automatic forward speed
+let speed=30/3.6; // 30 km/h minimum automatic forward speed
+let boostTimer=0;
+let boostRecover=0;
+const BOOST_MAX_SPEED=230/3.6;
+const BOOST_DURATION=2.8;
+const BOOST_RECOVERY=1.5;
 let distance=0;
 let lane=1;
 let targetX=0;
 let started=false;
 let paused=false;
-const settings={controlMode:"buttons",accelMode:"auto",sensitivity:"medium",graphicsQuality:DEFAULT_QUALITY};
-let tiltGamma=0;
+const settings={controlMode:"buttons",graphicsQuality:DEFAULT_QUALITY};
 
 const stats=document.getElementById("stats");
 const keys={};
 const MIN_SPEED=30/3.6;
-const MAX_SPEED=52; // m/s
+const MAX_SPEED=187/3.6; // normal top speed: 187 km/h
 let crashShock=0;
 let crashCooldown=0;
 const crashFX=document.getElementById("crashFX");
@@ -575,23 +886,16 @@ function resumeGame(){
 
 function applySettings(){
  settings.controlMode=document.getElementById("controlMode").value;
- settings.accelMode=document.getElementById("accelMode").value;
- settings.sensitivity=document.getElementById("sensitivity").value;
  const quality=document.getElementById("graphicsQuality");
  if(quality)settings.graphicsQuality=quality.value;
  const pixelCap=settings.graphicsQuality==="performance"?(IS_MOBILE?1:1.15):
   settings.graphicsQuality==="balanced"?(IS_MOBILE?1.2:1.5):(IS_MOBILE?1.35:1.8);
  renderer.setPixelRatio(Math.min(devicePixelRatio,pixelCap));
  renderer.setSize(innerWidth,innerHeight,false);
- // Button mode uses the on-screen steering pad. Tilt mode uses device orientation.
- // Keyboard mode uses WASD/arrow keys. Gas/brake buttons remain available in manual mode.
  document.getElementById("controls").classList.toggle(
   "hidden",settings.controlMode==="wasd"
  );
- const gasButton=document.getElementById("gas");
- gasButton.style.display=settings.accelMode==="auto"?"none":"block";
 }
-
 function restart(){
  speed=30/3.6;
  distance=0;
@@ -637,7 +941,7 @@ addEventListener("keyup",e=>{
  keys[e.key.toLowerCase()]=false;
 });
 
-/* MOBILE BUTTONS AND DEVICE TILT */
+/* MOBILE BUTTON CONTROLS */
 function holdButton(id,key){
  const button=document.getElementById(id);
  button.addEventListener("pointerdown",e=>{
@@ -648,7 +952,6 @@ function holdButton(id,key){
   button.addEventListener(event,()=>{keys[key]=false;});
  });
 }
-holdButton("gas","w");
 holdButton("brake","s");
 
 document.getElementById("left").addEventListener("click",()=> {
@@ -658,9 +961,6 @@ document.getElementById("right").addEventListener("click",()=> {
  if(settings.controlMode==="buttons")changeLane(1);
 });
 
-window.addEventListener("deviceorientation",e=>{
- if(typeof e.gamma==="number")tiltGamma=e.gamma;
-},{passive:true});
 
 document.getElementById("pauseBtn").addEventListener("click",pauseGame);
 document.getElementById("resumeBtn").addEventListener("click",()=>{
@@ -672,13 +972,8 @@ document.getElementById("restartBtn").addEventListener("click",()=>{
  restart();
 });
 document.getElementById("graphicsQuality").value=DEFAULT_QUALITY;
-["controlMode","accelMode","sensitivity","graphicsQuality"].forEach(id=>{
+["controlMode","graphicsQuality"].forEach(id=>{
  document.getElementById(id).addEventListener("change",()=>{
-  if(id==="controlMode"&&document.getElementById(id).value==="tilt"&&
-     typeof DeviceOrientationEvent!=="undefined"&&
-     typeof DeviceOrientationEvent.requestPermission==="function"){
-   DeviceOrientationEvent.requestPermission().catch(()=>{});
-  }
   applySettings();
  });
 });
@@ -701,37 +996,36 @@ function animate(now){
 
  if(started&&!paused){
 
-  // Read the selected steering input.
-  if(settings.controlMode==="tilt"){
-   const sensitivity=settings.sensitivity==="low"?22:settings.sensitivity==="high"?9:15;
-   const desiredLane=tiltGamma < -sensitivity ? Math.max(0,lane-1) :
-    tiltGamma > sensitivity ? Math.min(2,lane+1) : lane;
-   if(desiredLane!==lane){lane=desiredLane;targetX=lanes[lane];}
-  }
-
   // Forward-only speed model (m/s): throttle builds speed, coasting rolls off,
   // and the brake applies stronger progressive deceleration without stopping.
-  const accelerating=settings.accelMode==="auto" || keys.w||keys.arrowup;
+  const accelerating=true; // Automatic acceleration is always enabled.
   const braking=keys.s||keys.arrowdown;
 
-  if(accelerating){
-   // Engine torque tapers slightly at higher speed, like a real power curve.
+  if(boostTimer>0){
+   boostTimer=Math.max(0,boostTimer-dt);
+   speed+=(BOOST_MAX_SPEED-speed)*Math.min(1,dt*3.2);
+   if(boostTimer===0)boostRecover=BOOST_RECOVERY;
+  }else if(boostRecover>0){
+   boostRecover=Math.max(0,boostRecover-dt);
+   const allowedSpeed=MAX_SPEED+(BOOST_MAX_SPEED-MAX_SPEED)*(boostRecover/BOOST_RECOVERY);
+   speed=Math.min(speed,allowedSpeed);
+  }else if(accelerating){
    const torque=7.8*(1-Math.min(speed/MAX_SPEED,0.88)*0.48);
    speed+=torque*dt;
   }else{
-   // Coast-down combines rolling resistance and quadratic aerodynamic drag.
    const rollingDrag=0.16;
    const aerodynamicDrag=0.00165*speed*speed;
    speed-=(rollingDrag+aerodynamicDrag)*dt;
   }
 
   if(braking){
-   // Progressive braking: strongest at first, then eases as speed approaches the floor.
    const brakeForce=13.5*(0.72+0.28*Math.min(speed/18,1));
    speed-=brakeForce*dt;
   }
 
-  speed=THREE.MathUtils.clamp(speed,MIN_SPEED,MAX_SPEED);
+  const currentSpeedLimit=boostTimer>0?BOOST_MAX_SPEED:
+   boostRecover>0?MAX_SPEED+(BOOST_MAX_SPEED-MAX_SPEED)*(boostRecover/BOOST_RECOVERY):MAX_SPEED;
+  speed=THREE.MathUtils.clamp(speed,MIN_SPEED,currentSpeedLimit);
 
   const movement=speed*dt;
   distance+=movement;
@@ -781,6 +1075,28 @@ function animate(now){
    }
   }
 
+  // Update online opponents relative to this player's travelled distance.
+  for(const rider of remoteRacers.values()){
+   const remoteDistance=Number(rider.data.distance)||0;
+   const relative=remoteDistance-distance;
+   const remoteLane=Math.max(0,Math.min(2,Number(rider.data.lane)||0));
+   rider.mesh.position.set(lanes[remoteLane],0,bike.position.z-relative);
+   rider.mesh.visible=Math.abs(relative)<190;
+  }
+  // AI opponents advance at different speeds and occasionally change lanes.
+  for(const bot of botRacers){
+   bot.distance+=bot.speed*dt;
+   bot.laneClock-=dt;
+   if(bot.laneClock<=0){
+    bot.lane=Math.max(0,Math.min(2,bot.lane+(Math.random()<.5?-1:1)));
+    bot.laneClock=5+Math.random()*7;
+   }
+   const relative=bot.distance-distance;
+   bot.mesh.position.set(lanes[bot.lane],0,bike.position.z-relative);
+   bot.mesh.visible=Math.abs(relative)<190;
+  }
+  publishMultiplayerState(now);
+
   // Traffic movement, collisions and arcade-style car blast effects.
   for(const car of cars){
    if(car.exploding){
@@ -790,6 +1106,7 @@ function animate(now){
     car.mesh.rotation.x+=dt*5.5;
     car.mesh.rotation.z+=dt*4.2;
     car.mesh.position.x+=car.launchX*dt;
+    car.mesh.position.z+=car.launchZ*dt;
     if(car.explodeTime>1.25){
      car.exploding=false;
      car.mesh.position.y=0;
@@ -814,16 +1131,20 @@ function animate(now){
 
    const distanceZ=Math.abs(car.z-bike.position.z);
    const distanceX=Math.abs(car.mesh.position.x-bike.position.x);
-   if(distanceZ<2.05&&distanceX<1.35&&speed>MIN_SPEED&&crashCooldown<=0){
+   // The collision envelope follows the visible vehicle footprint, not a tiny point.
+   // Trigger just before the bike reaches the car so the impact is seen from the rider camera.
+   if(distanceZ<3.15&&distanceX<1.55&&speed>MIN_SPEED&&crashCooldown<=0){
     speed=Math.max(MIN_SPEED,speed*0.72);
     crashShock=1;
     crashCooldown=1.0;
     bike.rotation.z+=(bike.position.x<car.mesh.position.x?-.10:.10);
     car.exploding=true;
     car.explodeTime=0;
-    car.velocityY=7.5;
+    car.velocityY=10.5;
     car.launchX=(car.mesh.position.x-bike.position.x)*1.2+(Math.random()-.5)*2;
-    spawnExplosion(car.mesh.position.clone().add(new THREE.Vector3(0,1,0)));
+    car.launchZ=3.2;
+    car.mesh.position.y=.15;
+    spawnExplosion(car.mesh.position.clone().add(new THREE.Vector3(0,1.05,0)));
    }
   }
 
@@ -861,20 +1182,22 @@ function animate(now){
    9,
    dt
   );
-  camera.position.y=2.55+
+  camera.position.y=3+
    Math.sin(now*0.022)*shakeAmount*0.65+
    Math.abs(Math.sin(now*0.075))*impactJitter;
-  camera.position.z=bike.position.z-0.4;
+  camera.position.z = bike.position.z + 3.5;
 
+  skyDome.position.x=camera.position.x;
+  skyDome.position.z=camera.position.z;
   camera.lookAt(
    bike.position.x+lateralVelocity*.035,
-   2.35-crashShock*0.10+(braking?.035:0),
-   bike.position.z-35
+   1.52-crashShock*0.10+(braking?.035:0),
+   bike.position.z-27
   );
   // Lean with the rider and widen the view slightly as speed rises.
   camera.rotation.z=bike.rotation.z*0.42+
    Math.sin(now*0.08)*crashShock*0.035;
-  const targetFov=65+Math.min(speed/MAX_SPEED,1)*8;
+  const targetFov=78+Math.min(speed/MAX_SPEED,1)*7;
   camera.fov=THREE.MathUtils.damp(camera.fov,targetFov,2.5,dt);
   camera.updateProjectionMatrix();
 
