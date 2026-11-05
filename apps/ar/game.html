@@ -19,52 +19,34 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;tou
 #countdownLabel{font-size:11px;letter-spacing:4px;color:#9bdccc;font-weight:800}
 #countdownNumber{font-size:clamp(64px,15vw,110px);line-height:1.05;font-weight:900;color:#78edc4;text-shadow:0 0 28px #35dda677}
 #countdownCard.go #countdownNumber{font-size:clamp(36px,9vw,64px)}
-#controls{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;pointer-events:auto}
-.group{display:flex;gap:10px;align-items:end}
-.ctrl{width:66px;height:66px;border-radius:18px;background:#091827f2;color:white;border:1px solid #ffffff55;font-size:26px;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 5px 16px #0005}
-#brake{background:#b94c4c;height:66px;width:66px}
-#brake:active{background:#e05b5b}
-#crashFX{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 35%,#ff343455 100%);transition:opacity .06s}\n#speedFX{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 48%,#d7efff18 100%),repeating-linear-gradient(105deg,transparent 0 48px,#ffffff0b 49px 50px,transparent 51px 105px);mix-blend-mode:screen}
-#hint{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);font-size:10px;color:#ffffff99;white-space:nowrap}
-#pauseBtn{position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));transform:none;pointer-events:auto;border:1px solid #ffffff55;border-radius:12px;background:#071522f2;color:#fff;padding:11px 16px;font-weight:800;cursor:pointer;z-index:8;touch-action:manipulation}
+#hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10px;color:#ffffff99;white-space:nowrap}
+#pauseBtn{position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));pointer-events:auto;border:1px solid #ffffff55;border-radius:12px;background:#071522f2;color:#fff;padding:11px 16px;font-weight:800;cursor:pointer;z-index:8;touch-action:manipulation}
+#cameraBtn{position:absolute;top:calc(12px + env(safe-area-inset-top));right:112px;pointer-events:auto;border:1px solid #ffffff55;border-radius:12px;background:#071522f2;color:#fff;padding:11px 13px;font-size:12px;font-weight:800;cursor:pointer;z-index:8;touch-action:manipulation}
+@media(max-width:700px){#cameraBtn{top:calc(10px + env(safe-area-inset-top));right:92px;padding:10px 9px;font-size:11px}}
 #pauseMenu{display:none;position:fixed;inset:0;z-index:30;background:#020912ed;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom));pointer-events:auto}
-#pauseCard{width:min(94vw,490px);max-height:92vh;overflow:auto;border:1px solid #6be7c466;border-radius:22px;background:linear-gradient(145deg,#102e40,#07121d);box-shadow:0 20px 80px #000b;padding:22px}
+#pauseCard{width:min(94vw,460px);max-height:92vh;overflow:auto;border:1px solid #6be7c466;border-radius:22px;background:linear-gradient(145deg,#102e40,#07121d);box-shadow:0 20px 80px #000b;padding:22px}
 #pauseCard h2{margin:0 0 6px;color:#78edc4;font-size:28px}
 #pauseCard .sub{margin:0 0 18px;color:#bdcbd5;font-size:12px}
 .setting{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #ffffff18}
 .setting label{font-size:14px;font-weight:700}
 .setting small{display:block;color:#aabac6;font-size:11px;font-weight:400;margin-top:4px}
-.setting select{max-width:52%;min-width:145px;padding:10px;border-radius:10px;border:1px solid #ffffff35;background:#142b3a;color:#fff;font-size:13px}
+.setting select,.setting input{max-width:52%;min-width:145px;padding:10px;border-radius:10px;border:1px solid #ffffff35;background:#142b3a;color:#fff;font-size:13px}
 .pauseActions{display:flex;gap:10px;margin-top:18px}
 .pauseActions button{flex:1;padding:14px;border:0;border-radius:12px;font-weight:900;font-size:14px;cursor:pointer}
 #resumeBtn{background:#35dda6;color:#052019}
 #restartBtn{background:#263e50;color:white;border:1px solid #ffffff25}
-#controls.hidden{display:none}
-#controls .ctrl{user-select:none;-webkit-user-select:none}
 @media(max-width:700px){
  #stats{top:calc(10px + env(safe-area-inset-top));left:10px;padding:8px 10px;font-size:10px;line-height:1.55;border-radius:12px}
  #stats strong{font-size:19px}
- #pauseBtn{top:calc(10px + env(safe-area-inset-top));right:10px;transform:none;padding:10px 12px;font-size:12px}
- #controls{padding:0 12px;bottom:calc(12px + env(safe-area-inset-bottom));}
- .group{gap:8px}
- .ctrl{width:clamp(56px,16vw,72px);height:clamp(56px,16vw,72px);border-radius:17px;font-size:25px}
- #brake{width:clamp(58px,16vw,70px);height:clamp(58px,16vw,70px)}
+ #pauseBtn{top:calc(10px + env(safe-area-inset-top));right:10px;padding:10px 12px;font-size:12px}
  #hint{display:none}
- #menu{width:min(92vw,430px);max-height:84dvh;overflow:auto;padding:24px 18px;border-radius:20px}
- #menu p{font-size:12px}
  #pauseCard{width:min(94vw,460px);max-height:88dvh;padding:16px}
  .setting{align-items:flex-start;flex-direction:column;gap:7px}
- .setting select{max-width:none;width:100%;min-height:42px}
+ .setting select,.setting input{max-width:none;width:100%;min-height:42px}
  .pauseActions button{min-height:48px}
 }
 @media(max-height:500px) and (orientation:landscape){
- #menu{max-height:90dvh;padding:14px 20px}
- #menu p{margin:8px 0;font-size:11px}
- #menu h1{font-size:32px;margin:5px 0}
  #stats{top:8px}
- #controls{bottom:calc(6px + env(safe-area-inset-bottom))}
- .ctrl{width:54px;height:54px}
- #brake{height:54px;width:54px}
  #pauseCard{max-height:94dvh}
 }
 </style>
@@ -74,13 +56,11 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;tou
 <div id="speedFX"></div><div id="crashFX"></div>
 <div id="hud">
 
-<div id="stats" class="panel">
-<strong>30 km/h</strong>
-Distance: 0.00 km<br>
-Gear: D
-</div>
+<div id="stats" class="panel"><strong>30 km/h</strong></div>
 <button id="pauseBtn" type="button" aria-label="Pause game">Ⅱ PAUSE</button>
- <div id="raceStatus" style="position:absolute;top:64px;right:14px;padding:7px 10px;border-radius:10px;background:#071522d9;border:1px solid #ffffff30;font-size:11px;display:none;max-width:48vw;text-align:right"></div>
+<button id="cameraBtn" type="button" aria-label="Switch camera view" style="display:none">CAM: FOLLOW</button>
+<div id="raceStatus" style="display:none"></div>
+<div id="assetStatus" style="display:none">Loading 3D assets…</div>
 
 <div id="countdown" aria-live="polite">
  <div id="countdownCard">
@@ -89,34 +69,21 @@ Gear: D
  </div>
 </div>
 
-<div id="controls">
-<div class="group">
-<button class="ctrl" id="left">←</button>
-<button class="ctrl" id="right">→</button>
-</div>
-<div class="group">
-<button class="ctrl" id="brake" aria-label="Brake">−</button>
-</div>
-</div>
-
 <div id="pauseMenu" role="dialog" aria-modal="true" aria-label="Pause menu">
  <div id="pauseCard">
   <h2>PAUSED</h2>
-  <p class="sub">Choose steering and graphics settings. Acceleration stays automatic.</p>
+  <p class="sub">Swipe left or right on phones. Use A/D or arrow keys to steer, W/Up to accelerate and S/Down to brake.</p>
   <div class="setting">
-   <div><label for="controlMode">Control method</label><small>Choose how you steer the bike.</small></div>
-   <select id="controlMode">
-    <option value="buttons">On-screen buttons</option>
-    <option value="wasd">WASD / keyboard</option>
-   </select>
-  </div>
-  <div class="setting">
-   <div><label for="graphicsQuality">Graphics quality</label><small>Performance reduces rendering load on phones.</small></div>
+   <div><label for="graphicsQuality">Graphics quality</label><small>Performance mode is recommended for phones.</small></div>
    <select id="graphicsQuality">
     <option value="performance">Performance</option>
     <option value="balanced">Balanced</option>
     <option value="quality">Quality</option>
    </select>
+  </div>
+  <div class="setting">
+   <div><label for="maxCarSpeed">Car maximum speed (km/h)</label><small>Choose a normal top speed from 30 to 300 km/h.</small></div>
+   <input id="maxCarSpeed" type="number" min="30" max="300" step="1" value="187" inputmode="numeric" aria-label="Car maximum speed in kilometres per hour">
   </div>
   <div class="pauseActions">
    <button id="resumeBtn" type="button">▶ RESUME</button>
@@ -125,7 +92,7 @@ Gear: D
  </div>
 </div>
 
-<div id="hint">3D ENDLESS ROAD · TRAFFIC SIMULATION</div>
+
 </div>
 
 <!-- Automatic three-second start countdown -->
@@ -186,7 +153,7 @@ const playerName = gameParams.get("name") || "Rider";
 
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x9bc7d9);
-scene.fog=new THREE.Fog(0xb7c9ca,48,205);
+scene.fog=new THREE.Fog(0xb7c9ca,85,460);
 
 // Lightweight painted sky dome with soft cloud bands.
 function makeSkyTexture(){
@@ -214,9 +181,9 @@ const skyDome=new THREE.Mesh(
 skyDome.position.y=15;scene.add(skyDome);
 
 const camera=new THREE.PerspectiveCamera(
- 65,innerWidth/innerHeight,0.1,500
+ 65,innerWidth/innerHeight,0.1,850
 );
-camera.position.set(0,1.98,4.5);
+camera.position.set(0,2.15,7.5);
 
 const IS_MOBILE = matchMedia("(max-width: 900px), (pointer: coarse)").matches;
 const DEFAULT_QUALITY = IS_MOBILE ? "performance" : "balanced";
@@ -288,8 +255,9 @@ function box(parent,w,h,d,mat,x,y,z){
 /* INFINITE ROAD */
 
 const ROAD_WIDTH=12;
+// More segments keep the road visible far ahead.
 const CHUNK_LENGTH=60;
-const CHUNK_COUNT=IS_MOBILE?5:7;
+const CHUNK_COUNT=IS_MOBILE?9:11;
 const chunks=[];
 const lanes=[-4,0,4];
 const boostPads=[];
@@ -361,7 +329,7 @@ function createChunk(z){
 
  // Layered fog banks beyond the verges, never across the driving lanes.
  const fogMat=new THREE.MeshBasicMaterial({
-  color:0xdce6e5,transparent:true,opacity:.15,depthWrite:false,side:THREE.DoubleSide
+  color:0xdce6e5,transparent:true,opacity:.20,depthWrite:false,side:THREE.DoubleSide
  });
  for(let i=0;i<4;i++){
   for(const side of [-1,1]){
@@ -372,22 +340,18 @@ function createChunk(z){
   }
  }
 
- // Staggered tree rows on both sides, as in the hand-drawn layout.
+ // Tree slots are filled with the supplied tree1.glb ... tree6.glb models
+ // after the assets load. Slots remain children of this chunk and recycle with it.
+ group.userData.treeSlots=[];
  for(let i=0;i<12;i++){
   for(const side of [-1,1]){
-   const x=side*(13+Math.random()*7);
-   const zz=-2-i*5;
-   const height=3.0+Math.random()*2.0;
-   const tree=new THREE.Mesh(new THREE.CylinderGeometry(.14,.26,height,6),trunk);
-   tree.position.set(x,height/2,zz);group.add(tree);
-   const crown=new THREE.Mesh(
-    new THREE.ConeGeometry(1.35+Math.random()*.65,height*1.25,7),leaves
-   );
-   crown.position.set(x,height*.98,zz);group.add(crown);
-   const upper=new THREE.Mesh(
-    new THREE.ConeGeometry(.9+Math.random()*.35,height*.82,7),leaves
-   );
-   upper.position.set(x,height*1.38,zz);group.add(upper);
+   group.userData.treeSlots.push({
+    x:side*(13+Math.random()*7),
+    z:-2-i*5.05,
+    variant:Math.floor(Math.random()*6),
+    height:4.0+Math.random()*1.8,
+    rotation:Math.random()*Math.PI*2
+   });
   }
  }
 
@@ -395,138 +359,63 @@ function createChunk(z){
 }
 
 for(let i=0;i<CHUNK_COUNT;i++){
- createChunk(-i*CHUNK_LENGTH);
+ createChunk(CHUNK_LENGTH-i*CHUNK_LENGTH);
 }
 
 /* MOTORCYCLE */
 
 function createBike(){
- const bike=new THREE.Group();
- const rollingWheels=[];
-
- function wheel(z){
-  const tire=new THREE.Mesh(
-   new THREE.TorusGeometry(.48,.12,10,24),black
-  );
-  tire.rotation.y=Math.PI/2;
-  tire.position.set(0,.58,z);
-  bike.add(tire);
-  rollingWheels.push(tire);
-
-  const hub=new THREE.Mesh(
-   new THREE.CylinderGeometry(.18,.18,.16,16),chrome
-  );
-  hub.rotation.z=Math.PI/2;
-  hub.position.set(0,.58,z);
-  bike.add(hub);
- }
-
- wheel(.95);
- wheel(-.95);
-
- box(bike,.32,.22,1.35,red,0,1.02,0);
- box(bike,.25,.17,.75,black,0,1.2,0);
-
- const tank=new THREE.Mesh(
-  new THREE.SphereGeometry(.43,16,12),red
- );
- tank.scale.set(.72,.55,1.05);
- tank.position.set(0,1.34,0);
- bike.add(tank);
-
- // Front forks
- for(const x of [-.2,.2]){
-  const fork=new THREE.Mesh(
-   new THREE.CylinderGeometry(.045,.06,.95,8),chrome
-  );
-  fork.position.set(x,.95,.78);
-  fork.rotation.x=-.18;
-  bike.add(fork);
- }
-
- // Wider, lower handlebar positioned to remain visible at the bottom of the rider view.
-  box(bike,1.12,.075,.11,chrome,0,1.48,.72);
-  for(const x of [-.54,.54]){
-   const grip=new THREE.Mesh(
-    new THREE.CylinderGeometry(.075,.075,.28,10),black
-   );
-   grip.rotation.z=Math.PI/2;
-   grip.position.set(x,1.48,.72);
-   bike.add(grip);
-   const barEnd=new THREE.Mesh(
-    new THREE.SphereGeometry(.085,10,8),chrome
-   );
-   barEnd.position.set(x*1.13,1.48,.72);
-   bike.add(barEnd);
-  }
-
- const lamp=new THREE.Mesh(
-  new THREE.SphereGeometry(.19,12,10),
-  material(0xfff3c4,.2)
- );
- lamp.position.set(0,1.35,.83);
- bike.add(lamp);
-
- // Rider
- const jacket=material(0x24394b);
- const helmet=material(0x17212a,.25,.3);
-
- const body=new THREE.Mesh(
-  new THREE.CapsuleGeometry(.27,.72,5,10),jacket
- );
- body.position.set(0,2.02,-.25);
- body.rotation.x=-.25;
- bike.add(body);
-
- const head=new THREE.Mesh(
-  new THREE.SphereGeometry(.29,14,12),helmet
- );
- head.position.set(0,2.58,-.02);
- bike.add(head);
-
- for(const x of [-.22,.22]){
-  const arm=new THREE.Mesh(
-   new THREE.CylinderGeometry(.09,.12,.72,8),jacket
-  );
-  arm.position.set(x,1.83,.42);
-  arm.rotation.x=-.8;
-  bike.add(arm);
- }
-
- bike.position.set(0,0,4);
- bike.userData.rollingWheels=rollingWheels;
- scene.add(bike);
- return bike;
+ const group=new THREE.Group();
+ group.position.set(0,0,4);
+ group.userData.rollingWheels=[];
+ scene.add(group);
+ return group;
 }
-
-
 const bike=createBike();
 bike.rotation.y=Math.PI;
 
-// Remote riders are lightweight Three.js models updated from Firebase RTDB.
+// Every rider uses the same supplied GLB motorcycle.
 const remoteRacers = new Map();
-const remoteColors = [0x35d9a3,0xffc857,0x8b9dff,0xff7188,0x65d9ee];
 function makeRemoteRider(uid, data={}) {
  const group=new THREE.Group();
- const paint=material(remoteColors[remoteRacers.size%remoteColors.length],.38,.25);
- const riderMat=material(0x26384b,.8,0);
- const helmetMat=material(0x17212a,.25,.25);
- box(group,.38,.24,1.25,paint,0,1.02,0);
- const tank=new THREE.Mesh(new THREE.SphereGeometry(.34,12,10),paint);
- tank.scale.set(.8,.55,1);tank.position.set(0,1.3,0);group.add(tank);
- const body=new THREE.Mesh(new THREE.CapsuleGeometry(.23,.62,4,8),riderMat);
- body.position.set(0,1.95,-.2);body.rotation.x=-.22;group.add(body);
- const helmet=new THREE.Mesh(new THREE.SphereGeometry(.24,12,10),helmetMat);
- helmet.position.set(0,2.48,-.02);group.add(helmet);
- const wheelMat=black;
- for(const z of [-.82,.82]){
-  const wheel=new THREE.Mesh(new THREE.TorusGeometry(.36,.09,8,18),wheelMat);
-  wheel.rotation.y=Math.PI/2;wheel.position.set(0,.48,z);group.add(wheel);
- }
  group.rotation.y=Math.PI;
  scene.add(group);
  return {mesh:group,data};
 }
+function fittedBikeModel(source){
+ const model=source.clone(true);
+ // The supplied bike is lengthwise along X; rotate its long axis onto road Z.
+ model.rotation.y=-Math.PI/2;
+ model.updateMatrixWorld(true);
+ const bounds=new THREE.Box3().setFromObject(model);
+ const size=bounds.getSize(new THREE.Vector3());
+ // Keep proportions: normalize by the model's length, not independently per axis.
+ const scale=2.05/Math.max(size.z,.001);
+ model.scale.setScalar(scale);
+ model.updateMatrixWorld(true);
+ const fitted=new THREE.Box3().setFromObject(model);
+ const center=fitted.getCenter(new THREE.Vector3());
+ model.position.set(-center.x,-fitted.min.y,-center.z);
+ model.updateMatrixWorld(true);
+ model.traverse(o=>{
+  if(o.isMesh){
+   o.castShadow=false;
+   o.receiveShadow=false;
+   if(o.material){
+    const mats=Array.isArray(o.material)?o.material:[o.material];
+    mats.forEach(m=>{m.side=THREE.FrontSide;});
+   }
+  }
+ });
+ return model;
+}
+function attachBikeModel(group,source){
+ if(!group||!source||group.userData.hasBikeModel)return;
+ const model=fittedBikeModel(source);
+ group.add(model);
+ group.userData.hasBikeModel=true;
+}
+
 let multiplayerUid=null;
 let multiplayerPlayerRef=null;
 let lastNetworkWrite=0;
@@ -548,6 +437,7 @@ function connectMultiplayer(user){
    const data=members[id]||{};
    let rider=remoteRacers.get(id);
    if(!rider){rider=makeRemoteRider(id,data);remoteRacers.set(id,rider);}
+   if(loadedAssets.bike)attachBikeModel(rider.mesh,loadedAssets.bike);
    rider.data=data;
   }
   if(raceStatus){
@@ -661,28 +551,45 @@ for(let i=0;i<14;i++){
 
 /* USER-SUPPLIED GLB ASSETS */
 const ASSET_PATHS={
- sportsCar:"./assets/quaternius_cc0-sports-car-1371.glb",
- ambulance:"./assets/waqas-hader-110-ambulance-5477.glb",
- wingsCar:"./assets/wings_of_freedom-car-2721.glb",
- trafficLight:"./assets/quaternius_cc0-traffic-light-1428.glb",
- fence:"./assets/quaternius_cc0-fence-995.glb",
- standardCar:"./assets/car.glb",
- policeCar:"./assets/police.glb",
- bulldozer:"./assets/buildozer.glb"
+ bike:"./assets/bike.glb",
+ car:"./assets/car.glb",
+ ergoninane:"./assets/cer.glb",
+ fence:"./assets/fence.glb",
+ tree1:"./assets/tree/tree1.glb",
+ tree2:"./assets/tree/tree2.glb",
+ tree3:"./assets/tree/tree3.glb",
+ tree4:"./assets/tree/tree4.glb",
+ tree5:"./assets/tree/tree5.glb",
+ tree6:"./assets/tree/tree6.glb"
 };
 const gltfLoader=new GLTFLoader();
 const loadedAssets={};
 const pendingAssetLoads={};
+const assetErrors={};
+const assetStatus=document.getElementById("assetStatus");
 
+// Resolve relative to this HTML module so the paths continue to work when the
+// game is hosted in a subdirectory.
+function assetUrl(key){
+ return new URL(ASSET_PATHS[key],import.meta.url).href;
+}
 function loadAsset(key){
  if(loadedAssets[key])return Promise.resolve(loadedAssets[key]);
  if(pendingAssetLoads[key])return pendingAssetLoads[key];
- pendingAssetLoads[key]=new Promise((resolve)=>{
-  gltfLoader.load(ASSET_PATHS[key],gltf=>{
+ pendingAssetLoads[key]=new Promise(resolve=>{
+  const url=assetUrl(key);
+  gltfLoader.load(url,gltf=>{
    loadedAssets[key]=gltf.scene;
+   console.info("Loaded 3D asset:",key,url);
    resolve(gltf.scene);
-  },undefined,error=>{
-   console.warn("Could not load model:",key,error);
+  },event=>{
+   if(event.total && assetStatus){
+    const pct=Math.round(event.loaded/event.total*100);
+    assetStatus.textContent=`Loading ${key}: ${pct}%`;
+   }
+  },error=>{
+   assetErrors[key]=error;
+   console.error("Could not load model:",key,url,error);
    resolve(null);
   });
  });
@@ -694,12 +601,13 @@ function fittedModel(source,targetWidth,targetHeight,targetLength){
  model.updateMatrixWorld(true);
  const bounds=new THREE.Box3().setFromObject(model);
  const size=bounds.getSize(new THREE.Vector3());
- // Normalize each axis so very differently authored GLBs share the same road scale.
- model.scale.set(
+ // Preserve model proportions and fit it inside the requested vehicle envelope.
+ const scale=Math.min(
   targetWidth/Math.max(size.x,.001),
   targetHeight/Math.max(size.y,.001),
   targetLength/Math.max(size.z,.001)
  );
+ model.scale.setScalar(scale);
  model.updateMatrixWorld(true);
  const fittedBounds=new THREE.Box3().setFromObject(model);
  const center=fittedBounds.getCenter(new THREE.Vector3());
@@ -711,10 +619,7 @@ function fittedModel(source,targetWidth,targetHeight,targetLength){
   if(obj.isMesh){
    obj.castShadow=false;
    obj.receiveShadow=false;
-   if(obj.material){
-    const mats=Array.isArray(obj.material)?obj.material:[obj.material];
-    mats.forEach(m=>{m.side=THREE.FrontSide;});
-   }
+   // Preserve the GLB's original material side/culling settings.
   }
  });
  return model;
@@ -722,24 +627,14 @@ function fittedModel(source,targetWidth,targetHeight,targetLength){
 
 function replaceTrafficCarModel(car,assetKey){
  const source=loadedAssets[assetKey];
- if(!car || !car.isObject3D || !source)return;
- car.userData=car.userData||{};
- if(car.userData.usingGLB)return;
- const dimensions={
-  sportsCar:[1.9,1.45,3.7],
-  ambulance:[2.0,1.85,4.5],
-  wingsCar:[1.9,1.45,3.7],
-  standardCar:[1.9,1.45,3.7],
-  policeCar:[2.0,1.55,4.0],
-  bulldozer:[2.35,1.9,4.3]
- };
- const [width,height,length]=dimensions[assetKey]||[1.9,1.45,3.7];
- const model=fittedModel(source,width,height,length);
- // Supplied vehicles are aligned with the road's forward Z axis.
+ if(!car || !car.isObject3D || !source)return false;
+ if(car.userData.usingGLB)return true;
+ const model=fittedModel(source,2.55,1.65,4.15);
  car.clear();
  car.add(model);
  car.userData.usingGLB=true;
  car.userData.assetKey=assetKey;
+ return true;
 }
 
 function addRoadsideAsset(chunk,source,x,z,scale=1,rotationY=0){
@@ -765,38 +660,87 @@ function addFittedRoadProp(chunk,source,x,z,width,height,length,rotationY=0){
  return prop;
 }
 
+function addTreeGLB(chunk,source,slot){
+ if(!source)return false;
+ const tree=source.clone(true);
+ tree.rotation.y=slot.rotation;
+ tree.updateMatrixWorld(true);
+ const initialBounds=new THREE.Box3().setFromObject(tree);
+ const initialSize=initialBounds.getSize(new THREE.Vector3());
+ const scale=slot.height/Math.max(initialSize.y,.001);
+ tree.scale.multiplyScalar(scale);
+ tree.updateMatrixWorld(true);
+ const bounds=new THREE.Box3().setFromObject(tree);
+ const center=bounds.getCenter(new THREE.Vector3());
+ tree.position.set(slot.x-center.x,-bounds.min.y,slot.z-center.z);
+ tree.traverse(obj=>{
+  if(obj.isMesh){
+   obj.castShadow=false;
+   obj.receiveShadow=false;
+  }
+ });
+ chunk.add(tree);
+ return true;
+}
+
 async function loadWorldAssets(){
- const [sports,ambulance,wings,light,fence,standard,police,bulldozer]=await Promise.all([
-  loadAsset("sportsCar"),loadAsset("ambulance"),loadAsset("wingsCar"),
-  loadAsset("trafficLight"),loadAsset("fence"),
-  loadAsset("standardCar"),loadAsset("policeCar"),loadAsset("bulldozer")
+ const [bikeModel,carModel,ergoninaneModel,fence,...treeModels]=await Promise.all([
+  loadAsset("bike"),loadAsset("car"),loadAsset("ergoninane"),loadAsset("fence"),
+  loadAsset("tree1"),loadAsset("tree2"),loadAsset("tree3"),
+  loadAsset("tree4"),loadAsset("tree5"),loadAsset("tree6")
  ]);
- // Six vehicle types are distributed through traffic and remain attached
- // to their traffic objects when those objects are recycled.
- const vehicleKeys=["sportsCar","ambulance","wingsCar","standardCar","policeCar","bulldozer"];
+ const availableTrees=treeModels.filter(Boolean);
+
+ if(bikeModel){
+  attachBikeModel(bike,bikeModel);
+  for(const rider of remoteRacers.values())attachBikeModel(rider.mesh,bikeModel);
+  for(const bot of botRacers)attachBikeModel(bot.mesh,bikeModel);
+ }
+
+ let carModelsApplied=0;
  cars.forEach((car,i)=>{
-  const key=vehicleKeys[i%vehicleKeys.length];
-  if(car && car.mesh)replaceTrafficCarModel(car.mesh,key);
+  const key=i%2===0?"car":"ergoninane";
+  if(loadedAssets[key] && replaceTrafficCarModel(car.mesh,key))carModelsApplied++;
  });
 
- // Repeating roadside furniture stays attached to each recycled road chunk.
- chunks.forEach((chunk,index)=>{
-  const side=index%2===0?1:-1;
-  const z=-8;
+ chunks.forEach(chunk=>{
   if(fence){
-   // Aligned end-to-end sections make a continuous fence along both sides.
-   for(let n=0;n<3;n++){
-    const zz=-10-n*20;
-    addFittedRoadProp(chunk,fence,-8.65,zz,19.8,1.45,.30,Math.PI/2);
-    addFittedRoadProp(chunk,fence,8.65,zz,19.8,1.45,.30,Math.PI/2);
+   // Six short, slightly overlapping pieces form an uninterrupted fence
+   // along the full 60m segment on BOTH sides of the road.
+   for(let n=0;n<6;n++){
+    const zz=-5-n*10;
+    addFittedRoadProp(chunk,fence,-8.65,zz,10.25,1.45,.30,Math.PI/2);
+    addFittedRoadProp(chunk,fence,8.65,zz,10.25,1.45,.30,Math.PI/2);
    }
   }
  });
+
+ // Replace all old tree placeholders with randomized tree1.glb ... tree6.glb.
+ // Missing variants are skipped with a console warning; loaded variants are reused.
+ let treeInstancesApplied=0;
+ chunks.forEach(chunk=>{
+  const slots=chunk.userData.treeSlots||[];
+  slots.forEach(slot=>{
+   if(!availableTrees.length)return;
+   const source=treeModels[slot.variant]||availableTrees[slot.variant%availableTrees.length];
+   if(addTreeGLB(chunk,source,slot))treeInstancesApplied++;
+  });
+ });
+
+ const loaded=[
+  bikeModel?"bike":"no bike",
+  carModel?"car":"no car",
+  ergoninaneModel?"Ergoninane":"no Ergoninane",
+  fence?"fence":"no fence",
+  `trees ${availableTrees.length}/6`
+ ];
+ if(assetStatus){
+  assetStatus.textContent=`3D assets: ${loaded.join(" · ")}`;
+  assetStatus.style.color=(bikeModel&&carModel&&ergoninaneModel&&fence)?"#9cf0c8":"#ffd18a";
+ }
+ console.info("World assets:",{loaded,carModelsApplied,treeInstancesApplied,assetErrors});
 }
-loadWorldAssets().then(()=>{
- const status=document.getElementById("assetStatus");
- if(status)status.textContent="6 traffic models and roadside assets ready";
-});
+loadWorldAssets().catch(err=>console.error("World asset loading failed:",err));
 
 /* GAME STATE */
 
@@ -811,12 +755,13 @@ let lane=1;
 let targetX=0;
 let started=false;
 let paused=false;
-const settings={controlMode:"buttons",graphicsQuality:DEFAULT_QUALITY};
+let cameraMode="follow"; // follow = current over-the-bike view; first = rider POV
+const settings={graphicsQuality:DEFAULT_QUALITY};
 
 const stats=document.getElementById("stats");
 const keys={};
 const MIN_SPEED=30/3.6;
-const MAX_SPEED=187/3.6; // normal top speed: 187 km/h
+let MAX_SPEED=187/3.6; // editable normal maximum speed, in m/s
 let crashShock=0;
 let crashCooldown=0;
 const crashFX=document.getElementById("crashFX");
@@ -868,7 +813,6 @@ function startGame(){
  started=true;
  paused=false;
  startRideAudio();
- document.getElementById("menu").style.display="none";
  document.getElementById("pauseMenu").style.display="none";
 }
 
@@ -885,16 +829,22 @@ function resumeGame(){
 }
 
 function applySettings(){
- settings.controlMode=document.getElementById("controlMode").value;
  const quality=document.getElementById("graphicsQuality");
  if(quality)settings.graphicsQuality=quality.value;
+
+ const speedInput=document.getElementById("maxCarSpeed");
+ if(speedInput){
+  const requested=Number(speedInput.value);
+  const valid=Number.isFinite(requested)?THREE.MathUtils.clamp(Math.round(requested),30,300):187;
+  speedInput.value=String(valid);
+  MAX_SPEED=valid/3.6;
+  speed=Math.min(speed,MAX_SPEED);
+ }
+
  const pixelCap=settings.graphicsQuality==="performance"?(IS_MOBILE?1:1.15):
   settings.graphicsQuality==="balanced"?(IS_MOBILE?1.2:1.5):(IS_MOBILE?1.35:1.8);
  renderer.setPixelRatio(Math.min(devicePixelRatio,pixelCap));
  renderer.setSize(innerWidth,innerHeight,false);
- document.getElementById("controls").classList.toggle(
-  "hidden",settings.controlMode==="wasd"
- );
 }
 function restart(){
  speed=30/3.6;
@@ -924,45 +874,60 @@ function changeLane(direction){
  targetX=lanes[lane];
 }
 
+// Competitor bikes use the same collision envelope as the player's bike.
+// A contact slows the player and produces a brief camera/lean response.
+function checkCompetitorCollision(otherMesh,now){
+ if(!otherMesh || !otherMesh.visible || crashCooldown>0)return false;
+ const dz=Math.abs(otherMesh.position.z-bike.position.z);
+ const dx=Math.abs(otherMesh.position.x-bike.position.x);
+ if(dz>2.45 || dx>1.35)return false;
+ speed=Math.max(MIN_SPEED,speed*.84);
+ crashShock=Math.max(crashShock,.65);
+ crashCooldown=.85;
+ bike.rotation.z+=(bike.position.x<=otherMesh.position.x?-.12:.12);
+ return true;
+}
+
 /* KEYBOARD */
 
 addEventListener("keydown",e=>{
  const key=e.key.toLowerCase();
  if(key==="escape"){paused?resumeGame():pauseGame();return;}
  if(key==="r"&&started){restart();return;}
- if(settings.controlMode!=="wasd"||paused)return;
+ if(paused)return;
  keys[key]=true;
  if(key==="arrowleft"||key==="a")changeLane(-1);
  if(key==="arrowright"||key==="d")changeLane(1);
- if(["arrowup","arrowleft","arrowright"," "].includes(key))e.preventDefault();
+ if(["arrowup","arrowdown","arrowleft","arrowright"," "].includes(key))e.preventDefault();
 });
 
 addEventListener("keyup",e=>{
  keys[e.key.toLowerCase()]=false;
 });
 
-/* MOBILE BUTTON CONTROLS */
-function holdButton(id,key){
- const button=document.getElementById(id);
- button.addEventListener("pointerdown",e=>{
-  e.preventDefault();
-  if(!paused)keys[key]=true;
- });
- ["pointerup","pointercancel","pointerleave"].forEach(event=>{
-  button.addEventListener(event,()=>{keys[key]=false;});
- });
-}
-holdButton("brake","s");
-
-document.getElementById("left").addEventListener("click",()=> {
- if(settings.controlMode==="buttons")changeLane(-1);
+/* TOUCH SWIPE CONTROLS: no on-screen steering/brake buttons. */
+let swipeStartX=0,swipeStartY=0,swipePointer=null;
+renderer.domElement.addEventListener("pointerdown",e=>{
+ if(!IS_MOBILE||paused||!started)return;
+ swipePointer=e.pointerId;
+ swipeStartX=e.clientX;
+ swipeStartY=e.clientY;
+ try{renderer.domElement.setPointerCapture(e.pointerId);}catch(_){}
 });
-document.getElementById("right").addEventListener("click",()=> {
- if(settings.controlMode==="buttons")changeLane(1);
+renderer.domElement.addEventListener("pointerup",e=>{
+ if(!IS_MOBILE||e.pointerId!==swipePointer)return;
+ const dx=e.clientX-swipeStartX;
+ const dy=e.clientY-swipeStartY;
+ if(Math.abs(dx)>34&&Math.abs(dx)>Math.abs(dy)*1.15)changeLane(dx<0?-1:1);
+ swipePointer=null;
 });
-
+renderer.domElement.addEventListener("pointercancel",()=>{swipePointer=null;});
 
 document.getElementById("pauseBtn").addEventListener("click",pauseGame);
+document.getElementById("cameraBtn").addEventListener("click",()=>{
+ cameraMode=cameraMode==="follow"?"first":"follow";
+ document.getElementById("cameraBtn").textContent=cameraMode==="first"?"CAM: 1ST PERSON":"CAM: FOLLOW";
+});
 document.getElementById("resumeBtn").addEventListener("click",()=>{
  applySettings();
  resumeGame();
@@ -972,7 +937,7 @@ document.getElementById("restartBtn").addEventListener("click",()=>{
  restart();
 });
 document.getElementById("graphicsQuality").value=DEFAULT_QUALITY;
-["controlMode","graphicsQuality"].forEach(id=>{
+["graphicsQuality","maxCarSpeed"].forEach(id=>{
  document.getElementById(id).addEventListener("change",()=>{
   applySettings();
  });
@@ -983,7 +948,7 @@ applySettings();
 
 let previous=performance.now();
 let lastRender=0;
-const RENDER_INTERVAL=IS_MOBILE?1000/45:0;
+const RENDER_INTERVAL=IS_MOBILE?1000/30:0;
 
 function animate(now){
  requestAnimationFrame(animate);
@@ -1062,16 +1027,21 @@ function animate(now){
    wheel.rotation.x+=movement/.58;
   }
 
-  // Recycle road chunks endlessly
+  // Advance every complete terrain chunk at exactly the same speed as traffic.
+  // Each chunk contains its road, trees, fences, shoulders and fog props.
   for(const chunk of chunks){
    chunk.position.z+=movement;
-
-   if(chunk.position.z>CHUNK_LENGTH){
-    chunk.position.z-=CHUNK_LENGTH*CHUNK_COUNT;
-   }
-
-   if(chunk.position.z< -CHUNK_LENGTH*(CHUNK_COUNT-1)){
-    chunk.position.z+=CHUNK_LENGTH*CHUNK_COUNT;
+  }
+  // The player travels toward negative Z. Always recycle a passed chunk
+  // BEHIND the smallest (furthest-ahead) Z, never behind the largest Z.
+  // Using the largest Z caused chunks to overlap and the distant world to vanish.
+  for(const chunk of chunks){
+   if(chunk.position.z>CHUNK_LENGTH+24){
+    let furthestAhead=Infinity;
+    for(const other of chunks){
+     if(other!==chunk)furthestAhead=Math.min(furthestAhead,other.position.z);
+    }
+    chunk.position.z=furthestAhead-CHUNK_LENGTH;
    }
   }
 
@@ -1082,6 +1052,7 @@ function animate(now){
    const remoteLane=Math.max(0,Math.min(2,Number(rider.data.lane)||0));
    rider.mesh.position.set(lanes[remoteLane],0,bike.position.z-relative);
    rider.mesh.visible=Math.abs(relative)<190;
+   if(rider.mesh.visible)checkCompetitorCollision(rider.mesh,now);
   }
   // AI opponents advance at different speeds and occasionally change lanes.
   for(const bot of botRacers){
@@ -1094,6 +1065,7 @@ function animate(now){
    const relative=bot.distance-distance;
    bot.mesh.position.set(lanes[bot.lane],0,bike.position.z-relative);
    bot.mesh.visible=Math.abs(relative)<190;
+   if(bot.mesh.visible)checkCompetitorCollision(bot.mesh,now);
   }
   publishMultiplayerState(now);
 
@@ -1175,29 +1147,41 @@ function animate(now){
   // First-person rider camera with subtle helmet vibration and lean.
   const shakeAmount=0.008+Math.min(speed/MAX_SPEED,1)*0.018;
   const impactJitter=crashShock*0.075;
-  camera.position.x=THREE.MathUtils.damp(
-   camera.position.x,
-   bike.position.x+Math.sin(now*0.018)*shakeAmount+
-    Math.sin(now*0.09)*impactJitter,
-   9,
-   dt
-  );
-  camera.position.y=3+
-   Math.sin(now*0.022)*shakeAmount*0.65+
+  const cameraShakeX=Math.sin(now*0.018)*shakeAmount+Math.sin(now*0.09)*impactJitter;
+  const cameraShakeY=Math.sin(now*0.022)*shakeAmount*0.65+
    Math.abs(Math.sin(now*0.075))*impactJitter;
-  camera.position.z = bike.position.z + 3.5;
+  let desiredCameraX,desiredCameraY,desiredCameraZ,lookY,lookZ;
+  if(cameraMode==="first"){
+   // Rider eye position: close to the handlebar/head area, looking straight down the road.
+   desiredCameraX=bike.position.x+cameraShakeX*.35;
+   desiredCameraY=1.72+cameraShakeY*.35;
+   desiredCameraZ=bike.position.z+0.02;
+   lookY=1.68-crashShock*.06+(braking?.025:0);
+   lookZ=bike.position.z-55;
+  }else{
+   // Existing over-the-bike chase view.
+   desiredCameraX=bike.position.x+cameraShakeX;
+   desiredCameraY=2.15+cameraShakeY;
+   desiredCameraZ=bike.position.z+3.5;
+   lookY=1.52-crashShock*0.10+(braking?.035:0);
+   lookZ=bike.position.z-45;
+  }
+  camera.position.x=THREE.MathUtils.damp(camera.position.x,desiredCameraX,9,dt);
+  camera.position.y=THREE.MathUtils.damp(camera.position.y,desiredCameraY,9,dt);
+  camera.position.z=THREE.MathUtils.damp(camera.position.z,desiredCameraZ,9,dt);
 
   skyDome.position.x=camera.position.x;
   skyDome.position.z=camera.position.z;
   camera.lookAt(
-   bike.position.x+lateralVelocity*.035,
-   1.52-crashShock*0.10+(braking?.035:0),
-   bike.position.z-27
+   bike.position.x+(cameraMode==="first"?0:lateralVelocity*.035),
+   lookY,
+   lookZ
   );
-  // Lean with the rider and widen the view slightly as speed rises.
-  camera.rotation.z=bike.rotation.z*0.42+
+  // Keep the chase camera's lean subtle; first-person view stays steadier.
+  const cameraLean=cameraMode==="first"?.10:.42;
+  camera.rotation.z=bike.rotation.z*cameraLean+
    Math.sin(now*0.08)*crashShock*0.035;
-  const targetFov=78+Math.min(speed/MAX_SPEED,1)*7;
+  const targetFov=(cameraMode==="first"?82:78)+Math.min(speed/MAX_SPEED,1)*7;
   camera.fov=THREE.MathUtils.damp(camera.fov,targetFov,2.5,dt);
   camera.updateProjectionMatrix();
 
@@ -1208,12 +1192,7 @@ function animate(now){
   // Dashboard
   const gear="D";
 
-  stats.innerHTML=`
-   <strong>${Math.round(speed*3.6)} km/h</strong>
-   ${braking?"BRAKING":accelerating?"ACCELERATING":speed<=MIN_SPEED+0.05?"MINIMUM CRUISE":"COASTING"}<br>
-   Distance: ${(distance/1000).toFixed(2)} km<br>
-   Gear: ${gear}
-  `;
+  stats.innerHTML=`<strong>${Math.round(speed*3.6)} km/h</strong>`;
  }
 
  if(!RENDER_INTERVAL || now-lastRender>=RENDER_INTERVAL){
