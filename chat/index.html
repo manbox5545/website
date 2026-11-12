@@ -1,740 +1,1399 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <meta name="theme-color" content="#080b18">
+
 <meta name="description" content="Mpoxel AI - Your intelligent workspace">
+
 <title>Mpoxel AI</title>
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
 <link rel="preconnect" href="https://mpoxel.app.n8n.cloud">
 
 <link rel="stylesheet"
+
  href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css">
 
 <style>
+
 :root {
+
   color-scheme:dark;
 
   --bg:#080b18;
+
   --panel:#10162a;
+
   --panel2:#151d35;
+
   --text:#f3f4ff;
+
   --muted:#8992ae;
+
   --accent:#8275ff;
+
   --border:rgba(170,160,255,.13);
 
   --chat--color-primary:#8275ff;
+
   --chat--color-primary-shade-50:#7060ed;
+
   --chat--color-primary-shade-100:#5949cb;
+
   --chat--color-secondary:#252c4a;
+
   --chat--color-white:#f5f5ff;
+
   --chat--color-light:#11182d;
+
   --chat--color-light-shade-50:#19213a;
+
   --chat--color-light-shade-100:#222d49;
+
   --chat--color-medium:#8994b5;
+
   --chat--color-dark:#f5f5ff;
 
   --chat--window--width:100%;
+
   --chat--window--height:100%;
+
   --chat--window--border-radius:0;
 
   --chat--header--background:transparent;
+
   --chat--header--color:#fff;
+
   --chat--body--background:transparent;
+
   --chat--footer--background:rgba(9,13,27,.9);
 
   --chat--message--font-size:15px;
+
   --chat--message--line-height:1.65;
+
   --chat--message--border-radius:17px;
+
   --chat--message--padding:13px 18px;
 
   --chat--message--bot--background:#18213b;
+
   --chat--message--bot--color:#f5f5ff;
+
   --chat--message--user--background:#6255d5;
+
   --chat--message--user--color:#fff;
 
   --chat--input--background:#131b30;
+
   --chat--input--text-color:#fff;
+
   --chat--input--border:1px solid rgba(145,130,255,.27);
+
   --chat--input--border-radius:17px;
+
   --chat--input--send--button--background:#7465ee;
+
   --chat--input--send--button--color:#fff;
+
 }
 
 * {
+
   box-sizing:border-box;
+
 }
 
 html,body {
+
   margin:0;
+
   padding:0;
+
   width:100%;
+
   height:100%;
+
   min-height:100%;
+
   overflow:hidden;
+  overscroll-behavior:none;
+  -webkit-text-size-adjust:100%;
+
   background:var(--bg) !important;
+
   color:var(--text);
+
   font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
 }
 
 button {
+
   font:inherit;
+
 }
 
 button:focus-visible {
+
   outline:2px solid #a99aff;
+
   outline-offset:3px;
+
 }
 
 /* BACKGROUND */
 
 body {
+
   isolation:isolate;
+
   background:
+
     radial-gradient(ellipse at 60% -20%,#30266b40,transparent 55%),
+
     #080b18 !important;
+
 }
 
 body::before {
+
   content:"";
+
   position:fixed;
+
   z-index:-1;
+
   width:420px;
+
   height:420px;
+
   top:-280px;
+
   left:35%;
+
   border-radius:50%;
+
   background:#6550dd;
+
   filter:blur(120px);
+
   opacity:.2;
+
   pointer-events:none;
+
 }
 
 /* APP */
 
 .app {
+
   display:flex;
+
   width:100%;
-  height:100dvh;
+
+  height:var(--app-height, 100dvh);
+  min-height:0;
   overflow:hidden;
+
   background:transparent;
+
 }
 
 /* SIDEBAR */
 
 .sidebar {
+
   width:265px;
+
   min-width:265px;
+
   height:100%;
+
   display:flex;
+
   flex-direction:column;
+
   padding:17px 13px;
 
   background:rgba(12,17,34,.86);
+
   border-right:1px solid var(--border);
 
   backdrop-filter:blur(28px) saturate(150%);
+
   -webkit-backdrop-filter:blur(28px) saturate(150%);
 
   z-index:30;
+
   transition:transform .25s ease;
+
 }
 
 .brand {
+
   display:flex;
+
   align-items:center;
+
   gap:11px;
+
   padding:8px 7px 23px;
+
 }
 
 .logo {
+
   width:41px;
+
   height:41px;
+
   display:grid;
+
   place-items:center;
+
   flex-shrink:0;
+
   border-radius:14px;
+
   color:white;
+
   font-size:23px;
+
   background:linear-gradient(135deg,#a092ff,#5140c7);
+
   box-shadow:0 5px 24px #7564ff44;
+
 }
 
 .brand-name {
+
   font-size:17px;
+
   font-weight:850;
+
   letter-spacing:-.5px;
+
 }
 
 .brand-sub {
+
   margin-top:3px;
+
   color:var(--muted);
+
   font-size:10px;
+
 }
 
 /* NEW CHAT */
 
 .new-chat {
+
   display:flex;
+
   justify-content:center;
+
   align-items:center;
+
   gap:10px;
+
   width:100%;
+
   padding:13px;
+
   color:#fff;
+
   font-weight:750;
+
   font-size:14px;
 
   background:linear-gradient(110deg,#7969ef,#5144c8);
+
   border:1px solid #a499ff44;
+
   border-radius:13px;
+
   cursor:pointer;
 
   box-shadow:0 5px 20px #6354d52a;
+
   transition:transform .2s,filter .2s;
+
 }
 
 .new-chat:hover {
+
   transform:translateY(-2px);
+
   filter:brightness(1.12);
+
 }
 
 .new-chat:active {
+
   transform:scale(.98);
+
 }
 
 .section-title {
+
   padding:25px 9px 12px;
+
   color:var(--muted);
+
   font-size:11px;
+
   font-weight:800;
+
   letter-spacing:1px;
+
   text-transform:uppercase;
+
 }
 
 .history {
+
   flex:1;
+
   min-height:0;
+
   overflow-y:auto;
+
   scrollbar-width:thin;
+
   scrollbar-color:#514b80 transparent;
+
 }
 
 .history-empty {
+
   padding:18px 10px;
+
   color:#777f9e;
+
   font-size:12px;
+
   line-height:1.6;
+
 }
 
 .history-item {
+
   display:flex;
+
   align-items:center;
+
   gap:9px;
+
   width:100%;
+
   min-width:0;
+
   padding:11px 10px;
+
   margin-bottom:5px;
 
   color:#c9cce0;
+
   background:transparent;
+
   border:1px solid transparent;
+
   border-radius:11px;
 
   text-align:left;
+
   cursor:pointer;
+
   font-size:12px;
-  transition:background .15s,border-color .15s;
+
+  transition:*background* .15s,border-color .15s;
+
 }
 
 .history-item:hover {
+
   background:#ffffff09;
+
 }
 
 .history-item.active {
+
   color:white;
+
   background:#8275ff1c;
+
   border-color:#8275ff30;
+
 }
 
 .history-icon {
+
   flex-shrink:0;
+
   color:#aaa2ff;
+
 }
 
 .history-name {
+
   flex:1;
+
   min-width:0;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
+
   white-space:nowrap;
+
 }
 
 .delete-chat {
+
   flex-shrink:0;
+
   width:24px;
+
   height:24px;
+
   border:0;
+
   border-radius:7px;
+
   color:#ff8585;
+
   background:transparent;
+
   cursor:pointer;
+
   opacity:.45;
+
 }
 
 .delete-chat:hover {
+
   background:#ff55551a;
+
   opacity:1;
+
 }
 
 .sidebar-bottom {
+
   padding-top:13px;
+
   margin-top:10px;
+
   border-top:1px solid var(--border);
+
 }
 
 .sidebar-info {
+
   padding:8px;
+
   color:var(--muted);
+
   font-size:11px;
+
 }
 
 /* MAIN */
 
 .main {
+
   position:relative;
+
   flex:1;
+
   min-width:0;
+
   height:100%;
+  min-height:0;
+
   display:flex;
+
   flex-direction:column;
+
   background:transparent;
+
 }
 
 /* NAVBAR */
 
 .navbar {
+
   position:absolute;
+
   z-index:10;
+
   top:12px;
+
   left:14px;
+
   right:14px;
 
   height:59px;
+
   padding:0 14px;
 
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
 
   background:rgba(17,22,43,.66);
+
   border:1px solid rgba(170,160,255,.16);
+
   border-radius:17px;
 
   backdrop-filter:blur(28px) saturate(150%);
+
   -webkit-backdrop-filter:blur(28px) saturate(150%);
 
   box-shadow:
+
     0 10px 35px rgba(0,0,0,.24),
+
     inset 0 1px rgba(255,255,255,.05);
+
 }
 
 .nav-left,.nav-right {
+
   display:flex;
+
   align-items:center;
+
   gap:9px;
+
 }
 
 .nav-btn {
+
   width:37px;
+
   height:37px;
+
   display:grid;
+
   place-items:center;
 
   border:1px solid var(--border);
+
   border-radius:11px;
 
   color:white;
+
   background:#ffffff08;
+
   cursor:pointer;
 
-  transition:background .2s,transform .2s;
+  transition:*background* .2s,transform .2s;
+
 }
 
 .nav-btn:hover {
+
   background:#8275ff25;
+
   transform:translateY(-2px);
+
 }
 
 .model-label {
+
   color:#d5d0ff;
+
   font-size:12px;
+
   font-weight:750;
+
 }
 
 .online {
+
   display:flex;
+
   align-items:center;
+
   gap:7px;
+
   color:#70dfa0;
+
   font-size:11px;
+
 }
 
 .online-dot {
+
   width:7px;
+
   height:7px;
+
   border-radius:50%;
+
   background:#48dc8c;
+
   box-shadow:0 0 10px #48dc8c;
+
 }
 
 /* N8N CHAT CONTAINER */
 
 #n8n-chat {
+
   width:100%;
+
   height:100%;
+
   min-height:0;
+
   padding-top:82px;
+
   overflow:hidden;
+
   background:transparent !important;
+
 }
 
 /* IMPORTANT: FORCE DARK CHAT THEME */
 
 #n8n-chat,
+
 #n8n-chat .chat-layout,
+
 #n8n-chat .chat-body,
+
 #n8n-chat .chat-messages-list,
+
 #n8n-chat .chat-footer,
+
 #n8n-chat .chat-window {
+
   background-color:transparent !important;
+
   color:#f5f5ff !important;
+
 }
 
 #n8n-chat .chat-layout {
+
+  display:flex !important;
+  flex-direction:column;
+  width:100%;
   height:100%;
+  min-height:0;
+}
+
+#n8n-chat .chat-body {
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
+
+#n8n-chat .chat-messages-list {
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto !important;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+#n8n-chat .chat-footer {
+  flex:0 0 auto;
+  padding-bottom:max(14px, env(safe-area-inset-bottom));
 }
 
 #n8n-chat .chat-header {
+
   display:none !important;
+
 }
 
 /* BOT MESSAGE */
 
 #n8n-chat .chat-message-from-bot {
+
   background:linear-gradient(
+
     145deg,
+
     rgba(30,40,69,.96),
+
     rgba(18,26,47,.98)
+
   ) !important;
 
   color:#f5f5ff !important;
+
   border:1px solid rgba(160,150,255,.14) !important;
+
   border-radius:17px !important;
 
   box-shadow:0 8px 30px rgba(0,0,0,.13);
+
 }
 
 /* USER MESSAGE */
 
 #n8n-chat .chat-message-from-user {
+
   background:linear-gradient(
+
     135deg,#7668ed,#5146bd
+
   ) !important;
 
   color:white !important;
+
   border:1px solid rgba(255,255,255,.12) !important;
+
   border-radius:17px !important;
+
 }
 
 /* MESSAGE CONTENT */
 
 #n8n-chat .chat-message-from-bot *,
+
 #n8n-chat .chat-message-from-user * {
+
   color:inherit;
+
 }
 
 #n8n-chat .chat-messages-list {
+
   padding:22px 6%;
+
   scroll-behavior:smooth;
+
   scrollbar-width:thin;
+
   scrollbar-color:#514b80 transparent;
+
 }
 
 #n8n-chat .chat-message {
+
   max-width:78%;
+
   animation:messageIn .2s ease-out;
+
 }
 
 /* INPUT */
 
 #n8n-chat .chat-footer {
+
   padding:14px 6%;
+
   background:rgba(8,12,26,.82) !important;
+
   border-top:1px solid rgba(170,160,255,.1) !important;
 
   backdrop-filter:blur(24px);
+
   -webkit-backdrop-filter:blur(24px);
+
 }
 
 #n8n-chat .chat-inputs {
+
   background:rgba(19,26,48,.97) !important;
+
   border:1px solid rgba(145,130,255,.27) !important;
+
   border-radius:18px !important;
+
   box-shadow:0 10px 35px rgba(0,0,0,.2);
+
   transition:border-color .2s,box-shadow .2s;
+
 }
 
 #n8n-chat .chat-inputs:focus-within {
+
   border-color:#8275ff !important;
+
   box-shadow:0 0 0 3px #8275ff20;
+
+}
+
+/* FILE ATTACHMENTS */
+#n8n-chat input[type="file"] {
+  max-width:100%;
+  color:var(--text);
+}
+
+#n8n-chat [class*="file"],
+#n8n-chat [class*="attachment"] {
+  max-width:100%;
+}
+
+#n8n-chat [class*="file"] button,
+#n8n-chat [class*="attachment"] button {
+  cursor:pointer;
+  touch-action:manipulation;
 }
 
 #n8n-chat textarea,
+
 #n8n-chat input {
+
   background:transparent !important;
+
   color:#fff !important;
+
   caret-color:#a99aff;
+
 }
 
 #n8n-chat textarea::placeholder,
+
 #n8n-chat input::placeholder {
+
   color:#8992ae !important;
+
 }
 
 #n8n-chat *::-webkit-scrollbar {
+
   width:5px;
+
 }
 
 #n8n-chat *::-webkit-scrollbar-thumb {
+
   background:#514a82;
+
   border-radius:20px;
+
+}
+
+
+/* MPOXEL ATTACHMENT PICKER */
+#n8n-chat .mpoxel-attachment-bar {
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  flex-wrap:wrap;
+  width:100%;
+  margin:0 0 10px;
+}
+#n8n-chat .mpoxel-attach-trigger {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:38px;
+  padding:8px 12px;
+  color:#e9e5ff;
+  background:#8275ff20;
+  border:1px solid #8275ff55;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:700;
+  touch-action:manipulation;
+}
+#n8n-chat .mpoxel-attach-trigger:active { transform:scale(.97); }
+#n8n-chat .mpoxel-attach-help {
+  align-self:center;
+  color:#929bb8;
+  font-size:11px;
+}
+#n8n-chat .mpoxel-attachment-list {
+  display:flex;
+  flex:1 1 100%;
+  gap:8px;
+  flex-wrap:wrap;
+  min-width:0;
+}
+#n8n-chat .mpoxel-attachment-chip {
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  max-width:min(100%,260px);
+  min-width:0;
+  padding:6px 9px 6px 6px;
+  color:#f4f2ff;
+  background:#202846;
+  border:1px solid #8275ff55;
+  border-radius:12px;
+  cursor:pointer;
+  text-align:left;
+  font:inherit;
+  touch-action:manipulation;
+}
+#n8n-chat .mpoxel-attachment-chip:hover { background:#2a3154; }
+#n8n-chat .mpoxel-attachment-thumb,
+#n8n-chat .mpoxel-attachment-fileicon {
+  display:grid;
+  flex:0 0 36px;
+  width:36px;
+  height:36px;
+  place-items:center;
+  overflow:hidden;
+  border-radius:8px;
+  background:#11182d;
+  color:#c9c1ff;
+  font-size:11px;
+  font-weight:800;
+}
+#n8n-chat .mpoxel-attachment-thumb img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+#n8n-chat .mpoxel-attachment-meta {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:2px;
+}
+#n8n-chat .mpoxel-attachment-name {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:11px;
+  font-weight:700;
+}
+#n8n-chat .mpoxel-attachment-size {
+  color:#9ba4c1;
+  font-size:10px;
+}
+#n8n-chat .mpoxel-attachment-remove {
+  flex:0 0 auto;
+  margin-left:2px;
+  color:#ffaaaa;
+  font-size:16px;
+}
+#n8n-chat .mpoxel-hidden-file-input {
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+@media(max-width:760px) {
+  #n8n-chat { min-height:0; }
+  #n8n-chat .chat-footer {
+    padding:9px 10px max(10px, env(safe-area-inset-bottom)) !important;
+  }
+  #n8n-chat .mpoxel-attachment-chip { max-width:100%; }
+  #n8n-chat .mpoxel-attach-help { font-size:10px; }
 }
 
 /* ANIMATION */
 
 @keyframes messageIn {
+
   from {
+
     opacity:0;
+
     transform:translateY(7px);
+
   }
+
   to {
+
     opacity:1;
+
     transform:translateY(0);
+
   }
+
 }
 
 /* MOBILE SIDEBAR */
 
 .overlay {
+
   display:none;
+
   position:fixed;
+
   inset:0;
+
   z-index:25;
+
   background:rgba(0,0,0,.65);
+
   backdrop-filter:blur(3px);
+
   -webkit-backdrop-filter:blur(3px);
+
 }
 
 @media(max-width:760px) {
-  .sidebar {
-    position:fixed;
-    top:0;
-    left:0;
-    bottom:0;
-    width:min(290px,85vw);
-    min-width:0;
-
-    transform:translateX(-105%);
-    box-shadow:15px 0 50px #0006;
-    z-index:30;
+  html,body {
+    height:100%;
+    min-height:0;
+    overscroll-behavior:none;
   }
 
-  body.sidebar-open .sidebar {
-    transform:translateX(0);
+  .app {
+    height:var(--app-height, 100dvh);
+    min-height:0;
   }
 
-  body.sidebar-open .overlay {
-    display:block;
-  }
-
-  .navbar {
-    top:8px;
-    left:8px;
-    right:8px;
-    height:54px;
-    padding:0 9px;
-  }
-
-  .nav-left,.nav-right {
-    gap:6px;
-  }
-
-  .nav-btn {
-    width:35px;
-    height:35px;
-  }
-
-  .model-label {
-    font-size:11px;
+  .main {
+    height:100%;
+    min-height:0;
   }
 
   #n8n-chat {
+    height:100%;
+    min-height:0;
+    overflow:hidden;
     padding-top:70px;
+  }
+
+  #n8n-chat .chat-layout,
+  #n8n-chat .chat-body {
+    min-height:0;
   }
 
   #n8n-chat .chat-messages-list {
     padding:15px 12px;
-  }
-
-  #n8n-chat .chat-message {
-    max-width:91%;
+    touch-action:pan-y;
   }
 
   #n8n-chat .chat-footer {
-    padding:10px;
+    padding:10px 10px max(10px, env(safe-area-inset-bottom));
   }
-}
 
-@media(max-width:380px) {
-  .online {
-    display:none;
+
+  .sidebar {
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    bottom:0;
+
+    width:min(290px,85vw);
+
+    min-width:0;
+
+    transform:translateX(-105%);
+
+    box-shadow:15px 0 50px #0006;
+
+    z-index:30;
+
+  }
+
+  body.sidebar-open .sidebar {
+
+    transform:translateX(0);
+
+  }
+
+  body.sidebar-open .overlay {
+
+    display:block;
+
   }
 
   .navbar {
-    gap:3px;
+
+    top:8px;
+
+    left:8px;
+
+    right:8px;
+
+    height:54px;
+
+    padding:0 9px;
+
   }
+
+  .nav-left,.nav-right {
+
+    gap:6px;
+
+  }
+
+  .nav-btn {
+
+    width:35px;
+
+    height:35px;
+
+  }
+
+  .model-label {
+
+    font-size:11px;
+
+  }
+
+  #n8n-chat {
+
+    padding-top:70px;
+
+  }
+
+  #n8n-chat .chat-messages-list {
+
+    padding:15px 12px;
+
+  }
+
+  #n8n-chat .chat-message {
+
+    max-width:91%;
+
+  }
+
+}
+
+@media(max-width:380px) {
+
+  .online {
+
+    display:none;
+
+  }
+
+  .navbar {
+
+    gap:3px;
+
+  }
+
 }
 
 /* STARTUP INTRO */
 
 #intro {
+
   position:fixed;
+
   inset:0;
+
   z-index:99999;
 
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   overflow:hidden;
 
   background:
+
     radial-gradient(
+
       ellipse at 50% 42%,
+
       #272052 0%,
+
       #11152d 35%,
+
       #080b17 75%
+
     );
 
   transition:opacity .65s ease,visibility .65s ease;
+
 }
 
 #intro.hidden {
+
   opacity:0;
+
   visibility:hidden;
+
   pointer-events:none;
+
 }
 
 #intro-canvas {
+
   position:absolute;
+
   inset:0;
+
   width:100%;
+
   height:100%;
+
 }
 
 .intro-content {
+
   position:relative;
+
   z-index:2;
+
   text-align:center;
+
   pointer-events:none;
+
 }
 
 .intro-brand {
+
   width:76px;
+
   height:76px;
+
   margin:0 auto 22px;
+
   display:grid;
+
   place-items:center;
 
   font-size:40px;
+
   color:white;
+
   border-radius:24px;
 
   background:linear-gradient(145deg,#9d8aff,#5340c7);
 
   box-shadow:
+
     0 0 35px #7764ff88,
+
     0 0 100px #5141cc44;
 
   animation:logoFloat 2s ease-in-out infinite;
+
 }
 
 .intro-content h1 {
+
   margin:0;
+
   font-size:clamp(28px,5vw,43px);
+
   font-weight:850;
+
   letter-spacing:-1.5px;
 
   background:linear-gradient(90deg,#fff,#b9adff);
+
   background-clip:text;
+
   -webkit-background-clip:text;
+
   color:transparent;
+
 }
 
 .intro-content p {
+
   margin:10px 0 25px;
+
   color:#a6a9c7;
+
   font-size:13px;
+
 }
 
 .intro-loader {
+
   width:150px;
+
   height:3px;
+
   margin:auto;
+
   overflow:hidden;
+
   border-radius:10px;
+
   background:#ffffff17;
+
 }
 
 .intro-loader span {
+
   display:block;
+
   height:100%;
+
   width:35%;
+
   border-radius:10px;
+
   background:linear-gradient(90deg,#7767ed,#c0aaff);
+
   animation:loading 1.2s ease-in-out infinite;
+
 }
 
 .intro-content small {
+
   display:block;
+
   margin-top:13px;
+
   color:#8187a9;
+
   font-size:11px;
+
 }
 
 @keyframes loading {
+
   0% {transform:translateX(-110%)}
+
   100% {transform:translateX(430%)}
+
 }
 
 @keyframes logoFloat {
+
   0%,100% {transform:translateY(0)}
+
   50% {transform:translateY(-9px)}
+
 }
 
 /* ACCESSIBILITY */
 
 @media(prefers-reduced-motion:reduce) {
+
   *,*::before,*::after {
+
     animation:none !important;
+
     transition:none !important;
+
     scroll-behavior:auto !important;
+
   }
+
 }
+
 </style>
+
 </head>
 
 <body>
@@ -742,21 +1401,31 @@ body::before {
 <!-- THREE.JS INTRO -->
 
 <div id="intro">
+
   <canvas id="intro-canvas"></canvas>
 
   <div class="intro-content">
+
     <div class="intro-brand">✦</div>
+
     <h1>Mpoxel AI</h1>
+
     <p>Your intelligent workspace</p>
 
     <div class="intro-loader">
+
       <span></span>
+
     </div>
 
     <small id="intro-status">
+
       Initializing intelligence...
+
     </small>
+
   </div>
+
 </div>
 
 <!-- APPLICATION -->
@@ -768,31 +1437,47 @@ body::before {
   <aside class="sidebar" id="sidebar">
 
     <div class="brand">
+
       <div class="logo">✦</div>
 
       <div>
+
         <div class="brand-name">Mpoxel AI</div>
+
         <div class="brand-sub">Your AI workspace</div>
+
       </div>
+
     </div>
 
     <button class="new-chat" id="newChat">
+
       <span>＋</span>
+
       New Chat
+
     </button>
 
     <div class="section-title">
+
       Recent conversations
+
     </div>
 
     <div class="history" id="history">
+
       <div class="history-empty">Loading conversations...</div>
+
     </div>
 
     <div class="sidebar-bottom">
+
       <div class="sidebar-info">
+
         ✦ Powered by n8n AI
+
       </div>
+
     </div>
 
   </aside>
@@ -808,11 +1493,17 @@ body::before {
       <div class="nav-left">
 
         <button
+
           class="nav-btn"
+
           id="menuBtn"
+
           title="Chat history"
+
           aria-label="Open chat history">
+
           ☰
+
         </button>
 
         <span class="model-label">✦ Mpoxel AI</span>
@@ -822,35 +1513,57 @@ body::before {
       <div class="nav-right">
 
         <div class="online">
+
           <span class="online-dot"></span>
+
           Ready
+
         </div>
 
         <button
+
           class="nav-btn"
+
           id="themeBtn"
+
           title="Toggle theme"
+
           aria-label="Toggle theme">
+
           ☼
+
         </button>
 
         <button
+
           class="nav-btn"
+
           id="scrollBtn"
+
           title="Latest message"
+
           aria-label="Scroll to latest message">
+
           ↓
+
         </button>
 
         <button
+
           class="nav-btn"
+
           id="fullscreenBtn"
+
           title="Fullscreen"
+
           aria-label="Toggle fullscreen">
+
           ⛶
+
         </button>
 
       </div>
+
     </nav>
 
     <!-- N8N CHAT TARGET -->
@@ -866,53 +1579,91 @@ body::before {
 <script type="module">
 
 /* ===================================
+
    CONFIGURATION
+
 =================================== */
 
 const WEBHOOK_URL =
+
 'https://mpoxel.app.n8n.cloud/webhook/4d940d2d-7fac-4e3e-bb43-d7e37bfeaf69/chat';
 
 const HISTORY_KEY = 'mpoxel_chat_history';
+
 const ACTIVE_KEY = 'mpoxel_active_chat';
+
 const N8N_SESSION_KEY = 'n8n-chat/sessionId';
 
 const $ = id => document.getElementById(id);
 
+/* Keep the app fitted to the visible mobile viewport when the keyboard opens. */
+function updateAppViewport() {
+  const visibleHeight = window.visualViewport
+    ? window.visualViewport.height
+    : window.innerHeight;
+  document.documentElement.style.setProperty(
+    '--app-height',
+    `${Math.round(visibleHeight)}px`
+  );
+}
+
+updateAppViewport();
+window.addEventListener('resize',updateAppViewport,{passive:true});
+window.visualViewport?.addEventListener('resize',updateAppViewport,{passive:true});
+window.visualViewport?.addEventListener('scroll',updateAppViewport,{passive:true});
 
 /* ===================================
+
    STORAGE
+
 =================================== */
 
 function getHistory() {
+
   try {
+
     const data = JSON.parse(
+
       localStorage.getItem(HISTORY_KEY) || '[]'
+
     );
 
     return Array.isArray(data) ? data : [];
 
   } catch {
+
     return [];
+
   }
+
 }
 
 function saveHistory(items) {
+
   localStorage.setItem(
+
     HISTORY_KEY,
+
     JSON.stringify(items.slice(0,100))
+
   );
+
 }
 
 function createId() {
+
   return crypto.randomUUID();
+
 }
 
 let history = getHistory();
+
 let activeId = localStorage.getItem(ACTIVE_KEY);
 
-
 /* ===================================
+
    INITIAL SESSION
+
 =================================== */
 
 function ensureSession() {
@@ -920,29 +1671,41 @@ function ensureSession() {
   history = getHistory();
 
   if (
+
     !activeId ||
+
     !history.some(item => item.id === activeId)
+
   ) {
+
     activeId = createId();
 
     history.unshift({
+
       id:activeId,
+
       title:'New conversation',
+
       created:Date.now()
+
     });
+
   }
 
   localStorage.setItem(ACTIVE_KEY,activeId);
 
   // n8n Chat widget's browser session key.
+
   localStorage.setItem(N8N_SESSION_KEY,activeId);
 
   saveHistory(history);
+
 }
 
-
 /* ===================================
+
    RENDER HISTORY
+
 =================================== */
 
 function renderHistory() {
@@ -958,12 +1721,15 @@ function renderHistory() {
     const empty = document.createElement('div');
 
     empty.className = 'history-empty';
+
     empty.textContent =
+
       'Your conversations will appear here.';
 
     container.appendChild(empty);
 
     return;
+
   }
 
   history.forEach(item => {
@@ -971,27 +1737,39 @@ function renderHistory() {
     const row = document.createElement('div');
 
     row.className =
+
       'history-item' +
+
       (item.id === activeId ? ' active' : '');
 
     const icon = document.createElement('span');
+
     icon.className = 'history-icon';
+
     icon.textContent = '◷';
 
     const name = document.createElement('span');
+
     name.className = 'history-name';
+
     name.textContent = item.title || 'New conversation';
 
     const del = document.createElement('button');
 
     del.className = 'delete-chat';
+
     del.textContent = '×';
+
     del.title = 'Delete conversation';
+
     del.setAttribute('aria-label','Delete conversation');
 
     del.addEventListener('click', event => {
+
       event.stopPropagation();
+
       deleteConversation(item.id);
+
     });
 
     row.append(icon,name,del);
@@ -999,13 +1777,17 @@ function renderHistory() {
     row.addEventListener('click',() => {
 
       if(item.id === activeId) {
+
         closeSidebar();
+
         return;
+
       }
 
       activeId = item.id;
 
       localStorage.setItem(ACTIVE_KEY,activeId);
+
       localStorage.setItem(N8N_SESSION_KEY,activeId);
 
       location.reload();
@@ -1018,9 +1800,10 @@ function renderHistory() {
 
 }
 
-
 /* ===================================
+
    NEW CHAT
+
 =================================== */
 
 function newChat() {
@@ -1030,14 +1813,19 @@ function newChat() {
   history = getHistory();
 
   history.unshift({
+
     id:activeId,
+
     title:'New conversation',
+
     created:Date.now()
+
   });
 
   saveHistory(history);
 
   localStorage.setItem(ACTIVE_KEY,activeId);
+
   localStorage.setItem(N8N_SESSION_KEY,activeId);
 
   location.reload();
@@ -1046,15 +1834,18 @@ function newChat() {
 
 $('newChat').addEventListener('click',newChat);
 
-
 /* ===================================
+
    DELETE CONVERSATION
+
 =================================== */
 
 function deleteConversation(id) {
 
   if(!confirm('Remove this conversation from your history?')) {
+
     return;
+
   }
 
   history = getHistory().filter(item => item.id !== id);
@@ -1064,19 +1855,29 @@ function deleteConversation(id) {
   if(id === activeId) {
 
     activeId = history.length
+
       ? history[0].id
+
       : createId();
 
     if(!history.length) {
+
       history = [{
+
         id:activeId,
+
         title:'New conversation',
+
         created:Date.now()
+
       }];
+
       saveHistory(history);
+
     }
 
     localStorage.setItem(ACTIVE_KEY,activeId);
+
     localStorage.setItem(N8N_SESSION_KEY,activeId);
 
     location.reload();
@@ -1089,9 +1890,10 @@ function deleteConversation(id) {
 
 }
 
-
 /* ===================================
+
    AUTO TITLE FROM FIRST USER MESSAGE
+
 =================================== */
 
 function watchChatMessages() {
@@ -1103,7 +1905,9 @@ function watchChatMessages() {
   const attach = () => {
 
     const messageList = root.querySelector(
+
       '.chat-messages-list'
+
     );
 
     if(!messageList) return false;
@@ -1113,13 +1917,17 @@ function watchChatMessages() {
     observer = new MutationObserver(() => {
 
       const messages = messageList.querySelectorAll(
+
         '.chat-message-from-user'
+
       );
 
       if(!messages.length) return;
 
       const firstMessage = messages[0].textContent
+
         .trim()
+
         .replace(/\s+/g,' ');
 
       if(!firstMessage) return;
@@ -1127,21 +1935,29 @@ function watchChatMessages() {
       const items = getHistory();
 
       const current = items.find(
+
         item => item.id === activeId
+
       );
 
       if(
+
         current &&
+
         current.title === 'New conversation'
+
       ) {
 
         current.title =
+
           firstMessage.slice(0,38) +
+
           (firstMessage.length > 38 ? '…' : '');
 
         current.updated = Date.now();
 
         saveHistory(items);
+
         renderHistory();
 
       }
@@ -1149,12 +1965,17 @@ function watchChatMessages() {
     });
 
     observer.observe(messageList,{
+
       childList:true,
+
       subtree:true,
+
       characterData:true
+
     });
 
     return true;
+
   };
 
   if(!attach()) {
@@ -1162,23 +1983,29 @@ function watchChatMessages() {
     const rootObserver = new MutationObserver(() => {
 
       if(attach()) {
+
         rootObserver.disconnect();
+
       }
 
     });
 
     rootObserver.observe(root,{
+
       childList:true,
+
       subtree:true
+
     });
 
   }
 
 }
 
-
 /* ===================================
+
    INITIALIZE N8N
+
 =================================== */
 
 let chatInitialized = false;
@@ -1190,7 +2017,9 @@ async function initChat() {
   chatInitialized = true;
 
   const {createChat} = await import(
+
     'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js'
+
   );
 
   createChat({
@@ -1209,18 +2038,33 @@ async function initChat() {
 
     chatInputKey:'chatInput',
 
+    // Native n8n file upload support. Files are sent to the Chat Trigger
+    // as multipart binary data and appear in the workflow's binary output.
+    allowFileUploads:true,
+    allowedFilesMimeTypes:'*',
+
     initialMessages:[
+
       'Welcome to Mpoxel AI. What can I help you create today?'
+
     ],
 
     i18n:{
+
       en:{
+
         title:'Mpoxel AI',
+
         subtitle:'Your intelligent workspace',
+
         footer:'',
+
         getStarted:'Start chatting',
+
         inputPlaceholder:'Ask Mpoxel AI anything...'
+
       }
+
     }
 
   });
@@ -1228,15 +2072,163 @@ async function initChat() {
   // Watch for new messages and update titles.
   watchChatMessages();
 
+  // Add a removable file-preview strip above the chat composer.
+  watchForMpoxelUploadInput();
+
 }
 
+/* ===================================
+   MPOXEL FILE ATTACHMENTS
+   Selected files are passed to the n8n Chat Trigger as binary data.
+=================================== */
+function setupMpoxelAttachments() {
+  const root = document.getElementById('n8n-chat');
+  if (!root || root.dataset.mpoxelAttachmentsReady === '1') return;
+  const footer = root.querySelector('.chat-footer');
+  const n8nFileInput = root.querySelector('input[type="file"]');
+  if (!footer || !n8nFileInput) return;
+  root.dataset.mpoxelAttachmentsReady = '1';
+
+  const bar = document.createElement('div');
+  bar.className = 'mpoxel-attachment-bar';
+  const trigger = document.createElement('button');
+  trigger.type = 'button';
+  trigger.className = 'mpoxel-attach-trigger';
+  trigger.innerHTML = '<span aria-hidden="true">＋</span><span>Add files</span>';
+  const help = document.createElement('span');
+  help.className = 'mpoxel-attach-help';
+  help.textContent = 'Images, PDFs, documents and other files';
+  const list = document.createElement('div');
+  list.className = 'mpoxel-attachment-list';
+  list.setAttribute('aria-live', 'polite');
+  const picker = document.createElement('input');
+  picker.type = 'file';
+  picker.multiple = true;
+  picker.accept = '*/*';
+  picker.className = 'mpoxel-hidden-file-input';
+  picker.setAttribute('aria-label', 'Choose files to send to Mpoxel AI');
+  bar.append(trigger, help, list, picker);
+  const composer = footer.querySelector('.chat-inputs') || footer.firstElementChild;
+  footer.insertBefore(bar, composer || null);
+
+  let selectedFiles = [];
+  const keyOf = file => `${file.name}:${file.size}:${file.lastModified}`;
+  const formatSize = bytes => bytes < 1024 ? `${bytes} B` : bytes < 1048576 ? `${(bytes/1024).toFixed(1)} KB` : `${(bytes/1048576).toFixed(1)} MB`;
+
+  function syncToN8n() {
+    const nativeInput = n8nFileInput;
+    if (!nativeInput || !nativeInput.isConnected) {
+      help.textContent = 'n8n upload control is unavailable. Check Chat Trigger settings.';
+      return false;
+    }
+    try {
+      const transfer = new DataTransfer();
+      selectedFiles.forEach(file => transfer.items.add(file));
+      nativeInput.files = transfer.files;
+      nativeInput.dispatchEvent(new Event('input', {bubbles:true}));
+      nativeInput.dispatchEvent(new Event('change', {bubbles:true}));
+      return true;
+    } catch (error) {
+      console.error('Mpoxel could not attach files to n8n:', error);
+      help.textContent = 'This browser could not attach those files.';
+      return false;
+    }
+  }
+
+  function render() {
+    list.replaceChildren();
+    selectedFiles.forEach((file, index) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'mpoxel-attachment-chip';
+      chip.title = 'Click to remove this attachment';
+      chip.setAttribute('aria-label', `Remove ${file.name}`);
+      const visual = document.createElement('span');
+      visual.className = file.type.startsWith('image/') ? 'mpoxel-attachment-thumb' : 'mpoxel-attachment-fileicon';
+      if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.alt = '';
+        const objectUrl = URL.createObjectURL(file);
+        img.src = objectUrl;
+        img.onload = () => URL.revokeObjectURL(objectUrl);
+        visual.appendChild(img);
+      } else {
+        visual.textContent = (file.name.split('.').pop() || 'FILE').slice(0,5).toUpperCase();
+      }
+      const meta = document.createElement('span');
+      meta.className = 'mpoxel-attachment-meta';
+      const name = document.createElement('span');
+      name.className = 'mpoxel-attachment-name';
+      name.textContent = file.name;
+      const size = document.createElement('span');
+      size.className = 'mpoxel-attachment-size';
+      size.textContent = `${formatSize(file.size)} · click to remove`;
+      const remove = document.createElement('span');
+      remove.className = 'mpoxel-attachment-remove';
+      remove.textContent = '×';
+      remove.setAttribute('aria-hidden', 'true');
+      meta.append(name, size);
+      chip.append(visual, meta, remove);
+      chip.addEventListener('click', () => {
+        selectedFiles.splice(index, 1);
+        syncToN8n();
+        render();
+      });
+      list.appendChild(chip);
+    });
+    help.textContent = selectedFiles.length
+      ? `${selectedFiles.length} file${selectedFiles.length === 1 ? '' : 's'} ready · sent with your next message`
+      : 'Images, PDFs, documents and other files';
+  }
+
+  trigger.addEventListener('click', () => picker.click());
+  picker.addEventListener('change', () => {
+    const known = new Set(selectedFiles.map(keyOf));
+    Array.from(picker.files || []).forEach(file => {
+      if (!known.has(keyOf(file))) selectedFiles.push(file);
+    });
+    picker.value = '';
+    syncToN8n();
+    render();
+  });
+
+  const form = footer.querySelector('form') || root.querySelector('form');
+  if (form) form.addEventListener('submit', () => {
+    window.setTimeout(() => {
+      selectedFiles = [];
+      render();
+    }, 400);
+  });
+  render();
+}
+
+function watchForMpoxelUploadInput() {
+  const root = document.getElementById('n8n-chat');
+  if (!root) return;
+  const trySetup = () => {
+    if (root.querySelector('.chat-footer') && root.querySelector('input[type="file"]')) {
+      setupMpoxelAttachments();
+      return true;
+    }
+    return false;
+  };
+  if (trySetup()) return;
+  const observer = new MutationObserver(() => {
+    if (trySetup()) observer.disconnect();
+  });
+  observer.observe(root, {childList:true, subtree:true});
+}
 
 /* ===================================
+
    SIDEBAR
+
 =================================== */
 
 function closeSidebar() {
+
   document.body.classList.remove('sidebar-open');
+
 }
 
 $('menuBtn').addEventListener('click',() => {
@@ -1247,53 +2239,66 @@ $('menuBtn').addEventListener('click',() => {
 
 $('overlay').addEventListener('click',closeSidebar);
 
-
 /* ===================================
+
    SCROLL TO BOTTOM
+
 =================================== */
 
 $('scrollBtn').addEventListener('click',() => {
 
   const area = document.querySelector(
+
     '#n8n-chat .chat-messages-list'
+
   );
 
   if(area) {
 
     area.scrollTo({
+
       top:area.scrollHeight,
+
       behavior:'smooth'
+
     });
 
   }
 
 });
 
-
 /* ===================================
+
    THEME TOGGLE
+
 =================================== */
 
 $('themeBtn').addEventListener('click',() => {
 
   // The interface intentionally stays dark.
+
   // Avoid switching only part of the n8n widget to white.
 
   const enabled =
+
     document.body.classList.toggle('soft-theme');
 
   $('themeBtn').textContent = enabled ? '✦' : '☼';
 
   document.body.style.setProperty(
+
     '--accent',
+
     enabled ? '#9a8bff' : '#8275ff'
+
   );
 
 });
 
-
 /* ===================================
+
    FULLSCREEN
+
 =================================== */
 
 $('fullscreenBtn').addEventListener('click',async() => {
@@ -1321,32 +2326,43 @@ $('fullscreenBtn').addEventListener('click',async() => {
 document.addEventListener('fullscreenchange',() => {
 
   $('fullscreenBtn').textContent =
+
     document.fullscreenElement ? '⊡' : '⛶';
 
 });
 
-
 /* ===================================
+
    THREE.JS STARTUP
+
 =================================== */
 
 async function startMpoxel() {
 
   const intro = $('intro');
+
   const canvas = $('intro-canvas');
+
   const status = $('intro-status');
 
   const reducedMotion =
+
     matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const lowEnd =
+
     (navigator.hardwareConcurrency || 4) <= 4 ||
+
     matchMedia('(max-width:600px)').matches ||
+
     (navigator.deviceMemory || 4) <= 4;
 
   let renderer = null;
+
   let running = false;
+
   let frame = 0;
+
   let finished = false;
 
   function openChat() {
@@ -1354,6 +2370,7 @@ async function startMpoxel() {
     if(finished) return;
 
     finished = true;
+
     running = false;
 
     cancelAnimationFrame(frame);
@@ -1361,7 +2378,9 @@ async function startMpoxel() {
     if(renderer) {
 
       renderer.dispose();
+
       renderer.forceContextLoss();
+
       renderer = null;
 
     }
@@ -1373,10 +2392,13 @@ async function startMpoxel() {
       console.error('Chat initialization failed:',error);
 
       $('online-status')?.replaceChildren(
+
         document.createTextNode('Unavailable')
+
       );
 
       $('n8n-chat').textContent =
+
         'Unable to initialize chat. Check your internet connection and reload.';
 
     });
@@ -1394,6 +2416,7 @@ async function startMpoxel() {
   }
 
   // Safety fallback if WebGL or CDN loading fails.
+
   const safetyTimer = setTimeout(openChat,7000);
 
   try {
@@ -1401,7 +2424,9 @@ async function startMpoxel() {
     status.textContent = 'Building your AI workspace...';
 
     const THREE = await import(
+
       'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'
+
     );
 
     if(finished) return;
@@ -1409,42 +2434,67 @@ async function startMpoxel() {
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(
+
       45,
+
       innerWidth / innerHeight,
+
       .1,
+
       100
+
     );
 
     camera.position.z = 7;
 
     renderer = new THREE.WebGLRenderer({
+
       canvas,
+
       alpha:true,
+
       antialias:!lowEnd,
+
       powerPreference:'low-power'
+
     });
 
     renderer.setPixelRatio(
+
       Math.min(devicePixelRatio || 1,lowEnd ? 1 : 1.5)
+
     );
 
     renderer.setSize(innerWidth,innerHeight);
 
     const orbGeometry = new THREE.IcosahedronGeometry(
+
       1.15,
+
       lowEnd ? 1 : 2
+
     );
 
     const orb = new THREE.Mesh(
+
       orbGeometry,
+
       new THREE.MeshStandardMaterial({
+
         color:0x7564ff,
+
         metalness:.55,
+
         roughness:.28,
+
         emissive:0x241080,
+
         emissiveIntensity:1.1,
+
         flatShading:true
+
       })
+
     );
 
     scene.add(orb);
@@ -1452,31 +2502,49 @@ async function startMpoxel() {
     const wireGeometry = new THREE.IcosahedronGeometry(1.2,1);
 
     const wire = new THREE.Mesh(
+
       wireGeometry,
+
       new THREE.MeshBasicMaterial({
+
         color:0xb4a5ff,
+
         wireframe:true,
+
         transparent:true,
+
         opacity:.19
+
       })
+
     );
 
     scene.add(wire);
 
     const ringGeometry = new THREE.TorusGeometry(
+
       1.65,.012,6,lowEnd ? 32 : 64
+
     );
 
     const ring = new THREE.Mesh(
+
       ringGeometry,
+
       new THREE.MeshBasicMaterial({
+
         color:0x9380ff,
+
         transparent:true,
+
         opacity:.7
+
       })
+
     );
 
     ring.rotation.x=1.1;
+
     ring.rotation.y=.35;
 
     scene.add(ring);
@@ -1486,6 +2554,7 @@ async function startMpoxel() {
     light.position.set(2,2,4);
 
     scene.add(light);
+
     scene.add(new THREE.AmbientLight(0x6677bb,1.8));
 
     // Lightweight background particles.
@@ -1497,7 +2566,9 @@ async function startMpoxel() {
     for(let i=0;i<starCount;i++) {
 
       positions[i*3]=(Math.random()-.5)*11;
+
       positions[i*3+1]=(Math.random()-.5)*7;
+
       positions[i*3+2]=(Math.random()-.5)*4;
 
     }
@@ -1505,18 +2576,29 @@ async function startMpoxel() {
     const starGeometry = new THREE.BufferGeometry();
 
     starGeometry.setAttribute(
+
       'position',
+
       new THREE.BufferAttribute(positions,3)
+
     );
 
     const stars = new THREE.Points(
+
       starGeometry,
+
       new THREE.PointsMaterial({
+
         color:0xb3aaff,
+
         size:lowEnd ? .025 : .035,
+
         transparent:true,
+
         opacity:.7
+
       })
+
     );
 
     scene.add(stars);
@@ -1532,6 +2614,7 @@ async function startMpoxel() {
         if(!renderer || finished) return;
 
         camera.aspect=innerWidth/innerHeight;
+
         camera.updateProjectionMatrix();
 
         renderer.setSize(innerWidth,innerHeight);
@@ -1543,6 +2626,7 @@ async function startMpoxel() {
     window.addEventListener('resize',resize);
 
     const start=performance.now();
+
     const duration=2600;
 
     running=true;
@@ -1554,15 +2638,19 @@ async function startMpoxel() {
       if(!running || finished) return;
 
       const progress=Math.min(
+
         (now-start)/duration,1
+
       );
 
       const ease=1-Math.pow(1-progress,3);
 
       orb.rotation.y+=.009;
+
       orb.rotation.x+=.003;
 
       wire.rotation.y-=.004;
+
       wire.rotation.x+=.002;
 
       ring.rotation.z+=.004;
@@ -1578,6 +2666,7 @@ async function startMpoxel() {
       } else {
 
         cleanup();
+
         openChat();
 
       }
@@ -1595,15 +2684,19 @@ async function startMpoxel() {
       window.removeEventListener('resize',resize);
 
       orbGeometry.dispose();
+
       orb.material.dispose();
 
       wireGeometry.dispose();
+
       wire.material.dispose();
 
       ringGeometry.dispose();
+
       ring.material.dispose();
 
       starGeometry.dispose();
+
       stars.material.dispose();
 
     }
@@ -1611,6 +2704,7 @@ async function startMpoxel() {
     const originalOpenChat=openChat;
 
     // Clean scene resources before opening the chat.
+
     function finishAnimation() {
 
       if(finished) return;
@@ -1628,12 +2722,15 @@ async function startMpoxel() {
       if(!running || finished) return;
 
       const progress=Math.min((now-start)/duration,1);
+
       const ease=1-Math.pow(1-progress,3);
 
       orb.rotation.y+=.009;
+
       orb.rotation.x+=.003;
 
       wire.rotation.y-=.004;
+
       wire.rotation.x+=.002;
 
       ring.rotation.z+=.004;
@@ -1655,9 +2752,11 @@ async function startMpoxel() {
     }
 
     cancelAnimationFrame(frame);
+
     frame=requestAnimationFrame(renderFrame);
 
     // Store cleanup for the fallback.
+
     window.addEventListener('pagehide',cleanup,{once:true});
 
   } catch(error) {
@@ -1672,12 +2771,14 @@ async function startMpoxel() {
 
 }
 
-
 /* ===================================
+
    START APPLICATION
+
 =================================== */
 
 ensureSession();
+
 renderHistory();
 
 startMpoxel();
@@ -1685,4 +2786,5 @@ startMpoxel();
 </script>
 
 </body>
+
 </html>
