@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -15,12 +17,6 @@
 <title>Mpoxel AI</title>
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
-
-<link rel="preconnect" href="https://mpoxel.app.n8n.cloud">
-
-<link rel="stylesheet"
-
- href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css">
 
 <style>
 
@@ -651,9 +647,9 @@ body::before {
 
 }
 
-/* N8N CHAT CONTAINER */
+/* MPOXEL CHAT CONTAINER */
 
-#n8n-chat {
+#mpoxel-chat {
 
   width:100%;
 
@@ -669,19 +665,19 @@ body::before {
 
 }
 
-/* IMPORTANT: FORCE DARK CHAT THEME */
+/* MPOXEL DARK CHAT THEME */
 
-#n8n-chat,
+#mpoxel-chat,
 
-#n8n-chat .chat-layout,
+#mpoxel-chat .chat-layout,
 
-#n8n-chat .chat-body,
+#mpoxel-chat .chat-body,
 
-#n8n-chat .chat-messages-list,
+#mpoxel-chat .chat-messages-list,
 
-#n8n-chat .chat-footer,
+#mpoxel-chat .chat-footer,
 
-#n8n-chat .chat-window {
+#mpoxel-chat .chat-window {
 
   background-color:transparent !important;
 
@@ -689,7 +685,7 @@ body::before {
 
 }
 
-#n8n-chat .chat-layout {
+#mpoxel-chat .chat-layout {
 
   display:flex !important;
   flex-direction:column;
@@ -698,7 +694,7 @@ body::before {
   min-height:0;
 }
 
-#n8n-chat .chat-body {
+#mpoxel-chat .chat-body {
   display:flex;
   flex:1 1 auto;
   flex-direction:column;
@@ -706,7 +702,7 @@ body::before {
   overflow:hidden;
 }
 
-#n8n-chat .chat-messages-list {
+#mpoxel-chat .chat-messages-list {
   flex:1 1 auto;
   min-height:0;
   overflow-y:auto !important;
@@ -714,12 +710,12 @@ body::before {
   -webkit-overflow-scrolling:touch;
 }
 
-#n8n-chat .chat-footer {
+#mpoxel-chat .chat-footer {
   flex:0 0 auto;
   padding-bottom:max(14px, env(safe-area-inset-bottom));
 }
 
-#n8n-chat .chat-header {
+#mpoxel-chat .chat-header {
 
   display:none !important;
 
@@ -727,7 +723,7 @@ body::before {
 
 /* BOT MESSAGE */
 
-#n8n-chat .chat-message-from-bot {
+#mpoxel-chat .chat-message-from-bot {
 
   background:linear-gradient(
 
@@ -751,7 +747,7 @@ body::before {
 
 /* USER MESSAGE */
 
-#n8n-chat .chat-message-from-user {
+#mpoxel-chat .chat-message-from-user {
 
   background:linear-gradient(
 
@@ -769,15 +765,15 @@ body::before {
 
 /* MESSAGE CONTENT */
 
-#n8n-chat .chat-message-from-bot *,
+#mpoxel-chat .chat-message-from-bot *,
 
-#n8n-chat .chat-message-from-user * {
+#mpoxel-chat .chat-message-from-user * {
 
   color:inherit;
 
 }
 
-#n8n-chat .chat-messages-list {
+#mpoxel-chat .chat-messages-list {
 
   padding:22px 6%;
 
@@ -789,7 +785,7 @@ body::before {
 
 }
 
-#n8n-chat .chat-message {
+#mpoxel-chat .chat-message {
 
   max-width:78%;
 
@@ -799,7 +795,7 @@ body::before {
 
 /* INPUT */
 
-#n8n-chat .chat-footer {
+#mpoxel-chat .chat-footer {
 
   padding:14px 6%;
 
@@ -813,7 +809,7 @@ body::before {
 
 }
 
-#n8n-chat .chat-inputs {
+#mpoxel-chat .chat-inputs {
 
   background:rgba(19,26,48,.97) !important;
 
@@ -827,7 +823,7 @@ body::before {
 
 }
 
-#n8n-chat .chat-inputs:focus-within {
+#mpoxel-chat .chat-inputs:focus-within {
 
   border-color:#8275ff !important;
 
@@ -836,25 +832,25 @@ body::before {
 }
 
 /* FILE ATTACHMENTS */
-#n8n-chat input[type="file"] {
+#mpoxel-chat input[type="file"] {
   max-width:100%;
   color:var(--text);
 }
 
-#n8n-chat [class*="file"],
-#n8n-chat [class*="attachment"] {
+#mpoxel-chat [class*="file"],
+#mpoxel-chat [class*="attachment"] {
   max-width:100%;
 }
 
-#n8n-chat [class*="file"] button,
-#n8n-chat [class*="attachment"] button {
+#mpoxel-chat [class*="file"] button,
+#mpoxel-chat [class*="attachment"] button {
   cursor:pointer;
   touch-action:manipulation;
 }
 
-#n8n-chat textarea,
+#mpoxel-chat textarea,
 
-#n8n-chat input {
+#mpoxel-chat input {
 
   background:transparent !important;
 
@@ -864,21 +860,21 @@ body::before {
 
 }
 
-#n8n-chat textarea::placeholder,
+#mpoxel-chat textarea::placeholder,
 
-#n8n-chat input::placeholder {
+#mpoxel-chat input::placeholder {
 
   color:#8992ae !important;
 
 }
 
-#n8n-chat *::-webkit-scrollbar {
+#mpoxel-chat *::-webkit-scrollbar {
 
   width:5px;
 
 }
 
-#n8n-chat *::-webkit-scrollbar-thumb {
+#mpoxel-chat *::-webkit-scrollbar-thumb {
 
   background:#514a82;
 
@@ -888,51 +884,93 @@ body::before {
 
 
 /* MPOXEL ATTACHMENT PICKER */
-#n8n-chat .mpoxel-attachment-bar {
+#mpoxel-chat .mpoxel-attachment-bar {
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   gap:9px;
   flex-wrap:wrap;
   width:100%;
   margin:0 0 10px;
+  position:relative;
 }
-#n8n-chat .mpoxel-attach-trigger {
+#mpoxel-chat .mpoxel-attach-menu-wrap { position:relative; flex:0 0 auto; }
+#mpoxel-chat .mpoxel-attach-trigger {
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:7px;
-  min-height:38px;
+  min-height:40px;
+  min-width:42px;
   padding:8px 12px;
   color:#e9e5ff;
   background:#8275ff20;
   border:1px solid #8275ff55;
   border-radius:12px;
   cursor:pointer;
-  font-size:12px;
+  font-size:13px;
   font-weight:700;
   touch-action:manipulation;
 }
-#n8n-chat .mpoxel-attach-trigger:active { transform:scale(.97); }
-#n8n-chat .mpoxel-attach-help {
+#mpoxel-chat .mpoxel-attach-trigger:active { transform:scale(.97); }
+#mpoxel-chat .mpoxel-attach-menu {
+  position:absolute;
+  z-index:100;
+  left:0;
+  bottom:calc(100% + 8px);
+  display:none;
+  width:min(245px, calc(100vw - 36px));
+  padding:6px;
+  border:1px solid #8275ff55;
+  border-radius:13px;
+  background:#151d35;
+  box-shadow:0 14px 36px #0008;
+}
+#mpoxel-chat .mpoxel-attach-menu.open { display:grid; gap:4px; }
+#mpoxel-chat .mpoxel-attach-option {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  min-height:44px;
+  padding:10px;
+  color:#f4f2ff;
+  background:transparent;
+  border:0;
+  border-radius:9px;
+  text-align:left;
+  font:inherit;
+  font-size:13px;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+#mpoxel-chat .mpoxel-attach-option:hover { background:#8275ff24; }
+#mpoxel-chat .mpoxel-attach-option small {
+  display:block;
+  color:#9ba4c1;
+  font-size:10px;
+  margin-top:2px;
+}
+#mpoxel-chat .mpoxel-attach-help {
   align-self:center;
   color:#929bb8;
   font-size:11px;
 }
-#n8n-chat .mpoxel-attachment-list {
+#mpoxel-chat .mpoxel-attachment-list {
   display:flex;
   flex:1 1 100%;
-  gap:8px;
+  gap:10px;
   flex-wrap:wrap;
   min-width:0;
 }
-#n8n-chat .mpoxel-attachment-chip {
+#mpoxel-chat .mpoxel-attachment-chip {
   position:relative;
   display:flex;
-  align-items:center;
-  gap:8px;
-  max-width:min(100%,260px);
+  flex-direction:column;
+  align-items:stretch;
+  gap:6px;
+  width:116px;
   min-width:0;
-  padding:6px 9px 6px 6px;
+  padding:7px;
   color:#f4f2ff;
   background:#202846;
   border:1px solid #8275ff55;
@@ -942,50 +980,50 @@ body::before {
   font:inherit;
   touch-action:manipulation;
 }
-#n8n-chat .mpoxel-attachment-chip:hover { background:#2a3154; }
-#n8n-chat .mpoxel-attachment-thumb,
-#n8n-chat .mpoxel-attachment-fileicon {
+#mpoxel-chat .mpoxel-attachment-chip:hover { background:#2a3154; }
+#mpoxel-chat .mpoxel-attachment-thumb,
+#mpoxel-chat .mpoxel-attachment-fileicon {
   display:grid;
-  flex:0 0 36px;
-  width:36px;
-  height:36px;
+  width:100%;
+  height:82px;
   place-items:center;
   overflow:hidden;
   border-radius:8px;
   background:#11182d;
   color:#c9c1ff;
-  font-size:11px;
+  font-size:12px;
   font-weight:800;
 }
-#n8n-chat .mpoxel-attachment-thumb img {
+#mpoxel-chat .mpoxel-attachment-thumb img {
+  display:block;
   width:100%;
   height:100%;
   object-fit:cover;
 }
-#n8n-chat .mpoxel-attachment-meta {
+#mpoxel-chat .mpoxel-attachment-meta {
   display:flex;
   flex-direction:column;
   min-width:0;
   gap:2px;
 }
-#n8n-chat .mpoxel-attachment-name {
+#mpoxel-chat .mpoxel-attachment-name {
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
   font-size:11px;
   font-weight:700;
 }
-#n8n-chat .mpoxel-attachment-size {
+#mpoxel-chat .mpoxel-attachment-size {
   color:#9ba4c1;
   font-size:10px;
 }
-#n8n-chat .mpoxel-attachment-remove {
+#mpoxel-chat .mpoxel-attachment-remove {
   flex:0 0 auto;
   margin-left:2px;
   color:#ffaaaa;
   font-size:16px;
 }
-#n8n-chat .mpoxel-hidden-file-input {
+#mpoxel-chat .mpoxel-hidden-file-input {
   position:absolute !important;
   width:1px !important;
   height:1px !important;
@@ -993,12 +1031,12 @@ body::before {
   pointer-events:none !important;
 }
 @media(max-width:760px) {
-  #n8n-chat { min-height:0; }
-  #n8n-chat .chat-footer {
+  #mpoxel-chat { min-height:0; }
+  #mpoxel-chat .chat-footer {
     padding:9px 10px max(10px, env(safe-area-inset-bottom)) !important;
   }
-  #n8n-chat .mpoxel-attachment-chip { max-width:100%; }
-  #n8n-chat .mpoxel-attach-help { font-size:10px; }
+  #mpoxel-chat .mpoxel-attachment-chip { max-width:100%; }
+  #mpoxel-chat .mpoxel-attach-help { font-size:10px; }
 }
 
 /* ANIMATION */
@@ -1060,24 +1098,24 @@ body::before {
     min-height:0;
   }
 
-  #n8n-chat {
+  #mpoxel-chat {
     height:100%;
     min-height:0;
     overflow:hidden;
     padding-top:70px;
   }
 
-  #n8n-chat .chat-layout,
-  #n8n-chat .chat-body {
+  #mpoxel-chat .chat-layout,
+  #mpoxel-chat .chat-body {
     min-height:0;
   }
 
-  #n8n-chat .chat-messages-list {
+  #mpoxel-chat .chat-messages-list {
     padding:15px 12px;
     touch-action:pan-y;
   }
 
-  #n8n-chat .chat-footer {
+  #mpoxel-chat .chat-footer {
     padding:10px 10px max(10px, env(safe-area-inset-bottom));
   }
 
@@ -1150,19 +1188,19 @@ body::before {
 
   }
 
-  #n8n-chat {
+  #mpoxel-chat {
 
     padding-top:70px;
 
   }
 
-  #n8n-chat .chat-messages-list {
+  #mpoxel-chat .chat-messages-list {
 
     padding:15px 12px;
 
   }
 
-  #n8n-chat .chat-message {
+  #mpoxel-chat .chat-message {
 
     max-width:91%;
 
@@ -1392,6 +1430,129 @@ body::before {
 
 }
 
+
+/* CUSTOM GEMINI CHAT UI */
+#mpoxel-chat .chat-layout { display:flex; flex-direction:column; height:100%; min-height:0; }
+#mpoxel-chat .chat-body { display:flex; flex:1 1 auto; flex-direction:column; min-height:0; overflow:hidden; }
+#mpoxel-chat .chat-messages-list {
+  display:flex; flex:1 1 auto; flex-direction:column; gap:14px; min-height:0;
+  overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+}
+#mpoxel-chat .chat-message {
+  display:flex; flex-direction:column; width:fit-content; max-width:min(78%,760px);
+  padding:13px 16px; line-height:1.6; overflow-wrap:anywhere; white-space:normal;
+}
+#mpoxel-chat .chat-message-from-user { align-self:flex-end; margin-left:auto; }
+#mpoxel-chat .chat-message-from-bot { align-self:flex-start; margin-right:auto; }
+#mpoxel-chat .mpoxel-message-text { white-space:pre-wrap; overflow-wrap:anywhere; }
+#mpoxel-chat .mpoxel-message-time { margin-top:6px; color:#a6abc4; font-size:10px; opacity:.8; }
+#mpoxel-chat .mpoxel-message-attachments { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+#mpoxel-chat .mpoxel-message-attachments a { color:#dcd6ff; font-size:11px; text-decoration:none; }
+#mpoxel-chat .mpoxel-message-attachments img {
+  display:block; width:112px; height:90px; object-fit:cover; border-radius:9px;
+  border:1px solid #ffffff25; background:#11182d;
+}
+#mpoxel-chat .chat-footer { flex:0 0 auto; }
+#mpoxel-chat .chat-inputs {
+  display:flex; align-items:flex-end; gap:9px; padding:9px 10px;
+  width:100%; margin:0; box-sizing:border-box;
+}
+#mpoxel-chat .chat-inputs textarea {
+  display:block; flex:1 1 auto; width:100%; min-width:0; min-height:42px; max-height:140px;
+  padding:10px 8px; resize:none; border:0 !important; outline:0;
+  font:inherit; font-size:14px; line-height:1.45; overflow-y:auto;
+}
+#mpoxel-chat .mpoxel-send-button {
+  display:grid; flex:0 0 40px; width:40px; height:40px; place-items:center;
+  border:0; border-radius:12px; color:white; background:linear-gradient(135deg,#8878ff,#5749c9);
+  font-size:20px; cursor:pointer; touch-action:manipulation;
+}
+#mpoxel-chat .mpoxel-send-button:disabled { opacity:.45; cursor:not-allowed; }
+#mpoxel-chat .mpoxel-composer-note { margin:7px 4px 0; color:#7f89a8; text-align:center; font-size:10px; }
+#mpoxel-chat .mpoxel-welcome {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:230px; margin:auto; padding:24px; text-align:center; color:#e9e7ff;
+}
+#mpoxel-chat .mpoxel-welcome-icon {
+  display:grid; width:54px; height:54px; place-items:center; margin-bottom:14px;
+  border-radius:17px; background:linear-gradient(135deg,#9d8aff,#5340c7); font-size:27px;
+  box-shadow:0 8px 32px #7564ff44;
+}
+#mpoxel-chat .mpoxel-welcome h2 { margin:0 0 8px; font-size:clamp(20px,3vw,26px); }
+#mpoxel-chat .mpoxel-welcome p { max-width:420px; margin:0; color:#929bb8; font-size:13px; line-height:1.6; }
+#mpoxel-chat .mpoxel-typing { color:#bdb5ff; font-size:12px; }
+#mpoxel-chat .mpoxel-attachment-bar {
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap; width:100%; margin:0 0 10px; position:relative;
+}
+#mpoxel-chat .mpoxel-attach-menu-wrap { position:relative; flex:0 0 auto; }
+#mpoxel-chat .mpoxel-attach-trigger {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:40px; min-width:42px;
+  padding:8px 12px; color:#e9e5ff; background:#8275ff20; border:1px solid #8275ff55;
+  border-radius:12px; cursor:pointer; font-size:13px; font-weight:700; touch-action:manipulation;
+}
+#mpoxel-chat .mpoxel-attach-menu {
+  position:absolute; z-index:100; left:0; bottom:calc(100% + 8px); display:none;
+  width:min(245px,calc(100vw - 36px)); padding:6px; border:1px solid #8275ff55;
+  border-radius:13px; background:#151d35; box-shadow:0 14px 36px #0008;
+}
+#mpoxel-chat .mpoxel-attach-menu.open { display:grid; gap:4px; }
+#mpoxel-chat .mpoxel-attach-option {
+  display:flex; align-items:center; gap:10px; width:100%; min-height:44px; padding:10px;
+  color:#f4f2ff; background:transparent; border:0; border-radius:9px; text-align:left;
+  font:inherit; font-size:13px; cursor:pointer; touch-action:manipulation;
+}
+#mpoxel-chat .mpoxel-attach-option:hover { background:#8275ff24; }
+#mpoxel-chat .mpoxel-attach-option small { display:block; color:#9ba4c1; font-size:10px; margin-top:2px; }
+#mpoxel-chat .mpoxel-attach-help { align-self:center; color:#929bb8; font-size:11px; }
+#mpoxel-chat .mpoxel-attachment-list { display:flex; flex:1 1 100%; gap:10px; flex-wrap:wrap; min-width:0; }
+#mpoxel-chat .mpoxel-attachment-chip {
+  display:flex; flex-direction:column; align-items:stretch; gap:6px; width:112px; min-width:0;
+  padding:7px; color:#f4f2ff; background:#202846; border:1px solid #8275ff55;
+  border-radius:12px; cursor:pointer; text-align:left; font:inherit; touch-action:manipulation;
+}
+#mpoxel-chat .mpoxel-attachment-thumb,#mpoxel-chat .mpoxel-attachment-fileicon {
+  display:grid; width:100%; height:76px; place-items:center; overflow:hidden;
+  border-radius:8px; background:#11182d; color:#c9c1ff; font-size:12px; font-weight:800;
+}
+#mpoxel-chat .mpoxel-attachment-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
+#mpoxel-chat .mpoxel-attachment-meta { display:flex; flex-direction:column; min-width:0; gap:2px; }
+#mpoxel-chat .mpoxel-attachment-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; font-weight:700; }
+#mpoxel-chat .mpoxel-attachment-size { color:#9ba4c1; font-size:10px; }
+#mpoxel-chat .mpoxel-attachment-remove { color:#ffaaaa; font-size:14px; }
+#mpoxel-chat .mpoxel-hidden-file-input { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
+#mpoxel-chat .mpoxel-toast {
+  position:absolute; z-index:40; left:50%; bottom:120px; transform:translateX(-50%);
+  display:none; max-width:min(90%,520px); padding:10px 14px; border:1px solid #8275ff55;
+  border-radius:12px; background:#171f39; color:#fff; font-size:12px; box-shadow:0 8px 28px #0007;
+}
+#mpoxel-chat .mpoxel-toast.show { display:block; }
+@media(max-width:760px) {
+  #mpoxel-chat { padding-top:70px; }
+  #mpoxel-chat .chat-messages-list { padding:15px 12px; }
+  #mpoxel-chat .chat-message { max-width:91%; }
+  #mpoxel-chat .chat-footer { padding:9px 10px max(10px,env(safe-area-inset-bottom)); }
+  #mpoxel-chat .mpoxel-attachment-chip { width:96px; }
+  #mpoxel-chat .mpoxel-attachment-thumb,#mpoxel-chat .mpoxel-attachment-fileicon { height:68px; }
+}
+
+
+/* AI image generation + lightweight waiting game */
+.mpoxel-typing-dots{display:inline-flex;gap:5px;align-items:center;min-height:20px;color:#c8c1ff}
+.mpoxel-typing-dots i{width:6px;height:6px;border-radius:50%;background:#bdb5ff;animation:mpoxelDot .9s infinite ease-in-out}
+.mpoxel-typing-dots i:nth-child(2){animation-delay:.15s}.mpoxel-typing-dots i:nth-child(3){animation-delay:.3s}
+@keyframes mpoxelDot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-6px);opacity:1}}
+.mpoxel-image-job{width:min(100%,560px);padding:12px;border:1px solid #ffffff18;border-radius:16px;background:#858b98;color:#fff;box-shadow:0 8px 24px #0003}
+.mpoxel-image-job-title{font-size:13px;font-weight:750;text-align:center;margin:2px 0 10px}
+.mpoxel-image-job-sub{font-size:11px;opacity:.85;text-align:center;margin:0 0 10px}
+.mpoxel-image-preview{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:10px;background:#222}
+.mpoxel-game-open{display:block;margin:10px auto 0;padding:8px 12px;border:1px solid #ffffff55;border-radius:9px;background:#222a;color:white;cursor:pointer}
+.mpoxel-image-result{display:block;width:min(100%,560px);border-radius:14px;cursor:pointer;border:1px solid #ffffff24}
+.mpoxel-game-modal{position:fixed;inset:0;z-index:100000;background:#050713eF;display:none;align-items:center;justify-content:center;padding:16px}
+.mpoxel-game-modal.open{display:flex}
+.mpoxel-game-box{width:min(440px,100%);padding:16px;border:1px solid #8275ff66;border-radius:16px;background:#141b32;color:white;text-align:center}
+.mpoxel-game-box canvas{width:100%;max-width:360px;aspect-ratio:1;background:#080d1c;border-radius:10px;touch-action:none}
+.mpoxel-game-box button{margin:8px;padding:8px 12px;border:1px solid #8275ff66;border-radius:9px;background:#29234f;color:white;cursor:pointer}
+
 </style>
 
 </head>
@@ -1444,7 +1605,7 @@ body::before {
 
         <div class="brand-name">Mpoxel AI</div>
 
-        <div class="brand-sub">Your AI workspace</div>
+        <div class="brand-sub">Gemini-powered workspace</div>
 
       </div>
 
@@ -1474,7 +1635,7 @@ body::before {
 
       <div class="sidebar-info">
 
-        ✦ Powered by n8n AI
+        ✦ Powered by Gemini AI
 
       </div>
 
@@ -1506,13 +1667,13 @@ body::before {
 
         </button>
 
-        <span class="model-label">✦ Mpoxel AI</span>
+        <span class="model-label">✦ Mpoxel AI · Gemini AI</span>
 
       </div>
 
       <div class="nav-right">
 
-        <div class="online">
+        <div class="online" id="onlineStatus">
 
           <span class="online-dot"></span>
 
@@ -1566,1220 +1727,760 @@ body::before {
 
     </nav>
 
-    <!-- N8N CHAT TARGET -->
+    <!-- MPOXEL CHAT TARGET -->
 
-    <div id="n8n-chat"></div>
+    <div id="mpoxel-chat">
+      <div class="chat-layout">
+        <div class="chat-body">
+          <div class="chat-messages-list" id="messagesList" aria-live="polite">
+            <div class="mpoxel-welcome">
+              <div class="mpoxel-welcome-icon">✦</div>
+              <h2>Welcome to Mpoxel AI</h2>
+              <p>Your intelligent workspace. Ask a question, share an image, or upload a document.</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-footer">
+          <div class="mpoxel-attachment-bar">
+            <div class="mpoxel-attach-menu-wrap">
+              <button type="button" class="mpoxel-attach-trigger" id="attachButton"
+                aria-label="Add an attachment" aria-expanded="false">
+                <span aria-hidden="true">📎</span><span>Add</span>
+              </button>
+              <div class="mpoxel-attach-menu" id="attachMenu" role="menu">
+                <button type="button" class="mpoxel-attach-option" id="chooseFiles" role="menuitem">
+                  <span aria-hidden="true">📁</span><span>Upload from device<small>Choose images, PDFs, audio, video or text files</small></span>
+                </button>
+                <button type="button" class="mpoxel-attach-option" id="takePhoto" role="menuitem">
+                  <span aria-hidden="true">📷</span><span>Click a photo<small>Use your device camera</small></span>
+                </button>
+              </div>
+            </div>
+            <span class="mpoxel-attach-help" id="attachmentHelp">Attach an image or file</span>
+            <div class="mpoxel-attachment-list" id="attachmentList"></div>
+            <input id="deviceFileInput" class="mpoxel-hidden-file-input" type="file" multiple
+              accept="image/*,application/pdf,text/*,application/json,audio/*,video/*">
+            <input id="cameraFileInput" class="mpoxel-hidden-file-input" type="file" multiple
+              accept="image/*" capture="environment">
+          </div>
+          <form class="chat-inputs" id="chatForm">
+            <textarea id="messageInput" rows="1" maxlength="30000"
+              placeholder="Ask Mpoxel AI anything..." aria-label="Message Mpoxel AI"></textarea>
+            <button type="submit" class="mpoxel-send-button" id="sendButton" aria-label="Send message">
+              <span aria-hidden="true">➤</span>
+            </button>
+          </form>
+          <div class="mpoxel-composer-note">Gemini AI · Chats saved in this browser</div>
+        </div>
+      </div>
+      <div class="mpoxel-toast" id="mpoxelToast" role="status" aria-live="polite"></div>
+    </div>
 
   </main>
 
 </div>
 
+<div class="mpoxel-game-modal" id="snakeModal" role="dialog" aria-modal="true" aria-label="Snake and apple mini game">
+  <div class="mpoxel-game-box">
+    <h3>Snake &amp; Apple</h3>
+    <p>Use arrow keys or swipe to play while your image is being created.</p>
+    <canvas id="snakeCanvas" width="360" height="360"></canvas>
+    <div><span id="snakeScore">Score: 0</span></div>
+    <button type="button" id="snakeRestart">Restart</button>
+    <button type="button" id="snakeClose">Close game</button>
+  </div>
+</div>
 <!-- APP LOGIC -->
 
-<script type="module">
-
-/* ===================================
-
-   CONFIGURATION
-
-=================================== */
-
-const WEBHOOK_URL =
-
-'https://mpoxel.app.n8n.cloud/webhook/4d940d2d-7fac-4e3e-bb43-d7e37bfeaf69/chat';
-
-const HISTORY_KEY = 'mpoxel_chat_history';
-
-const ACTIVE_KEY = 'mpoxel_active_chat';
-
-const N8N_SESSION_KEY = 'n8n-chat/sessionId';
+<script>
 
 const $ = id => document.getElementById(id);
+const API_BASE_URL = 'https://mpoxel.pythonanywhere.com';
+const API_URL = `${API_BASE_URL}/api/chat`;
+const MODEL_NAME = 'Gemini AI';
+const MAX_FILE_BYTES = 8 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 15 * 1024 * 1024;
+const MAX_FILES = 4;
+const STORAGE_KEY = 'mpoxel_local_chats_v1';
 
-/* Keep the app fitted to the visible mobile viewport when the keyboard opens. */
+let conversations = [];
+let messages = [];
+let activeConversationId = localStorage.getItem('mpoxel_active_chat') || null;
+let selectedFiles = [];
+let pendingUserMessage = null;
+let streamingReply = null;
+let isSending = false;
+let toastTimer = null;
+
+function setStatus(text, online = true) {
+  const status = $('onlineStatus');
+  if (!status) return;
+  status.replaceChildren();
+  const dot = document.createElement('span');
+  dot.className = 'online-dot';
+  if (!online) dot.style.background = '#ff7777';
+  status.append(dot, document.createTextNode(text));
+}
+function showToast(message, duration = 4200) {
+  const toast = $('mpoxelToast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+}
 function updateAppViewport() {
-  const visibleHeight = window.visualViewport
-    ? window.visualViewport.height
-    : window.innerHeight;
-  document.documentElement.style.setProperty(
-    '--app-height',
-    `${Math.round(visibleHeight)}px`
-  );
+  const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  document.documentElement.style.setProperty('--app-height', `${Math.round(height)}px`);
 }
-
 updateAppViewport();
-window.addEventListener('resize',updateAppViewport,{passive:true});
-window.visualViewport?.addEventListener('resize',updateAppViewport,{passive:true});
-window.visualViewport?.addEventListener('scroll',updateAppViewport,{passive:true});
+window.addEventListener('resize', updateAppViewport, { passive: true });
+window.visualViewport?.addEventListener('resize', updateAppViewport, { passive: true });
+window.visualViewport?.addEventListener('scroll', updateAppViewport, { passive: true });
 
-/* ===================================
+function safeText(value) { return String(value || '').replace(/\s+/g, ' ').trim(); }
+function formatSize(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+const MIME_BY_EXTENSION = {
+  // Images
+  jpg:'image/jpeg', jpeg:'image/jpeg', jpe:'image/jpeg',
+  png:'image/png', gif:'image/gif', webp:'image/webp',
+  bmp:'image/bmp', tif:'image/tiff', tiff:'image/tiff',
+  heic:'image/heic', heif:'image/heif', avif:'image/avif',
+  // Documents and text
+  pdf:'application/pdf', txt:'text/plain', md:'text/markdown',
+  csv:'text/csv', json:'application/json', js:'text/javascript',
+  mjs:'text/javascript', ts:'text/x-typescript', html:'text/html',
+  htm:'text/html', css:'text/css', xml:'text/xml',
+  py:'text/x-python', yml:'text/plain', yaml:'text/plain',
+  log:'text/plain', java:'text/plain', c:'text/plain',
+  cpp:'text/plain', h:'text/plain', sql:'text/plain',
+  // Audio and video
+  mp3:'audio/mpeg', wav:'audio/wav', m4a:'audio/mp4',
+  aac:'audio/aac', ogg:'audio/ogg', flac:'audio/flac',
+  aiff:'audio/aiff', mp4:'video/mp4', mpeg:'video/mpeg',
+  mpg:'video/mpg', mov:'video/quicktime', webm:'video/webm',
+  wmv:'video/wmv', avi:'video/avi', flv:'video/x-flv',
+  '3gp':'video/3gpp', m4v:'video/mp4'
+};
 
-   STORAGE
+async function inferContentType(file) {
+  const browserType = (file.type || '').toLowerCase().split(';')[0].trim();
 
-=================================== */
+  // Use the browser's declared MIME type when it is specific.
+  if (browserType && browserType !== 'application/octet-stream' &&
+      browserType !== 'binary/octet-stream') {
+    return browserType === 'image/jpg' ? 'image/jpeg' : browserType;
+  }
 
-function getHistory() {
+  // If the browser reports a generic type, inspect common file signatures.
+  const bytes = new Uint8Array(await file.slice(0, 16).arrayBuffer());
+  const starts = (...values) => values.every((value, index) => bytes[index] === value);
 
+  if (starts(0xFF, 0xD8, 0xFF)) return 'image/jpeg';
+  if (starts(0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)) return 'image/png';
+  if (starts(0x47, 0x49, 0x46, 0x38)) return 'image/gif';
+  if (starts(0x52, 0x49, 0x46, 0x46) &&
+      bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) {
+    return 'image/webp';
+  }
+  if (starts(0x25, 0x50, 0x44, 0x46)) return 'application/pdf';
+
+  // Fall back to a known extension for formats without a simple signature.
+  const extension = (file.name.split('.').pop() || '').toLowerCase();
+  const extensionType = MIME_BY_EXTENSION[extension];
+  if (extensionType) return extensionType;
+
+  throw new Error(
+    `Cannot identify the file type for "${file.name}". Upload a supported image, PDF, audio, video, or text file.`
+  );
+}
+function persistState() {
   try {
-
-    const data = JSON.parse(
-
-      localStorage.getItem(HISTORY_KEY) || '[]'
-
-    );
-
-    return Array.isArray(data) ? data : [];
-
-  } catch {
-
-    return [];
-
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ conversations, messagesByChat }));
+    localStorage.setItem('mpoxel_active_chat', activeConversationId || '');
+  } catch (error) {
+    console.warn('Could not save chat history:', error);
+    showToast('Browser storage is full. Delete older chats or use smaller attachments.');
   }
-
 }
-
-function saveHistory(items) {
-
-  localStorage.setItem(
-
-    HISTORY_KEY,
-
-    JSON.stringify(items.slice(0,100))
-
-  );
-
+let messagesByChat = {};
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    conversations = Array.isArray(saved.conversations) ? saved.conversations : [];
+    messagesByChat = saved.messagesByChat && typeof saved.messagesByChat === 'object' ? saved.messagesByChat : {};
+  } catch (_) { conversations = []; messagesByChat = {}; }
 }
-
-function createId() {
-
-  return crypto.randomUUID();
-
-}
-
-let history = getHistory();
-
-let activeId = localStorage.getItem(ACTIVE_KEY);
-
-/* ===================================
-
-   INITIAL SESSION
-
-=================================== */
-
-function ensureSession() {
-
-  history = getHistory();
-
-  if (
-
-    !activeId ||
-
-    !history.some(item => item.id === activeId)
-
-  ) {
-
-    activeId = createId();
-
-    history.unshift({
-
-      id:activeId,
-
-      title:'New conversation',
-
-      created:Date.now()
-
-    });
-
-  }
-
-  localStorage.setItem(ACTIVE_KEY,activeId);
-
-  // n8n Chat widget's browser session key.
-
-  localStorage.setItem(N8N_SESSION_KEY,activeId);
-
-  saveHistory(history);
-
-}
-
-/* ===================================
-
-   RENDER HISTORY
-
-=================================== */
-
-function renderHistory() {
-
-  history = getHistory();
-
-  const container = $('history');
-
-  container.replaceChildren();
-
-  if (!history.length) {
-
-    const empty = document.createElement('div');
-
-    empty.className = 'history-empty';
-
-    empty.textContent =
-
-      'Your conversations will appear here.';
-
-    container.appendChild(empty);
-
-    return;
-
-  }
-
-  history.forEach(item => {
-
-    const row = document.createElement('div');
-
-    row.className =
-
-      'history-item' +
-
-      (item.id === activeId ? ' active' : '');
-
-    const icon = document.createElement('span');
-
-    icon.className = 'history-icon';
-
-    icon.textContent = '◷';
-
-    const name = document.createElement('span');
-
-    name.className = 'history-name';
-
-    name.textContent = item.title || 'New conversation';
-
-    const del = document.createElement('button');
-
-    del.className = 'delete-chat';
-
-    del.textContent = '×';
-
-    del.title = 'Delete conversation';
-
-    del.setAttribute('aria-label','Delete conversation');
-
-    del.addEventListener('click', event => {
-
-      event.stopPropagation();
-
-      deleteConversation(item.id);
-
-    });
-
-    row.append(icon,name,del);
-
-    row.addEventListener('click',() => {
-
-      if(item.id === activeId) {
-
-        closeSidebar();
-
-        return;
-
-      }
-
-      activeId = item.id;
-
-      localStorage.setItem(ACTIVE_KEY,activeId);
-
-      localStorage.setItem(N8N_SESSION_KEY,activeId);
-
-      location.reload();
-
-    });
-
-    container.appendChild(row);
-
-  });
-
-}
-
-/* ===================================
-
-   NEW CHAT
-
-=================================== */
-
-function newChat() {
-
-  activeId = createId();
-
-  history = getHistory();
-
-  history.unshift({
-
-    id:activeId,
-
-    title:'New conversation',
-
-    created:Date.now()
-
-  });
-
-  saveHistory(history);
-
-  localStorage.setItem(ACTIVE_KEY,activeId);
-
-  localStorage.setItem(N8N_SESSION_KEY,activeId);
-
-  location.reload();
-
-}
-
-$('newChat').addEventListener('click',newChat);
-
-/* ===================================
-
-   DELETE CONVERSATION
-
-=================================== */
-
-function deleteConversation(id) {
-
-  if(!confirm('Remove this conversation from your history?')) {
-
-    return;
-
-  }
-
-  history = getHistory().filter(item => item.id !== id);
-
-  saveHistory(history);
-
-  if(id === activeId) {
-
-    activeId = history.length
-
-      ? history[0].id
-
-      : createId();
-
-    if(!history.length) {
-
-      history = [{
-
-        id:activeId,
-
-        title:'New conversation',
-
-        created:Date.now()
-
-      }];
-
-      saveHistory(history);
-
-    }
-
-    localStorage.setItem(ACTIVE_KEY,activeId);
-
-    localStorage.setItem(N8N_SESSION_KEY,activeId);
-
-    location.reload();
-
-  } else {
-
-    renderHistory();
-
-  }
-
-}
-
-/* ===================================
-
-   AUTO TITLE FROM FIRST USER MESSAGE
-
-=================================== */
-
-function watchChatMessages() {
-
-  const root = $('n8n-chat');
-
-  let observer;
-
-  const attach = () => {
-
-    const messageList = root.querySelector(
-
-      '.chat-messages-list'
-
-    );
-
-    if(!messageList) return false;
-
-    if(observer) observer.disconnect();
-
-    observer = new MutationObserver(() => {
-
-      const messages = messageList.querySelectorAll(
-
-        '.chat-message-from-user'
-
-      );
-
-      if(!messages.length) return;
-
-      const firstMessage = messages[0].textContent
-
-        .trim()
-
-        .replace(/\s+/g,' ');
-
-      if(!firstMessage) return;
-
-      const items = getHistory();
-
-      const current = items.find(
-
-        item => item.id === activeId
-
-      );
-
-      if(
-
-        current &&
-
-        current.title === 'New conversation'
-
-      ) {
-
-        current.title =
-
-          firstMessage.slice(0,38) +
-
-          (firstMessage.length > 38 ? '…' : '');
-
-        current.updated = Date.now();
-
-        saveHistory(items);
-
-        renderHistory();
-
-      }
-
-    });
-
-    observer.observe(messageList,{
-
-      childList:true,
-
-      subtree:true,
-
-      characterData:true
-
-    });
-
-    return true;
-
-  };
-
-  if(!attach()) {
-
-    const rootObserver = new MutationObserver(() => {
-
-      if(attach()) {
-
-        rootObserver.disconnect();
-
-      }
-
-    });
-
-    rootObserver.observe(root,{
-
-      childList:true,
-
-      subtree:true
-
-    });
-
-  }
-
-}
-
-/* ===================================
-
-   INITIALIZE N8N
-
-=================================== */
-
-let chatInitialized = false;
-
-async function initChat() {
-
-  if(chatInitialized) return;
-
-  chatInitialized = true;
-
-  const {createChat} = await import(
-
-    'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js'
-
-  );
-
-  createChat({
-
-    target:'#n8n-chat',
-
-    webhookUrl:WEBHOOK_URL,
-
-    mode:'fullscreen',
-
-    showWelcomeScreen:false,
-
-    loadPreviousSession:true,
-
-    chatSessionKey:'sessionId',
-
-    chatInputKey:'chatInput',
-
-    // Native n8n file upload support. Files are sent to the Chat Trigger
-    // as multipart binary data and appear in the workflow's binary output.
-    allowFileUploads:true,
-    allowedFilesMimeTypes:'*',
-
-    initialMessages:[
-
-      'Welcome to Mpoxel AI. What can I help you create today?'
-
-    ],
-
-    i18n:{
-
-      en:{
-
-        title:'Mpoxel AI',
-
-        subtitle:'Your intelligent workspace',
-
-        footer:'',
-
-        getStarted:'Start chatting',
-
-        inputPlaceholder:'Ask Mpoxel AI anything...'
-
-      }
-
-    }
-
-  });
-
-  // Watch for new messages and update titles.
-  watchChatMessages();
-
-  // Add a removable file-preview strip above the chat composer.
-  watchForMpoxelUploadInput();
-
-}
-
-/* ===================================
-   MPOXEL FILE ATTACHMENTS
-   Selected files are passed to the n8n Chat Trigger as binary data.
-=================================== */
-function setupMpoxelAttachments() {
-  const root = document.getElementById('n8n-chat');
-  if (!root || root.dataset.mpoxelAttachmentsReady === '1') return;
-  const footer = root.querySelector('.chat-footer');
-  const n8nFileInput = root.querySelector('input[type="file"]');
-  if (!footer || !n8nFileInput) return;
-  root.dataset.mpoxelAttachmentsReady = '1';
-
-  const bar = document.createElement('div');
-  bar.className = 'mpoxel-attachment-bar';
-  const trigger = document.createElement('button');
-  trigger.type = 'button';
-  trigger.className = 'mpoxel-attach-trigger';
-  trigger.innerHTML = '<span aria-hidden="true">＋</span><span>Add files</span>';
-  const help = document.createElement('span');
-  help.className = 'mpoxel-attach-help';
-  help.textContent = 'Images, PDFs, documents and other files';
-  const list = document.createElement('div');
-  list.className = 'mpoxel-attachment-list';
-  list.setAttribute('aria-live', 'polite');
-  const picker = document.createElement('input');
-  picker.type = 'file';
-  picker.multiple = true;
-  picker.accept = '*/*';
-  picker.className = 'mpoxel-hidden-file-input';
-  picker.setAttribute('aria-label', 'Choose files to send to Mpoxel AI');
-  bar.append(trigger, help, list, picker);
-  const composer = footer.querySelector('.chat-inputs') || footer.firstElementChild;
-  footer.insertBefore(bar, composer || null);
-
-  let selectedFiles = [];
-  const keyOf = file => `${file.name}:${file.size}:${file.lastModified}`;
-  const formatSize = bytes => bytes < 1024 ? `${bytes} B` : bytes < 1048576 ? `${(bytes/1024).toFixed(1)} KB` : `${(bytes/1048576).toFixed(1)} MB`;
-
-  function syncToN8n() {
-    const nativeInput = n8nFileInput;
-    if (!nativeInput || !nativeInput.isConnected) {
-      help.textContent = 'n8n upload control is unavailable. Check Chat Trigger settings.';
-      return false;
-    }
-    try {
-      const transfer = new DataTransfer();
-      selectedFiles.forEach(file => transfer.items.add(file));
-      nativeInput.files = transfer.files;
-      nativeInput.dispatchEvent(new Event('input', {bubbles:true}));
-      nativeInput.dispatchEvent(new Event('change', {bubbles:true}));
-      return true;
-    } catch (error) {
-      console.error('Mpoxel could not attach files to n8n:', error);
-      help.textContent = 'This browser could not attach those files.';
-      return false;
-    }
-  }
-
-  function render() {
-    list.replaceChildren();
-    selectedFiles.forEach((file, index) => {
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'mpoxel-attachment-chip';
-      chip.title = 'Click to remove this attachment';
-      chip.setAttribute('aria-label', `Remove ${file.name}`);
-      const visual = document.createElement('span');
-      visual.className = file.type.startsWith('image/') ? 'mpoxel-attachment-thumb' : 'mpoxel-attachment-fileicon';
-      if (file.type.startsWith('image/')) {
-        const img = document.createElement('img');
-        img.alt = '';
-        const objectUrl = URL.createObjectURL(file);
-        img.src = objectUrl;
-        img.onload = () => URL.revokeObjectURL(objectUrl);
-        visual.appendChild(img);
-      } else {
-        visual.textContent = (file.name.split('.').pop() || 'FILE').slice(0,5).toUpperCase();
-      }
-      const meta = document.createElement('span');
-      meta.className = 'mpoxel-attachment-meta';
-      const name = document.createElement('span');
-      name.className = 'mpoxel-attachment-name';
-      name.textContent = file.name;
-      const size = document.createElement('span');
-      size.className = 'mpoxel-attachment-size';
-      size.textContent = `${formatSize(file.size)} · click to remove`;
-      const remove = document.createElement('span');
-      remove.className = 'mpoxel-attachment-remove';
-      remove.textContent = '×';
-      remove.setAttribute('aria-hidden', 'true');
-      meta.append(name, size);
-      chip.append(visual, meta, remove);
-      chip.addEventListener('click', () => {
-        selectedFiles.splice(index, 1);
-        syncToN8n();
-        render();
-      });
-      list.appendChild(chip);
-    });
-    help.textContent = selectedFiles.length
-      ? `${selectedFiles.length} file${selectedFiles.length === 1 ? '' : 's'} ready · sent with your next message`
-      : 'Images, PDFs, documents and other files';
-  }
-
-  trigger.addEventListener('click', () => picker.click());
-  picker.addEventListener('change', () => {
-    const known = new Set(selectedFiles.map(keyOf));
-    Array.from(picker.files || []).forEach(file => {
-      if (!known.has(keyOf(file))) selectedFiles.push(file);
-    });
-    picker.value = '';
-    syncToN8n();
-    render();
-  });
-
-  const form = footer.querySelector('form') || root.querySelector('form');
-  if (form) form.addEventListener('submit', () => {
-    window.setTimeout(() => {
-      selectedFiles = [];
-      render();
-    }, 400);
-  });
-  render();
-}
-
-function watchForMpoxelUploadInput() {
-  const root = document.getElementById('n8n-chat');
-  if (!root) return;
-  const trySetup = () => {
-    if (root.querySelector('.chat-footer') && root.querySelector('input[type="file"]')) {
-      setupMpoxelAttachments();
-      return true;
-    }
-    return false;
-  };
-  if (trySetup()) return;
-  const observer = new MutationObserver(() => {
-    if (trySetup()) observer.disconnect();
-  });
-  observer.observe(root, {childList:true, subtree:true});
-}
-
-/* ===================================
-
-   SIDEBAR
-
-=================================== */
-
-function closeSidebar() {
-
-  document.body.classList.remove('sidebar-open');
-
-}
-
-$('menuBtn').addEventListener('click',() => {
-
-  document.body.classList.toggle('sidebar-open');
-
-});
-
-$('overlay').addEventListener('click',closeSidebar);
-
-/* ===================================
-
-   SCROLL TO BOTTOM
-
-=================================== */
-
-$('scrollBtn').addEventListener('click',() => {
-
-  const area = document.querySelector(
-
-    '#n8n-chat .chat-messages-list'
-
-  );
-
-  if(area) {
-
-    area.scrollTo({
-
-      top:area.scrollHeight,
-
-      behavior:'smooth'
-
-    });
-
-  }
-
-});
-
-/* ===================================
-
-   THEME TOGGLE
-
-=================================== */
-
-$('themeBtn').addEventListener('click',() => {
-
-  // The interface intentionally stays dark.
-
-  // Avoid switching only part of the n8n widget to white.
-
-  const enabled =
-
-    document.body.classList.toggle('soft-theme');
-
+function closeSidebar() { document.body.classList.remove('sidebar-open'); }
+$('menuBtn').addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+$('overlay').addEventListener('click', closeSidebar);
+$('scrollBtn').addEventListener('click', () => $('messagesList')?.scrollTo({ top: $('messagesList').scrollHeight, behavior: 'smooth' }));
+$('themeBtn').addEventListener('click', () => {
+  const enabled = document.body.classList.toggle('soft-theme');
   $('themeBtn').textContent = enabled ? '✦' : '☼';
-
-  document.body.style.setProperty(
-
-    '--accent',
-
-    enabled ? '#9a8bff' : '#8275ff'
-
-  );
-
+  document.body.style.setProperty('--accent', enabled ? '#9a8bff' : '#8275ff');
+});
+$('fullscreenBtn').addEventListener('click', async () => {
+  try {
+    if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  } catch (error) { console.warn('Fullscreen unavailable:', error); }
+});
+document.addEventListener('fullscreenchange', () => {
+  $('fullscreenBtn').textContent = document.fullscreenElement ? '⊡' : '⛶';
 });
 
-/* ===================================
+function showWelcomeIfEmpty() {
+  const welcome = document.createElement('div');
+  welcome.className = 'mpoxel-welcome';
+  const icon = document.createElement('div'); icon.className = 'mpoxel-welcome-icon'; icon.textContent = '✦';
+  const heading = document.createElement('h2'); heading.textContent = 'Welcome to Mpoxel AI';
+  const paragraph = document.createElement('p');
+  paragraph.textContent = 'Your intelligent workspace. Ask a question, share an image, or upload a document.';
+  welcome.append(icon, heading, paragraph); $('messagesList').appendChild(welcome);
+}
+function renderHistory() {
+  const container = $('history'); container.replaceChildren();
+  if (!conversations.length) {
+    const empty = document.createElement('div'); empty.className = 'history-empty';
+    empty.textContent = 'Your conversations are saved in this browser.';
+    container.appendChild(empty); return;
+  }
+  conversations.forEach(conversation => {
+    const row = document.createElement('div');
+    row.className = 'history-item' + (conversation.id === activeConversationId ? ' active' : '');
+    const icon = document.createElement('span'); icon.className = 'history-icon'; icon.textContent = '◷';
+    const name = document.createElement('span'); name.className = 'history-name';
+    name.textContent = conversation.title || 'New conversation';
+    const del = document.createElement('button'); del.className = 'delete-chat'; del.type = 'button';
+    del.textContent = '×'; del.title = 'Delete conversation'; del.setAttribute('aria-label', 'Delete conversation');
+    del.addEventListener('click', event => { event.stopPropagation(); deleteConversation(conversation.id); });
+    row.append(icon, name, del);
+    row.addEventListener('click', () => { if (conversation.id !== activeConversationId) setActiveConversation(conversation.id); closeSidebar(); });
+    container.appendChild(row);
+  });
+}
+function createConversation() {
+  const id = crypto.randomUUID();
+  const now = Date.now();
+  conversations.unshift({ id, title: 'New conversation', createdAt: now, updatedAt: now });
+  messagesByChat[id] = [];
+  setActiveConversation(id);
+  persistState();
+}
+function setActiveConversation(id) {
+  activeConversationId = id;
+  localStorage.setItem('mpoxel_active_chat', id);
+  messages = Array.isArray(messagesByChat[id]) ? messagesByChat[id] : [];
+  pendingUserMessage = null; streamingReply = null;
+  renderHistory(); renderMessages();
+}
+function deleteConversation(id) {
+  if (!confirm('Delete this conversation from this browser?')) return;
+  conversations = conversations.filter(item => item.id !== id);
+  delete messagesByChat[id];
+  if (activeConversationId === id) {
+    activeConversationId = conversations[0]?.id || null;
+    if (!activeConversationId) createConversation();
+    else setActiveConversation(activeConversationId);
+  }
+  persistState(); renderHistory(); renderMessages();
+}
+function renderAttachmentInMessage(container, attachment) {
+  const item = document.createElement('span');
+  item.className = 'mpoxel-attachment-fileicon';
+  item.textContent = (String(attachment.name || 'FILE').split('.').pop() || 'FILE').slice(0, 5).toUpperCase();
+  const name = document.createElement('span');
+  name.textContent = attachment.name || 'Attached file';
+  const wrap = document.createElement('div');
+  wrap.style.display = 'inline-flex'; wrap.style.alignItems = 'center'; wrap.style.gap = '8px';
+  wrap.append(item, name); container.appendChild(wrap);
+}
+function createMessageElement(message) {
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-message ' + (message.role === 'user' ? 'chat-message-from-user' : 'chat-message-from-bot');
+  if (message.text) {
+    const text = document.createElement('div'); text.className = 'mpoxel-message-text';
+    text.textContent = message.text; bubble.appendChild(text);
+  } else if (message.streaming) {
+    const dots = document.createElement('div'); dots.className = 'mpoxel-typing-dots';
+    dots.setAttribute('aria-label','Mpoxel AI is thinking');
+    dots.innerHTML = '<i></i><i></i><i></i>'; bubble.appendChild(dots);
+  }
+  if (message.imageUrl) {
+    const image = document.createElement('img'); image.className = 'mpoxel-image-result';
+    image.src = message.imageUrl; image.alt = 'Generated image'; image.loading = 'lazy';
+    image.title = 'Click to download image';
+    image.addEventListener('click', () => downloadGeneratedImage(message.imageUrl));
+    bubble.appendChild(image);
+  }
+  if (message.imageJob) {
+    const job = document.createElement('div'); job.className = 'mpoxel-image-job';
+    const title = document.createElement('div'); title.className = 'mpoxel-image-job-title';
+    title.textContent = 'Your picture is creating';
+    const sub = document.createElement('p'); sub.className = 'mpoxel-image-job-sub';
+    sub.textContent = message.imageJob === 'error' ? 'Image generation failed.' : 'Preparing the image…';
+    job.append(title,sub);
+    if (message.imageJob === 'working') {
+      job.style.cursor='pointer'; job.title='Click to play Snake & Apple';
+      job.addEventListener('click',openSnakeGame);
+      const game = document.createElement('button'); game.type='button'; game.className='mpoxel-game-open';
+      game.textContent='Play Snake & Apple while you wait';
+      game.addEventListener('click', openSnakeGame); job.appendChild(game);
+    }
+    bubble.appendChild(job);
+  }
+  if (Array.isArray(message.attachments) && message.attachments.length) {
+    const attachments = document.createElement('div'); attachments.className = 'mpoxel-message-attachments';
+    message.attachments.forEach(item => renderAttachmentInMessage(attachments, item));
+    bubble.appendChild(attachments);
+  }
+  if (message.pending) {
+    const meta = document.createElement('div'); meta.className = 'mpoxel-message-time';
+    meta.textContent = 'Sending…'; bubble.appendChild(meta);
+  }
+  return bubble;
+}
+function renderMessages() {
+  const list = $('messagesList'); if (!list) return;
+  const wasNearBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 180;
+  list.replaceChildren();
+  const visible = [...messages];
+  if (pendingUserMessage && !visible.some(item => item.id === pendingUserMessage.id)) visible.push(pendingUserMessage);
+  if (streamingReply && !visible.some(item => item.id === streamingReply.id)) visible.push(streamingReply);
+  if (!visible.length) showWelcomeIfEmpty();
+  visible.forEach(message => list.appendChild(createMessageElement(message)));
+  if (wasNearBottom || streamingReply || pendingUserMessage) {
+    requestAnimationFrame(() => list.scrollTo({ top: list.scrollHeight, behavior: 'smooth' }));
+  }
+}
+function renderSelectedFiles() {
+  const list = $('attachmentList'); list.replaceChildren();
+  selectedFiles.forEach((item, index) => {
+    const chip = document.createElement('button'); chip.type = 'button';
+    chip.className = 'mpoxel-attachment-chip'; chip.title = 'Tap to remove this attachment';
+    chip.setAttribute('aria-label', `Remove ${item.file.name}`);
+    const visual = document.createElement('span');
+    visual.className = item.file.type.startsWith('image/') ? 'mpoxel-attachment-thumb' : 'mpoxel-attachment-fileicon';
+    if (item.file.type.startsWith('image/')) {
+      const image = document.createElement('img'); image.alt = `Preview of ${item.file.name}`;
+      image.src = item.previewUrl; visual.appendChild(image);
+    } else visual.textContent = (item.file.name.split('.').pop() || 'FILE').slice(0, 5).toUpperCase();
+    const meta = document.createElement('span'); meta.className = 'mpoxel-attachment-meta';
+    const name = document.createElement('span'); name.className = 'mpoxel-attachment-name'; name.textContent = item.file.name;
+    const size = document.createElement('span'); size.className = 'mpoxel-attachment-size';
+    size.textContent = item.progress == null ? `${formatSize(item.file.size)} · tap to remove` : `Preparing ${Math.round(item.progress)}%`;
+    meta.append(name, size); chip.append(visual, meta);
+    chip.addEventListener('click', () => {
+      if (isSending) return;
+      URL.revokeObjectURL(item.previewUrl); selectedFiles.splice(index, 1); renderSelectedFiles();
+    });
+    list.appendChild(chip);
+  });
+  $('attachmentHelp').textContent = selectedFiles.length
+    ? `${selectedFiles.length} file${selectedFiles.length === 1 ? '' : 's'} selected` : 'Attach an image or file';
+}
+function addFiles(fileList) {
+  const incoming = Array.from(fileList || []);
+  let total = selectedFiles.reduce((sum, item) => sum + item.file.size, 0);
+  for (const file of incoming) {
+    if (selectedFiles.length >= MAX_FILES) { showToast(`You can attach up to ${MAX_FILES} files at once.`); break; }
+    if (file.size > MAX_FILE_BYTES) { showToast(`${file.name} is larger than the 8 MB per-file limit.`); continue; }
+    if (total + file.size > MAX_TOTAL_BYTES) { showToast('Attachments must total 15 MB or less per message.'); continue; }
+    const duplicate = selectedFiles.some(item => item.file.name === file.name && item.file.size === file.size && item.file.lastModified === file.lastModified);
+    if (duplicate) continue;
+    total += file.size; selectedFiles.push({ file, previewUrl: URL.createObjectURL(file), progress: null });
+  }
+  renderSelectedFiles();
+}
+function setupAttachmentMenu() {
+  const menu = $('attachMenu'), button = $('attachButton');
+  const close = () => { menu.classList.remove('open'); button.setAttribute('aria-expanded', 'false'); };
+  button.addEventListener('click', () => {
+    const open = menu.classList.toggle('open'); button.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('pointerdown', event => { if (!event.target.closest('.mpoxel-attach-menu-wrap')) close(); });
+  $('chooseFiles').addEventListener('click', () => { close(); $('deviceFileInput').click(); });
+  $('takePhoto').addEventListener('click', () => { close(); $('cameraFileInput').click(); });
+  $('deviceFileInput').addEventListener('change', event => { addFiles(event.target.files); event.target.value = ''; });
+  $('cameraFileInput').addEventListener('change', event => { addFiles(event.target.files); event.target.value = ''; });
+}
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',')[1] || '');
+    reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
+    reader.readAsDataURL(file);
+  });
+}
+async function streamGeminiResponse({ text, attachments }) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'text/event-stream' },
+    cache: 'no-store',
+    body: JSON.stringify({
+      text,
+      history: messages.slice(0, -1).slice(-12).map(item => ({
+        role: item.role === 'assistant' ? 'model' : item.role,
+        text: item.text || ''
+      })),
+      attachments
+    })
+  });
 
-   FULLSCREEN
+  if (!response.ok) {
+    const raw = await response.text();
+    let detail = raw;
+    try { detail = JSON.parse(raw).error || raw; } catch (_) {}
+    throw new Error(detail || `Request failed (${response.status})`);
+  }
+  if (!response.body) throw new Error('This browser does not support streamed responses.');
 
-=================================== */
+  streamingReply = {
+    id: crypto.randomUUID(), role: 'assistant', text: '',
+    attachments: [], createdAt: Date.now(), streaming: true
+  };
+  renderMessages();
 
-$('fullscreenBtn').addEventListener('click',async() => {
+  const liveTextElement = $('messagesList').lastElementChild?.querySelector('.mpoxel-message-text');
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  // Parse actual Server-Sent Events. The backend sends: data: {"text":"..."}
+  // Append each received model chunk immediately; no artificial typing timer.
+  const processEvent = eventBlock => {
+    const data = eventBlock
+      .split(/\r?\n/)
+      .filter(line => line.startsWith('data:'))
+      .map(line => line.slice(5).trimStart())
+      .join('\n');
+
+    if (!data || data === '[DONE]') return;
+
+    let item;
+    try { item = JSON.parse(data); }
+    catch (_) { return; }
+
+    if (item.error) throw new Error(item.error);
+
+    if (typeof item.text === 'string' && item.text) {
+      streamingReply.text += item.text;
+      if (liveTextElement) {
+        liveTextElement.textContent = streamingReply.text;
+      }
+      const list = $('messagesList');
+      if (list) list.scrollTop = list.scrollHeight;
+    }
+  };
 
   try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
 
-    if(!document.fullscreenElement) {
+      buffer += decoder.decode(value, { stream: true });
+      const events = buffer.split(/\r?\n\r?\n/);
+      buffer = events.pop() || '';
 
-      await document.documentElement.requestFullscreen();
-
-    } else {
-
-      await document.exitFullscreen();
-
+      for (const eventBlock of events) processEvent(eventBlock);
     }
 
+    buffer += decoder.decode();
+    if (buffer.trim()) processEvent(buffer);
+
+    if (!streamingReply.text) {
+      throw new Error('Gemini returned an empty response. Check the backend model and API logs.');
+    }
+  } catch (error) {
+    try { await reader.cancel(); } catch (_) {}
+    throw error;
+  }
+
+  const finalReply = { ...streamingReply, streaming: false };
+  streamingReply = null;
+  messages.push(finalReply);
+  messagesByChat[activeConversationId] = messages;
+
+  const conversation = conversations.find(item => item.id === activeConversationId);
+  if (conversation) conversation.updatedAt = Date.now();
+
+  persistState();
+  renderHistory();
+  renderMessages();
+}
+
+
+function isImageGenerationRequest(text) {
+  return /\b(generate|create|make|draw|design|सृजन|बनाओ|बनाना)\b/i.test(text) &&
+         /\b(image|picture|photo|art|illustration|wallpaper|logo|poster|चित्र|तस्वीर)\b/i.test(text);
+}
+async function downloadGeneratedImage(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Image download failed.');
+    const blob = await response.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=objectUrl; a.download='mpoxel-generated-image.png';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(objectUrl);
+  } catch (error) { showToast(error.message || 'Could not download image.'); }
+}
+async function generateImage(prompt) {
+  const response = await fetch(`${API_BASE_URL}/api/generate-image`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({prompt})
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || `Image generation error (${response.status})`);
+  if (!data.image) throw new Error('Image generation returned no image.');
+  return data.image;
+}
+function openSnakeGame(){ $('snakeModal').classList.add('open'); startSnakeGame(); }
+$('snakeClose').addEventListener('click',()=>{$('snakeModal').classList.remove('open');stopSnakeGame();});
+$('snakeRestart').addEventListener('click',startSnakeGame);
+let snakeTimer=null, snakeState=null;
+function stopSnakeGame(){clearInterval(snakeTimer);snakeTimer=null;}
+function startSnakeGame(){
+  stopSnakeGame();
+  const canvas=$('snakeCanvas'),ctx=canvas.getContext('2d'),size=18,tiles=20;
+  snakeState={snake:[{x:9,y:10},{x:8,y:10},{x:7,y:10}],dir:{x:1,y:0},next:{x:1,y:0},apple:{x:14,y:10},score:0};
+  $('snakeScore').textContent='Score: 0';
+  function tick(){
+    const st=snakeState; if(!st)return;
+    st.dir=st.next; const head={x:st.snake[0].x+st.dir.x,y:st.snake[0].y+st.dir.y};
+    if(head.x<0||head.y<0||head.x>=tiles||head.y>=tiles||st.snake.some(p=>p.x===head.x&&p.y===head.y)){stopSnakeGame();return;}
+    st.snake.unshift(head);
+    if(head.x===st.apple.x&&head.y===st.apple.y){st.score++;$('snakeScore').textContent=`Score: ${st.score}`;st.apple={x:Math.floor(Math.random()*tiles),y:Math.floor(Math.random()*tiles)};}
+    else st.snake.pop();
+    ctx.fillStyle='#080d1c';ctx.fillRect(0,0,360,360);
+    ctx.fillStyle='#ff7373';ctx.fillRect(st.apple.x*size+3,st.apple.y*size+3,size-6,size-6);
+    ctx.fillStyle='#8e83ff';st.snake.forEach(p=>ctx.fillRect(p.x*size+1,p.y*size+1,size-2,size-2));
+  }
+  snakeTimer=setInterval(tick,125);tick();
+}
+document.addEventListener('keydown',e=>{
+  if(!$('snakeModal').classList.contains('open')||!snakeState)return;
+  const dirs={ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1},ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0}};
+  const d=dirs[e.key];if(d&&d.x!==-snakeState.dir.x&&d.y!==-snakeState.dir.y){snakeState.next=d;e.preventDefault();}
+});
+let snakeTouch=null;
+$('snakeCanvas').addEventListener('touchstart',e=>{snakeTouch={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
+$('snakeCanvas').addEventListener('touchend',e=>{
+  if(!snakeTouch||!snakeState)return;const dx=e.changedTouches[0].clientX-snakeTouch.x,dy=e.changedTouches[0].clientY-snakeTouch.y;
+  const d=Math.abs(dx)>Math.abs(dy)?{x:Math.sign(dx),y:0}:{x:0,y:Math.sign(dy)};
+  if((d.x||d.y)&&d.x!==-snakeState.dir.x&&d.y!==-snakeState.dir.y)snakeState.next=d;snakeTouch=null;
+},{passive:true});
+
+async function sendImageGenerationRequest(prompt) {
+  const job={id:crypto.randomUUID(),role:'assistant',text:'',imageJob:'working',createdAt:Date.now()};
+  messages.push(job); renderMessages(); setStatus('Creating image…');
+  try {
+    const promptResponse=await fetch(`${API_BASE_URL}/api/image-prompt`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});
+    const promptData=await promptResponse.json().catch(()=>({}));
+    if(!promptResponse.ok) throw new Error(promptData.error || 'Gemini could not prepare the image prompt.');
+    const imageUrl=await generateImage(promptData.prompt || prompt);
+    $('snakeModal').classList.remove('open'); stopSnakeGame();
+    messages=messages.filter(m=>m.id!==job.id);
+    messages.push({id:crypto.randomUUID(),role:'assistant',text:'Your image is ready. Click it to download.',imageUrl,createdAt:Date.now()});
+    messagesByChat[activeConversationId]=messages; persistState(); renderMessages(); setStatus('Ready');
   } catch(error) {
-
-    console.warn('Fullscreen unavailable:',error);
-
+    $('snakeModal').classList.remove('open'); stopSnakeGame();
+    messages=messages.filter(m=>m.id!==job.id);
+    messages.push({id:crypto.randomUUID(),role:'assistant',text:`Image generation error: ${error.message}`,createdAt:Date.now()});
+    messagesByChat[activeConversationId]=messages;persistState();renderMessages();setStatus('Image service issue',false);
   }
+}
 
-});
-
-document.addEventListener('fullscreenchange',() => {
-
-  $('fullscreenBtn').textContent =
-
-    document.fullscreenElement ? '⊡' : '⛶';
-
-});
-
-/* ===================================
-
-   THREE.JS STARTUP
-
-=================================== */
-
-async function startMpoxel() {
-
-  const intro = $('intro');
-
-  const canvas = $('intro-canvas');
-
-  const status = $('intro-status');
-
-  const reducedMotion =
-
-    matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const lowEnd =
-
-    (navigator.hardwareConcurrency || 4) <= 4 ||
-
-    matchMedia('(max-width:600px)').matches ||
-
-    (navigator.deviceMemory || 4) <= 4;
-
-  let renderer = null;
-
-  let running = false;
-
-  let frame = 0;
-
-  let finished = false;
-
-  function openChat() {
-
-    if(finished) return;
-
-    finished = true;
-
-    running = false;
-
-    cancelAnimationFrame(frame);
-
-    if(renderer) {
-
-      renderer.dispose();
-
-      renderer.forceContextLoss();
-
-      renderer = null;
-
+async function sendMessage(event) {
+  event?.preventDefault();
+  if (isSending || !activeConversationId) return;
+  const text = $('messageInput').value.trim();
+  if (!text && !selectedFiles.length) return;
+  isSending = true; $('sendButton').disabled = true; $('messageInput').disabled = true;
+  const userMessageId = crypto.randomUUID();
+  try {
+    setStatus('Preparing message…');
+    const attachments = [];
+    for (const item of selectedFiles) {
+      item.progress = 50; renderSelectedFiles();
+      attachments.push({
+        name: item.file.name,
+        contentType: await inferContentType(item.file),
+        size: item.file.size,
+        data: await fileToBase64(item.file)
+      });
+      item.progress = 100; renderSelectedFiles();
     }
+    const sentText = text || 'Please inspect the attached file(s) and explain their contents.';
+    const userMessage = {
+      id: userMessageId, role: 'user', text: sentText,
+      attachments: attachments.map(({name,contentType,size}) => ({name,contentType,size})),
+      createdAt: Date.now()
+    };
+    messages.push(userMessage); pendingUserMessage = null;
+    messagesByChat[activeConversationId] = messages;
+    const conversation = conversations.find(item => item.id === activeConversationId);
+    if (conversation && conversation.title === 'New conversation') conversation.title = sentText.replace(/\s+/g, ' ').slice(0, 42);
+    if (conversation) conversation.updatedAt = Date.now();
+    persistState(); renderHistory(); renderMessages();
+    $('messageInput').value = ''; $('messageInput').style.height = '42px';
+    if (isImageGenerationRequest(sentText) && !attachments.length) {
+      await sendImageGenerationRequest(sentText);
+    } else {
+      setStatus('Gemini is thinking…');
+      await streamGeminiResponse({ text: sentText, attachments });
+    }
+    selectedFiles.forEach(item => URL.revokeObjectURL(item.previewUrl));
+    selectedFiles = []; renderSelectedFiles(); setStatus('Ready');
+  } catch (error) {
+    console.error('Mpoxel send failed:', error);
+    streamingReply = null; setStatus('Connection issue', false);
+    showToast(error.message || 'Could not reach Gemini. Check your Worker URL and API key.', 8000);
+    renderMessages();
+  } finally {
+    isSending = false; $('sendButton').disabled = false; $('messageInput').disabled = false;
+    $('messageInput').focus({ preventScroll: true });
+  }
+}
+$('chatForm').addEventListener('submit', sendMessage);
+$('messageInput').addEventListener('input', () => {
+  const input = $('messageInput'); input.style.height = '42px';
+  input.style.height = `${Math.min(input.scrollHeight, 140)}px`;
+});
+$('messageInput').addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+    event.preventDefault(); $('chatForm').requestSubmit();
+  }
+});
+setupAttachmentMenu(); renderSelectedFiles();
+$('newChat').addEventListener('click', () => { createConversation(); closeSidebar(); $('messageInput').focus({ preventScroll: true }); });
 
+function initializeLocal() {
+  loadState();
+  if (!conversations.length) createConversation();
+  else {
+    if (!activeConversationId || !conversations.some(item => item.id === activeConversationId)) activeConversationId = conversations[0].id;
+    setActiveConversation(activeConversationId);
+  }
+  renderHistory(); setStatus('Ready');
+  $('modelLabel') && ($('modelLabel').textContent = `✦ Mpoxel AI · ${MODEL_NAME}`);
+  const note = document.querySelector('.mpoxel-composer-note');
+  if (note) note.textContent = 'Gemini AI · Chats saved in this browser';
+}
+
+/* Preserve the original Mpoxel startup intro, but initialize browser storage using the browser storage + Gemini stack. */
+async function startMpoxel() {
+  const intro = $('intro');
+  const canvas = $('intro-canvas');
+  const status = $('intro-status');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lowEnd = (navigator.hardwareConcurrency || 4) <= 4 ||
+    matchMedia('(max-width:600px)').matches || (navigator.deviceMemory || 4) <= 4;
+  let renderer = null, running = false, frame = 0, finished = false;
+
+  function openApp() {
+    if (finished) return;
+    finished = true;
+    running = false;
+    cancelAnimationFrame(frame);
+    if (renderer) { renderer.dispose(); renderer.forceContextLoss(); renderer = null; }
     intro.classList.add('hidden');
-
-    initChat().catch(error => {
-
-      console.error('Chat initialization failed:',error);
-
-      $('online-status')?.replaceChildren(
-
-        document.createTextNode('Unavailable')
-
-      );
-
-      $('n8n-chat').textContent =
-
-        'Unable to initialize chat. Check your internet connection and reload.';
-
-    });
-
+    initializeLocal();
   }
 
-  if(reducedMotion) {
-
-    status.textContent = 'Opening your workspace...';
-
-    setTimeout(openChat,350);
-
-    return;
-
-  }
-
-  // Safety fallback if WebGL or CDN loading fails.
-
-  const safetyTimer = setTimeout(openChat,7000);
+  if (reducedMotion) { status.textContent = 'Opening your workspace…'; setTimeout(openApp, 250); return; }
+  const safetyTimer = setTimeout(openApp, 6500);
 
   try {
-
-    status.textContent = 'Building your AI workspace...';
-
-    const THREE = await import(
-
-      'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'
-
-    );
-
-    if(finished) return;
-
+    status.textContent = 'Building your AI workspace…';
+    const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
+    if (finished) return;
     const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-
-      45,
-
-      innerWidth / innerHeight,
-
-      .1,
-
-      100
-
-    );
-
+    const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .1, 100);
     camera.position.z = 7;
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !lowEnd, powerPreference: 'low-power' });
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowEnd ? 1 : 1.5));
+    renderer.setSize(innerWidth, innerHeight);
 
-    renderer = new THREE.WebGLRenderer({
-
-      canvas,
-
-      alpha:true,
-
-      antialias:!lowEnd,
-
-      powerPreference:'low-power'
-
-    });
-
-    renderer.setPixelRatio(
-
-      Math.min(devicePixelRatio || 1,lowEnd ? 1 : 1.5)
-
-    );
-
-    renderer.setSize(innerWidth,innerHeight);
-
-    const orbGeometry = new THREE.IcosahedronGeometry(
-
-      1.15,
-
-      lowEnd ? 1 : 2
-
-    );
-
-    const orb = new THREE.Mesh(
-
-      orbGeometry,
-
-      new THREE.MeshStandardMaterial({
-
-        color:0x7564ff,
-
-        metalness:.55,
-
-        roughness:.28,
-
-        emissive:0x241080,
-
-        emissiveIntensity:1.1,
-
-        flatShading:true
-
-      })
-
-    );
-
+    const orbGeometry = new THREE.IcosahedronGeometry(1.15, lowEnd ? 1 : 2);
+    const orb = new THREE.Mesh(orbGeometry, new THREE.MeshStandardMaterial({
+      color: 0x7564ff, metalness: .55, roughness: .28, emissive: 0x241080,
+      emissiveIntensity: 1.1, flatShading: true
+    }));
     scene.add(orb);
-
-    const wireGeometry = new THREE.IcosahedronGeometry(1.2,1);
-
-    const wire = new THREE.Mesh(
-
-      wireGeometry,
-
-      new THREE.MeshBasicMaterial({
-
-        color:0xb4a5ff,
-
-        wireframe:true,
-
-        transparent:true,
-
-        opacity:.19
-
-      })
-
-    );
-
+    const wireGeometry = new THREE.IcosahedronGeometry(1.2, 1);
+    const wire = new THREE.Mesh(wireGeometry, new THREE.MeshBasicMaterial({
+      color: 0xb4a5ff, wireframe: true, transparent: true, opacity: .19
+    }));
     scene.add(wire);
-
-    const ringGeometry = new THREE.TorusGeometry(
-
-      1.65,.012,6,lowEnd ? 32 : 64
-
-    );
-
-    const ring = new THREE.Mesh(
-
-      ringGeometry,
-
-      new THREE.MeshBasicMaterial({
-
-        color:0x9380ff,
-
-        transparent:true,
-
-        opacity:.7
-
-      })
-
-    );
-
-    ring.rotation.x=1.1;
-
-    ring.rotation.y=.35;
-
-    scene.add(ring);
-
-    const light = new THREE.PointLight(0x9280ff,25);
-
-    light.position.set(2,2,4);
-
-    scene.add(light);
-
-    scene.add(new THREE.AmbientLight(0x6677bb,1.8));
-
-    // Lightweight background particles.
+    const ringGeometry = new THREE.TorusGeometry(1.65, .012, 6, lowEnd ? 32 : 64);
+    const ring = new THREE.Mesh(ringGeometry, new THREE.MeshBasicMaterial({
+      color: 0x9380ff, transparent: true, opacity: .7
+    }));
+    ring.rotation.x = 1.1; ring.rotation.y = .35; scene.add(ring);
+    const light = new THREE.PointLight(0x9280ff, 25);
+    light.position.set(2, 2, 4); scene.add(light); scene.add(new THREE.AmbientLight(0x6677bb, 1.8));
 
     const starCount = lowEnd ? 55 : 120;
-
-    const positions = new Float32Array(starCount*3);
-
-    for(let i=0;i<starCount;i++) {
-
-      positions[i*3]=(Math.random()-.5)*11;
-
-      positions[i*3+1]=(Math.random()-.5)*7;
-
-      positions[i*3+2]=(Math.random()-.5)*4;
-
+    const positions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      positions[i * 3] = (Math.random() - .5) * 11;
+      positions[i * 3 + 1] = (Math.random() - .5) * 7;
+      positions[i * 3 + 2] = (Math.random() - .5) * 4;
     }
-
     const starGeometry = new THREE.BufferGeometry();
-
-    starGeometry.setAttribute(
-
-      'position',
-
-      new THREE.BufferAttribute(positions,3)
-
-    );
-
-    const stars = new THREE.Points(
-
-      starGeometry,
-
-      new THREE.PointsMaterial({
-
-        color:0xb3aaff,
-
-        size:lowEnd ? .025 : .035,
-
-        transparent:true,
-
-        opacity:.7
-
-      })
-
-    );
-
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({
+      color: 0xb3aaff, size: lowEnd ? .025 : .035, transparent: true, opacity: .7
+    }));
     scene.add(stars);
 
-    let resizeTimer;
-
-    function resize() {
-
-      clearTimeout(resizeTimer);
-
-      resizeTimer = setTimeout(() => {
-
-        if(!renderer || finished) return;
-
-        camera.aspect=innerWidth/innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(innerWidth,innerHeight);
-
-      },120);
-
-    }
-
-    window.addEventListener('resize',resize);
-
-    const start=performance.now();
-
-    const duration=2600;
-
-    running=true;
-
-    status.textContent='Connecting to Mpoxel AI...';
-
-    function animate(now) {
-
-      if(!running || finished) return;
-
-      const progress=Math.min(
-
-        (now-start)/duration,1
-
-      );
-
-      const ease=1-Math.pow(1-progress,3);
-
-      orb.rotation.y+=.009;
-
-      orb.rotation.x+=.003;
-
-      wire.rotation.y-=.004;
-
-      wire.rotation.x+=.002;
-
-      ring.rotation.z+=.004;
-
-      orb.scale.setScalar(.3+ease*.7);
-
-      renderer.render(scene,camera);
-
-      if(progress<1) {
-
-        frame=requestAnimationFrame(animate);
-
-      } else {
-
-        cleanup();
-
-        openChat();
-
-      }
-
-    }
-
+    const start = performance.now();
+    const duration = 2100;
+    running = true;
+    status.textContent = 'Opening Mpoxel AI…';
     function cleanup() {
-
-      running=false;
-
-      cancelAnimationFrame(frame);
-
-      clearTimeout(resizeTimer);
-
-      window.removeEventListener('resize',resize);
-
-      orbGeometry.dispose();
-
-      orb.material.dispose();
-
-      wireGeometry.dispose();
-
-      wire.material.dispose();
-
-      ringGeometry.dispose();
-
-      ring.material.dispose();
-
-      starGeometry.dispose();
-
-      stars.material.dispose();
-
+      running = false; cancelAnimationFrame(frame);
+      orbGeometry.dispose(); orb.material.dispose();
+      wireGeometry.dispose(); wire.material.dispose();
+      ringGeometry.dispose(); ring.material.dispose();
+      starGeometry.dispose(); stars.material.dispose();
     }
-
-    const originalOpenChat=openChat;
-
-    // Clean scene resources before opening the chat.
-
-    function finishAnimation() {
-
-      if(finished) return;
-
-      cleanup();
-
-      clearTimeout(safetyTimer);
-
-      openChat();
-
+    function resize() {
+      if (!renderer || finished) return;
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
     }
-
-    function renderFrame(now) {
-
-      if(!running || finished) return;
-
-      const progress=Math.min((now-start)/duration,1);
-
-      const ease=1-Math.pow(1-progress,3);
-
-      orb.rotation.y+=.009;
-
-      orb.rotation.x+=.003;
-
-      wire.rotation.y-=.004;
-
-      wire.rotation.x+=.002;
-
-      ring.rotation.z+=.004;
-
-      orb.scale.setScalar(.3+ease*.7);
-
-      renderer.render(scene,camera);
-
-      if(progress<1) {
-
-        frame=requestAnimationFrame(renderFrame);
-
-      } else {
-
-        finishAnimation();
-
+    window.addEventListener('resize', resize, { passive: true });
+    function animate(now) {
+      if (!running || finished) return;
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      orb.rotation.y += .009; orb.rotation.x += .003;
+      wire.rotation.y -= .004; wire.rotation.x += .002; ring.rotation.z += .004;
+      orb.scale.setScalar(.3 + ease * .7);
+      renderer.render(scene, camera);
+      if (progress < 1) frame = requestAnimationFrame(animate);
+      else {
+        cleanup();
+        window.removeEventListener('resize', resize);
+        clearTimeout(safetyTimer);
+        openApp();
       }
-
     }
-
-    cancelAnimationFrame(frame);
-
-    frame=requestAnimationFrame(renderFrame);
-
-    // Store cleanup for the fallback.
-
-    window.addEventListener('pagehide',cleanup,{once:true});
-
-  } catch(error) {
-
-    console.warn('Three.js unavailable:',error);
-
+    frame = requestAnimationFrame(animate);
+    window.addEventListener('pagehide', cleanup, { once: true });
+  } catch (error) {
+    console.warn('Three.js intro unavailable:', error);
     clearTimeout(safetyTimer);
-
-    openChat();
-
+    openApp();
   }
-
 }
-
-/* ===================================
-
-   START APPLICATION
-
-=================================== */
-
-ensureSession();
-
-renderHistory();
 
 startMpoxel();
 
